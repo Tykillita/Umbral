@@ -79,7 +79,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          $checksums = Get-ChildItem -LiteralPath apps/desktop/release -Filter '*.sha256' | ForEach-Object { Join-Path 'apps/desktop/release' $_.Name }
-          if (!$checksums) { throw 'No se generó el SHA-256 del instalador.' }
-          gh release upload $env:GITHUB_REF_NAME @checksums --repo Tykillita/Umbral --clobber
-          if ($LASTEXITCODE -ne 0) { throw 'No se pudo adjuntar el SHA-256 a la release.' }
+          Push-Location apps/desktop/release
+          try {
+            $checksums = Get-ChildItem -File -Filter '*.sha256' | ForEach-Object { $_.Name }
+            if (!$checksums) { throw 'No se generó el SHA-256 del instalador.' }
+            foreach ($checksum in $checksums) {
+              gh release upload $env:GITHUB_REF_NAME $checksum --repo Tykillita/Umbral --clobber
+              if ($LASTEXITCODE -ne 0) { throw "No se pudo adjuntar el checksum $checksum a la release." }
+            }
+          } finally {
+            Pop-Location
+          }
