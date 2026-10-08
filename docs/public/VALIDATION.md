@@ -62,6 +62,13 @@ Compilada y probada en el equipo de desarrollo el 2026-10-07:
 - `apps/desktop/smoke_electron.py` sobre el paquete desempaquetado de esa misma compilación: **12/12 comprobaciones**, cero errores de página y cero solicitudes externas; SHA-256 del ejecutable probado `d36a5980cc38522a3487ab0e9a80bd004f7b13e9e872731d5d9669413e538a60`.
 - No había perfiles ChatGPT activos ni sesión OAuth de Claude en este equipo al comprobarlo; las inferencias con cuentas reales quedan pendientes.
 
+**Actualización real con GitHub Releases, 2026-10-08 (Windows; v0.1.0 → v0.1.1):**
+
+- La app v0.1.0 detectó la release nueva y descargó el instalador oficial de [v0.1.1](https://github.com/Tykillita/Umbral/releases/tag/v0.1.1). El instalador Windows x64 fue de **823.288.574 bytes** y su SHA-256 fue `0ddd9d23b37128ddf4cfb965ea88be746b7ea34f306cec4bcdfb8d36853146c6`, coincidente con el digest del asset de GitHub. La release anterior usada como origen fue [v0.1.0](https://github.com/Tykillita/Umbral/releases/tag/v0.1.0).
+- El actualizador cerró la versión anterior, ejecutó NSIS y la nueva app se abrió después de que terminara la instalación. La primera apertura se inició mientras NSIS todavía desplegaba archivos y mostró un error temporal del motor; al cerrar esa instancia y abrir de nuevo tras finalizar NSIS, el motor local y la interfaz cargaron correctamente. El ejecutable instalado informó `ProductVersion 0.1.1.0` y `FileVersion 0.1.1`.
+- Comprobación local de continuidad: los 316 archivos registrados antes de reinstalar v0.1.0 seguían presentes tras actualizar; los archivos del snapshot anterior conservaron sus hashes. Los cambios se limitaron a la base SQLite/configuración y datos de caché que la app actualiza al abrir. La base SQLite activa y la copia de seguridad creada por el motor conservaron el mismo contenido lógico; no se publican datos ni rutas del perfil.
+- El workflow de release [37852126466](https://github.com/Tykillita/Umbral/actions/runs/37852126466) construyó y publicó el instalador y `latest.yml`, pero terminó con error al adjuntar el checksum. Se verificó el instalador contra el digest de GitHub y se adjuntó su archivo `.sha256` a mano. El fallo del paso de carga se corrigió en el workflow por el PR #11; la carga automática del checksum en una ejecución posterior del workflow sigue pendiente.
+
 ## 5. CI remota y despliegue alojado
 
 - **CI remota (GitHub Actions), 2026-10-08:** el PR #1 y la integración en `main` pasaron las 5 comprobaciones (higiene, API, pipeline, web, integración y E2E). En la primera ejecución del PR falló una prueba de zonas táctiles que depende del tiempo de la animación de pulsación (43 px en vez de 44 px en el ejecutor Linux); se corrigió esperando a que terminen las animaciones antes de medir (PR #2).
@@ -78,8 +85,8 @@ Esta prueba **no llama a Gemini real** y no acredita revisión humana.
 - Generación real con Gemini sostenida, el contador de cuota de Firestore de producción y el arranque en frío medido en Render.
 - Que Render entregue `CF-Connecting-IP` y el límite por visitante la use (las respuestas pasan por Cloudflare, pero la cabecera hacia el origen no se ha comprobado); si falta, se conserva el límite compartido por socket.
 - **Dos ciclos reales** del workflow diario, rechazo de un snapshot corrupto en producción y continuidad de casos archivados.
-- **Instalación en un Windows limpio**, uso sin internet y actualización del instalador sin pérdida de trabajo.
-- Ejecución de `release-desktop.yml` desde un tag estable y actualización real desde una versión previamente instalada mediante GitHub Releases; no se publica una release como parte de las pruebas locales.
+- **Instalación en un Windows limpio** y uso sin internet.
+- Una ejecución completa de `release-desktop.yml` desde un tag estable con carga automática del checksum. El workflow de v0.1.1 publicó el instalador y `latest.yml`, pero falló en ese último paso; el checksum de esa release se adjuntó manualmente. La actualización real v0.1.0 → v0.1.1 mediante GitHub Releases ya se ejecutó y se documenta arriba.
 - Inferencia real con cuentas conectadas de ChatGPT o Claude; no había sesión activa disponible al verificarlas el 2026-10-08.
 - **Revisión humana:** clasificación y geografía, agrupación de duplicados, sustento de afirmaciones, Precision@5 editorial de la agenda y el benchmark reservado de 20 consultas, que vive fuera de este repositorio y no se ha leído.
 - Paquete oficial congelado de noticias (el snapshot sigue siendo provisional).
