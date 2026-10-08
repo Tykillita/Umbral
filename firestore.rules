@@ -1,0 +1,9 @@
+// Solo el backend (Admin SDK) accede a Firestore; los clientes web no leen ni escriben directamente.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

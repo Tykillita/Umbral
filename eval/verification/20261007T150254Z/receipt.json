@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "evaluationKind": "synthetic_control",
+  "command": "eval/verify_eval_tools.py",
+  "ranAt": "2026-10-07T15:02:56Z",
+  "checks": [
+    "classification CLI",
+    "baseline comparison CLI",
+    "raw Brier/ECE",
+    "pair PR CLI",
+    "agenda P@5 CLI",
+    "claim support/coverage CLI",
+    "snapshot tamper rejection"
+  ],
+  "commands": [
+    {
+      "command": [
+        "<repo>\\pipeline\\.venv\\Scripts\\python.exe",
+        "<repo>\\eval\\run_classification.py",
+        "--labels",
+        "<repo>\\eval\\verification\\20261007T150254Z\\classification-labels.synthetic.jsonl",
+        "--snapshot",
+        "laya_control=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de",
+        "--snapshot",
+        "baseline_control=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-b3a8f170",
+        "--out",
+        "<repo>\\eval\\verification\\20261007T150254Z\\classification.synthetic.json"
+      ],
+      "exitCode": 0,
+      "stdout": "laya_control all n=2 macroF1=0.6666666666666666 accuracy=0.5 geo macroF1=1.0\nlaya_control uniform n=2 macroF1=0.6666666666666666 accuracy=0.5 geo macroF1=1.0\nbaseline_control all n=2 macroF1=1.0 accuracy=1.0 geo macroF1=1.0\nbaseline_control uniform n=2 macroF1=1.0 accuracy=1.0 geo macroF1=1.0\n-> <repo>\\eval\\verification\\20261007T150254Z\\classification.synthetic.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<repo>\\pipeline\\.venv\\Scripts\\python.exe",
+        "<repo>\\eval\\run_clustering_eval.py",
+        "--labels",
+        "<repo>\\eval\\verification\\20261007T150254Z\\pairs-labels.synthetic.jsonl",
+        "--snapshot",
+        "control=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de",
+        "--out",
+        "<repo>\\eval\\verification\\20261007T150254Z\\pairs.synthetic.json"
+      ],
+      "exitCode": 0,
+      "stdout": "control        P=0.5 R=0.5 F1=0.5 tp=1 fp=1 fn=1 tn=1\n-> <repo>\\eval\\verification\\20261007T150254Z\\pairs.synthetic.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<repo>\\pipeline\\.venv\\Scripts\\python.exe",
+        "<repo>\\eval\\run_agenda_eval.py",
+        "--labels",
+        "<repo>\\eval\\verification\\20261007T150254Z\\agenda-labels.synthetic.jsonl",
+        "--ranking",
+        "<repo>\\eval\\verification\\20261007T150254Z\\agenda.synthetic.json",
+        "--snapshot",
+        "<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de",
+        "--out",
+        "<repo>\\eval\\verification\\20261007T150254Z\\agenda-result.synthetic.json"
+      ],
+      "exitCode": 0,
+      "stdout": "agenda juicios=1; provenance=synthetic_control -> <repo>\\eval\\verification\\20261007T150254Z\\agenda-result.synthetic.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<repo>\\pipeline\\.venv\\Scripts\\python.exe",
+        "<repo>\\eval\\run_claims_eval.py",
+        "--labels",
+        "<repo>\\eval\\verification\\20261007T150254Z\\claims-labels.synthetic.jsonl",
+        "--snapshot",
+        "<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de",
+        "--out",
+        "<repo>\\eval\\verification\\20261007T150254Z\\claims-result.synthetic.json"
+      ],
+      "exitCode": 0,
+      "stdout": "afirmaciones=2; juicios=2; provenance=synthetic_control -> <repo>\\eval\\verification\\20261007T150254Z\\claims-result.synthetic.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "<repo>\\pipeline\\.venv\\Scripts\\python.exe",
+        "<repo>\\eval\\run_classification.py",
+        "--labels",
+        "<repo>\\eval\\verification\\20261007T150254Z\\classification-labels.synthetic.jsonl",
+        "--snapshot",
+        "tampered=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de",
+        "--out",
+        "<repo>\\eval\\verification\\20261007T150254Z\\must-not-exist.json"
+      ],
+      "exitCode": 1,
+      "expectedFailure": "SHA-256 tamper rejected"
+    }
+  ],
+  "fixtureSnapshots": [
+    "20261007-1b6958de",
+    "20261007-b3a8f170"
+  ],
+  "evaluatorSha256": "704f118d0a922a901b0e246d0a5a1036796ffe472e23f3a5acc824c2c65f6e28",
+  "note": "VALIDACIÓN DE HERRAMIENTAS con números analíticos sintéticos; no métricas humanas ni desempeño Laya."
+}

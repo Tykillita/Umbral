@@ -1,0 +1,27 @@
+{
+  "command": "<repo>\\eval\\run_claims_eval.py --labels <repo>\\eval\\verification\\20261007T150254Z\\claims-labels.synthetic.jsonl --snapshot <repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de --out <repo>\\eval\\verification\\20261007T150254Z\\claims-result.synthetic.json",
+  "ranAt": "2026-10-07T15:02:56Z",
+  "snapshotId": "20261007-1b6958de",
+  "evaluationKind": "synthetic_control",
+  "facts": 2,
+  "reviewedFacts": 2,
+  "factualCitationCoverageStructural": {
+    "numerator": 1,
+    "denominator": 2,
+    "value": 0.5
+  },
+  "humanSupport": {
+    "numerator": 1,
+    "denominator": 2,
+    "value": 0.5
+  },
+  "humanCitationCorrect": {
+    "numerator": 1,
+    "denominator": 2,
+    "value": 0.5
+  },
+  "manifestSha256": "4bddcaa5d61b6117f09c4018ccf425b827020990c8b3c90dfd8ca293ce0ca84a",
+  "labelsSha256": "c64c6162a5e4125efc77971054397210b9ead5f8fc75cff23d1bbe91ecd49eb1",
+  "evaluatorSha256": "6d9370e74f38e9845760694e9981141af37d9b0acf3920401e064a315ff2ea1b",
+  "note": "Validez de campos/IDs no prueba sustento; los juicios requieren revisión independiente."
+}

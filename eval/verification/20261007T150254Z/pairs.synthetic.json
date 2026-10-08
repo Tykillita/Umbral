@@ -1,0 +1,46 @@
+{
+  "command": "<repo>\\eval\\run_clustering_eval.py --labels <repo>\\eval\\verification\\20261007T150254Z\\pairs-labels.synthetic.jsonl --snapshot control=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de --out <repo>\\eval\\verification\\20261007T150254Z\\pairs.synthetic.json",
+  "ranAt": "2026-10-07T15:02:55Z",
+  "python": "3.12.14",
+  "pairsLabeled": 4,
+  "positives": 2,
+  "labelers": [
+    "Deterministic test control"
+  ],
+  "results": {
+    "control": {
+      "snapshotId": "20261007-1b6958de",
+      "classifier": "laya",
+      "skippedPairsNotInSnapshot": 0,
+      "manifestSha256": "4bddcaa5d61b6117f09c4018ccf425b827020990c8b3c90dfd8ca293ce0ca84a",
+      "tp": 1,
+      "fp": 1,
+      "fn": 1,
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "tn": 1,
+      "byStratum": {
+        "synthetic_control": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "tn": 1
+        }
+      },
+      "linkMethods": {
+        "synthetic_control": true
+      },
+      "caveat": "Pares CANDIDATOS (BM25+RapidFuzz) etiquetados por revisor único; recall sobre pares candidatos, no sobre el universo."
+    }
+  },
+  "labelMethod": [
+    "synthetic_control"
+  ],
+  "evaluationKind": "synthetic_control",
+  "labelsSha256": "2f7ea975e0f926e824596cf6028ca1a90e5b6022c7ae064d19d27ccc69ca7629",
+  "evaluatorSha256": "6fb0e2efd3c55e5324154005b98ced9cb7d717a9b25137bb69f1312c39f31321"
+}

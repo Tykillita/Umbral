@@ -1,0 +1,12 @@
+{
+  "snapshotId": "20261007-1b6958de",
+  "rulesVersion": "synthetic-scoring-v1",
+  "items": [
+    {
+      "id": "synthetic_A"
+    },
+    {
+      "id": "synthetic_B"
+    }
+  ]
+}

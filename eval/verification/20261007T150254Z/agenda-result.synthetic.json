@@ -1,0 +1,14 @@
+{
+  "command": "<repo>\\eval\\run_agenda_eval.py --labels <repo>\\eval\\verification\\20261007T150254Z\\agenda-labels.synthetic.jsonl --ranking <repo>\\eval\\verification\\20261007T150254Z\\agenda.synthetic.json --snapshot <repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de --out <repo>\\eval\\verification\\20261007T150254Z\\agenda-result.synthetic.json",
+  "ranAt": "2026-10-07T15:02:56Z",
+  "snapshotId": "20261007-1b6958de",
+  "rulesVersion": "synthetic-scoring-v1",
+  "evaluationKind": "synthetic_control",
+  "judgments": 1,
+  "precisionAt5": 0.2,
+  "manifestSha256": "4bddcaa5d61b6117f09c4018ccf425b827020990c8b3c90dfd8ca293ce0ca84a",
+  "rankingSha256": "d20267c77e2945392c6372672d322d2895073d30b24138aa97dca84355fb9b1b",
+  "labelsSha256": "19d35cd2ce1c3a39a3a6bd510c33575b8bd99c07696737086b97737e448e7f1e",
+  "evaluatorSha256": "b1ba77db81e8c6d7337df123cf39c6ce75748ff70dc405d71c9918b7d32f0ee7",
+  "note": "Juicios independientes de agenda; no confundir con recuperación de noticias."
+}

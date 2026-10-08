@@ -1,0 +1,66 @@
+{"id": "os00", "title": "Hallan sin vida a un joven con heridas de arma blanca en una vivienda", "expected": "out_of_scope"}
+{"id": "os01", "title": "Policía aprehende a sospechosos de robar una tienda de conveniencia", "expected": "out_of_scope"}
+{"id": "os02", "title": "Condenan a 20 años de cárcel a hombre por homicidio de su vecino", "expected": "out_of_scope"}
+{"id": "os03", "title": "Detienen a conductor ebrio tras chocar contra un poste", "expected": "out_of_scope"}
+{"id": "os04", "title": "Balacera deja dos heridos en un barrio de la ciudad", "expected": "out_of_scope"}
+{"id": "os05", "title": "Mujer denuncia que fue víctima de una estafa por redes sociales", "expected": "out_of_scope"}
+{"id": "os06", "title": "Incautan paquetes de droga en un operativo antidrogas", "expected": "out_of_scope"}
+{"id": "os07", "title": "Selección nacional de fútbol vence 2-1 a su rival en partido amistoso", "expected": "out_of_scope"}
+{"id": "os08", "title": "Equipo de béisbol gana el campeonato tras once entradas", "expected": "out_of_scope"}
+{"id": "os09", "title": "Tenista lidera el ranking mundial después de ganar el torneo", "expected": "out_of_scope"}
+{"id": "os10", "title": "Boxeador defenderá su título el próximo mes en Las Vegas", "expected": "out_of_scope"}
+{"id": "os11", "title": "Real Madrid y Barcelona empatan en el clásico", "expected": "out_of_scope"}
+{"id": "os12", "title": "Cantante lanza nuevo álbum y anuncia gira por Latinoamérica", "expected": "out_of_scope"}
+{"id": "os13", "title": "Actriz confirma su compromiso con su pareja tras años de relación", "expected": "out_of_scope"}
+{"id": "os14", "title": "Reina de belleza viaja para participar en el certamen internacional", "expected": "out_of_scope"}
+{"id": "os15", "title": "Famoso presentador revela detalles de su divorcio", "expected": "out_of_scope"}
+{"id": "os16", "title": "Estrenan película que lidera la taquilla este fin de semana", "expected": "out_of_scope"}
+{"id": "os17", "title": "Humorista sorprende con un video viral en redes sociales", "expected": "out_of_scope"}
+{"id": "os18", "title": "Perro rescatado se hace viral por reunirse con su dueño", "expected": "out_of_scope"}
+{"id": "os19", "title": "Horóscopo de hoy: qué dicen los astros para cada signo", "expected": "out_of_scope"}
+{"id": "os20", "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China", "expected": "out_of_scope"}
+{"id": "os21", "title": "Rusia y Ucrania intercambian prisioneros de guerra", "expected": "out_of_scope"}
+{"id": "os22", "title": "Parlamento europeo debate la política migratoria del bloque", "expected": "out_of_scope"}
+{"id": "os23", "title": "Elecciones en Francia: el partido de derecha lidera las encuestas", "expected": "out_of_scope"}
+{"id": "os24", "title": "Papa pide por la paz en Oriente Medio durante su audiencia semanal", "expected": "out_of_scope"}
+{"id": "os25", "title": "Murió el reconocido escritor a los 85 años", "expected": "out_of_scope"}
+{"id": "os26", "title": "Médicos advierten sobre los beneficios de dormir ocho horas", "expected": "out_of_scope"}
+{"id": "os27", "title": "Receta fácil de arroz con pollo para el almuerzo familiar", "expected": "out_of_scope"}
+{"id": "os28", "title": "Cómo elegir el mejor teléfono celular según tu presupuesto", "expected": "out_of_scope"}
+{"id": "os29", "title": "Lanzan nuevo videojuego que rompe récords de ventas", "expected": "out_of_scope"}
+{"id": "os30", "title": "Incendio destruye una casa y deja a una familia sin hogar", "expected": "out_of_scope"}
+{"id": "os31", "title": "Accidente de tránsito deja un muerto en la carretera", "expected": "out_of_scope"}
+{"id": "os32", "title": "Diputados discuten entre sí durante la sesión de la comisión", "expected": "out_of_scope"}
+{"id": "os33", "title": "Declaraciones de un político generan polémica en redes", "expected": "out_of_scope"}
+{"id": "os34", "title": "Estudiantes celebran el día del padre en una escuela", "expected": "out_of_scope"}
+{"id": "os35", "title": "Misa en honor a un santo reúne a miles de fieles", "expected": "out_of_scope"}
+{"id": "in_economia_0", "title": "Inflación anual se ubicó en 0,5 % según el instituto de estadística", "expected": "economia"}
+{"id": "in_economia_1", "title": "Economía crece 3,2 % en el primer semestre, informa el ministerio de economía", "expected": "economia"}
+{"id": "in_economia_2", "title": "Desempleo baja al 7 % y se crean nuevos puestos de trabajo", "expected": "economia"}
+{"id": "in_economia_3", "title": "Gobierno recauda más impuestos y reduce el déficit fiscal", "expected": "economia"}
+{"id": "in_economia_4", "title": "Bancos reportan aumento de los préstamos al sector empresarial", "expected": "economia"}
+{"id": "in_logistica_canal_0", "title": "Canal de Panamá aumenta los tránsitos diarios de buques neopanamax", "expected": "logistica_canal"}
+{"id": "in_logistica_canal_1", "title": "Puerto de contenedores moviliza récord de carga en el trimestre", "expected": "logistica_canal"}
+{"id": "in_logistica_canal_2", "title": "Autoridad del Canal anuncia nueva reserva de tránsitos por sequía", "expected": "logistica_canal"}
+{"id": "in_logistica_canal_3", "title": "Naviera abre ruta marítima con escala en el puerto de Colón", "expected": "logistica_canal"}
+{"id": "in_logistica_canal_4", "title": "Zona Libre de Colón reporta alza en reexportaciones", "expected": "logistica_canal"}
+{"id": "in_turismo_0", "title": "Llegada de turistas internacionales crece 12 % este año", "expected": "turismo"}
+{"id": "in_turismo_1", "title": "Hoteles de Bocas del Toro alcanzan alta ocupación en el feriado", "expected": "turismo"}
+{"id": "in_turismo_2", "title": "Aerolínea abre nueva ruta directa para atraer visitantes a Panamá", "expected": "turismo"}
+{"id": "in_turismo_3", "title": "Autoridad de Turismo promociona destinos en una feria internacional", "expected": "turismo"}
+{"id": "in_turismo_4", "title": "Cruceros arriban a Colón con miles de pasajeros", "expected": "turismo"}
+{"id": "in_servicios_publicos_0", "title": "Idaan anuncia corte de agua potable en varios corregimientos", "expected": "servicios_publicos"}
+{"id": "in_servicios_publicos_1", "title": "Apagón afecta a miles de usuarios de electricidad en la capital", "expected": "servicios_publicos"}
+{"id": "in_servicios_publicos_2", "title": "Ministerio de Salud inicia campaña de vacunación en escuelas", "expected": "servicios_publicos"}
+{"id": "in_servicios_publicos_3", "title": "Meduca anuncia el calendario del año escolar y nuevos docentes", "expected": "servicios_publicos"}
+{"id": "in_servicios_publicos_4", "title": "Línea del Metro amplía su horario para los usuarios", "expected": "servicios_publicos"}
+{"id": "in_eventos_naturales_0", "title": "Sismo de magnitud 4,8 se siente en Chiriquí, informa Sinaproc", "expected": "eventos_naturales"}
+{"id": "in_eventos_naturales_1", "title": "Lluvias intensas provocan inundaciones en Darién", "expected": "eventos_naturales"}
+{"id": "in_eventos_naturales_2", "title": "Alerta por oleaje y marejadas en la costa del Pacífico", "expected": "eventos_naturales"}
+{"id": "in_eventos_naturales_3", "title": "Sequía reduce el nivel del lago Gatún", "expected": "eventos_naturales"}
+{"id": "in_eventos_naturales_4", "title": "Tormenta tropical se acerca al Caribe centroamericano", "expected": "eventos_naturales"}
+{"id": "in_regulacion_0", "title": "Asamblea aprueba en tercer debate proyecto de ley de contrataciones públicas", "expected": "regulacion"}
+{"id": "in_regulacion_1", "title": "Gobierno publica decreto que reglamenta la ley de zonas francas", "expected": "regulacion"}
+{"id": "in_regulacion_2", "title": "Superintendencia de Bancos emite nueva resolución sobre cuentas", "expected": "regulacion"}
+{"id": "in_regulacion_3", "title": "Corte Suprema declara inconstitucional una norma tributaria", "expected": "regulacion"}
+{"id": "in_regulacion_4", "title": "Reforma a la ley de la seguridad social entra en vigencia", "expected": "regulacion"}

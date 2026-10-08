@@ -1,0 +1,2 @@
+{"raw": {"publishedAt": "31/31/2026", "title": "Registro con fecha inválida (fixture)"}, "reasonCodes": ["invalid_date"], "reasons": ["fecha inválida"], "rejectId": "fx_rej_1", "rejectedAt": "2026-10-07T11:50:00Z", "source": "fixture"}
+{"raw": {"title": null, "url": "https://fixture.example/sin-titulo"}, "reasonCodes": ["missing_title"], "reasons": ["título ausente"], "rejectId": "fx_rej_2", "rejectedAt": "2026-10-07T11:50:00Z", "source": "fixture"}

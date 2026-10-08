@@ -1,0 +1,126 @@
+name: Despliegue
+
+# Orquestador único de la publicación. Tras una CI aprobada en main:
+#   1) Render despliega ESE commit (hook con ref) y se espera a que la API lo sirva, íntegra y en modo público;
+#   2) solo entonces se compila y publica Firebase Hosting;
+#   3) se ejecuta la prueba online contra las URL reales.
+# Si el paso 1 falla, Hosting no se toca. Para recuperar un despliegue anterior: «Run workflow» con su SHA.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: SHA completo (40 hex) a desplegar; vacío = punta actual de main
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: despliegue-produccion
+  cancel-in-progress: false
+
+env:
+  WEB_URL: https://site-umbral.web.app
+
+jobs:
+  desplegar:
+    name: Render, verificación, Hosting y prueba online
+    if: >-
+      github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' ||
+      github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Determinar el commit
+        id: commit
+        env:
+          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+          INPUT_SHA: ${{ github.event.inputs.sha }}
+          MAIN_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          sha="${RUN_SHA:-${INPUT_SHA:-$MAIN_SHA}}"
+          sha="$(echo "$sha" | tr 'A-F' 'a-f')"
+          [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || { echo "SHA no válido."; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+      - name: Comprobar la configuración
+        env:
+          PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          FIREBASE: ${{ secrets.FIREBASE_DEPLOY_SERVICE_ACCOUNT }}
+        run: |
+          set -euo pipefail
+          case "$PUBLIC_API_URL" in https://*.onrender.com) ;; *) echo "Falta la variable PUBLIC_API_URL (https://<servicio>.onrender.com)."; exit 1 ;; esac
+          [ -n "$HOOK" ] || { echo "Falta el secreto RENDER_DEPLOY_HOOK_URL."; exit 1; }
+          [ -n "$FIREBASE" ] || { echo "Falta el secreto FIREBASE_DEPLOY_SERVICE_ACCOUNT."; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.commit.outputs.sha }}
+          persist-credentials: false
+
+      - name: Pedir a Render el despliegue de este commit
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          case "$HOOK" in https://api.render.com/deploy/*) ;; *) echo "RENDER_DEPLOY_HOOK_URL no tiene el formato esperado."; exit 1 ;; esac
+          sep='?'
+          case "$HOOK" in *\?*) sep='&' ;; esac
+          curl --fail --silent --show-error --max-time 60 -X POST "${HOOK}${sep}ref=${SHA}" > /dev/null
+          echo "Despliegue solicitado a Render."
+      - name: Esperar a que la API sirva este commit
+        env:
+          PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          mkdir -p .production
+          python3 scripts/wait_for_deploy.py --api-url "$PUBLIC_API_URL" --sha "$SHA" \
+            --web-origin "$WEB_URL" --timeout 1800 --interval 15 --out .production/render-receipt.json
+
+      - id: build
+        uses: ./.github/actions/online-build
+        with:
+          api-url: ${{ vars.PUBLIC_API_URL }}
+          feed-url: ${{ env.WEB_URL }}/data/
+      - name: Publicar Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_DEPLOY_SERVICE_ACCOUNT }}
+          projectId: site-umbral
+          channelId: live
+      - name: Prueba online contra las URL reales
+        env:
+          PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+        run: |
+          python3 scripts/verify_hosted.py --web-url "$WEB_URL" --api-url "$PUBLIC_API_URL" \
+            --expected-snapshot-file .production/candidate-id --wait-seconds 960 --out .production/hosted-receipt.json
+      - name: Resumen
+        if: always()
+        env:
+          SHA: ${{ steps.commit.outputs.sha }}
+          SNAPSHOT: ${{ steps.build.outputs.snapshot-id }}
+          API: ${{ vars.PUBLIC_API_URL }}
+        run: |
+          {
+            echo "### Despliegue"
+            echo "- Commit: $SHA"
+            echo "- Snapshot: $SNAPSHOT"
+            echo "- Web: $WEB_URL"
+            echo "- API: $API"
+            echo "- Para recuperar el último despliegue válido, ejecuta este workflow con su SHA."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recibos-despliegue
+          path: |
+            .production/render-receipt.json
+            .production/hosted-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30

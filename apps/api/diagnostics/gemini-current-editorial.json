@@ -1,0 +1,50 @@
+{
+  "startedAtUtc": "2026-10-07T15:37:27.354007+00:00",
+  "model": "gemini-3.1-flash-lite",
+  "stage": "editorial",
+  "realNetwork": true,
+  "retryAttempts": 1,
+  "calls": [
+    {
+      "name": "full_editorial",
+      "latencySeconds": 30.25,
+      "generationMode": "plantilla",
+      "fallbackReason": "proveedor_no_disponible",
+      "fallbackDetail": "Gemini no disponible: ReadTimeout",
+      "validationOk": true,
+      "factualCitationCoverage": 1.0,
+      "claimCount": 2,
+      "wordCounts": {
+        "brief": 75,
+        "script": 122,
+        "socialCopy": 26
+      },
+      "scriptSecondsEstimate": 48.8,
+      "citationFields": [
+        "outlet",
+        "title"
+      ],
+      "modelUsed": null,
+      "usage": null
+    }
+  ],
+  "result": "fallback",
+  "snapshotId": "20261007-cfa338b6",
+  "classifier": "laya",
+  "containsFixtures": false,
+  "topicId": "evt_889d969cced3d8bf",
+  "category": "logistica_canal",
+  "geoRelevance": "panama",
+  "rulesVersion": "scoring-v1",
+  "humanReview": false,
+  "maxEditorialCalls": 1,
+  "articleCount": 991,
+  "publicSourceUrls": [
+    "https://www.panamaamerica.com.pa/canal-de-panama-pospone-restricciones-de-calado-gracias-las-lluvias-1266715"
+  ],
+  "promptBytes": 885,
+  "promptSha256": "0cfd5ddacf49e475c6b613ff30655e098ef9f67d1d048b78588d0064f6f5ffb7",
+  "schemaBytes": 1883,
+  "schemaSha256": "84e76ea911fd4ee9eeb88cbe5b4db71c90234de8f59411e6c60629e19be5c268",
+  "completedAtUtc": "2026-10-07T15:37:57.819079+00:00"
+}

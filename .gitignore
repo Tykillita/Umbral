@@ -1,0 +1,111 @@
+# secrets / local state
+.env
+.env.*
+!.env.example
+*.pem
+service-account*.json
+*firebase-adminsdk*.json
+firebase-service-account*.json
+.umbral-local/
+*.sqlite
+*.sqlite3
+*.db
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# model weights (se descargan aparte)
+models/
+*.safetensors
+*.bin
+*.gguf
+
+# node / astro
+node_modules/
+dist/
+dist-public/
+dist-online/
+.astro/
+.firebase/
+playwright-report/
+test-results/
+
+# benchmark reservado: NUNCA en el repo público
+eval/held-out/
+eval/reserved/
+*.reserved.*
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# pruebas (calidad)
+tests/.pytest-tmp/
+.pytest-tmp/
+tests/.results/
+
+# datos crudos y temporales del pipeline (derechos: no se redistribuyen)
+data/raw/
+data/snapshots/_tmp_build/
+data/snapshots/_tmp_build_*/
+.pytest_tmp/
+tests/.browsers/
+
+# logs de emuladores Firebase
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*-debug.log
+
+# artefactos de producción y escritorio (sin secretos ni pesos en Git)
+.production/
+apps/desktop/build/
+apps/desktop/release/
+apps/desktop/.runtime/
+apps/desktop/.qa/
+apps/desktop/staging/
+gha-creds-*.json
+
+# --- Publicación: solo se versiona lo que esta lista autoriza ---------------
+# Instrucciones privadas para agentes, coordinación, traspasos, tableros,
+# prompts y registros internos permanecen en local.
+CLAUDE.md
+AGENTS.md
+.claude/
+docs/board/
+docs/notion/
+docs/reto-tvn-media.pdf
+apps/web/public/brand/concepts/
+.coverage
+coverage.xml
+data/*.log
+data/raw/
+
+# Markdown: todo ignorado salvo la lista explícita (la verifica scripts/check_public_files.py).
+*.md
+!/README.md
+!/README.es.md
+!/CHANGELOG.md
+!/SECURITY.md
+!/apps/web/README.md
+!/docs/public/*.md
+!/docs/contracts/api-draft.md
+!/docs/contracts/api-public.md
+!/docs/contracts/snapshot-schema.md
+!/eval/README.md
+!/eval/labels/LEEME.md
+!/tests/e2e/TESTIDS.md
+!/data/snapshots/*/DATA_DICTIONARY.md
+!/data/snapshots/*/TERMS_OF_USE.md
+
+# Datos: solo el corte vigente se versiona; los intermedios quedan en local.
+data/snapshots/*
+!data/snapshots/CURRENT
+!data/snapshots/20261007-cfa338b6/

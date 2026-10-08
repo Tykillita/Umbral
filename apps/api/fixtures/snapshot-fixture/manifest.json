@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshotId": "20261007-480f234e",
+  "version": "fixture-0.1.0",
+  "provisional": true,
+  "containsFixtures": true,
+  "cutoffUtc": "2026-10-07T12:00:00Z",
+  "createdAt": "2026-10-07T11:50:00Z",
+  "pipeline": {
+    "name": "umbral_api.fixture_builder",
+    "version": "0.1.0",
+    "python": "3.12.14"
+  },
+  "window": {
+    "startUtc": "2026-09-07T12:00:00Z",
+    "endUtc": "2026-10-07T12:00:00Z",
+    "days": 30,
+    "widenedTo90": false,
+    "note": "Fixture sintético."
+  },
+  "queries": [],
+  "files": {
+    "articles.jsonl": {
+      "sha256": "cb46a37c63c0265ec60bd7d8cc9917026464c65b10a129ffe9f3949e9de4d5f3",
+      "bytes": 16051,
+      "records": 20
+    },
+    "indicators.jsonl": {
+      "sha256": "8be45299510e41feb85c7d0d197d6b95c55a59500c73774e4aaed7fc97f332fb",
+      "bytes": 10557,
+      "records": 21
+    },
+    "predictions.jsonl": {
+      "sha256": "b5cdf97c49b893bd9471f47fdff791225b7b111634072432690ede96b05a3042",
+      "bytes": 9598,
+      "records": 20
+    },
+    "clusters.jsonl": {
+      "sha256": "32a0bc047f21882ca1690bc8a0a4822a81ab07d007851d5880ae5e6efc11d841",
+      "bytes": 8274,
+      "records": 14
+    },
+    "invalid.jsonl": {
+      "sha256": "eb51c1d541c84c5335b045c915ec66f6ee0c2b9da3a0e3b495c57c9467a51801",
+      "bytes": 457,
+      "records": 2
+    }
+  },
+  "counts": {
+    "articlesValid": 20,
+    "articlesInvalid": 2,
+    "tvn": 8,
+    "gdelt": 0,
+    "indicatorRows": 21,
+    "indicatorValues": 13,
+    "clusters": 14,
+    "predictions": 20
+  },
+  "classifier": {
+    "classifier": "baseline",
+    "modelId": "fixture-baseline",
+    "modelVersion": "fixture",
+    "runAt": "2026-10-07T11:50:00Z",
+    "device": "none",
+    "predictionsInputSha256": "416417625a2ac922f260e1b37ef136f52ad0e4accbf19096e911112eec0df0e1",
+    "articlesSha256": "cb46a37c63c0265ec60bd7d8cc9917026464c65b10a129ffe9f3949e9de4d5f3"
+  },
+  "sources": [
+    {
+      "id": "fixture-news",
+      "name": "Noticias sintéticas (fixture)",
+      "url": "https://fixture.example",
+      "extractedAt": "2026-10-07T11:50:00Z",
+      "coverage": "20 titulares sintéticos",
+      "fields": [
+        "title",
+        "url",
+        "outlet"
+      ],
+      "license": "Sintético",
+      "terms": "Solo pruebas",
+      "transformations": [
+        "fixture_builder"
+      ]
+    },
+    {
+      "id": "fixture-wb",
+      "name": "Indicadores sintéticos (fixture)",
+      "url": "https://fixture.example/worldbank",
+      "extractedAt": "2026-10-07T11:50:00Z",
+      "coverage": "7 series, valores sintéticos",
+      "fields": [
+        "value",
+        "unit"
+      ],
+      "license": "Sintético",
+      "terms": "No usar como datos reales",
+      "transformations": [
+        "fixture_builder"
+      ]
+    }
+  ],
+  "licenseNotes": "FIXTURE: todos los registros son sintéticos.",
+  "transformations": [
+    "fixture_builder"
+  ],
+  "snapshotHashInputs": "sha256(articles)+sha256(indicators)+sha256(predictions)+sha256(clusters)"
+}

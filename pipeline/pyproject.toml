@@ -1,0 +1,60 @@
+[project]
+name = "umbral-pipeline"
+version = "0.1.0"
+description = "Pipeline de datos de Umbral: ingesta TVN RSS + GDELT + Banco Mundial, validacion, clasificacion, duplicados y snapshot con manifest SHA-256."
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+dependencies = [
+  "httpx>=0.27",
+  "rapidfuzz>=3.9",
+  "rank-bm25>=0.2.2",
+  "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+# Laya (PyTorch + transformers). Pesado (~200 MB torch CPU + ~650 MB pesos HF). NO se instala en CI.
+laya = [
+  "laya==0.3.28",
+  "torch==2.14.1+cpu",
+  "transformers>=4.48",
+  "safetensors>=0.4",
+  "huggingface_hub>=0.20",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+  "mypy>=1.10",
+]
+
+[project.scripts]
+umbral-pipeline = "umbral_pipeline.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["umbral_pipeline"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["network: usa red real (se omite con -m 'not network')", "laya: requiere extra laya y pesos descargados"]
+addopts = "-m 'not network and not laya'"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]

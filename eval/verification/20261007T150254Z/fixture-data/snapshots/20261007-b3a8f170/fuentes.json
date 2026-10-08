@@ -1,0 +1,55 @@
+[
+  {
+    "id": "tvn_news_sitemap",
+    "name": "TVN Panamá – sitemap Google News público",
+    "url": "https://www.tvn-2.com/tvn_sitemap_google_news.xml",
+    "license": "Sin licencia abierta. Solo titular, URL y fecha de publicación declarada por el editor.",
+    "terms": "Sitemap enlazado desde robots.txt/índice oficial. No se conservan imágenes ni cuerpos. news:publication_date es publicación; lastmod no se utiliza como publicación.",
+    "extractedAt": null,
+    "transformations": [
+      "synthetic_control"
+    ]
+  },
+  {
+    "id": "tvn_rss",
+    "name": "TVN Panamá – feed RSS público",
+    "url": "https://www.tvn-2.com/rss/",
+    "license": "Sin licencia abierta. Solo se conservan metadatos (titular, URL, fecha).",
+    "terms": "El RSS observado contiene noticias, fechas y descripciones; eso no implica licencia abierta sobre artículos, videos o imágenes (PDF §12). No se redistribuyen descripciones/extractos ni cuerpos; reutilización de extractos requiere autorización explícita del patrocinador.",
+    "extractedAt": null,
+    "transformations": [
+      "synthetic_control"
+    ]
+  },
+  {
+    "id": "gdelt_doc",
+    "name": "GDELT DOC 2.0 API (ArtList)",
+    "url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts",
+    "license": "GDELT es de uso libre con atribución; la API no transfiere derechos sobre los artículos de los medios enlazados.",
+    "terms": "Máx. 250 artículos por consulta; 1 consulta cada 5 s. 'seendate' es detección, no publicación. Se guardan titular, URL, dominio, idioma y país del medio.",
+    "extractedAt": null,
+    "transformations": [
+      "synthetic_control"
+    ]
+  },
+  {
+    "id": "world_bank",
+    "name": "Banco Mundial – Indicators API v2",
+    "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+    "license": "CC BY 4.0 (salvo excepciones de terceros indicadas en los metadatos de cada indicador)",
+    "terms": "Atribución obligatoria («World Bank Open Data»); revisar excepciones de terceros por indicador. Los datos pueden revisarse; el período de referencia no coincide con el año de extracción.",
+    "extractedAt": null,
+    "transformations": [
+      "synthetic_control"
+    ]
+  },
+  {
+    "id": "fixture",
+    "name": "Fixtures sintéticos (T01–T04, T07)",
+    "url": "pipeline/umbral_pipeline/fixtures.py",
+    "license": "Sintéticos del equipo (MIT)",
+    "terms": "Dominios .example/.invalid; no representan noticias reales.",
+    "extractedAt": "2026-10-07T08:00:00Z",
+    "transformations": []
+  }
+]

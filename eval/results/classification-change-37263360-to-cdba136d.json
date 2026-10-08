@@ -1,0 +1,228 @@
+{
+ "changed": [
+  {
+   "articleId": "art_ae21e71d0bb9e24c",
+   "title": "TVN Media avanza en Merco Talento Panamá 2026 y reafirma su liderazgo como número uno en el sector de medios de comunicación",
+   "old": "economia",
+   "oldP": 0.6641,
+   "new": "indeterminado",
+   "newP": 0.8475
+  },
+  {
+   "articleId": "art_c0372f870560e3b0",
+   "title": "Líderes 360 | Mario Castrellón: la visión de un chef que convirtió la gastronomía panameña en una marca país",
+   "old": "turismo",
+   "oldP": 0.6443,
+   "new": "indeterminado",
+   "newP": 0.8748
+  },
+  {
+   "articleId": "art_f0fef5d22a5031ee",
+   "title": "Proyecto para aplicar 7% en compras digitales busca actualizar el Código Fiscal, explica viceministra de Economía",
+   "old": "regulacion",
+   "oldP": 0.9454,
+   "new": "economia",
+   "newP": 0.9002
+  },
+  {
+   "articleId": "art_1b78adf77f8f99cf",
+   "title": "Costa Coffee se expande a Panamá con dos nuevas tiendas operadas por el socio franquiciado Grupo Maritanos",
+   "old": "economia",
+   "oldP": 0.8488,
+   "new": "indeterminado",
+   "newP": 0.6358
+  },
+  {
+   "articleId": "art_141bcdfeaa6773ce",
+   "title": "ENA refuerza campaña informativa por trabajos en el intercambiador de Costa del Este, en el Corredor Sur de Agosto a Diciembre 2026",
+   "old": "logistica_canal",
+   "oldP": 0.6222,
+   "new": "indeterminado",
+   "newP": 0.8567
+  },
+  {
+   "articleId": "art_a82782945024c809",
+   "title": "El auge del fútbol panameño y la transformación del entretenimiento deportivo digital en Centroamérica",
+   "old": "economia",
+   "oldP": 0.709,
+   "new": "indeterminado",
+   "newP": 0.8194
+  },
+  {
+   "articleId": "art_4882cff83dce0997",
+   "title": "El bitcoin supera los 80.000 dólares, beneficiándose de la debilidad del dólar",
+   "old": "economia",
+   "oldP": 0.782,
+   "new": "indeterminado",
+   "newP": 0.4358
+  },
+  {
+   "articleId": "art_b87a31bdb29acff2",
+   "title": "WISS LATAM reúne a mujeres líderes y empresarias para impulsar la innovación y el liderazgo femenino",
+   "old": "economia",
+   "oldP": 0.9212,
+   "new": "indeterminado",
+   "newP": 0.8747
+  },
+  {
+   "articleId": "art_fa0d1b8a5d8a1977",
+   "title": "Tu Banco, tu Istmo: Banistmo presenta nueva identidad como parte del Grupo Financiero BSC",
+   "old": "economia",
+   "oldP": 0.6332,
+   "new": "indeterminado",
+   "newP": 0.713
+  },
+  {
+   "articleId": "art_4141cfd6a1f046f4",
+   "title": "Domingo Alonso entrega a SIXT Panamá su primera flota mediante arrendamiento operativo",
+   "old": "economia",
+   "oldP": 0.6924,
+   "new": "indeterminado",
+   "newP": 0.738
+  },
+  {
+   "articleId": "art_a41a9b13e0cb4979",
+   "title": "KFC presenta su nueva identidad de marca en Panamá y reafirma su evolución en la industria",
+   "old": "economia",
+   "oldP": 0.893,
+   "new": "indeterminado",
+   "newP": 0.8762
+  },
+  {
+   "articleId": "art_f3d679d286f41205",
+   "title": "Alcaldía de Panamá y Konzerta presentan Empleo 2.0 Powered by Konzerta",
+   "old": "economia",
+   "oldP": 0.7197,
+   "new": "indeterminado",
+   "newP": 0.9524
+  },
+  {
+   "articleId": "art_cdbf23d2e27ef2ed",
+   "title": "Panamá reúne a más de 400 líderes empresariales para debatir los desafíos de la inteligencia artificial",
+   "old": "logistica_canal",
+   "oldP": 0.7165,
+   "new": "indeterminado",
+   "newP": 0.849
+  },
+  {
+   "articleId": "art_a015ad17dff06457",
+   "title": "Empleo 2.0 Powered by Konzerta: Las claves de la feria laboral más grande del país",
+   "old": "indeterminado",
+   "oldP": 0.5957,
+   "new": "economia",
+   "newP": 0.7898
+  },
+  {
+   "articleId": "art_afc60a8aa9ab6dc9",
+   "title": "BRICS a nivel humano: cómo los programas de empleo fortalecen los lazos entre Rusia y Latinoamérica",
+   "old": "economia",
+   "oldP": 0.9397,
+   "new": "indeterminado",
+   "newP": 0.6117
+  },
+  {
+   "articleId": "art_2db16c5bd59fa99f",
+   "title": "BYD Panamá presenta su tecnología y anuncia su participación en Panamá Motor Show 2026",
+   "old": "economia",
+   "oldP": 0.8534,
+   "new": "indeterminado",
+   "newP": 0.4853
+  },
+  {
+   "articleId": "art_8581d3df61f86e88",
+   "title": "BYD Panamá reunió a representantes de medios de comunicación en su agencia de Calle 50 para realizar un Tech Talk dedicado a conocer de cerca la tecnología, innovación y propuesta de movilidad que distinguen a la marca.",
+   "old": "economia",
+   "oldP": 0.5918,
+   "new": "indeterminado",
+   "newP": 0.784
+  },
+  {
+   "articleId": "art_42c4b9b4ef8a1262",
+   "title": "Contenido Exclusivo: Coclé, se seca el campo",
+   "old": "servicios_publicos",
+   "oldP": 0.9483,
+   "new": "indeterminado",
+   "newP": 0.5312
+  },
+  {
+   "articleId": "art_aadab2ef62517fa1",
+   "title": "Asesinan a taxista en Remedios; fue hallado dentro de su vehículo con varias heridas",
+   "old": "eventos_naturales",
+   "oldP": 0.8673,
+   "new": "indeterminado",
+   "newP": 0.4836
+  },
+  {
+   "articleId": "art_048a031b6c2ae4f0",
+   "title": "Renace una estrella: Geely de Bahia Motors presenta el nuevo Starray en el Panama Motor Show 2026",
+   "old": "economia",
+   "oldP": 0.7292,
+   "new": "indeterminado",
+   "newP": 0.7034
+  },
+  {
+   "articleId": "art_f6ca5d164948b67b",
+   "title": "MOP solicita $43.1 millones para pagar compromisos y continuar obras en ejecución",
+   "old": "economia",
+   "oldP": 0.7739,
+   "new": "indeterminado",
+   "newP": 0.7348
+  },
+  {
+   "articleId": "art_59b4f2b8930e179f",
+   "title": "El inesperado carro de chatarra que sacó risas a Jorge Quirós, reportero de TVN Noticias",
+   "old": "eventos_naturales",
+   "oldP": 0.7098,
+   "new": "indeterminado",
+   "newP": 0.8984
+  },
+  {
+   "articleId": "art_34ec23de659835cc",
+   "title": "Parque Nacional Chagres celebra 42 años con siembra de especies nativas",
+   "old": "eventos_naturales",
+   "oldP": 0.696,
+   "new": "indeterminado",
+   "newP": 0.6306
+  },
+  {
+   "articleId": "art_e4bf8f806263e402",
+   "title": "Paul McCartney y Phil Collins cierran una herida de 24 años tras una inesperada llamada",
+   "old": "eventos_naturales",
+   "oldP": 0.5884,
+   "new": "indeterminado",
+   "newP": 0.8913
+  },
+  {
+   "articleId": "art_3d8e176a6b0d0474",
+   "title": "Diputada Yamireliz Chong y Benicio Robinson chocan en la Comisión de Presupuesto: 'no me interrumpa'",
+   "old": "economia",
+   "oldP": 0.8157,
+   "new": "indeterminado",
+   "newP": 0.5432
+  },
+  {
+   "articleId": "art_07a599a0354e6598",
+   "title": "Adultos mayores lo pierden todo tras incendio de su vivienda en Portachuelo",
+   "old": "eventos_naturales",
+   "oldP": 0.5632,
+   "new": "indeterminado",
+   "newP": 0.6089
+  },
+  {
+   "articleId": "art_c049aa1aad1d4868",
+   "title": "Marco Rubio apelará a la alianza estratégica en Grecia para proteger valores de Occidente",
+   "old": "economia",
+   "oldP": 0.6932,
+   "new": "indeterminado",
+   "newP": 0.901
+  },
+  {
+   "articleId": "art_5ddd9e6a9ade949b",
+   "title": "Brasil: Senado evalúa ampliar el descanso laboral como baza electoral de Lula",
+   "old": "economia",
+   "oldP": 0.9139,
+   "new": "indeterminado",
+   "newP": 0.9675
+  }
+ ]
+}

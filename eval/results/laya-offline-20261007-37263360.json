@@ -1,0 +1,61 @@
+{
+  "status": "ejecutado",
+  "test": "T10_Laya_cached_no_network",
+  "command": "eval/verify_laya_offline.py --snapshot data/snapshots/20261007-37263360 --out eval/results/laya-offline-20261007-37263360.json",
+  "ranAt": "2026-10-07T08:21:02Z",
+  "snapshotId": "20261007-37263360",
+  "manifestSha256": "6d5607c0d3d6cdfd0da8b48323aea9b25bfa385c77f71d2e898d464f1a6a69fd",
+  "classifier": {
+    "classifier": "laya",
+    "modelId": "convaiinnovations/laya/multilingual",
+    "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+    "layaPackageVersion": "0.3.28",
+    "torchVersion": "2.14.1+cpu",
+    "runAt": "2026-10-07T08:21:02Z",
+    "device": "cpu",
+    "loadSeconds": 5.9,
+    "forwardCalls": 1,
+    "threshold": 0.5,
+    "questions": {
+      "category": "choice 6+otro",
+      "geo": "choice panama/regional/none"
+    },
+    "note": "Probabilidades sin calibrar (calibrated=false)."
+  },
+  "prediction": {
+    "predictionId": "pred_86292f7aa35d033e",
+    "articleId": "art_ae21e71d0bb9e24c",
+    "inputHash": "e674aeb590dbbdc383565f64d0c8659a4fcb881e71bfd92697ad6968a92f0e06",
+    "task": "category",
+    "category": "economia",
+    "probability": 0.6641,
+    "probabilities": {
+      "economia": 0.6641,
+      "logistica_canal": 0.0359,
+      "turismo": 0.0338,
+      "servicios_publicos": 0.0259,
+      "eventos_naturales": 0.0052,
+      "regulacion": 0.0114,
+      "indeterminado": 0.2237
+    },
+    "threshold": 0.5,
+    "geoRelevance": "none",
+    "geoEvidence": [
+      "laya:none=0.514"
+    ],
+    "classifier": "laya",
+    "modelId": "convaiinnovations/laya/multilingual",
+    "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+    "predictedAt": "2026-10-07T08:21:02Z",
+    "calibrated": false,
+    "provisional": true
+  },
+  "dnsProbeBlocked": true,
+  "modelExternalAttemptsBlocked": 0,
+  "offlineFlags": {
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1"
+  },
+  "netblockLog": "<repo>\\eval\\results\\laya-offline-netblock.log",
+  "caveat": "Inferencia real sin red; no evaluación de exactitud ni macro-F1."
+}

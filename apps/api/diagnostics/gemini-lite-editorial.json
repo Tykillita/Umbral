@@ -1,0 +1,27 @@
+{
+  "startedAtUtc": "2026-10-07T08:20:15.239238+00:00",
+  "model": "gemini-3.1-flash-lite",
+  "stage": "editorial",
+  "realNetwork": true,
+  "retryAttempts": 1,
+  "calls": [
+    {
+      "name": "full_editorial",
+      "latencySeconds": 15.015,
+      "generationMode": "modelo",
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "validationOk": true,
+      "factualCitationCoverage": 1.0
+    }
+  ],
+  "result": "success",
+  "snapshotId": "20261007-37263360",
+  "classifier": "laya",
+  "containsFixtures": false,
+  "topicId": "evt_762aec0b02a3d659",
+  "promptBytes": 817,
+  "schemaBytes": 1883,
+  "schemaSha256": "84e76ea911fd4ee9eeb88cbe5b4db71c90234de8f59411e6c60629e19be5c268",
+  "completedAtUtc": "2026-10-07T08:20:30.296395+00:00"
+}

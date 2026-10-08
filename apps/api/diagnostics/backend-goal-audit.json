@@ -1,0 +1,112 @@
+{
+  "completedAtUtc": "2026-10-07T15:31:42.7730542+00:00",
+  "snapshotId": "20261007-cfa338b6",
+  "openapiSha256": "7a6092499fb09dc293152283579ef60edcd6fb7fac8f652bf504b597ff1a5e03",
+  "checks": [
+    {
+      "command": "uv run --extra firebase pytest",
+      "result": "196 passed",
+      "durationSeconds": 12.6
+    },
+    {
+      "command": "uv run --extra firebase ruff check src tests scripts",
+      "result": "All checks passed"
+    },
+    {
+      "command": "uv run --extra firebase mypy src",
+      "result": "Success: no issues found in 21 source files"
+    },
+    {
+      "command": "uv run --extra firebase python scripts/export_openapi.py --check",
+      "result": "openapi.json al día"
+    }
+  ],
+  "firebaseEmulatorReceipt": "tests/.results/firebase-local.json: 11 real SDK/browser checks passed; separate production/human limits retained",
+  "scope": "API local, firmas RSA y SDK de transporte controlados; CURRENT real y plantillas completas. No equivale a autorización personal ChatGPT/Claude ni deployment cloud.",
+  "sourceFiles": [
+    {
+      "path": "src/umbral_api/__init__.py",
+      "sha256": "08de4cb91f3e303985360ff0b20103e6654f8a5a08bbd06a636d967211c1fbbb"
+    },
+    {
+      "path": "src/umbral_api/app.py",
+      "sha256": "372f7429c370a673e83b8841f9bda307215b247123b1e7b15778f7c20209556f"
+    },
+    {
+      "path": "src/umbral_api/auth.py",
+      "sha256": "de7a0d85ca6b644742e5395fa76c0084aba2f83ac945396c31d7c528515da560"
+    },
+    {
+      "path": "src/umbral_api/config.py",
+      "sha256": "12030cea5f32136c1f3638cc5bae49f1ded2b5a61bbe86142ba8cba4ef20921f"
+    },
+    {
+      "path": "src/umbral_api/connections.py",
+      "sha256": "e35c77a29d50cb18e1a59d000320a08cebae6d61b9b119b580d00149ee2b04bf"
+    },
+    {
+      "path": "src/umbral_api/drafts.py",
+      "sha256": "9620b9505b1b13d8b82e706b0034f21214893f429b247c22e063626c62f9ee30"
+    },
+    {
+      "path": "src/umbral_api/errors.py",
+      "sha256": "430d5db4fb2c3368440fb4e5dcda4feeafb4ee45f5742d8a00de61f3038bf80c"
+    },
+    {
+      "path": "src/umbral_api/export.py",
+      "sha256": "2557bf4ea94d0290ac4860e3d800d5a68580441153f895a7b84ce204764a9e89"
+    },
+    {
+      "path": "src/umbral_api/fixture_builder.py",
+      "sha256": "24f8aca17fcbedfc24bb4998434ea406ae974af0ee573dbb93050f2a2889ede2"
+    },
+    {
+      "path": "src/umbral_api/main.py",
+      "sha256": "fa51486e4a744f7f88cb80f3812986e1f2991c63e4c40a4bd15575919a571ab3"
+    },
+    {
+      "path": "src/umbral_api/models.py",
+      "sha256": "91f067b471ef48f572284ee3362eb73e772511577cd4f71f802339f14b91e915"
+    },
+    {
+      "path": "src/umbral_api/providers.py",
+      "sha256": "275448fa031bfb591b782330e8b212b3f6a059d4a82d95662b72344fb7e2e148"
+    },
+    {
+      "path": "src/umbral_api/queries.py",
+      "sha256": "2b84e22a2a9df9eee3cdcb6999d3ffe4497f122dbfc27cf13864691af58a7f63"
+    },
+    {
+      "path": "src/umbral_api/retrieval.py",
+      "sha256": "99302cf6c7d03ef2a8675be5f7b5d3cfd6fee559a67779ec0c51ac865b85b647"
+    },
+    {
+      "path": "src/umbral_api/scoring.py",
+      "sha256": "59a83f042905704b649fc9e65fbda199b3eb564034bdb53383dddc6a2e58f0b3"
+    },
+    {
+      "path": "src/umbral_api/security.py",
+      "sha256": "3803397ed62829ea513b864442be3e2023e24eff7b25a5d0ab1de74d5220dceb"
+    },
+    {
+      "path": "src/umbral_api/services.py",
+      "sha256": "5bf9ef1f7773af94db83d1003e51962d785a2e8ca6455b3844827474313cc05f"
+    },
+    {
+      "path": "src/umbral_api/snapshot.py",
+      "sha256": "e29e6a8b537c7b33bc6ad5310827e527a2c5ae73e8684a23bc8e41dd2a1c5ab1"
+    },
+    {
+      "path": "src/umbral_api/storage.py",
+      "sha256": "2f5fd691696220686e8a410ba67c7d0e7ad70f1f830ed23ce1c704d573b8781f"
+    },
+    {
+      "path": "src/umbral_api/topics.py",
+      "sha256": "60976d051e2120c0f1b23126ee697a493bb3d49ec932907aad99c5e252e10fa2"
+    },
+    {
+      "path": "src/umbral_api/util.py",
+      "sha256": "06c09095e33875c731cdd8e28149bdbc34f6669458cd1b7303d67ff20e324b1e"
+    }
+  ]
+}

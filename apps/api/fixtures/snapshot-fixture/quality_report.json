@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshotId": "20261007-480f234e",
+  "generatedAt": "2026-10-07T11:50:00Z",
+  "label": "FIXTURE: reporte sintético, no corresponde a una ejecución real del pipeline",
+  "news": {
+    "fetched": 22,
+    "valid": 20,
+    "invalid": 2,
+    "invalidByCode": {
+      "invalid_date": 1,
+      "missing_title": 1
+    },
+    "uniqueCanonicalUrls": 20,
+    "tvnValid": 8,
+    "gdeltValid": 0,
+    "nullPublishedAt": 1,
+    "targetMet": false,
+    "minimumMet": false,
+    "tvnMinimumMet": false,
+    "widenedTo90Days": false
+  },
+  "indicators": {
+    "expectedCombinations": 1350,
+    "rows": 21,
+    "withValue": 13,
+    "missing": 8
+  },
+  "classification": {
+    "classifier": "baseline"
+  },
+  "clusters": {
+    "count": 14
+  },
+  "checks": [],
+  "warnings": [
+    "Fixture: no cumple los mínimos del reto (100 noticias, 20 de TVN, 1.350 indicadores)."
+  ]
+}

@@ -1,0 +1,58 @@
+# Render Blueprint de la API pública (plan Free, sin método de pago). Guía: docs/public/DEPLOYMENT.md.
+# No contiene secretos: las variables con `sync: false` se escriben en el panel de Render.
+# Los despliegues los ordena GitHub Actions (workflow «Despliegue») mediante el hook secreto con el SHA exacto;
+# Render no despliega por su cuenta al detectar commits.
+services:
+  - type: web
+    name: umbral-api
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    healthCheckPath: /api/v1/health
+    buildCommand: pip install uv==0.12.7 && cd apps/api && uv sync --frozen --no-dev --extra firebase
+    startCommand: cd apps/api && uv run --no-sync uvicorn umbral_api.main:app --host 0.0.0.0 --port $PORT --no-proxy-headers
+    autoDeployTrigger: "off"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: UMBRAL_STRICT_INTEGRITY
+        value: "1"
+      - key: UMBRAL_OFFLINE
+        value: "0"
+      - key: UMBRAL_AUTH_MODE
+        value: public
+      - key: UMBRAL_PERSISTENCE
+        value: none
+      - key: UMBRAL_LOCAL_MODE
+        value: "false"
+      - key: UMBRAL_TRUST_CLOUDFLARE_IP
+        value: "1"
+      - key: UMBRAL_ALLOW_FIXTURE
+        value: "false"
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite
+      - key: GEMINI_FALLBACK_MODEL
+        value: ""
+      - key: GEMINI_TIMEOUT_S
+        value: "30"
+      - key: GEMINI_CALLS_PER_USER_DAY
+        value: "20"
+      - key: GEMINI_GLOBAL_CALLS_PER_DAY
+        value: "20"
+      - key: UMBRAL_QUERIES_PER_MINUTE
+        value: "30"
+      - key: UMBRAL_DRAFTS_PER_MINUTE
+        value: "2"
+      - key: UMBRAL_SNAPSHOT_FEED_URL
+        value: https://site-umbral.web.app/data/current.json
+      - key: FIREBASE_PROJECT_ID
+        value: site-umbral
+      - key: UMBRAL_CORS_ORIGINS
+        value: https://site-umbral.web.app,https://site-umbral.firebaseapp.com
+      - key: UMBRAL_CORS_PREVIEW_PROJECT
+        value: site-umbral # permite solo los canales pr-<n> de ese proyecto Firebase
+      - key: GEMINI_API_KEY
+        sync: false # clave del nivel gratuito SIN facturación; se escribe en el panel, nunca en el repo
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/secrets/firebase-service-account.json # Secret File creado en el panel de Render

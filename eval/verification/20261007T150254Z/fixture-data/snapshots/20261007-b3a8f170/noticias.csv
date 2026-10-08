@@ -1,0 +1,5 @@
+id_noticia,titulo,url,medio,idioma,fecha_publicacion,fecha_deteccion,fecha_extraccion,tema,origen,alcance_texto
+fx_89a08efd1a1ce5b7,Fixture T01 registro válido con publicación nula y detección conocida,https://t01.fixture.example/ok-1,t01.fixture.example,es,,2026-10-06T08:00:00Z,2026-10-07T08:00:00Z,panama,fixture,headline_metadata
+fx_113fed2541940f43,"Sismo de magnitud 5,1 sacude el sur de Panamá, según Sinaproc - EFE",https://medio-a.fixture.example/sismo-5-1-sur-de-panama?utm_source=rss,medio-a.fixture.example,es,2026-10-06T03:12:00Z,,2026-10-07T08:00:00Z,naturales,fixture,headline_metadata
+fx_9ac8039e5e4a5a53,"Sismo de magnitud 5,1 sacude el sur de Panamá, según Sinaproc (EFE)",https://www.medio-b.fixture.example/internacional/sismo-5-1-panama/,medio-b.fixture.example,es,2026-10-06T05:36:00Z,,2026-10-07T08:00:00Z,naturales,fixture,headline_metadata
+fx_c40f9e40dd732e22,"Sismo de magnitud 5,1 sacude el sur de Panamá, según Sinaproc",https://medio-c.fixture.example/2026/10/05/sismo-5-1-panama.html,medio-c.fixture.example,es,2026-10-06T08:00:00Z,,2026-10-07T08:00:00Z,naturales,fixture,headline_metadata
