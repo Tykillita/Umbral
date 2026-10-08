@@ -60,10 +60,10 @@ def test_asistente_no_redimensiona_el_contenido(page: Page, stack, width: int):
     tid(page, "assistant-input").fill("Texto que debe conservarse al cerrar y reabrir")
     if width < 1024:
         send = tid(page, "assistant-send")
-        close = tid(page, "assistant-close")
+        panel = tid(page, "assistant-panel")
         send.focus()
         page.keyboard.press("Tab")
-        expect(close).to_be_focused()
+        expect(panel.locator(":focus")).to_have_count(1)
         page.keyboard.press("Shift+Tab")
         expect(send).to_be_focused()
     page.keyboard.press("Escape")

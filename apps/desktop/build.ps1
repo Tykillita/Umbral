@@ -1,5 +1,7 @@
-param([switch]$Installer, [switch]$SkipWeb, [string]$Snapshot, [string]$Model)
+param([switch]$Installer, [switch]$Publish, [switch]$SkipWeb, [string]$Snapshot, [string]$Model)
 $ErrorActionPreference = 'Stop'
+if ($Publish -and !$Installer) { throw 'La publicación solo se permite junto al instalador NSIS.' }
+if ($Publish -and !$env:GH_TOKEN) { throw 'La publicación requiere el token temporal GH_TOKEN de GitHub Actions.' }
 $desktopDirectory = $PSScriptRoot
 $repositoryDirectory = (Resolve-Path (Join-Path $desktopDirectory '../..')).Path
 $nodeExecutable = Join-Path $repositoryDirectory 'apps/web/node_modules/node/bin/node.exe'
@@ -29,9 +31,12 @@ try {
   & ./.venv/Scripts/python.exe -m PyInstaller --noconfirm sidecar.spec
   if ($LASTEXITCODE -ne 0) { throw 'No se pudo empaquetar el motor local.' }
   $targetArgument = if ($Installer) { 'nsis' } else { '--dir' }
-  & $nodeExecutable node_modules/electron-builder/cli.js --win $targetArgument --x64 --publish never
+  $publishMode = if ($Publish) { 'always' } else { 'never' }
+  & $nodeExecutable node_modules/electron-builder/cli.js --win $targetArgument --x64 --publish $publishMode
   if ($LASTEXITCODE -ne 0) { throw 'No se pudo generar la aplicación Windows.' }
   Get-ChildItem -LiteralPath release -Filter '*.exe' | ForEach-Object {
-    Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256
+    $hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+    Set-Content -LiteralPath "$($_.FullName).sha256" -Value "$hash  $($_.Name)" -Encoding ascii -NoNewline
+    [pscustomobject]@{ Path = $_.Name; SHA256 = $hash }
   }
 } finally { Pop-Location }

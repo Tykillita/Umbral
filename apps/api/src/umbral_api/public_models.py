@@ -10,6 +10,7 @@ from pydantic import Field, StrictInt, model_validator
 from .models import (
     ApiModel,
     CaseView,
+    ComposeProvider,
     DraftProviderChoice,
     DraftRecord,
     EditorialPackage,
@@ -76,6 +77,10 @@ class PublicAgendaRequest(PublicTopicRequest):
 
 class PublicQueryRequest(QueryRequest):
     context: PublicContext
+
+
+class PublicComposeRequest(PublicQueryRequest):
+    provider: ComposeProvider = "gemini"
 
 
 class PublicDraftRequest(PublicTopicRequest):

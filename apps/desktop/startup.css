@@ -1,1 +1,14 @@
-*{box-sizing:border-box}::selection{background:#ffb742;color:#172b32}body{margin:0;background:#f3ead7;color:#172b32;font-family:Arial,sans-serif;min-height:100vh;display:grid;place-items:center}main{max-width:650px;margin:32px;padding:44px;border:3px solid #172b32;box-shadow:9px 9px 0 #172b32;background:#fff8e9}.eyebrow{font-weight:900;letter-spacing:.14em;font-size:13px}h1{font-size:52px;line-height:1.05}.hint{font-size:14px;line-height:1.5;opacity:.8}[data-status]{font-size:20px;line-height:1.5}
+*{box-sizing:border-box}::selection{background:#ffb742;color:#172b32}body{margin:0;background:#f3ead7;color:#172b32;font-family:Arial,sans-serif;min-height:100vh;display:grid;grid-template-rows:auto 1fr;place-items:center}body>main{grid-row:2}main{max-width:650px;margin:32px;padding:44px;border:3px solid #172b32;box-shadow:9px 9px 0 #172b32;background:#fff8e9}.eyebrow{font-weight:900;letter-spacing:.14em;font-size:13px}h1{font-size:52px;line-height:1.05}.hint{font-size:14px;line-height:1.5;opacity:.8}[data-status]{font-size:20px;line-height:1.5}
+.titlebar{position:relative;grid-row:1;justify-self:stretch;display:flex;align-items:center;min-height:70px;padding:0 16px;background:#fffef7;border-bottom:2px solid #172337;box-shadow:0 3px 0 #172337;-webkit-app-region:drag;user-select:none}
+.titlebar[hidden]{display:none}
+.titlebar-brand{display:flex;align-items:center;line-height:1}
+.titlebar-word{color:#172337;font:800 36px "Barlow Condensed","Arial Narrow",Impact,sans-serif;letter-spacing:.025em}
+.titlebar-controls{position:fixed;top:0;right:0;display:flex;align-items:stretch;height:32px;background:#fffef7;border-left:2px solid #172337;border-bottom:2px solid #172337;-webkit-app-region:no-drag}
+.wc{display:grid;place-items:center;width:44px;height:100%;padding:0;border:0;border-radius:0;background:#fffef7;color:#172337;cursor:pointer;-webkit-appearance:none;appearance:none}
+.wc+.wc{border-left:2px solid #172337}
+.wc svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:square;stroke-linejoin:miter}
+.wc:hover{background:#f7c744}
+.wc-close:hover{background:#ae342d;color:#fff}
+.wc:active{background:#172337;color:#fffef7}
+.wc:focus-visible{outline:2px solid #172337;outline-offset:-5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

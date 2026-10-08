@@ -21,12 +21,13 @@ import type {
   CaseView,
   ClaimInput,
   ClaimType,
+  DraftProviderChoice,
   DraftRecord,
   ReviewStatus,
   TopicDetail,
 } from '../../lib/api/types';
 import { ApiError, describeError } from '../../lib/api/client';
-import { useCreateDraft, useReview, useSaveDraft, useTopic, useTopics } from '../../lib/hooks';
+import { useCreateDraft, useHealth, useReview, useSaveDraft, useTopic, useTopics } from '../../lib/hooks';
 import { CLAIM_HELP, CLAIM_LABEL, FALLBACK_LABEL, PROVIDER_CHOICES, REVIEW_LABEL } from '../../lib/labels';
 import { fmtDateTime, fmtNumber, pct } from '../../lib/format';
 import { useEntrance } from '../../lib/useMotion';
@@ -45,7 +46,8 @@ import {
   SectionTitle,
   inputCls,
 } from '../ui';
-import { Select, Tooltip } from '../ui/controls';
+import { Modal, Select, Tooltip } from '../ui/controls';
+import { ConnectionsCard } from '../EditorialSettings';
 
 // Límites del plan (PLAN §3): brief ≤250, copy ≤80, guion 45–60 s a ~2,5 palabras/s, 3 preguntas.
 const BRIEF_MAX = 250;
@@ -719,46 +721,87 @@ function TopicPicker() {
 
 function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: CaseView }) {
   const { authMode } = useApp();
-  const choices = authMode === 'public' ? PROVIDER_CHOICES.filter((choice) => ['auto','gemini','plantilla'].includes(choice.value)) : PROVIDER_CHOICES;
+  const health = useHealth();
   const create = useCreateDraft(detail.summary.id);
-  const [provider, setProvider] = useState('auto');
+  const [provider, setProvider] = useState<DraftProviderChoice>('auto');
+  const [accountsOpen, setAccountsOpen] = useState(false);
+  const [providerNotice, setProviderNotice] = useState('');
   const id = useId();
-  const choice = PROVIDER_CHOICES.find((p) => p.value === provider);
+  const localConnectionsAllowed = authMode === 'local' && health.data?.localMode === true && health.data.authMode === 'local';
+  const choices = useMemo(() => PROVIDER_CHOICES.filter((choice) => {
+    if (choice.value === 'chatgpt' || choice.value === 'claude') {
+      if (!localConnectionsAllowed) return false;
+      return health.data?.providers.find((item) => item.name === choice.value)?.available === true;
+    }
+    if (choice.value === 'gemini') {
+      const status = health.data?.providers.find((item) => item.name === 'gemini');
+      return !status || status.available;
+    }
+    return true;
+  }), [health.data, localConnectionsAllowed]);
+  useEffect(() => {
+    if (choices.some((choice) => choice.value === provider)) return;
+    setProvider('auto');
+    setProviderNotice('El proveedor dejó de estar disponible; se eligió Automático. No se cambiará a otro proveedor personal.');
+  }, [choices, provider]);
+  const selectedChoice = choices.find((item) => item.value === provider);
+  const choice = selectedChoice ?? PROVIDER_CHOICES.find((item) => item.value === 'auto');
+  const unavailableConnections = localConnectionsAllowed && ['chatgpt', 'claude'].some((name) =>
+    !health.data?.providers.find((item) => item.name === name)?.available,
+  );
   return (
-    <Card aria-labelledby="create-title">
-      <SectionTitle id="create-title" kicker="Generación">
-        {caseView.currentDraft ? 'Generar otro borrador' : 'Crear borrador'}
-      </SectionTitle>
-      <div className="draft-create-row">
-        <div className="min-w-0">
-          <Field label="Proveedor de redacción" htmlFor={id}>
-            <Select id={id} testId="draft-provider" value={provider} onChange={setProvider} options={choices.map((p) => ({ value: p.value, label: p.label }))} />
-          </Field>
+    <>
+      <Card aria-labelledby="create-title">
+        <SectionTitle id="create-title" kicker="Generación">
+          {caseView.currentDraft ? 'Generar otro borrador' : 'Crear borrador'}
+        </SectionTitle>
+        <div className="draft-create-row">
+          <div className="min-w-0">
+            <Field label="Proveedor de redacción" htmlFor={id}>
+              <Select id={id} testId="draft-provider" value={provider} onChange={(value) => { setProvider(value); setProviderNotice(''); }} options={choices.map((item) => {
+                const status = health.data?.providers.find((entry) => entry.name === item.value);
+                const label = status?.model && ['gemini', 'chatgpt', 'claude'].includes(item.value) ? `${item.label} · ${status.model}` : item.label;
+                const hint = item.value === 'chatgpt' || item.value === 'claude'
+                  ? `${item.help} Solo en este equipo; usa tu plan o suscripción.`
+                  : item.help;
+                return { value: item.value, label, hint };
+              })} />
+            </Field>
+          </div>
+          <Button variant="primary" icon={Sparkles} data-testid="draft-generate" busy={create.isPending} onClick={() => create.mutate(provider)}>
+            {create.isPending ? 'Generando…' : 'Generar borrador'}
+          </Button>
         </div>
-        <Button variant="primary" icon={Sparkles} data-testid="draft-generate" busy={create.isPending} onClick={() => create.mutate(provider as never)}>
-          {create.isPending ? 'Generando…' : 'Generar borrador'}
-        </Button>
-      </div>
-      {choice?.help && <p className="-mt-2 text-xs text-ink-3">{choice.help}</p>}
-      <p className="text-xs text-ink-3">
-        Se usa solo la evidencia recuperada del corpus. Si el modelo no está disponible, hay cuota agotada o no hay conexión, se recurre a un borrador recuperado o a la plantilla con citas; nunca a un proveedor de pago.
-      </p>
-      <div aria-live="polite" className="mt-2 space-y-2">
-        {create.data?.notices.map((n, i) => (
-          <Notice key={i} tone="info" testId="draft-notice">
-            {n}
-          </Notice>
-        ))}
-      </div>
-      {create.error && (
-        <div className="mt-2">
-          <ErrorBox error={create.error} testId="draft-create-error" />
-          {create.error instanceof ApiError && create.error.status === 403 && (
-            <p className="mt-1 text-xs text-ink-3">Las conexiones personales (ChatGPT, Claude) solo funcionan al ejecutar en localhost.</p>
-          )}
+        {choice?.help && <p className="mt-2 text-xs text-ink-3" data-testid="draft-provider-help">{choice.help}</p>}
+        {providerNotice && <Notice tone="warn" role="status" testId="draft-provider-changed">{providerNotice}</Notice>}
+        {unavailableConnections && <div className="mt-2 flex flex-wrap items-center gap-2">
+          <p className="text-xs text-ink-3">ChatGPT y Claude aparecen en este selector cuando Umbral reconoce una sesión local.</p>
+          <Button variant="ghost" data-testid="draft-provider-accounts" onClick={() => setAccountsOpen(true)}>Cuentas y modelos…</Button>
+        </div>}
+        {localConnectionsAllowed && !unavailableConnections && <div className="mt-2"><Button variant="ghost" data-testid="draft-provider-accounts" onClick={() => setAccountsOpen(true)}>Cuentas y modelos…</Button></div>}
+        <p className="mt-2 text-xs text-ink-3">
+          Se usa solo la evidencia recuperada del corpus. Si el modelo deja de responder o se agota su cuota, se recurre a un borrador recuperado o a la plantilla con citas; nunca se cambia automáticamente a otro proveedor personal.
+        </p>
+        <div aria-live="polite" className="mt-2 space-y-2">
+          {create.data?.notices.map((n, i) => (
+            <Notice key={i} tone="info" testId="draft-notice">
+              {n}
+            </Notice>
+          ))}
         </div>
-      )}
-    </Card>
+        {create.error && (
+          <div className="mt-2">
+            <ErrorBox error={create.error} testId="draft-create-error" />
+            {create.error instanceof ApiError && create.error.status === 403 && (
+              <p className="mt-1 text-xs text-ink-3">Las conexiones personales (ChatGPT, Claude) solo funcionan al ejecutar en localhost.</p>
+            )}
+          </div>
+        )}
+      </Card>
+      <Modal open={accountsOpen} title="Cuentas y modelos" description="Umbral reconoce las conexiones locales de ChatGPT y Claude; no importa sesiones de otros clientes." onClose={() => setAccountsOpen(false)} testId="draft-provider-accounts-modal">
+        <ConnectionsCard />
+      </Modal>
+    </>
   );
 }
 

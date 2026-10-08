@@ -33,6 +33,14 @@ function mount(ui: ReactNode, api = new MockApi(), route: Route = { view: 'agend
 
 const assistant = <AssistantPanel state="open" onStateChange={() => {}} onClose={() => {}} seed={{ text: '', topicId: null, topicTitle: '', n: 0 }} />;
 
+async function availableGemini(api: MockApi) {
+  const health = await api.health();
+  vi.spyOn(api, 'health').mockResolvedValue({
+    ...health,
+    providers: health.providers.map((provider) => provider.name === 'gemini' ? { ...provider, available: true, model: 'gemini-test' } : provider),
+  });
+}
+
 describe('estados editoriales y teclado', () => {
   it('conserva la confirmación de edición guardada cuando la API actualiza editedAt y remonta el editor', async () => {
     const api = new MockApi();
@@ -48,6 +56,30 @@ describe('estados editoriales y teclado', () => {
     const saved = await api.getCase('case-tema-mock-001');
     expect(saved.currentDraft?.editedAt).toBeTruthy();
     expect(saved.currentDraft?.package.proposedTitle).toBe('Título editado durante la prueba');
+  });
+
+  it('ofrece en Borradores solo las conexiones locales disponibles y separa el texto de ayuda', async () => {
+    const api = new MockApi();
+    const health = await api.health();
+    const base = health.providers.find((provider) => provider.name === 'gemini')!;
+    vi.spyOn(api, 'health').mockResolvedValue({
+      ...health,
+      localMode: true,
+      authMode: 'local',
+      providers: [
+        { ...base, name: 'gemini', available: true, model: 'gemini-test' },
+        { ...base, name: 'chatgpt', available: true, localOnly: true, model: 'gpt-test', signIn: 'oauth', account: 'cuenta-fixture' },
+        { ...base, name: 'claude', available: false, localOnly: true, model: 'claude-test', signIn: 'cli', account: null, reason: 'Sin sesión de Claude.' },
+      ],
+    });
+    mount(<Drafts />, api, { view: 'borradores', topicId: 'tema-mock-001' });
+    fireEvent.click(await screen.findByRole('combobox', { name: 'Proveedor de redacción' }));
+    await waitFor(() => expect(screen.getAllByRole('option').some((option) => /ChatGPT/.test(option.textContent ?? ''))).toBe(true));
+    const options = screen.getAllByRole('option');
+    expect(options.map((option) => option.textContent).join(' ')).toMatch(/ChatGPT.*gpt-test/);
+    expect(options.map((option) => option.textContent).join(' ')).not.toMatch(/Claude/);
+    expect(screen.getByTestId('draft-provider-help').className).toContain('mt-2');
+    expect(screen.getByTestId('draft-provider-accounts')).toBeTruthy();
   });
 
   it('agenda anuncia la carga, muestra un fallo real y permite recuperar mediante Reintentar', async () => {
@@ -329,6 +361,7 @@ describe('estados editoriales y teclado', () => {
 
   it('redacta con IA bajo demanda, rotula el origen y conserva la respuesta por reglas', async () => {
     const api = new MockApi();
+    await availableGemini(api);
     const result = await answeredWithSources(api);
     const compose = vi.spyOn(api, 'compose').mockResolvedValue({
       response: { ...result, answer: 'Respuesta redactada con IA\n- El medio reporta el tránsito [1]' }, answerMode: 'modelo', rulesAnswer: result.answer,
@@ -339,7 +372,7 @@ describe('estados editoriales y teclado', () => {
     expect(screen.getByTestId('assistant-mode').getAttribute('data-mode')).toBe('reglas');
     fireEvent.click(screen.getByTestId('assistant-compose'));
     await waitFor(() => expect(screen.getByTestId('assistant-mode').getAttribute('data-mode')).toBe('modelo'));
-    expect(compose).toHaveBeenCalledWith({ question: 'Qué pasa en el Canal', topicId: null }, { signal: expect.any(AbortSignal) });
+    expect(compose).toHaveBeenCalledWith({ question: 'Qué pasa en el Canal', topicId: null, provider: 'gemini' }, { signal: expect.any(AbortSignal) });
     expect(screen.getByTestId('assistant-mode').textContent).toMatch(/gemini-test.*verificada por código/);
     expect(screen.getByTestId('assistant-answer-text').textContent).toMatch(/Respuesta redactada con IA/);
     expect(screen.queryByTestId('assistant-compose')).toBeNull();
@@ -348,8 +381,53 @@ describe('estados editoriales y teclado', () => {
     expect(screen.getByTestId('assistant-announcer').textContent).toMatch(/redactada con IA/);
   });
 
+  it('el selector del asistente muestra el estado real y envía el proveedor elegido', async () => {
+    const api = new MockApi();
+    const health = await api.health();
+    const base = health.providers.find((provider) => provider.name === 'gemini')!;
+    vi.spyOn(api, 'health').mockResolvedValue({
+      ...health,
+      localMode: true,
+      authMode: 'local',
+      providers: [
+        { ...base, name: 'gemini', available: true, model: 'gemini-test' },
+        { ...base, name: 'chatgpt', available: true, localOnly: true, model: 'gpt-test', signIn: 'oauth', account: 'cuenta-fixture' },
+        { ...base, name: 'claude', available: false, localOnly: true, model: 'claude-test', signIn: 'cli', account: null, reason: 'Sin sesión de Claude.' },
+      ],
+    });
+    const answer = await answeredWithSources(api);
+    const compose = vi.spyOn(api, 'compose').mockResolvedValue({
+      response: { ...answer, answer: 'Respuesta redactada por ChatGPT' }, answerMode: 'modelo', rulesAnswer: answer.answer,
+      provider: 'chatgpt', model: 'gpt-test', fallbackReason: null, fallbackDetail: null, usage: null, notices: [],
+    } as unknown as Awaited<ReturnType<MockApi['compose']>>);
+    mount(assistant, api);
+    await askCanal();
+    const selector = await screen.findByRole('combobox', { name: /Proveedor de redacción: Gemini/ });
+    await waitFor(() => expect(selector.getAttribute('aria-disabled')).toBeNull());
+    expect(selector.textContent).toContain('Proveedor');
+    expect(selector.textContent).toContain('Gemini');
+    expect(selector.textContent).toContain('gemini-test');
+    expect(selector.closest('.assistant-model-controls')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Cuentas y modelos' })).toBeTruthy();
+    fireEvent.click(selector);
+    const listbox = await screen.findByRole('listbox');
+    expect(listbox.parentElement?.classList.contains('select-popover')).toBe(true);
+    expect((listbox.parentElement as HTMLElement).style.width).toBe('320px');
+    fireEvent.click(await screen.findByRole('option', { name: /ChatGPT.*gpt-test/ }));
+    const selectedSelector = await screen.findByRole('combobox', { name: /Proveedor de redacción: ChatGPT/ });
+    fireEvent.click(selectedSelector);
+    const claudeOption = await screen.findByRole('option', { name: /Claude/ });
+    expect(claudeOption.getAttribute('aria-disabled')).toBe('true');
+    fireEvent.keyDown(selectedSelector, { key: 'Escape' });
+    fireEvent.click(await screen.findByRole('button', { name: 'Redactar con ChatGPT' }));
+    await waitFor(() => expect(compose).toHaveBeenCalledWith(
+      { question: 'Qué pasa en el Canal', topicId: null, provider: 'chatgpt' }, { signal: expect.any(AbortSignal) },
+    ));
+  });
+
   it('si la redacción falla conserva la respuesta por reglas, explica el motivo y permite reintentar', async () => {
     const api = new MockApi();
+    await availableGemini(api);
     const result = await answeredWithSources(api);
     vi.spyOn(api, 'compose').mockResolvedValue({
       response: result, answerMode: 'reglas', rulesAnswer: result.answer, provider: null, model: null,
@@ -378,6 +456,7 @@ describe('estados editoriales y teclado', () => {
 
   it('permite cancelar una redacción en curso sin perder la respuesta por reglas', async () => {
     const api = new MockApi();
+    await availableGemini(api);
     await answeredWithSources(api);
     vi.spyOn(api, 'compose').mockImplementation((_request, options) => new Promise((_resolve, reject) => {
       options?.signal?.addEventListener('abort', () => reject(new Error('abortada')));
@@ -390,4 +469,3 @@ describe('estados editoriales y teclado', () => {
     expect(screen.getByTestId('assistant-answer-text').textContent).toMatch(/TVN reporta/);
   });
 });
-

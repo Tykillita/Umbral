@@ -1,6 +1,7 @@
 import { useEffect, useState, type RefObject } from 'react';
 import { ApiError, describeError } from '../../lib/api/client';
 import { assistantTitle, type AssistantConversation } from '../../lib/api/assistantHistory';
+import type { ComposeProvider } from '../../lib/api/types';
 import { ANSWER_LABEL, FALLBACK_LABEL } from '../../lib/labels';
 import type { useApp } from '../context';
 
@@ -81,7 +82,7 @@ export function useAssistantQuery({ api, history, inFlight, isViewing, onViewedA
   }
 
   /** Redacta con IA una respuesta ya recibida. Si el modelo falla o no pasa la validación, se conserva la de reglas con el motivo. */
-  async function composeTurn(conversationId: string, turnId: string) {
+  async function composeTurn(conversationId: string, turnId: string, provider: ComposeProvider = 'gemini') {
     if (inFlight.current.has(conversationId) || deletedIds.current.has(conversationId)) return;
     const turn = conversationsRef.current.find((item) => item.id === conversationId)?.turns.find((item) => item.id === turnId);
     if (!turn?.result) return;
@@ -91,7 +92,9 @@ export function useAssistantQuery({ api, history, inFlight, isViewing, onViewedA
     const note = (text: string | undefined) => patchConversation(conversationId, (item) => ({ ...item, turns: item.turns.map((entry) => entry.id === turnId ? { ...entry, composeNote: text } : entry) }), false);
     note(undefined);
     try {
-      const body = turn.followUp ? { question: turn.question, topicId: turn.topicId, followUp: turn.followUp } : { question: turn.question, topicId: turn.topicId };
+      const body = turn.followUp
+        ? { question: turn.question, topicId: turn.topicId, followUp: turn.followUp, provider }
+        : { question: turn.question, topicId: turn.topicId, provider };
       const data = await api.compose(body, { signal: controller.signal });
       if (deletedIds.current.has(conversationId)) return;
       if (data.answerMode === 'modelo' && data.response.snapshotId === turn.result.snapshotId) {

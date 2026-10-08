@@ -53,6 +53,15 @@ Compilada y probada en el equipo de desarrollo el 2026-10-07:
 - Instalador NSIS sin firma, 822.606.812 bytes, SHA-256 `74ea5c55f643742388a4e414c3b4d17608b0ea13f688b23c418fcb7de5b750c3`; ejecutable sin empaquetar `4b3d4a19d8aa0f401fa0befcd392100904a0a4c01740131fbe4ecbcf88cc31da`.
 - Pruebas propias del escritorio: 2 de Node y 7 de Python aprobadas.
 
+**Selector de modelos y actualizador, 2026-10-08 (árbol de trabajo local):**
+
+- `node --test tests/*.test.cjs` en `apps/desktop`: **8/8**; `node node_modules/vitest/vitest.mjs run` en `apps/web`: **99/99**; pruebas de API para compose y sesiones Claude con `uv run --extra firebase pytest`: aprobadas.
+- `python scripts/check_no_native_ui.py`: aprobado; integración y E2E `UMBRAL_TESTS_STRICT=1 uv run pytest -q -p no:cacheprovider integration/test_regla_sin_controles_nativos.py e2e/test_sin_controles_nativos.py`: **30 aprobadas**.
+- `astro check`: **64 archivos, 0 errores, 0 avisos**; `astro build`: **2 páginas**. Se ejecutaron desde una copia temporal con dependencias instaladas por lock, para conservar el servidor web activo.
+- Instalador NSIS de prueba v0.1.0, creado con `electron-builder --win nsis --x64 --publish never`: **823.738.263 bytes**, SHA-256 `235070f5730babaf82d0d973ef0eec089f0a4208f2a9f1fec7090bea1fcc0244`. Se generaron `latest.yml` y `.blockmap`; el modo de publicación fue `never`.
+- `apps/desktop/smoke_electron.py` sobre el paquete desempaquetado de esa misma compilación: **12/12 comprobaciones**, cero errores de página y cero solicitudes externas; SHA-256 del ejecutable probado `d36a5980cc38522a3487ab0e9a80bd004f7b13e9e872731d5d9669413e538a60`.
+- No había perfiles ChatGPT activos ni sesión OAuth de Claude en este equipo al comprobarlo; las inferencias con cuentas reales quedan pendientes.
+
 ## 5. CI remota y despliegue alojado
 
 - **CI remota (GitHub Actions), 2026-10-08:** el PR #1 y la integración en `main` pasaron las 5 comprobaciones (higiene, API, pipeline, web, integración y E2E). En la primera ejecución del PR falló una prueba de zonas táctiles que depende del tiempo de la animación de pulsación (43 px en vez de 44 px en el ejecutor Linux); se corrigió esperando a que terminen las animaciones antes de medir (PR #2).
@@ -70,5 +79,7 @@ Esta prueba **no llama a Gemini real** y no acredita revisión humana.
 - Que Render entregue `CF-Connecting-IP` y el límite por visitante la use (las respuestas pasan por Cloudflare, pero la cabecera hacia el origen no se ha comprobado); si falta, se conserva el límite compartido por socket.
 - **Dos ciclos reales** del workflow diario, rechazo de un snapshot corrupto en producción y continuidad de casos archivados.
 - **Instalación en un Windows limpio**, uso sin internet y actualización del instalador sin pérdida de trabajo.
+- Ejecución de `release-desktop.yml` desde un tag estable y actualización real desde una versión previamente instalada mediante GitHub Releases; no se publica una release como parte de las pruebas locales.
+- Inferencia real con cuentas conectadas de ChatGPT o Claude; no había sesión activa disponible al verificarlas el 2026-10-08.
 - **Revisión humana:** clasificación y geografía, agrupación de duplicados, sustento de afirmaciones, Precision@5 editorial de la agenda y el benchmark reservado de 20 consultas, que vive fuera de este repositorio y no se ha leído.
 - Paquete oficial congelado de noticias (el snapshot sigue siendo provisional).

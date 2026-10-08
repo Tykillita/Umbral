@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { IDBFactory } from 'fake-indexeddb';
 import {
-  assistantTitle, deleteAssistantConversation, loadAssistantConversation, subscribeAssistantHistory, exportAssistantMarkdown, loadAssistantHistory, MAX_ASSISTANT_CONVERSATIONS,
+  assistantTitle, deleteAssistantConversation, loadAssistantConversation, subscribeAssistantHistory, exportAssistantMarkdown, loadAssistantHistory, loadAssistantComposeProvider, saveAssistantComposeProvider, MAX_ASSISTANT_CONVERSATIONS,
   normalizeAssistantConversation, saveAssistantConversation, setLastAssistantConversation, turnToMarkdown,
   type AssistantConversation, type AssistantTurn,
 } from './assistantHistory';
@@ -39,6 +39,17 @@ describe('historial local del asistente', () => {
     expect((await loadAssistantHistory(namespace)).conversations).toEqual([]);
     expect(await saveAssistantConversation({ ...item, turns: [] })).toBe(false);
     expect((await loadAssistantHistory(namespace)).conversations).toEqual([]);
+  });
+
+  it('recuerda el proveedor por identidad y conserva esa preferencia al cambiar o borrar la conversación activa', async () => {
+    const namespace = `compose-provider-${crypto.randomUUID()}`;
+    const item = conversation(namespace, 'conv-provider');
+    expect(await loadAssistantComposeProvider(namespace)).toBe('gemini');
+    expect(await saveAssistantComposeProvider(namespace, 'claude')).toBe(true);
+    expect(await setLastAssistantConversation(namespace, item.id)).toBe(true);
+    expect(await loadAssistantComposeProvider(namespace)).toBe('claude');
+    expect(await deleteAssistantConversation(namespace, item.id)).toBe(true);
+    expect(await loadAssistantComposeProvider(namespace)).toBe('claude');
   });
 
   it('exporta una pregunta completa y da un título legible a partir de su texto', () => {
@@ -129,4 +140,3 @@ describe('historial local del asistente', () => {
     expect(received).toEqual([{ type: 'saved', id: 'conv-x' }, { type: 'deleted', id: 'conv-y' }, { type: 'changed' }, { type: 'changed' }]);
   });
 });
-

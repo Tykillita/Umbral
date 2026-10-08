@@ -191,6 +191,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/connections/claude": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Claude Status */
+        get: operations["claude_status_api_v1_connections_claude_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connections/claude/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Claude Login */
+        post: operations["claude_login_api_v1_connections_claude_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connections/claude/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Claude Logout */
+        post: operations["claude_logout_api_v1_connections_claude_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/health": {
         parameters: {
             query?: never;
@@ -784,6 +835,61 @@ export interface components {
          * @enum {string}
          */
         ClaimType: "hecho" | "declaracion" | "inferencia" | "hipotesis";
+        /** ClaudeConnection */
+        ClaudeConnection: {
+            /** Account */
+            account: string | null;
+            /** Authmethod */
+            authMethod: string | null;
+            /** Available */
+            available: boolean;
+            /**
+             * Installed
+             * @default false
+             */
+            installed: boolean;
+            /**
+             * Loggedin
+             * @default false
+             */
+            loggedIn: boolean;
+            /**
+             * Logincommand
+             * @default claude auth login
+             */
+            loginCommand: string;
+            /**
+             * Loginpending
+             * @default false
+             */
+            loginPending: boolean;
+            /** Reason */
+            reason: string | null;
+        };
+        /** ComposeRequest */
+        ComposeRequest: {
+            /** @description `followUpContext` de la respuesta anterior; sin él cada pregunta es independiente */
+            followUp?: components["schemas"]["QueryContext-Input"] | null;
+            /**
+             * Limit
+             * @default 5
+             */
+            limit: number;
+            /**
+             * Provider
+             * @description Proveedor que redacta la respuesta; ChatGPT y Claude solo existen en ejecución local
+             * @default gemini
+             * @enum {string}
+             */
+            provider: "gemini" | "chatgpt" | "claude";
+            /** Question */
+            question: string;
+            /**
+             * Topicid
+             * @description Limita la consulta a un tema
+             */
+            topicId?: string | null;
+        };
         /**
          * ComposeResponse
          * @description Resultado de redactar con IA una respuesta con fuentes. Si el modelo falla, `response` conserva la respuesta por reglas.
@@ -1773,6 +1879,11 @@ export interface components {
         };
         /** ProviderStatus */
         ProviderStatus: {
+            /**
+             * Account
+             * @description Cuenta de la sesión reconocida (solo local)
+             */
+            account: string | null;
             /** Available */
             available: boolean;
             /** External */
@@ -1786,12 +1897,41 @@ export interface components {
             name: string;
             /** Reason */
             reason: string | null;
+            /**
+             * Signin
+             * @description Cómo iniciar sesión en este proveedor (solo local): OAuth propio o CLI oficial
+             */
+            signIn: ("oauth" | "cli") | null;
         };
         /** PublicAgendaRequest */
         PublicAgendaRequest: {
             context: components["schemas"]["PublicContext"];
             evidence?: components["schemas"]["ArchivedEvidence-Input"] | null;
             filters?: components["schemas"]["AgendaFilters"];
+        };
+        /** PublicComposeRequest */
+        PublicComposeRequest: {
+            context: components["schemas"]["PublicContext"];
+            /** @description `followUpContext` de la respuesta anterior; sin él cada pregunta es independiente */
+            followUp?: components["schemas"]["QueryContext-Input"] | null;
+            /**
+             * Limit
+             * @default 5
+             */
+            limit: number;
+            /**
+             * Provider
+             * @default gemini
+             * @enum {string}
+             */
+            provider: "gemini" | "chatgpt" | "claude";
+            /** Question */
+            question: string;
+            /**
+             * Topicid
+             * @description Limita la consulta a un tema
+             */
+            topicId?: string | null;
         };
         /** PublicContext */
         PublicContext: {
@@ -3621,6 +3761,228 @@ export interface operations {
             };
         };
     };
+    claude_status_api_v1_connections_claude_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaudeConnection"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    claude_login_api_v1_connections_claude_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaudeConnection"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    claude_logout_api_v1_connections_claude_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClaudeConnection"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     health_api_v1_health_get: {
         parameters: {
             query?: never;
@@ -3884,7 +4246,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PublicQueryRequest"];
+                "application/json": components["schemas"]["PublicComposeRequest"];
             };
         };
         responses: {
@@ -4198,7 +4560,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["QueryRequest"];
+                "application/json": components["schemas"]["ComposeRequest"];
             };
         };
         responses: {

@@ -26,6 +26,7 @@ from .compose import (
 from .config import Settings
 from .drafts import EvidencePack, build_pack, build_template_package, validate_package
 from .errors import (
+    ApiError,
     Forbidden,
     InvalidTransition,
     NotFound,
@@ -330,6 +331,18 @@ class Services:
                 if status.name == "gemini" and status.available:
                     status.available = False
                     status.reason = "El contador global seguro no está disponible; se conserva la plantilla con citas."
+        if self.settings.local_mode and self.settings.auth_mode not in {"public", "firebase"}:
+            for status in out:
+                if status.name == "chatgpt":
+                    status.sign_in = "oauth"
+                    try:
+                        profiles = self.providers["chatgpt"].connection.status().profiles  # type: ignore[attr-defined]
+                        status.account = next((p.email for p in profiles if p.active), None)
+                    except ApiError:
+                        pass
+                elif status.name == "claude":
+                    status.sign_in = "cli"
+                    status.account = self.providers["claude"].session.status().account  # type: ignore[attr-defined]
         out.append(
             ProviderStatus(name="recuperado", mode=GenerationMode.recuperado, external=False, local_only=False, available=True,
                            reason="Reutiliza el último borrador generado por un modelo en este caso."))
@@ -620,8 +633,12 @@ class Services:
         response.rules_version = self.rules(user).rules_version
         return response
 
-    def compose_query(self, user: str, req: QueryRequest, *, consume_limit: bool = True) -> ComposeResponse:
-        """Redacta con IA (Gemini, Free Tier) la respuesta con fuentes de una consulta; si algo falla, conserva la de reglas."""
+    def compose_query(self, user: str, req: QueryRequest, *, consume_limit: bool = True, provider: str = "gemini") -> ComposeResponse:
+        """Redacta con IA la respuesta con fuentes de una consulta; si algo falla, conserva la de reglas.
+
+        ``provider`` elige quién redacta: Gemini (Free Tier, predeterminado) o, solo en ejecución local, ChatGPT/Claude.
+        Solo Gemini consume la cuota diaria; la validación de citas es la misma para todos.
+        """
         if consume_limit:
             self.limiter.check(user, "compose", self.settings.drafts_per_minute)
         base = self._answer(user, req)
@@ -636,13 +653,18 @@ class Services:
 
         if base.answer_status in (AnswerStatus.abstencion, AnswerStatus.contradiccion) or not base.citations:
             return fallback(FallbackReason.sin_evidencia, "Solo se redactan respuestas con fuentes y sin versiones en contradicción.")
-        prov = self.providers["gemini"]
+        prov = self.providers.get(provider)
         try:
+            if prov is None:
+                raise ProviderError(FallbackReason.proveedor_no_disponible, f"Proveedor «{provider}» desconocido.")
             if self.settings.offline:
                 raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamadas externas bloqueadas.")
+            if prov.local_only and (not self.settings.local_mode or self.settings.auth_mode in {"public", "firebase"}):
+                raise ProviderError(FallbackReason.solo_localhost, "Esta conexión personal solo está disponible al ejecutar en localhost.")
             status = prov.status()
             if not status.available:
-                raise ProviderError(FallbackReason.sin_credenciales, status.reason or "Proveedor no disponible.")
+                reason = FallbackReason.proveedor_no_conectado if prov.local_only else FallbackReason.sin_credenciales
+                raise ProviderError(reason, status.reason or "Proveedor no disponible.")
             pack, order = pack_from_response(self.corpus, base)
             if not order:
                 raise ProviderError(FallbackReason.sin_evidencia, "Ninguna fuente citada es utilizable.")
@@ -653,8 +675,10 @@ class Services:
                 calls += 1
                 if isinstance(prov, GeminiProvider):
                     result = prov.generate(COMPOSE_SYSTEM, user_content, schema=ModelCompose, before_call=lambda: self._reserve_gemini_call(user))
-                else:  # stub de pruebas: no hace red, pero consume la cuota igual que Gemini
+                elif prov.name == "gemini":  # stub de pruebas: no hace red, pero consume la cuota igual que Gemini
                     self._reserve_gemini_call(user)
+                    result = prov.generate(COMPOSE_SYSTEM, user_content, schema=ModelCompose)
+                else:  # ChatGPT/Claude (solo local): usan la cuenta del usuario, no la cuota gratuita de Gemini
                     result = prov.generate(COMPOSE_SYSTEM, user_content, schema=ModelCompose)
                 _, errors = validate_composition(result.output, pack, order, base.intent)
                 if not errors:

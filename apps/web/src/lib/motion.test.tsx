@@ -7,9 +7,11 @@ import type { ReactNode } from 'react';
 import { Bot } from 'lucide-react';
 import type { Route } from './router';
 import { MockApi } from './mock/mockApi';
-import { MOTION, endSettling, playCards, playHeading, settle, staggerStep } from './motion';
+import { MOTION, cancelAllMotion, endSettling, playCards, playHeading, reducedMotion, setMotionPreference, settle, staggerStep } from './motion';
+import { MOTION_PREFERENCE_STORAGE_KEY } from './motionPreference';
 import { installInteractions } from './interactions';
 import { AppContext } from '../components/context';
+import { MotionPreferenceSwitch } from '../components/ui/controls';
 import { Agenda } from '../components/views/Agenda';
 import { Button, Notice } from '../components/ui';
 
@@ -66,11 +68,14 @@ beforeEach(() => {
     addEventListener() {},
     removeEventListener() {},
   })) as unknown as typeof window.matchMedia;
+  delete document.documentElement.dataset.motionPreference;
+  localStorage.removeItem(MOTION_PREFERENCE_STORAGE_KEY);
   endSettling();
 });
 
 afterEach(() => {
   cleanup();
+  cancelAllMotion();
   delete (HTMLElement.prototype as { animate?: unknown }).animate;
 });
 
@@ -121,6 +126,56 @@ describe('tiempos de la coreografía', () => {
     expect(playCards([el])).toEqual([]);
     expect(calls).toHaveLength(0);
     el.remove();
+  });
+});
+
+describe('selector de movimiento reducido', () => {
+  it('permite anular la preferencia del sistema y guarda los tres modos', async () => {
+    reduced = true;
+    document.documentElement.dataset.motionPreference = 'system';
+    expect(reducedMotion()).toBe(true);
+
+    await setMotionPreference('full');
+    expect(reducedMotion()).toBe(false);
+    expect(localStorage.getItem(MOTION_PREFERENCE_STORAGE_KEY)).toBe('full');
+
+    await setMotionPreference('reduced');
+    expect(reducedMotion()).toBe(true);
+    expect(document.documentElement.dataset.motionPreference).toBe('reduced');
+
+    reduced = false;
+    await setMotionPreference('system');
+    expect(reducedMotion()).toBe(false);
+    expect(localStorage.getItem(MOTION_PREFERENCE_STORAGE_KEY)).toBe('system');
+  });
+
+  it('cancela los efectos decorativos en curso al activar movimiento reducido', async () => {
+    const el = document.createElement('div');
+    document.body.append(el);
+    playHeading(el);
+    const animation = must(calls[0]).anim;
+
+    await setMotionPreference('reduced');
+
+    expect(animation.cancelled).toBe(true);
+    expect(playHeading(el)).toBeNull();
+    el.remove();
+  });
+
+  it('expone un grupo segmentado con flechas y conserva el modo elegido', () => {
+    render(<MotionPreferenceSwitch />);
+    const group = screen.getByRole('radiogroup', { name: 'Movimiento reducido' });
+    const system = screen.getByRole('radio', { name: 'Usar preferencia del sistema' });
+    const reducedMode = screen.getByRole('radio', { name: 'Activar movimiento reducido' });
+    expect(group).toBeTruthy();
+    expect(system.getAttribute('aria-checked')).toBe('true');
+
+    fireEvent.keyDown(system, { key: 'ArrowRight' });
+
+    expect(reducedMode.getAttribute('aria-checked')).toBe('true');
+    expect(document.activeElement).toBe(reducedMode);
+    expect(document.documentElement.dataset.motionPreference).toBe('reduced');
+    expect(localStorage.getItem(MOTION_PREFERENCE_STORAGE_KEY)).toBe('reduced');
   });
 });
 

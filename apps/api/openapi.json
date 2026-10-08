@@ -1027,6 +1027,135 @@
         "title": "ClaimType",
         "type": "string"
       },
+      "ClaudeConnection": {
+        "properties": {
+          "account": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Account"
+          },
+          "authMethod": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Authmethod"
+          },
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "installed": {
+            "default": false,
+            "title": "Installed",
+            "type": "boolean"
+          },
+          "loggedIn": {
+            "default": false,
+            "title": "Loggedin",
+            "type": "boolean"
+          },
+          "loginCommand": {
+            "default": "claude auth login",
+            "title": "Logincommand",
+            "type": "string"
+          },
+          "loginPending": {
+            "default": false,
+            "title": "Loginpending",
+            "type": "boolean"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "required": [
+          "available",
+          "installed",
+          "loggedIn",
+          "authMethod",
+          "account",
+          "loginPending",
+          "reason",
+          "loginCommand"
+        ],
+        "title": "ClaudeConnection",
+        "type": "object"
+      },
+      "ComposeRequest": {
+        "properties": {
+          "followUp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QueryContext-Input"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`followUpContext` de la respuesta anterior; sin él cada pregunta es independiente"
+          },
+          "limit": {
+            "default": 5,
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "provider": {
+            "default": "gemini",
+            "description": "Proveedor que redacta la respuesta; ChatGPT y Claude solo existen en ejecución local",
+            "enum": [
+              "gemini",
+              "chatgpt",
+              "claude"
+            ],
+            "title": "Provider",
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Question",
+            "type": "string"
+          },
+          "topicId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Limita la consulta a un tema",
+            "title": "Topicid"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "ComposeRequest",
+        "type": "object"
+      },
       "ComposeResponse": {
         "description": "Resultado de redactar con IA una respuesta con fuentes. Si el modelo falla, `response` conserva la respuesta por reglas.",
         "properties": {
@@ -3702,6 +3831,18 @@
       },
       "ProviderStatus": {
         "properties": {
+          "account": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cuenta de la sesión reconocida (solo local)",
+            "title": "Account"
+          },
           "available": {
             "title": "Available",
             "type": "boolean"
@@ -3742,6 +3883,22 @@
               }
             ],
             "title": "Reason"
+          },
+          "signIn": {
+            "anyOf": [
+              {
+                "enum": [
+                  "oauth",
+                  "cli"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Cómo iniciar sesión en este proveedor (solo local): OAuth propio o CLI oficial",
+            "title": "Signin"
           }
         },
         "required": [
@@ -3751,7 +3908,9 @@
           "localOnly",
           "available",
           "reason",
-          "model"
+          "model",
+          "signIn",
+          "account"
         ],
         "title": "ProviderStatus",
         "type": "object"
@@ -3779,6 +3938,65 @@
           "context"
         ],
         "title": "PublicAgendaRequest",
+        "type": "object"
+      },
+      "PublicComposeRequest": {
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/PublicContext"
+          },
+          "followUp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QueryContext-Input"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`followUpContext` de la respuesta anterior; sin él cada pregunta es independiente"
+          },
+          "limit": {
+            "default": 5,
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "provider": {
+            "default": "gemini",
+            "enum": [
+              "gemini",
+              "chatgpt",
+              "claude"
+            ],
+            "title": "Provider",
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Question",
+            "type": "string"
+          },
+          "topicId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Limita la consulta a un tema",
+            "title": "Topicid"
+          }
+        },
+        "required": [
+          "question",
+          "context"
+        ],
+        "title": "PublicComposeRequest",
         "type": "object"
       },
       "PublicContext": {
@@ -7365,6 +7583,249 @@
         ]
       }
     },
+    "/api/v1/connections/claude": {
+      "get": {
+        "operationId": "claude_status_api_v1_connections_claude_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeConnection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Claude Status",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connections/claude/login": {
+      "post": {
+        "operationId": "claude_login_api_v1_connections_claude_login_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeConnection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Claude Login",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connections/claude/logout": {
+      "post": {
+        "operationId": "claude_logout_api_v1_connections_claude_logout_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeConnection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Claude Logout",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "health_api_v1_health_get",
@@ -7666,7 +8127,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PublicQueryRequest"
+                "$ref": "#/components/schemas/PublicComposeRequest"
               }
             }
           },
@@ -8041,7 +8502,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/QueryRequest"
+                "$ref": "#/components/schemas/ComposeRequest"
               }
             }
           },

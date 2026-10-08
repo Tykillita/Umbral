@@ -19,6 +19,8 @@ import type {
   ExportResponse,
   ImpactRequest,
   ComposeResponse,
+  ComposeRequestBody,
+  ClaudeConnection,
   QueryRequestBody,
   QueryResponse,
   ReviewRequest,
@@ -91,7 +93,10 @@ export class MockApi implements UmbralApi {
 
   async updateRules(_body: RulesRequest): Promise<Rules> { throw new ApiError(503, null, 'La demostración no guarda políticas editoriales.'); }
   async connections(): Promise<Connections> { return { available: false, reason: 'Conexiones personales no disponibles en demostración.', profiles: [], activeProfileId: null }; }
+  async claudeConnection(): Promise<ClaudeConnection> { return { available: false, installed: false, loggedIn: false, loginPending: false, loginCommand: 'claude auth login', account: null, authMethod: null, reason: 'Conexiones personales no disponibles en demostración.' }; }
   async startConnection(_body: ConnectionStart): Promise<Authorization> { throw new ApiError(503, null, 'Usa la aplicación local con la API real.'); }
+  async startClaudeLogin(): Promise<ClaudeConnection> { throw new ApiError(503, null, 'Usa la aplicación local con la API real.'); }
+  async claudeLogout(): Promise<ClaudeConnection> { throw new ApiError(503, null, 'Usa la aplicación local con la API real.'); }
   async selectConnection(_profileId: string): Promise<Connections> { throw new ApiError(503, null, 'Usa la aplicación local con la API real.'); }
   async connectionModels(): Promise<Models> { throw new ApiError(503, null, 'Usa la aplicación local con la API real.'); }
   async selectConnectionModel(_model: string): Promise<Models> { throw new ApiError(503, null, 'Usa la aplicación local con la API real.'); }
@@ -179,7 +184,7 @@ export class MockApi implements UmbralApi {
     return buildDetail(spec, this.getCaseSync(`case-${topicId}`));
   }
 
-  async compose(req: QueryRequestBody, opts: { signal?: AbortSignal } = {}): Promise<ComposeResponse> {
+  async compose(req: ComposeRequestBody, opts: { signal?: AbortSignal } = {}): Promise<ComposeResponse> {
     const response = await this.query(req, opts);
     return {
       response, answerMode: 'reglas', rulesAnswer: response.answer, provider: null, model: null, usage: null, attempts: 0,

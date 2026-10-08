@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { Bot, Copy, ExternalLink, Sparkles, TriangleAlert, X } from 'lucide-react';
-import type { QueryResponse } from '../../lib/api/types';
+import type { ComposeProvider, QueryResponse } from '../../lib/api/types';
 import { fmtDateTime } from '../../lib/format';
 import type { AssistantTurn } from '../../lib/api/assistantHistory';
-import { ANSWER_LABEL } from '../../lib/labels';
+import { ANSWER_LABEL, COMPOSE_PROVIDER_HELP, COMPOSE_PROVIDER_LABEL } from '../../lib/labels';
 import { useApp } from '../context';
 import { Button, Notice, Pill, type Tone } from '../ui';
 import { Disclosure } from '../ui/controls';
@@ -101,12 +101,13 @@ function CitationGroup({ index, evidenceId, citations, response }: {
   );
 }
 
-export function Answer({ turn, onCopy, onRelatedTitles, onNavigate, composing, canCompose, onCompose, onCancelCompose }: {
+export function Answer({ turn, onCopy, onRelatedTitles, onNavigate, composing, canCompose, composeProvider, onCompose, onCancelCompose }: {
   turn: AssistantTurn;
   /** Se está redactando esta respuesta con IA. */
   composing: boolean;
   /** Gemini disponible; si no, el motivo para mostrarlo. */
   canCompose: { ok: boolean; reason?: string | null };
+  composeProvider: ComposeProvider;
   onCompose: () => void;
   onCancelCompose: () => void;
   onCopy: (turn: AssistantTurn) => void;
@@ -166,8 +167,8 @@ export function Answer({ turn, onCopy, onRelatedTitles, onNavigate, composing, c
       {canCompose.ok === false && turn.answerMode !== 'modelo' && composable && <p className="text-xs text-ink-3" data-testid="assistant-compose-unavailable">Redactar con IA no está disponible: {canCompose.reason ?? 'proveedor no conectado'}.</p>}
       {composable && canCompose.ok && !composing && turn.answerMode !== 'modelo' && (
         <div className="assistant-compose">
-          <Button variant="secondary" icon={Sparkles} onClick={onCompose} data-testid="assistant-compose">Redactar con IA</Button>
-          <p className="assistant-input-help">Un modelo reescribe esta respuesta usando solo estas fuentes y el código la verifica (citas, pasajes y cifras). Usa una de las llamadas diarias gratuitas de Gemini, que son limitadas.</p>
+          <Button variant="secondary" icon={Sparkles} onClick={onCompose} data-testid="assistant-compose">Redactar con {COMPOSE_PROVIDER_LABEL[composeProvider]}</Button>
+          <p className="assistant-input-help">Un modelo reescribe esta respuesta usando solo estas fuentes y el código la verifica (citas, pasajes y cifras). {COMPOSE_PROVIDER_HELP[composeProvider]}</p>
         </div>
       )}
       {showAbstentionReason && <Notice tone="neutral" title="Motivo de abstención" testId="assistant-abstention" animate={false}><p>{abstentionReason}</p></Notice>}

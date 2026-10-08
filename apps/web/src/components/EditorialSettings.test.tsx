@@ -45,7 +45,7 @@ describe('política editorial y conexiones personales', () => {
   it('no consulta conexiones personales desde web o demostración', async () => {
     const api = new MockApi(); const connections = vi.spyOn(api, 'connections');
     mount(<ConnectionsCard />, api);
-    await screen.findByText('Disponible en la aplicación local');
+    await screen.findAllByText('Disponible en la aplicación local');
     expect(connections).not.toHaveBeenCalled();
   });
   it('en offline muestra perfiles sin iniciar OAuth ni consultar catálogo', async () => {
@@ -54,7 +54,7 @@ describe('política editorial y conexiones personales', () => {
     vi.spyOn(api, 'connections').mockResolvedValue({ available: false, reason: 'Offline', activeProfileId: 'one', profiles: [{ profileId: 'one', label: 'Perfil de prueba', email: null, connected: true, active: true, planUsageEnabled: true, model: 'modelo-de-prueba' }] });
     const start = vi.spyOn(api, 'startConnection'); const models = vi.spyOn(api, 'connectionModels');
     mount(<ConnectionsCard />, api); await screen.findByText('Perfil de prueba');
-    expect((screen.getByRole('button', { name: 'Preparar inicio de sesión' }) as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole('button', { name: 'Iniciar sesión con ChatGPT' }) as HTMLButtonElement).disabled).toBe(true);
     expect(start).not.toHaveBeenCalled(); expect(models).not.toHaveBeenCalled();
   });
   it('cliente HTTP envía alcance y bearer; guarda pesos con el contrato', async () => {

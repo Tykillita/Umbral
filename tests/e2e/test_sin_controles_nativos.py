@@ -208,3 +208,38 @@ def test_globo_de_ayuda_propio(page: Page, stack):
     assert "Puntaje de atención" in tip.inner_text()
     page.mouse.move(5, 5)
     expect(tip).to_have_count(0)
+
+
+def test_selector_flotante_de_movimiento_con_teclado_y_persistencia(page: Page, stack):
+    page.set_viewport_size({"width": 390, "height": 844})
+    page.add_init_script("localStorage.removeItem('umbral.motion-preference.v1')")
+    open_app(page, stack.url)
+
+    group = page.get_by_role("radiogroup", name="Movimiento reducido")
+    system = page.get_by_role("radio", name="Usar preferencia del sistema", exact=True)
+    reduced = page.get_by_role("radio", name="Activar movimiento reducido", exact=True)
+    full = page.get_by_role("radio", name="Desactivar movimiento reducido", exact=True)
+    expect(group).to_be_visible()
+    expect(system).to_have_attribute("aria-checked", "true")
+    switch_box = page.get_by_test_id("motion-preference-switch").bounding_box()
+    tabbar_box = page.locator(".comic-tabbar").bounding_box()
+    assert switch_box is not None and tabbar_box is not None
+    assert switch_box["y"] + switch_box["height"] <= tabbar_box["y"], "el selector debe quedar encima de la navegación móvil"
+    for option in (system, reduced, full):
+        box = option.bounding_box()
+        assert box is not None and box["width"] >= 43.5 and box["height"] >= 43.5, f"zona táctil insuficiente: {box}"
+
+    system.focus()
+    page.keyboard.press("ArrowRight")
+    expect(reduced).to_have_attribute("aria-checked", "true")
+    assert page.locator("html").get_attribute("data-motion-preference") == "reduced"
+    assert page.evaluate("localStorage.getItem('umbral.motion-preference.v1')") == "reduced"
+
+    page.keyboard.press("ArrowRight")
+    expect(full).to_have_attribute("aria-checked", "true")
+    assert page.locator("html").get_attribute("data-motion-preference") == "full"
+
+    page.keyboard.press("End")
+    expect(full).to_have_attribute("aria-checked", "true")
+    page.keyboard.press("Home")
+    expect(system).to_have_attribute("aria-checked", "true")

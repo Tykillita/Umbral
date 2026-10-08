@@ -14,7 +14,8 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { Check, ChevronDown, ChevronRight, Minus, Plus, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, Minus, Monitor, Pause, Play, Plus, X } from 'lucide-react';
+import { getMotionPreference, setMotionPreference, type MotionPreference } from '../../lib/motion';
 
 /** Apariencia común de los campos propios (misma que `inputCls` de ui/index.tsx; se repite para evitar una importación circular). */
 const FIELD =
@@ -40,6 +41,7 @@ export interface SelectOption<T extends string = string> {
   value: T;
   label: string;
   hint?: string;
+  disabled?: boolean;
 }
 
 type PopoverPos = { left: number; width: number; maxHeight: number; top?: number; bottom?: number };
@@ -56,6 +58,10 @@ export function Select<T extends string>({
   disabled = false,
   testId,
   className = '',
+  triggerIcon,
+  triggerPrefix,
+  iconOnly = false,
+  popoverMinWidth = 0,
 }: {
   id?: string;
   value: T | '';
@@ -68,6 +74,13 @@ export function Select<T extends string>({
   disabled?: boolean;
   testId?: string;
   className?: string;
+  /** Icono opcional del disparador; con `iconOnly` la opción elegida queda solo para lector de pantalla. */
+  triggerIcon?: ReactNode;
+  /** Texto breve visible antes del valor seleccionado. */
+  triggerPrefix?: string;
+  iconOnly?: boolean;
+  /** Ancho mínimo en píxeles del menú de escritorio, independiente del disparador. */
+  popoverMinWidth?: number;
 }) {
   const autoId = useId();
   const baseId = id ?? autoId;
@@ -96,7 +109,7 @@ export function Select<T extends string>({
   };
   const choose = (index: number) => {
     const option = options[index];
-    if (!option) return;
+    if (!option || option.disabled) return;
     onChange(option.value);
     close();
   };
@@ -110,9 +123,10 @@ export function Select<T extends string>({
     const above = r.top - 12;
     const useBelow = below >= 220 || below >= above;
     const maxHeight = Math.max(140, Math.min(320, useBelow ? below : above));
-    const left = Math.max(8, Math.min(r.left, window.innerWidth - r.width - 8));
-    setPos({ left, width: r.width, maxHeight, ...(useBelow ? { top: r.bottom + 4 } : { bottom: vh - r.top + 4 }) });
-  }, []);
+    const width = Math.min(Math.max(r.width, popoverMinWidth), Math.max(0, window.innerWidth - 16));
+    const left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8));
+    setPos({ left, width, maxHeight, ...(useBelow ? { top: r.bottom + 4 } : { bottom: vh - r.top + 4 }) });
+  }, [popoverMinWidth]);
 
   useLayoutEffect(() => {
     if (!open || sheet) return;
@@ -250,7 +264,9 @@ export function Select<T extends string>({
           id={`${listId}-opt-${index}`}
           role="option"
           aria-selected={index === selectedIndex}
+          aria-disabled={option.disabled || undefined}
           data-value={option.value}
+          data-disabled={option.disabled ? 'true' : undefined}
           data-testid="select-option"
           data-active={index === active ? 'true' : undefined}
           className="select-option"
@@ -291,7 +307,9 @@ export function Select<T extends string>({
         onClick={() => (open ? close(false) : openList())}
         onKeyDown={onKeyDown}
       >
-        <span className={`select-value ${selected ? '' : 'is-placeholder'}`}>{selected ? selected.label : placeholder}</span>
+        {triggerIcon && <span className="select-trigger-icon" aria-hidden="true">{triggerIcon}</span>}
+        {triggerPrefix && <span className="select-trigger-prefix" aria-hidden="true">{triggerPrefix}</span>}
+        <span className={`select-value ${selected ? '' : 'is-placeholder'} ${iconOnly ? 'sr-only' : ''}`}>{selected ? selected.label : placeholder}</span>
         <ChevronDown size={16} aria-hidden="true" className="select-chevron" />
       </div>
       {open &&
@@ -580,6 +598,65 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
           document.body,
         )}
     </span>
+  );
+}
+
+const MOTION_OPTIONS: { value: MotionPreference; label: string; hint: string; icon: typeof Monitor }[] = [
+  { value: 'system', label: 'Usar preferencia del sistema', hint: 'Seguir el ajuste de movimiento del dispositivo', icon: Monitor },
+  { value: 'reduced', label: 'Activar movimiento reducido', hint: 'Reducir las animaciones en esta plataforma', icon: Pause },
+  { value: 'full', label: 'Desactivar movimiento reducido', hint: 'Permitir todas las animaciones en esta plataforma', icon: Play },
+];
+
+/** Selector segmentado de movimiento. Sigue el patrón de radio APG sin controles nativos. */
+export function MotionPreferenceSwitch() {
+  const [preference, setPreference] = useState<MotionPreference>(() => getMotionPreference());
+  const [saveError, setSaveError] = useState('');
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const choose = (next: MotionPreference) => {
+    if (next === preference) return;
+    setPreference(next);
+    setSaveError('');
+    void setMotionPreference(next).catch(() => setSaveError('No se pudo guardar esta preferencia; seguirá activa hasta cerrar la app.'));
+  };
+
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const currentIndex = MOTION_OPTIONS.findIndex((option) => option.value === preference);
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (currentIndex + 1) % MOTION_OPTIONS.length;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (currentIndex + MOTION_OPTIONS.length - 1) % MOTION_OPTIONS.length;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = MOTION_OPTIONS.length - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    const next = MOTION_OPTIONS[nextIndex];
+    refs.current[nextIndex]?.focus();
+    if (next) choose(next.value);
+  };
+
+  return (
+    <div className="motion-switch" data-testid="motion-preference-switch">
+      <div role="radiogroup" aria-label="Movimiento reducido" className="motion-switch-options" onKeyDown={onKeyDown}>
+        {MOTION_OPTIONS.map(({ value, label, hint, icon: Icon }, index) => (
+          <Tooltip key={value} content={hint}>
+            <button
+              ref={(element) => { refs.current[index] = element; }}
+              type="button"
+              role="radio"
+              aria-label={label}
+              aria-checked={preference === value}
+              tabIndex={preference === value ? 0 : -1}
+              data-testid={`motion-option-${value}`}
+              className="motion-switch-option"
+              onClick={() => choose(value)}
+            >
+              <Icon size={18} aria-hidden="true" />
+            </button>
+          </Tooltip>
+        ))}
+      </div>
+      <span role="status" aria-live="polite" className="sr-only">{saveError}</span>
+    </div>
   );
 }
 

@@ -1,18 +1,19 @@
 import { RotateCcw, X } from 'lucide-react';
-import type { QueryContext } from '../../lib/api/types';
+import type { ComposeProvider, QueryContext } from '../../lib/api/types';
 import type { AssistantTurn } from '../../lib/api/assistantHistory';
 import { Button, Notice } from '../ui';
 import { ErrorBoundary } from '../ui/ErrorBoundary';
 import { Answer } from './AnswerCard';
 
 /** Una pregunta con su estado (pendiente, interrumpida, error o respuesta) y, si es la última, sus continuaciones. */
-export function TurnView({ turn, isLast, running, composing, canCompose, busy, now, onCancel, onRetry, onEditQuestion, onCopy, onRelatedTitles, onNavigate, onFollowUp, onCompose }: {
+export function TurnView({ turn, isLast, running, composing, canCompose, composeProvider, busy, now, onCancel, onRetry, onEditQuestion, onCopy, onRelatedTitles, onNavigate, onFollowUp, onCompose }: {
   turn: AssistantTurn;
   isLast: boolean;
   /** Esta pregunta tiene una consulta en vuelo en este momento. */
   running: boolean;
   composing: boolean;
   canCompose: { ok: boolean; reason?: string | null };
+  composeProvider: ComposeProvider;
   onCompose: () => void;
   /** Hay alguna consulta en vuelo en la conversación (bloquea reintentos y continuaciones). */
   busy: boolean;
@@ -64,7 +65,7 @@ export function TurnView({ turn, isLast, running, composing, canCompose, busy, n
             <Button variant="secondary" icon={RotateCcw} onClick={() => { reset(); onRetry(); }}>Consultar de nuevo</Button>
           </Notice>
         )}>
-          <Answer turn={turn} composing={composing} canCompose={canCompose} onCompose={onCompose} onCancelCompose={onCancel} onCopy={onCopy} onRelatedTitles={(titles) => onRelatedTitles(turn.id, titles)} onNavigate={onNavigate} />
+          <Answer turn={turn} composing={composing} canCompose={canCompose} composeProvider={composeProvider} onCompose={onCompose} onCancelCompose={onCancel} onCopy={onCopy} onRelatedTitles={(titles) => onRelatedTitles(turn.id, titles)} onNavigate={onNavigate} />
         </ErrorBoundary>
       )}
       {isLast && turn.state === 'complete' && suggestions.length > 0 && (

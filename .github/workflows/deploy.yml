@@ -2,7 +2,7 @@ name: Despliegue
 
 # Orquestador único de la publicación. Tras una CI aprobada en main:
 #   1) Render despliega ESE commit (hook con ref) y se espera a que la API lo sirva, íntegra y en modo público;
-#   2) solo entonces se compila y publica Firebase Hosting;
+#   2) solo entonces se compila y publica Firebase Hosting, promoviendo el snapshot versionado si cambió CURRENT;
 #   3) se ejecuta la prueba online contra las URL reales.
 # Si el paso 1 falla, Hosting no se toca. Para recuperar un despliegue anterior: «Run workflow» con su SHA.
 on:
@@ -61,7 +61,26 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.commit.outputs.sha }}
+          fetch-depth: 0
           persist-credentials: false
+
+      - name: Detectar un snapshot versionado nuevo
+        id: snapshot
+        shell: bash
+        env:
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -euo pipefail
+          current="$(git show "$SHA:data/snapshots/CURRENT" | tr -d '\r\n')"
+          [[ "$current" =~ ^[0-9]{8}-[a-f0-9]{8}$ ]] || { echo 'CURRENT no contiene un ID de snapshot válido.'; exit 1; }
+          previous="$(git show "$SHA^:data/snapshots/CURRENT" 2>/dev/null | tr -d '\r\n' || true)"
+          if [ "$current" != "$previous" ]; then
+            echo "snapshot_id=$current" >> "$GITHUB_OUTPUT"
+            echo "Se promoverá el snapshot versionado $current."
+          else
+            echo 'CURRENT no cambió; se conservarán los datos ya alojados.'
+            echo 'snapshot_id=' >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Pedir a Render el despliegue de este commit
         env:
@@ -88,6 +107,7 @@ jobs:
         with:
           api-url: ${{ vars.PUBLIC_API_URL }}
           feed-url: ${{ env.WEB_URL }}/data/
+          snapshot-id: ${{ steps.snapshot.outputs.snapshot_id }}
       - name: Publicar Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -97,9 +117,19 @@ jobs:
       - name: Prueba online contra las URL reales
         env:
           PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+          MODEL_VERSION: ${{ steps.build.outputs.model-version }}
+          PROFILE_ID: ${{ steps.build.outputs.calibration-profile-id }}
+          PROFILE_SHA256: ${{ steps.build.outputs.calibration-profile-sha256 }}
         run: |
-          python3 scripts/verify_hosted.py --web-url "$WEB_URL" --api-url "$PUBLIC_API_URL" \
-            --expected-snapshot-file .production/candidate-id --wait-seconds 960 --out .production/hosted-receipt.json
+          set -euo pipefail
+          args=(--web-url "$WEB_URL" --api-url "$PUBLIC_API_URL" \
+            --expected-snapshot-file .production/candidate-id --wait-seconds 960 --out .production/hosted-receipt.json)
+          if [ -n "$MODEL_VERSION" ]; then
+            args+=(--expected-model-version "$MODEL_VERSION" \
+              --expected-calibration-profile-id "$PROFILE_ID" \
+              --expected-calibration-profile-sha256 "$PROFILE_SHA256")
+          fi
+          python3 scripts/verify_hosted.py "${args[@]}"
       - name: Resumen
         if: always()
         env:

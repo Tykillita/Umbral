@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import DesktopWindowControls from '../components/DesktopWindowControls';
+import DesktopUpdateNotice from '../components/DesktopUpdateNotice';
 import '@fontsource/barlow-condensed/latin-700.css';
 import '@fontsource/barlow-condensed/latin-800.css';
 import '@fontsource/atkinson-hyperlegible/latin-400.css';
@@ -22,8 +24,21 @@ const { title, description = 'Umbral: agenda editorial priorizada, evidencia tra
     <link rel="icon" type="image/png" href="/brand/favicon-32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="/brand/favicon-16.png" sizes="16x16" />
     <title>{title}</title>
+    <script is:inline>
+      // En la app de escritorio la cabecera ya nace fija y con su hueco reservado, sin parpadeo al hidratar.
+      if (window.umbralDesktop && window.umbralDesktop.windowControls) document.documentElement.classList.add('desktop-shell');
+      const preferenceKey = 'umbral.motion-preference.v1';
+      const validPreference = (value) => value === 'system' || value === 'reduced' || value === 'full';
+      let motionPreference = window.umbralDesktop && window.umbralDesktop.motionPreference;
+      if (!validPreference(motionPreference)) {
+        try { motionPreference = window.localStorage.getItem(preferenceKey); } catch { /* storage may be unavailable */ }
+      }
+      document.documentElement.dataset.motionPreference = validPreference(motionPreference) ? motionPreference : 'system';
+    </script>
   </head>
   <body>
+    <DesktopWindowControls client:only="react" />
+    <DesktopUpdateNotice client:only="react" />
     <slot />
   </body>
 </html>

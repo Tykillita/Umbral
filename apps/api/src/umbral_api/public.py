@@ -24,10 +24,10 @@ from .models import (
 )
 from .public_models import (
     ArchivedEvidence,
+    PublicComposeRequest,
     PublicContext,
     PublicDraftRequest,
     PublicDraftResponse,
-    PublicQueryRequest,
     PublicValidationRequest,
     PublicValidationResponse,
 )
@@ -128,12 +128,12 @@ class PublicApi:
                     self._cache.popitem(last=False)
             return response
 
-    def compose(self, body: PublicQueryRequest, user: str) -> ComposeResponse:
+    def compose(self, body: PublicComposeRequest, user: str) -> ComposeResponse:
         """Redacción con IA de una consulta pública. Reutiliza resultados verificados idénticos para no gastar la cuota diaria."""
         svc = self.context(body.context, user)
         svc.limiter.check(user, "compose", min(2, svc.settings.drafts_per_minute))
         request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
-        payload = body.model_dump(mode="json") | {"model": svc.settings.gemini_model, "fallbackModel": svc.settings.gemini_fallback_model}
+        payload = body.model_dump(mode="json") | {"model": svc.settings.gemini_model, "fallbackModel": svc.settings.gemini_fallback_model}  # incluye `provider`
         key = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
         with self._compose_lock:
             now = time.monotonic()
@@ -143,9 +143,9 @@ class PublicApi:
             if cached is not None:
                 response = cached[1].model_copy(deep=True)
                 response.usage = None
-                response.notices.append("Se reutilizó una redacción ya verificada; no se llamó de nuevo a Gemini.")
+                response.notices.append("Se reutilizó una redacción ya verificada; no se llamó de nuevo al modelo.")
                 return response
-            result = svc.compose_query(user, request, consume_limit=False)
+            result = svc.compose_query(user, request, consume_limit=False, provider=body.provider)
             if result.answer_mode == "modelo":  # solo resultados del modelo; nunca respaldos por reglas
                 self._compose_cache[key] = (now, result.model_copy(deep=True))
                 while len(self._compose_cache) > 128:

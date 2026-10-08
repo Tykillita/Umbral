@@ -163,8 +163,12 @@ button.comic-icon-button { padding: 0; }
 .assistant-header { flex: 0 0 auto; padding: .75rem 1rem .5rem; border-bottom: 2px solid var(--color-ink); background: #cee5ec; }
 .assistant-header-main { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .assistant-header-actions { display: flex; align-items: center; gap: .25rem; }
-.assistant-toolbar { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .35rem; }
+.assistant-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; margin-top: .35rem; }
 .assistant-toolbar > button { min-height: 2.75rem; }
+.assistant-toolbar > span { display: inline-flex; max-width: 100%; }
+.assistant-model-row { display: grid; gap: .2rem; margin-top: .45rem; padding-top: .4rem; border-top: 1px solid rgb(23 35 55 / .22); }
+.assistant-model-controls { display: grid; width: 100%; max-width: 26rem; grid-template-columns: minmax(0,1fr) 2.75rem; align-items: center; gap: .4rem; }
+.assistant-model-controls > span { display: inline-flex; width: 100%; min-width: 0; }
 .assistant-backdrop { position: fixed; inset: 0; z-index: 39; border: 0; background: rgb(23 35 55 / .38); }
 .assistant-dock { position: fixed; z-index: 40; right: 1rem; bottom: 1rem; display: flex; width: 15rem; height: 3.25rem; align-items: center; gap: .6rem; border: 2px solid var(--color-ink); padding: .35rem .6rem; background: #cee5ec; color: var(--color-ink); box-shadow: 4px 4px 0 var(--color-ink); text-align: left; }
 .assistant-dock strong, .assistant-dock small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -199,7 +203,8 @@ button.comic-icon-button { padding: 0; }
 .assistant-passage-field { display: block; color: var(--color-ink-3); font-size: .75rem; font-weight: 700; }
 .assistant-passage-trigger { min-height: 2.75rem; font-size: .8125rem; }
 .assistant-untrusted { border: 2px solid var(--color-warn); padding: .5rem .6rem; background: var(--color-warn-bg, transparent); }
-@media (prefers-reduced-motion: reduce) { .cite-marker { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html:not([data-motion-preference="full"]) .cite-marker { transition: none; } }
+html[data-motion-preference="reduced"] .cite-marker { transition: none; }
 @media print { .cite-marker { box-shadow: none; } }
 .assistant-related-link { min-height: 2.75rem; border: 1px solid var(--color-rule-strong); padding: .55rem .65rem; background: var(--color-card); color: var(--color-info); text-align: left; font-size: .8rem; line-height: 1.35; }
 .assistant-query-data { display: grid; gap: .4rem; font-size: .75rem; line-height: 1.4; }
@@ -264,11 +269,22 @@ button.comic-icon-button { padding: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  html:not([data-motion-preference="full"]) *,
+  html:not([data-motion-preference="full"]) *::before,
+  html:not([data-motion-preference="full"]) *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
 }
+html[data-motion-preference="reduced"] *,
+html[data-motion-preference="reduced"] *::before,
+html[data-motion-preference="reduced"] *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+html[data-motion-preference="reduced"] .assistant-panel,
+html[data-motion-preference="reduced"] .assistant-panel.is-closing { animation: none; }
+html[data-motion-preference="reduced"] .assistant-spinner { animation: none; border-top-color: var(--color-amber-600); }
 
 textarea,
 input,
@@ -337,8 +353,9 @@ h1, h2, h3, .comic-page-heading, .topic-copy h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .assistant-panel, .assistant-panel.is-closing { animation: none; }
-  .assistant-spinner { animation: none; border-top-color: var(--color-amber-600); }
+  html:not([data-motion-preference="full"]) .assistant-panel,
+  html:not([data-motion-preference="full"]) .assistant-panel.is-closing { animation: none; }
+  html:not([data-motion-preference="full"]) .assistant-spinner { animation: none; border-top-color: var(--color-amber-600); }
 }
 
 /* Móvil: la ayuda de estado no debe empujar el contenido; el aviso conserva su título. */
@@ -388,6 +405,13 @@ textarea { resize: none; field-sizing: content; min-height: 5rem; max-height: 24
 /* Menú desplegable propio */
 .select-trigger { display: flex; align-items: center; justify-content: space-between; gap: .5rem; cursor: pointer; user-select: none; text-align: left; }
 .select-trigger.is-disabled { opacity: .55; cursor: not-allowed; }
+.select-trigger-icon { display: inline-grid; flex: 0 0 auto; place-items: center; }
+.select-trigger-prefix { flex: 0 0 auto; white-space: nowrap; }
+.assistant-model-trigger { width: 100%; min-width: 0; height: 2.75rem; flex: 1 1 auto; gap: .35rem; padding: .35rem .5rem; border: 2px solid var(--color-ink); background: var(--color-amber-100); box-shadow: 2px 2px 0 var(--color-ink); }
+.assistant-model-trigger:hover { background: var(--color-amber-300); }
+.assistant-model-trigger .select-trigger-icon { color: var(--color-ink); }
+.assistant-model-trigger .select-trigger-prefix { color: var(--color-ink-2); font-size: .6875rem; font-weight: 800; letter-spacing: .025em; text-transform: uppercase; }
+.assistant-model-trigger .select-value { color: var(--color-ink); font-size: .875rem; font-weight: 800; }
 .select-value { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .select-value.is-placeholder { color: var(--color-ink-3); }
 .select-chevron { flex-shrink: 0; transition: transform .15s; }
@@ -398,6 +422,8 @@ textarea { resize: none; field-sizing: content; min-height: 5rem; max-height: 24
 .select-option { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 2.75rem; padding: .5rem .65rem; cursor: pointer; border: 1.5px solid transparent; font-size: .9375rem; }
 .select-option[data-active="true"] { background: var(--color-amber-100); border-color: var(--color-ink); }
 .select-option[aria-selected="true"] { font-weight: 700; }
+.select-option[data-disabled="true"] { color: var(--color-ink-3); cursor: not-allowed; }
+.select-option[data-disabled="true"][data-active="true"] { background: var(--color-sunk); }
 .select-layer { position: fixed; inset: 0; z-index: 80; }
 .select-backdrop { position: absolute; inset: 0; background: rgb(23 35 55 / .5); }
 .select-sheet { position: absolute; left: 0; right: 0; bottom: 0; max-height: 75vh; display: flex; flex-direction: column; background: var(--color-card); border-top: 3px solid var(--color-ink); padding-bottom: env(safe-area-inset-bottom); }
@@ -443,3 +469,54 @@ textarea { resize: none; field-sizing: content; min-height: 5rem; max-height: 24
 .rich-list-ol > li::before { content: counter(rich); position: absolute; left: 0.5rem; top: 0.5rem; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; background: var(--color-amber-300); border: 2px solid var(--color-ink); font-family: var(--font-serif); font-weight: 800; font-size: 0.8125rem; line-height: 1; color: var(--color-ink); }
 .rich-list-ul > li::before { content: ""; position: absolute; left: 0.9rem; top: 0.95rem; width: 0.5rem; height: 0.5rem; background: var(--color-ink); transform: rotate(45deg); }
 .rich-text > p:first-child { font-weight: 600; }
+
+/* Selector flotante de movimiento: tres viñetas compactas con la selección marcada en ámbar. */
+.motion-switch { position: fixed; z-index: 70; left: max(.75rem, env(safe-area-inset-left)); bottom: max(.75rem, env(safe-area-inset-bottom)); border: 2px solid var(--color-ink); padding: .2rem; background: var(--color-paper); box-shadow: 4px 4px 0 var(--color-ink); transform: rotate(-1deg); }
+.motion-switch-options { display: flex; align-items: center; gap: .1rem; }
+.motion-switch-options > span { display: flex; }
+.motion-switch-option { display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 2px solid transparent; padding: 0; background: var(--color-card); color: var(--color-ink-2); cursor: pointer; }
+.motion-switch-option:hover { background: var(--color-amber-100); color: var(--color-ink); }
+.motion-switch-option[aria-checked="true"] { border-color: var(--color-ink); background: var(--color-amber-300); color: var(--color-ink); box-shadow: 2px 2px 0 var(--color-ink); }
+.motion-switch-option:active { background: var(--color-ink); color: var(--color-paper); }
+.motion-switch-option:focus-visible { outline: 3px solid var(--color-ink); outline-offset: 2px; }
+@media (max-width: 767px) { .motion-switch { bottom: calc(4rem + env(safe-area-inset-bottom)); } }
+
+/* ---- Controles de ventana de la app de escritorio (la ventana no tiene marco nativo) ----
+   La cabecera de la app (.comic-masthead) hace de barra de título: queda fija y a todo el ancho, es zona de arrastre y los
+   tres botones cuelgan de la esquina superior derecha (46 x 32 px, como los de Windows 11). El desplazamiento ocurre en <body>,
+   por debajo de la cabecera, así que la barra de scroll no la parte. --titlebar-h es la altura medida de la cabecera. */
+:root { --titlebar-h: 0px; }
+html.desktop-shell { --titlebar-h: 4.4rem; overflow: hidden; scrollbar-gutter: auto; }
+html.desktop-shell .desktop-update-notice { position: fixed; z-index: 120; right: 1rem; bottom: 1rem; display: flex; gap: .75rem; width: min(28rem, calc(100vw - 2rem)); padding: .9rem; border: 2px solid var(--color-ink); background: var(--color-card); box-shadow: 4px 4px 0 var(--color-ink); color: var(--color-ink); }
+html.desktop-shell .desktop-update-icon { display: grid; width: 2.75rem; height: 2.75rem; flex: 0 0 auto; place-items: center; border: 1px solid currentColor; background: var(--color-amber-100); }
+html.desktop-shell .desktop-update-title { margin: 0; font-family: var(--font-serif); font-size: 1rem; font-weight: 800; line-height: 1.2; }
+html.desktop-shell .desktop-update-message { margin: .25rem 0 .5rem; font-size: .875rem; line-height: 1.4; }
+html.desktop-shell .desktop-update-track { height: .5rem; overflow: hidden; border: 1px solid var(--color-ink); background: var(--color-paper); }
+html.desktop-shell .desktop-update-track span { display: block; height: 100%; background: var(--color-info); }
+html.desktop-shell .desktop-update-percent { display: block; margin-top: .2rem; text-align: right; font-size: .75rem; font-variant-numeric: tabular-nums; }
+html.desktop-shell .desktop-update-actions { display: flex; min-height: 2.75rem; align-items: center; justify-content: space-between; gap: .5rem; }
+html.desktop-shell .desktop-update-primary, html.desktop-shell .desktop-update-close { min-height: 2.75rem; border: 1px solid var(--color-ink); background: var(--color-paper); padding: .45rem .7rem; font-weight: 700; }
+html.desktop-shell .desktop-update-primary { box-shadow: 2px 2px 0 var(--color-ink); }
+html.desktop-shell .desktop-update-primary:focus-visible, html.desktop-shell .desktop-update-close:focus-visible { outline: 3px solid var(--color-info); outline-offset: 2px; }
+html.desktop-shell .desktop-update-close { display: grid; width: 2.75rem; flex: 0 0 auto; place-items: center; padding: 0; }
+html.desktop-shell body { height: calc(100dvh - var(--titlebar-h)); min-height: 0; margin-top: var(--titlebar-h); overflow-x: hidden; overflow-y: auto; scrollbar-gutter: auto; scroll-padding-top: 1rem; }
+html.desktop-shell .comic-masthead { position: fixed; inset: 0 0 auto 0; -webkit-app-region: drag; user-select: none; }
+html.desktop-shell .comic-masthead a, html.desktop-shell .comic-masthead button, html.desktop-shell .comic-masthead input, html.desktop-shell .comic-masthead [role="combobox"], html.desktop-shell .comic-masthead [role="tab"] { -webkit-app-region: no-drag; }
+/* Los controles ocupan la esquina: el contenido de la cabecera se aparta cuando la ventana no es lo bastante ancha. */
+@media (max-width: 1400px) { html.desktop-shell .comic-masthead > div { padding-right: 9.5rem; } }
+.desktop-drag-strip { position: fixed; inset: 0 0 auto 0; z-index: 124; height: 2rem; -webkit-app-region: drag; }
+.desktop-wc-group { position: fixed; top: 0; right: 0; z-index: 125; display: flex; height: 2rem; align-items: stretch; background: var(--color-card); border-left: 2px solid var(--color-ink); border-bottom: 2px solid var(--color-ink); -webkit-app-region: no-drag; user-select: none; }
+.desktop-wc-group > span { display: flex; }
+/* Cada botón lleva el trazo de tinta de la app: se tiñe de ámbar al pasar el cursor (cerrar, de rojo) y se invierte al pulsar. */
+.desktop-wc { display: grid; width: 2.75rem; height: 100%; place-items: center; padding: 0; border: 0; border-radius: 0; background: var(--color-card); color: var(--color-ink); cursor: pointer; }
+.desktop-wc-group > span + span .desktop-wc { border-left: 2px solid var(--color-ink); }
+.desktop-wc-glyph { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: square; stroke-linejoin: miter; }
+.desktop-wc:hover { background: var(--color-amber-300); }
+.desktop-wc-close:hover { background: var(--color-bad); color: #fff; }
+.desktop-wc:active { background: var(--color-ink); color: var(--color-card); }
+.desktop-wc:focus-visible { outline: 2px solid var(--color-ink); outline-offset: -5px; border-radius: 0; }
+@media (max-width: 1023px) {
+  html.desktop-shell .assistant-panel, html.desktop-shell .assistant-panel-expanded { top: var(--titlebar-h); height: calc(var(--assistant-viewport-height, 100dvh) - var(--titlebar-h)); max-height: calc(var(--assistant-viewport-height, 100dvh) - var(--titlebar-h)); }
+}
+/* En la app de escritorio ya se está dentro de la aplicación: lo que sobra se oculta. */
+html.desktop-shell .desktop-hidden { display: none; }

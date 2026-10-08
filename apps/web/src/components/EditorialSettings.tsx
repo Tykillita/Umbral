@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useApp } from './context';
 import { useHealth, useRules, useUpdateRules } from '../lib/hooks';
@@ -78,20 +78,45 @@ function LocalConnections({ offline }: { offline: boolean }) {
   const [label, setLabel] = useState('Cuenta ChatGPT');
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const status = useQuery({ queryKey: ['chatgpt-connections'], queryFn: () => api.connections() });
+  const [oauthPending, setOauthPending] = useState(false);
+  const oauthFingerprint = useRef('');
+  const oauthTimer = useRef<number | undefined>(undefined);
+  const status = useQuery({
+    queryKey: ['chatgpt-connections'],
+    queryFn: () => api.connections(),
+    refetchInterval: oauthPending ? 1500 : false,
+  });
   const models = useQuery({ queryKey: ['chatgpt-models', status.data?.activeProfileId], queryFn: () => api.connectionModels(), enabled: !offline && Boolean(status.data?.activeProfileId), retry: false });
   const refresh = async () => { await Promise.all([qc.invalidateQueries({ queryKey: ['chatgpt-connections'] }), qc.invalidateQueries({ queryKey: ['chatgpt-models'] }), qc.invalidateQueries({ queryKey: ['health'] })]); };
+  useEffect(() => {
+    if (!oauthPending || !status.data) return;
+    const fingerprint = JSON.stringify(status.data.profiles.map((p) => [p.profileId, p.connected, p.active]));
+    if (fingerprint !== oauthFingerprint.current && status.data.profiles.some((p) => p.active && p.connected)) {
+      setOauthPending(false);
+      window.clearTimeout(oauthTimer.current);
+      setNotice('Sesión de ChatGPT reconocida en este equipo.');
+      void qc.invalidateQueries({ queryKey: ['health'] });
+    }
+  }, [oauthPending, status.data, qc]);
+  useEffect(() => () => window.clearTimeout(oauthTimer.current), []);
   const change = useMutation({ mutationFn: async (action: { kind: 'start' | 'select' | 'model' | 'disconnect'; value: string }) => {
     setNotice(null);
     if (action.kind === 'start') {
+      oauthFingerprint.current = JSON.stringify(status.data?.profiles.map((p) => [p.profileId, p.connected, p.active]) ?? []);
+      setOauthPending(true);
       const result = await api.startConnection({ label: action.value });
       const url = new URL(result.authorizationUrl);
       if (url.protocol !== 'https:' || url.hostname !== 'auth.openai.com' || url.username || url.password) throw new Error('El servicio devolvió una dirección de autenticación inesperada.');
       setAuthorizationUrl(url.href); setNotice(`Enlace preparado. Inicia sesión antes de ${fmtDateTime(result.expiresIn ? new Date(Date.now() + result.expiresIn * 1000).toISOString() : null)}.`);
+      window.clearTimeout(oauthTimer.current);
+      oauthTimer.current = window.setTimeout(() => {
+        setOauthPending(false);
+        setNotice('El inicio OAuth expiró. Puedes volver a iniciarlo.');
+      }, Math.max(1, result.expiresIn ?? 600) * 1000);
     } else if (action.kind === 'select') { await api.selectConnection(action.value); await refresh(); }
     else if (action.kind === 'model') { await api.selectConnectionModel(action.value); await refresh(); }
-    else { const result = await api.disconnect(action.value); setNotice(result.note); setAuthorizationUrl(null); await refresh(); }
-  }});
+    else { const result = await api.disconnect(action.value); setNotice(result.note); setAuthorizationUrl(null); setOauthPending(false); window.clearTimeout(oauthTimer.current); await refresh(); }
+  }, onError: () => setOauthPending(false) });
   if (status.isLoading) return <Loading label="Consultando conexiones locales…" />;
   return <div className="space-y-3" data-testid="local-connections">
     <p className="text-sm text-ink-2">La conexión usa tu cuenta personal. Los perfiles y tokens se guardan en este equipo; el catálogo corresponde a la cuenta elegida.</p>
@@ -100,9 +125,10 @@ function LocalConnections({ offline }: { offline: boolean }) {
     {status.data?.reason && <p className="text-sm text-ink-3">{status.data.reason}</p>}
     <div className="flex flex-wrap items-end gap-2">
       <Field htmlFor="chatgpt-profile-label" label="Nombre del perfil"><input id="chatgpt-profile-label" className={inputCls} value={label} maxLength={120} onChange={(e) => setLabel(e.target.value)} disabled={offline || change.isPending} /></Field>
-      <Button disabled={offline || change.isPending || !label.trim()} onClick={() => change.mutate({ kind: 'start', value: label.trim() })}>Preparar inicio de sesión</Button>
+      <Button disabled={offline || change.isPending || !label.trim()} onClick={() => change.mutate({ kind: 'start', value: label.trim() })}>Iniciar sesión con ChatGPT</Button>
       <Button onClick={refresh} disabled={change.isPending}>Actualizar conexión</Button>
     </div>
+    {oauthPending && <p role="status" className="text-sm text-ink-2">Esperando la confirmación OAuth de ChatGPT…</p>}
     {authorizationUrl && <a href={authorizationUrl} target="_blank" rel="noreferrer noopener" className="inline-block font-semibold underline underline-offset-4" data-testid="chatgpt-login-link">Abrir inicio de sesión de ChatGPT ↗</a>}
     <ul className="space-y-2">
       {status.data?.profiles.map((profile) => <li key={profile.profileId} className="flex flex-wrap items-center justify-between gap-2 border border-rule p-3 text-sm"><div><strong>{profile.label}</strong> {profile.active ? '· activo' : ''}<p>{profile.email ?? 'Cuenta sin correo disponible'} · {profile.connected ? 'Credenciales guardadas' : 'Desconectado'}</p>{profile.model && <p>Modelo: {profile.model}</p>}</div><div className="flex flex-wrap gap-2"><Button disabled={offline || change.isPending || profile.active || !profile.connected} onClick={() => change.mutate({ kind: 'select', value: profile.profileId })}>Seleccionar</Button><Button disabled={offline || change.isPending || !profile.connected} onClick={() => change.mutate({ kind: 'disconnect', value: profile.profileId })}>Cerrar sesión</Button></div></li>)}
@@ -115,11 +141,62 @@ function LocalConnections({ offline }: { offline: boolean }) {
   </div>;
 }
 
+function LocalClaudeConnection({ offline }: { offline: boolean }) {
+  const { api } = useApp();
+  const qc = useQueryClient();
+  const [notice, setNotice] = useState<string | null>(null);
+  const status = useQuery({
+    queryKey: ['claude-connection'],
+    queryFn: () => api.claudeConnection(),
+    refetchInterval: (query) => query.state.data?.loginPending ? 1500 : false,
+  });
+  const refresh = async () => { await Promise.all([qc.invalidateQueries({ queryKey: ['claude-connection'] }), qc.invalidateQueries({ queryKey: ['health'] })]); };
+  useEffect(() => { if (status.data?.loggedIn) void qc.invalidateQueries({ queryKey: ['health'] }); }, [qc, status.data?.loggedIn]);
+  const action = useMutation({
+    mutationFn: (kind: 'login' | 'logout') => kind === 'login' ? api.startClaudeLogin() : api.claudeLogout(),
+    onSuccess: async (connection) => {
+      setNotice(connection.loggedIn ? 'Sesión de Claude reconocida en este equipo.' : connection.loginPending ? 'Claude abrió el inicio de sesión oficial; esperando la confirmación…' : connection.reason ?? 'Estado de Claude actualizado.');
+      await refresh();
+    },
+  });
+  const command = status.data?.loginCommand ?? 'claude auth login --claudeai';
+  async function copyCommand() {
+    try {
+      await navigator.clipboard.writeText(command);
+      setNotice('Comando copiado. Ejecútalo en una terminal de este equipo y actualiza la sesión después.');
+    } catch { setNotice(`Ejecuta este comando en una terminal de este equipo: ${command}`); }
+  }
+  const commandFromError = action.error instanceof ApiError ? action.error.details?.command : null;
+  return <div className="space-y-3" data-testid="claude-connection">
+    <p className="text-sm text-ink-2">Umbral reconoce la sesión del CLI oficial de Claude. No importa credenciales ni sesiones de otras aplicaciones; solo usa tu suscripción, nunca una clave de API.</p>
+    {status.isLoading && <Loading label="Consultando sesión local de Claude…" />}
+    {status.error && <ErrorBox error={status.error} onRetry={() => status.refetch()} />}
+    {status.data?.reason && <p className="text-sm text-ink-3" data-testid="claude-connection-reason">{status.data.reason}</p>}
+    {status.data?.loggedIn && <p className="text-sm" data-testid="claude-connection-account">Sesión abierta{status.data.account ? ` · ${status.data.account}` : ''}{status.data.authMethod ? ` · ${status.data.authMethod}` : ''}</p>}
+    {status.data?.loginPending && <p className="text-sm text-ink-2" role="status">Esperando la confirmación en el navegador…</p>}
+    <div className="flex flex-wrap gap-2">
+      <Button disabled={offline || action.isPending || !status.data?.installed || status.data.loggedIn || status.data.loginPending} busy={action.isPending && !status.data?.loggedIn} onClick={() => action.mutate('login')}>Iniciar sesión con Claude</Button>
+      {status.data?.loggedIn && <Button disabled={offline || action.isPending} onClick={() => action.mutate('logout')}>Cerrar sesión de Claude</Button>}
+      <Button variant="ghost" disabled={action.isPending} onClick={refresh}>Actualizar sesión</Button>
+    </div>
+    {status.data && !status.data.loggedIn && !status.data.loginPending && <div className="flex flex-wrap items-center gap-2"><p className="text-xs text-ink-3">Si el inicio automático no abrió el navegador, ejecuta:</p><code className="rounded border border-rule bg-sunk px-2 py-1 text-sm">{command}</code><Button variant="ghost" onClick={() => void copyCommand()}>Copiar comando</Button></div>}
+    {typeof commandFromError === 'string' && <div className="flex flex-wrap items-center gap-2"><code className="rounded border border-rule bg-sunk px-2 py-1 text-sm">{commandFromError}</code><Button variant="ghost" onClick={() => void copyCommand()}>Copiar comando</Button></div>}
+    {action.error && <ErrorBox error={action.error} />}
+    {notice && <Notice tone="info" role="status">{notice}</Notice>}
+  </div>;
+}
+
 export function ConnectionsCard() {
   const { api, authMode } = useApp();
   const health = useHealth();
   const eligible = api.kind === 'live' && authMode === 'local' && health.data?.localMode && health.data.authMode === 'local';
-  return <Card data-testid="connections-card"><SectionTitle kicker="Opcional · uso personal">Conexión ChatGPT</SectionTitle>
-    {health.isLoading ? <Loading /> : eligible ? <LocalConnections offline={health.data?.offline ?? true} /> : <Notice title="Disponible en la aplicación local">Abre Umbral en localhost con su API local para conectar una cuenta personal.</Notice>}
-  </Card>;
+  const unavailable = <Notice title="Disponible en la aplicación local">Abre Umbral en localhost con su API local para conectar una cuenta personal.</Notice>;
+  return <div data-testid="connections-card" className="space-y-4">
+    <Card><SectionTitle kicker="Opcional · OAuth local">Conexión ChatGPT</SectionTitle>
+      {health.isLoading ? <Loading /> : eligible ? <LocalConnections offline={health.data?.offline ?? true} /> : unavailable}
+    </Card>
+    <Card><SectionTitle kicker="Opcional · sesión del CLI oficial">Conexión Claude</SectionTitle>
+      {health.isLoading ? <Loading /> : eligible ? <LocalClaudeConnection offline={health.data?.offline ?? true} /> : unavailable}
+    </Card>
+  </div>;
 }

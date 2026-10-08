@@ -1,1 +1,25 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="startup.css"></head><body><main><p class="eyebrow">UMBRAL · ESCRITORIO</p><h1>La agenda empieza aquí.</h1><p data-status role="status">Preparando tus datos y el motor local…</p><p class="hint">Tus borradores permanecen en este equipo. El primer inicio comprueba los datos incluidos.</p></main></body></html>
+<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="startup.css"></head><body>
+<header class="titlebar" data-titlebar><div class="titlebar-brand"><strong class="titlebar-word">UMBRAL<i>.</i></strong></div>
+<div class="titlebar-controls" role="group" aria-label="Controles de la ventana">
+<button type="button" class="wc wc-min" data-wc="minimize" aria-label="Minimizar la ventana"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 14h12"/></svg></button>
+<button type="button" class="wc wc-max" data-wc="maximize" aria-label="Maximizar la ventana"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 4.5h11v11h-11z"/></svg></button>
+<button type="button" class="wc wc-close" data-wc="close" aria-label="Cerrar Umbral"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 4.5l11 11M15.5 4.5l-11 11"/></svg></button></div></header>
+<main><p class="eyebrow">UMBRAL · ESCRITORIO</p><h1>La agenda empieza aquí.</h1><p data-status role="status">Preparando tus datos y el motor local…</p><p class="hint">Tus borradores permanecen en este equipo. El primer inicio comprueba los datos incluidos.</p></main>
+<script>
+(() => {
+  const api = window.umbralDesktop && window.umbralDesktop.windowControls;
+  const bar = document.querySelector('[data-titlebar]');
+  if (!api) { bar.hidden = true; return; }
+  const max = document.querySelector('[data-wc="maximize"]');
+  const paint = (state) => {
+    const on = Boolean(state && state.maximized);
+    max.setAttribute('aria-label', on ? 'Restaurar la ventana' : 'Maximizar la ventana');
+    max.querySelector('path').setAttribute('d', on ? 'M7.5 7.5h8v8h-8zM7.5 4.5h8M4.5 7.5v8' : 'M4.5 4.5h11v11h-11z');
+  };
+  document.querySelector('[data-wc="minimize"]').addEventListener('click', () => api.minimize());
+  max.addEventListener('click', () => api.toggleMaximize().then(paint));
+  document.querySelector('[data-wc="close"]').addEventListener('click', () => api.close());
+  api.onStateChange(paint);
+  api.getState().then(paint);
+})();
+</script></body></html>

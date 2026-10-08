@@ -460,6 +460,15 @@ class QueryRequest(ApiModel):
     )
 
 
+ComposeProvider = Literal["gemini", "chatgpt", "claude"]
+
+
+class ComposeRequest(QueryRequest):
+    provider: ComposeProvider = Field(
+        "gemini", description="Proveedor que redacta la respuesta; ChatGPT y Claude solo existen en ejecución local"
+    )
+
+
 class QueryHit(ApiModel):
     evidence_id: str
     kind: str
@@ -702,6 +711,10 @@ class ProviderStatus(ApiModel):
     available: bool
     reason: str | None = None
     model: str | None = None
+    sign_in: Literal["oauth", "cli"] | None = Field(
+        default=None, description="Cómo iniciar sesión en este proveedor (solo local): OAuth propio o CLI oficial"
+    )
+    account: str | None = Field(default=None, description="Cuenta de la sesión reconocida (solo local)")
 
 
 class IntegrityReport(ApiModel):

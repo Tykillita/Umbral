@@ -1,8 +1,10 @@
 import type {
   AnswerStatus,
   Category,
+  ComposeProvider,
   ClaimType,
   DataMode,
+  DraftProviderChoice,
   EvidenceStatus,
   FallbackReason,
   GenerationMode,
@@ -69,6 +71,13 @@ export const ANSWER_LABEL: Record<AnswerStatus, string> = {
   abstencion: 'Abstención: no hay evidencia suficiente',
 };
 
+export const COMPOSE_PROVIDER_LABEL: Record<ComposeProvider, string> = { gemini: 'Gemini', chatgpt: 'ChatGPT', claude: 'Claude' };
+export const COMPOSE_PROVIDER_HELP: Record<ComposeProvider, string> = {
+  gemini: 'Usa una llamada diaria gratuita de Gemini, dentro de su cuota.',
+  chatgpt: 'Solo en este equipo; consume tu plan personal de ChatGPT.',
+  claude: 'Solo en este equipo; consume tu suscripción de Claude.',
+};
+
 export const DATA_MODE_LABEL: Record<DataMode, string> = {
   fixture: 'Datos de fixture (no reales)',
   provisional: 'Snapshot provisional',
@@ -90,7 +99,7 @@ export const FALLBACK_LABEL: Record<FallbackReason, string> = {
   sin_evidencia: 'no hay una respuesta con fuentes que redactar',
 };
 
-export const PROVIDER_CHOICES: { value: string; label: string; help: string }[] = [
+export const PROVIDER_CHOICES: { value: DraftProviderChoice; label: string; help: string }[] = [
   { value: 'auto', label: 'Automático', help: 'Gemini si hay cuota; si no, recuperado o plantilla.' },
   { value: 'gemini', label: 'Gemini (Free Tier)', help: 'Modelo gratuito dentro de su cuota.' },
   { value: 'recuperado', label: 'Recuperado', help: 'Reutiliza un borrador anterior guardado.' },

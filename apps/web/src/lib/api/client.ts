@@ -10,6 +10,7 @@ import type {
   Health,
   ImpactRequest,
   ComposeResponse,
+  ComposeRequestBody,
   QueryRequestBody,
   QueryResponse,
   ReviewRequest,
@@ -20,6 +21,7 @@ import type {
   Authorization,
   Models,
   Disconnect,
+  ClaudeConnection,
   SnapshotInfo,
   TopicDetail,
   TopicFilters,
@@ -46,12 +48,15 @@ export interface UmbralApi {
   connectionModels(): Promise<Models>;
   selectConnectionModel(model: string): Promise<Models>;
   disconnect(profileId: string): Promise<Disconnect>;
+  claudeConnection(): Promise<ClaudeConnection>;
+  startClaudeLogin(): Promise<ClaudeConnection>;
+  claudeLogout(): Promise<ClaudeConnection>;
   snapshot(): Promise<SnapshotInfo>;
   topics(filters: TopicFilters): Promise<TopicsResponse>;
   topic(topicId: string): Promise<TopicDetail>;
   query(req: QueryRequestBody, opts?: { signal?: AbortSignal }): Promise<QueryResponse>;
   /** Redacción opcional con IA de la respuesta con fuentes; ante cualquier fallo devuelve la de reglas. */
-  compose(req: QueryRequestBody, opts?: { signal?: AbortSignal }): Promise<ComposeResponse>;
+  compose(req: ComposeRequestBody, opts?: { signal?: AbortSignal }): Promise<ComposeResponse>;
   createDraft(topicId: string, provider?: DraftProviderChoice): Promise<DraftResponse>;
   saveDraft(caseId: string, body: DraftEditRequest): Promise<CaseView>;
   review(caseId: string, body: ReviewRequest): Promise<CaseView>;
@@ -205,6 +210,9 @@ export class HttpApi implements UmbralApi {
   connectionModels = () => this.request<Models>('GET', '/connections/chatgpt/models');
   selectConnectionModel = (model: string) => this.request<Models>('PUT', '/connections/chatgpt/model', { body: { model } });
   disconnect = (profileId: string) => this.request<Disconnect>('DELETE', `/connections/chatgpt/${encodeURIComponent(profileId)}`);
+  claudeConnection = () => this.request<ClaudeConnection>('GET', '/connections/claude');
+  startClaudeLogin = () => this.request<ClaudeConnection>('POST', '/connections/claude/login');
+  claudeLogout = () => this.request<ClaudeConnection>('POST', '/connections/claude/logout');
   snapshot = () => this.request<SnapshotInfo>('GET', '/snapshot');
   topics = (f: TopicFilters) =>
     this.request<TopicsResponse>('GET', '/topics', {
@@ -222,7 +230,7 @@ export class HttpApi implements UmbralApi {
   topic = (id: string) => this.request<TopicDetail>('GET', `/topics/${encodeURIComponent(id)}`);
   query = (req: QueryRequestBody, opts: { signal?: AbortSignal } = {}) =>
     this.request<QueryResponse>('POST', '/queries', { body: req, signal: opts.signal });
-  compose = (req: QueryRequestBody, opts: { signal?: AbortSignal } = {}) =>
+  compose = (req: ComposeRequestBody, opts: { signal?: AbortSignal } = {}) =>
     this.request<ComposeResponse>('POST', '/queries/compose', { body: req, signal: opts.signal, timeoutMs: 120_000 });
   createDraft = (topicId: string, provider: DraftProviderChoice = 'auto') =>
     this.request<DraftResponse>('POST', `/topics/${encodeURIComponent(topicId)}/drafts`, {

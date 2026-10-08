@@ -2,6 +2,15 @@
 // Todo es decorativo: ningún reproductor retrasa una acción, cambia el DOM ni deja estilos al terminar
 // (las animaciones usan `fill: backwards`/`forwards` solo mientras duran) y, con movimiento reducido o sin
 // soporte del navegador, cada reproductor devuelve `null` y el contenido cambia al instante.
+import {
+  applyMotionPreference,
+  getMotionPreference,
+  persistMotionPreference,
+  type MotionPreference,
+} from './motionPreference';
+
+export type { MotionPreference } from './motionPreference';
+export { getMotionPreference } from './motionPreference';
 
 export const MOTION = {
   easing: {
@@ -27,12 +36,18 @@ export const MOTION = {
 type Slot = 'enter' | 'exit' | 'press' | 'burst' | 'stamp';
 
 const running = new WeakMap<Element, Map<Slot, Animation>>();
+const activeAnimations = new Set<Animation>();
 
 function media(query: string): boolean {
   return typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
 }
 
-export const reducedMotion = () => media('(prefers-reduced-motion: reduce)');
+export const reducedMotion = () => {
+  const preference = getMotionPreference();
+  if (preference === 'reduced') return true;
+  if (preference === 'full') return false;
+  return media('(prefers-reduced-motion: reduce)');
+};
 const dist = (px: number) => Math.round(px * (media(MOTION.compactQuery) ? MOTION.compactFactor : 1) * 10) / 10;
 
 function canPlay(el: Element): el is HTMLElement {
@@ -50,6 +65,16 @@ export function cancelMotion(el: Element | null | undefined, slot?: Slot): void 
   }
 }
 
+export function cancelAllMotion(): void {
+  for (const animation of [...activeAnimations]) animation.cancel();
+}
+
+export async function setMotionPreference(preference: MotionPreference): Promise<void> {
+  applyMotionPreference(preference);
+  if (reducedMotion()) cancelAllMotion();
+  await persistMotionPreference(preference);
+}
+
 function play(el: Element | null | undefined, slot: Slot, frames: Keyframe[], options: KeyframeAnimationOptions): Animation | null {
   if (!el || !canPlay(el)) return null;
   cancelMotion(el, slot);
@@ -61,8 +86,10 @@ function play(el: Element | null | undefined, slot: Slot, frames: Keyframe[], op
   }
   const slots = running.get(el) ?? new Map<Slot, Animation>();
   slots.set(slot, anim);
+  activeAnimations.add(anim);
   running.set(el, slots);
   const forget = () => {
+    activeAnimations.delete(anim);
     if (slots.get(slot) === anim) slots.delete(slot);
   };
   anim.addEventListener('finish', forget);
