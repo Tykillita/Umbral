@@ -1,6 +1,6 @@
 import { ApiError, HttpApi, type UmbralApi } from './client';
 import { BrowserWorkspace, canonicalJson, conflict, parseWorkspace, type WorkspaceCase, type WorkspaceExport } from './workspace';
-import type { ArchivedEvidence, PublicContext, PublicDraftResponse, PublicValidationResponse, Authorization, CaseView, Connections, ConnectionStart, Disconnect, DraftEditRequest, DraftProviderChoice, DraftRecord, DraftResponse, ExportResponse, Health, ImpactRequest, Models, QueryResponse, ReviewRequest, Rules, RulesRequest, TopicDetail, TopicFilters, TopicsResponse } from './types';
+import type { ArchivedEvidence, ComposeResponse, PublicContext, QueryRequestBody, PublicDraftResponse, PublicValidationResponse, Authorization, CaseView, Connections, ConnectionStart, Disconnect, DraftEditRequest, DraftProviderChoice, DraftRecord, DraftResponse, ExportResponse, Health, ImpactRequest, Models, QueryResponse, ReviewRequest, Rules, RulesRequest, TopicDetail, TopicFilters, TopicsResponse } from './types';
 
 type Evidence = ArchivedEvidence;
 type Validated = PublicValidationResponse;
@@ -58,16 +58,17 @@ export class BrowserWorkspaceApi implements UmbralApi {
     return { snapshotId: selected, weights: rules.weights, rulesVersion: rules.rulesVersion,
       topicOverrides: state.cases.filter((entry) => entry.detail.snapshotId === selected).map(({ case: c }) => this.scoringOverride(c)) };
   }
-  private async currentRequest<T>(path: string, body: Record<string, unknown>): Promise<T> {
-    try { return await this.remote.publicRequest<T>(path, { ...body, context: await this.context() }); }
+  private async currentRequest<T>(path: string, body: Record<string, unknown>, signal?: AbortSignal): Promise<T> {
+    try { return await this.remote.publicRequest<T>(path, { ...body, context: await this.context() }, signal); }
     catch (error) {
       if (!(error instanceof ApiError) || !error.isConflict || !error.details?.currentSnapshotId) throw error;
       await this.health();
-      return this.remote.publicRequest<T>(path, { ...body, context: await this.context() });
+      return this.remote.publicRequest<T>(path, { ...body, context: await this.context() }, signal);
     }
   }
   topics = (filters: TopicFilters) => this.currentRequest<TopicsResponse>('/agenda', { filters });
-  query = (request: { question: string; topicId?: string | null; limit?: number }) => this.currentRequest<QueryResponse>('/queries', request);
+  query = (request: QueryRequestBody, opts: { signal?: AbortSignal } = {}) => this.currentRequest<QueryResponse>('/queries', request, opts.signal);
+  compose = (request: QueryRequestBody, opts: { signal?: AbortSignal } = {}) => this.currentRequest<ComposeResponse>('/queries/compose', request, opts.signal);
   async topic(topicId: string): Promise<TopicDetail> {
     const entry = (await this.workspace.read()).cases.find((item) => item.case.topicId === topicId);
     // Un caso conserva la ficha exacta de su creación, incluso cuando un snapshot sustituye el tema.

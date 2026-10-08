@@ -13,6 +13,16 @@ from pathlib import Path
 
 from . import __version__
 from .auth import Authenticator
+from .compose import (
+    COMPOSE_NOTICE,
+    COMPOSE_SYSTEM,
+    ModelCompose,
+    build_compose_user,
+    composition_pending,
+    pack_from_response,
+    render_composition,
+    validate_composition,
+)
 from .config import Settings
 from .drafts import EvidencePack, build_pack, build_template_package, validate_package
 from .errors import (
@@ -29,10 +39,12 @@ from .models import (
     EVIDENCE_LABELS,
     GENERATION_LABELS,
     REVIEW_LABELS,
+    AnswerStatus,
     CaseEvent,
     CaseView,
     Category,
     Claim,
+    ComposeResponse,
     DraftEditRequest,
     DraftProviderChoice,
     DraftRecord,
@@ -598,12 +610,72 @@ class Services:
     def query(self, user: str, req: QueryRequest) -> QueryResponse:
         limit = min(30, self.settings.queries_per_minute) if self.settings.auth_mode == "public" else self.settings.queries_per_minute
         self.limiter.check(user, "queries", limit)
-        agenda = [s for s in self.list_topics(
+        return self._answer(user, req)
+
+    def _answer(self, user: str, req: QueryRequest) -> QueryResponse:
+        # La agenda solo se calcula si la consulta resulta ser de agenda: el resto no paga ese costo.
+        response = self.engine.answer(req, lambda: [s for s in self.list_topics(
             user, limit=5, category=None, evidence=None, band=None, review_status=None, q=None, include_components=False
-        ).items]
-        response = self.engine.answer(req, agenda)
+        ).items])
         response.rules_version = self.rules(user).rules_version
         return response
+
+    def compose_query(self, user: str, req: QueryRequest, *, consume_limit: bool = True) -> ComposeResponse:
+        """Redacta con IA (Gemini, Free Tier) la respuesta con fuentes de una consulta; si algo falla, conserva la de reglas."""
+        if consume_limit:
+            self.limiter.check(user, "compose", self.settings.drafts_per_minute)
+        base = self._answer(user, req)
+        notices: list[str] = []
+        calls = 0
+
+        def fallback(reason: FallbackReason, detail: str) -> ComposeResponse:
+            return ComposeResponse(
+                response=base, answer_mode="reglas", rules_answer=base.answer, fallback_reason=reason, fallback_detail=detail,
+                attempts=calls, notices=[*notices, "Se conserva la respuesta por reglas y fuentes."],
+            )
+
+        if base.answer_status in (AnswerStatus.abstencion, AnswerStatus.contradiccion) or not base.citations:
+            return fallback(FallbackReason.sin_evidencia, "Solo se redactan respuestas con fuentes y sin versiones en contradicción.")
+        prov = self.providers["gemini"]
+        try:
+            if self.settings.offline:
+                raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamadas externas bloqueadas.")
+            status = prov.status()
+            if not status.available:
+                raise ProviderError(FallbackReason.sin_credenciales, status.reason or "Proveedor no disponible.")
+            pack, order = pack_from_response(self.corpus, base)
+            if not order:
+                raise ProviderError(FallbackReason.sin_evidencia, "Ninguna fuente citada es utilizable.")
+            user_content = build_compose_user(req.question, pack, order, base.intent)
+            composed: ModelCompose | None = None
+            result = None
+            for attempt in (1, 2):
+                calls += 1
+                if isinstance(prov, GeminiProvider):
+                    result = prov.generate(COMPOSE_SYSTEM, user_content, schema=ModelCompose, before_call=lambda: self._reserve_gemini_call(user))
+                else:  # stub de pruebas: no hace red, pero consume la cuota igual que Gemini
+                    self._reserve_gemini_call(user)
+                    result = prov.generate(COMPOSE_SYSTEM, user_content, schema=ModelCompose)
+                _, errors = validate_composition(result.output, pack, order, base.intent)
+                if not errors:
+                    composed = result.output
+                    break
+                if attempt == 2:
+                    raise ProviderError(FallbackReason.validacion_fallida, "La redacción del modelo no pasó la validación: " + "; ".join(errors)[:300])
+                # Un único reintento con la retroalimentación del validador (cuenta contra la cuota).
+                user_content += "\n\nCORRECCIÓN: tu redacción anterior fue rechazada por estos errores; devuelve una nueva corrigiéndolos: " + "; ".join(errors)[:400]
+            assert composed is not None and result is not None
+        except ProviderError as exc:
+            notices.append(f"No se redactó con IA: {exc.detail}")
+            return fallback(exc.reason, exc.detail)
+        shown = base.model_copy(deep=True)
+        shown.answer = render_composition(composed, order)
+        shown.missing = list(dict.fromkeys([*shown.missing, *composition_pending(composed)]))
+        shown.warnings = [*shown.warnings, COMPOSE_NOTICE]
+        return ComposeResponse(
+            response=shown, answer_mode="modelo", rules_answer=base.answer, provider=prov.name, model=result.model,
+            usage=result.usage, attempts=calls, notices=notices,
+        )
 
     # ------------------------------------------------------------------ casos
     def _new_record(self, base: TopicBase) -> CaseRecord:

@@ -18,6 +18,8 @@ import type {
   DraftResponse,
   ExportResponse,
   ImpactRequest,
+  ComposeResponse,
+  QueryRequestBody,
   QueryResponse,
   ReviewRequest,
   ReviewStatus,
@@ -177,8 +179,17 @@ export class MockApi implements UmbralApi {
     return buildDetail(spec, this.getCaseSync(`case-${topicId}`));
   }
 
-  async query(req: { question: string; topicId?: string | null; limit?: number }): Promise<QueryResponse> {
+  async compose(req: QueryRequestBody, opts: { signal?: AbortSignal } = {}): Promise<ComposeResponse> {
+    const response = await this.query(req, opts);
+    return {
+      response, answerMode: 'reglas', rulesAnswer: response.answer, provider: null, model: null, usage: null, attempts: 0,
+      fallbackReason: 'sin_credenciales', fallbackDetail: 'La demostración no tiene un proveedor de IA conectado.', notices: [],
+    };
+  }
+
+  async query(req: QueryRequestBody, opts: { signal?: AbortSignal } = {}): Promise<QueryResponse> {
     await delay(250);
+    if (opts.signal?.aborted) throw new DOMException('Consulta cancelada', 'AbortError');
     const terms = req.question.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((t) => t.length > 3);
     const base = {
       snapshotId: MOCK_SNAPSHOT_ID,
@@ -187,6 +198,9 @@ export class MockApi implements UmbralApi {
       queryId: `mock-q-${Date.now()}`,
       question: req.question,
       warnings: ['Respuesta simulada por el frontend con datos de demostración.'],
+      resolvedQuestion: null,
+      followUpContext: null,
+      followUpSuggestions: [] as string[],
     };
     const topics = MOCK_SPECS.map((s) => buildDetail(s, this.getCaseSync(`case-${s.id}`)));
     const hits = topics.flatMap((t) =>

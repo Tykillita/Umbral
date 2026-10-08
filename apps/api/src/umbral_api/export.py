@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .models import CATEGORY_LABELS, GEO_LABELS, TopicDetail
-from .util import fmt_pa, now_utc
+from .util import fmt_pa, fmt_value, now_utc
 
 
 def _cell(s: str | None) -> str:
@@ -74,7 +74,7 @@ def export_markdown(detail: TopicDetail) -> str:
         out.append("| País | Indicador | Año | Valor | Unidad | Fuente |")
         out.append("|---|---|---|---|---|---|")
         for ip in detail.official_context.indicators:
-            val = "ausente (nulo)" if ip.is_missing else f"{ip.value:g}"
+            val = "ausente (nulo)" if ip.is_missing else fmt_value(ip.value)
             out.append(f"| {ip.country_iso3} | {_cell(ip.indicator_name)} | {ip.year} | {val} | {_cell(ip.unit)} | {ip.source_url or '—'} |")
     for lim in detail.official_context.limitations:
         out.append(f"- _{lim}_")

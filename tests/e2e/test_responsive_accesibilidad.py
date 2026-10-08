@@ -15,7 +15,7 @@ from playwright.sync_api import Page, expect
 pytestmark = pytest.mark.e2e
 
 RESULTS = Path(__file__).resolve().parents[1] / ".results" / "responsive"
-WIDTHS = [(1440, 900), (390, 844), (320, 640)]
+WIDTHS = [(1440, 900), (1024, 900), (768, 900), (390, 844), (320, 640)]
 
 JS_OVERFLOW = """() => {
   // Desborde de PÁGINA: scrollWidth > innerWidth, o elementos que sobresalen sin estar dentro de un contenedor con
@@ -74,6 +74,25 @@ JS_MOTION = """() => {
 def go_view(page: Page, nav: str) -> None:
     tid(page, nav).click()
     page.wait_for_timeout(400)
+
+
+@pytest.mark.parametrize("w,h", WIDTHS, ids=lambda v: str(v))
+def test_portada_cta_simetrica_y_sin_desborde(page: Page, stack, w, h):
+    page.set_viewport_size({"width": w, "height": h})
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    page.goto(stack.url + "/")
+    actions = page.locator(".comic-landing-actions > a")
+    expect(actions).to_have_count(2)
+    boxes = [item.bounding_box() for item in actions.all()]
+    assert boxes[0] and boxes[1]
+    assert abs(boxes[0]["width"] - boxes[1]["width"]) <= 1
+    if w >= 640:
+        assert abs(boxes[0]["y"] - boxes[1]["y"]) <= 1
+    else:
+        assert boxes[1]["y"] >= boxes[0]["y"] + boxes[0]["height"] - 1
+    metrics = page.evaluate(JS_OVERFLOW)
+    assert metrics["scrollWidth"] <= w + 1 and not metrics["wide"], f"portada desborda a {w}px: {metrics}"
+    page.screenshot(path=str(RESULTS / f"portada-{w}.png"), full_page=True)
 
 
 @pytest.mark.parametrize("w,h", WIDTHS, ids=lambda v: str(v))

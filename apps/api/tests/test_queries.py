@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
 from .conftest import find_topic
@@ -171,3 +173,27 @@ def test_official_indicator_hits_are_the_same_selected_evidence_as_citations(mak
     assert response["hits"] and all(hit["kind"] == "indicador" for hit in response["hits"])
     cited = {citation["evidenceId"] for citation in response["citations"]}
     assert all(hit["evidenceId"] in cited for hit in response["hits"])
+
+
+_MARKER = re.compile(r"\[(\d{1,2})\]")
+
+
+def test_citation_markers_are_numbered_in_citation_order(make_app):
+    r = ask(make_app(), "calado del Canal por el lago Gatún")
+    order = list(dict.fromkeys(c["evidenceId"] for c in r["citations"]))
+    numbers = {int(n) for n in _MARKER.findall(r["answer"])}
+    assert numbers and numbers <= set(range(1, len(order) + 1))
+    assert not any(evidence_id in r["answer"] for evidence_id in order)  # ningún id crudo en el texto
+
+
+def test_economic_and_agenda_answers_carry_markers(make_app):
+    client = make_app()
+    econ = ask(client, "¿Cuál es el crecimiento del PIB de Panamá hoy?")
+    assert _MARKER.search(econ["answer"]) and not any(c["evidenceId"] in econ["answer"] for c in econ["citations"])
+    agenda = ask(client, "¿Qué cinco temas merecen revisión para la agenda?")
+    assert _MARKER.search(agenda["answer"]) and not any(c["evidenceId"] in agenda["answer"] for c in agenda["citations"])
+
+
+def test_abstention_has_no_markers(make_app):
+    r = ask(make_app(), "¿Cuál es el precio del petróleo en Marte?")
+    assert r["answerStatus"] == "abstencion" and not _MARKER.search(r["answer"])

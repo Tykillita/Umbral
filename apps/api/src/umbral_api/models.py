@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import StrEnum
-from typing import Any
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
 from pydantic.alias_generators import to_camel
@@ -143,6 +143,7 @@ class FallbackReason(StrEnum):
     solicitado = "solicitado"
     contador_no_disponible = "contador_no_disponible"
     limite_global = "limite_global"
+    sin_evidencia = "sin_evidencia"
 
 
 class DataMode(StrEnum):
@@ -432,10 +433,31 @@ class TopicDetail(ApiModel):
 # --------------------------------------------------------------------------- consultas
 
 
+_ShortId = Annotated[str, Field(min_length=1, max_length=128)]
+
+
+class QueryContext(ApiModel):
+    """Contexto estructurado mínimo de una respuesta anterior para resolver preguntas de seguimiento.
+
+    Solo contiene identificadores y valores de catálogo; nunca el texto de respuestas ni de fuentes.
+    """
+
+    snapshot_id: str = Field(min_length=1, max_length=128)
+    intent: QueryIntent
+    topic_ids: list[_ShortId] = Field(default_factory=list, max_length=5)
+    evidence_ids: list[_ShortId] = Field(default_factory=list, max_length=10)
+    countries: list[Annotated[str, Field(min_length=3, max_length=3)]] = Field(default_factory=list, max_length=6)
+    indicators: list[_ShortId] = Field(default_factory=list, max_length=6)
+    years: list[Annotated[int, Field(ge=1900, le=2100)]] = Field(default_factory=list, max_length=15)
+
+
 class QueryRequest(ApiModel):
     question: str = Field(min_length=3, max_length=500)
     topic_id: str | None = Field(None, description="Limita la consulta a un tema")
     limit: int = Field(5, ge=1, le=10)
+    follow_up: QueryContext | None = Field(
+        None, description="`followUpContext` de la respuesta anterior; sin él cada pregunta es independiente"
+    )
 
 
 class QueryHit(ApiModel):
@@ -483,6 +505,9 @@ class QueryResponse(ApiModel):
     rules_version: str
     data_mode: DataMode
     retrieval: RetrievalInfo
+    resolved_question: str | None = Field(None, description="Pregunta autónoma que se ejecutó cuando `question` era un seguimiento")
+    follow_up_context: QueryContext | None = None
+    follow_up_suggestions: list[str] = Field(default_factory=list, max_length=4)
 
 
 # --------------------------------------------------------------------------- borradores
@@ -533,6 +558,21 @@ class GenerationUsage(ApiModel):
     scope: str = "Respuesta exitosa del proveedor; no incluye llamadas fallidas ni cargos anteriores."
     cost_usd: float | None = None
     cost_note: str = "El SDK no declara costo monetario; el proyecto está configurado para Free Tier sin salto a pago."
+
+
+class ComposeResponse(ApiModel):
+    """Resultado de redactar con IA una respuesta con fuentes. Si el modelo falla, `response` conserva la respuesta por reglas."""
+
+    response: QueryResponse = Field(description="Respuesta que se muestra: la redactada o, si falló, la determinista")
+    answer_mode: Literal["reglas", "modelo"]
+    rules_answer: str = Field(description="Texto de la respuesta determinista (siempre disponible)")
+    provider: str | None = None
+    model: str | None = None
+    fallback_reason: FallbackReason | None = None
+    fallback_detail: str | None = None
+    usage: GenerationUsage | None = None
+    attempts: int = Field(0, description="Llamadas al modelo hechas para esta redacción (0 si no se llegó a llamar; 2 si hubo reintento)")
+    notices: list[str] = Field(default_factory=list)
 
 
 class DraftRecord(ApiModel):

@@ -30,6 +30,17 @@ Donde se indica `[attr]`, el atributo lleva el dato para poder verificarlo sin d
 | Asistente | `assistant-input`, `assistant-send` | |
 | | `assistant-answer`; `[data-status]` = `respondida|parcial|contradiccion|abstencion` | |
 | | `assistant-citation` | `[data-evidence-id]` (enlace a la fuente) |
+| | `assistant-toggle`, `assistant-panel`, `assistant-dock`, `assistant-close` | abrir/cerrar; `assistant-panel[data-size]` = `compact|expanded` |
+| | `assistant-minimize`, `assistant-resize` | solo en escritorio (panel no modal) |
+| | `assistant-history-toggle` (`aria-pressed`), `assistant-history-search`, `assistant-new-conversation` | historial local |
+| | `assistant-delete-modal`, `assistant-replace-draft-modal`, `assistant-copy-fallback` | diálogos propios |
+| | `assistant-cancel`, `assistant-retry`, `assistant-edit-question`, `assistant-error`, `assistant-interrupted` | estados de la consulta |
+| | `assistant-cite-marker` (`[data-cite-index]`), `assistant-passage`, `assistant-untrusted`, `assistant-mode` | marcadores `[n]` del texto, pasaje citado, fuentes excluidas y rótulo de origen |
+| | `assistant-continue` (casilla), `assistant-followups`, `assistant-followup`, `assistant-resolved` | seguimiento: conmutador de contexto, chips y «Entendí tu pregunta como…» |
+| | `assistant-toggle-unread` | contador de respuestas no leídas en el botón de la cabecera (solo con el panel cerrado) |
+| | `assistant-compose`, `assistant-compose-cancel`, `assistant-compose-note`, `assistant-compose-unavailable`, `assistant-rules-answer` | redacción opcional con IA; `assistant-mode[data-mode]` = `reglas|modelo` |
+| | `assistant-announcer` | región `role=status` solo para lectores de pantalla («Respuesta lista…», «Consulta cancelada.») |
+| | `assistant-scope` | `Select` propio del ámbito (usa `choose()`) |
 | Borradores | `draft-generate` | botón (admite elegir proveedor: `draft-provider`) |
 | | `draft-origin-label` | «Generado por un modelo / Recuperado… / Construido mediante plantilla»; `[data-mode]` |
 | | `draft-fallback-reason` | motivo del fallback si lo hay |

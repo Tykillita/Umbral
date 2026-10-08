@@ -7,6 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from umbral_api.app import create_app
+from umbral_api.compose import ModelCompose, stub_compose_from_prompt
 from umbral_api.config import Settings
 from umbral_api.fixture_builder import build_fixture
 from umbral_api.models import FallbackReason
@@ -58,13 +59,15 @@ class FakeProvider(DraftProvider):
             return self._status(False, "Modo sin conexión.", "fake-model")
         return self._status(self.behavior != "no_key", None if self.behavior != "no_key" else "sin clave", "fake-model")
 
-    def generate(self, system: str, user: str) -> ProviderResult:
+    def generate(self, system: str, user: str, *, schema=ModelOutput) -> ProviderResult:
         self.calls += 1
         self.last_user = user
         if self.behavior == "quota":
             raise ProviderError(FallbackReason.cuota_agotada, "Cuota agotada (429).")
         if self.behavior == "down":
             raise ProviderError(FallbackReason.proveedor_no_disponible, "Servicio no disponible.")
+        if schema is ModelCompose:
+            return ProviderResult(stub_compose_from_prompt(user, self.behavior), "fake-model")
         return ProviderResult(model_output_from_prompt(user, self.behavior), "fake-model")
 
 

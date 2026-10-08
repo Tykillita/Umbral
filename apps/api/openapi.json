@@ -1027,6 +1027,108 @@
         "title": "ClaimType",
         "type": "string"
       },
+      "ComposeResponse": {
+        "description": "Resultado de redactar con IA una respuesta con fuentes. Si el modelo falla, `response` conserva la respuesta por reglas.",
+        "properties": {
+          "answerMode": {
+            "enum": [
+              "reglas",
+              "modelo"
+            ],
+            "title": "Answermode",
+            "type": "string"
+          },
+          "attempts": {
+            "default": 0,
+            "description": "Llamadas al modelo hechas para esta redacción (0 si no se llegó a llamar; 2 si hubo reintento)",
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "fallbackDetail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallbackdetail"
+          },
+          "fallbackReason": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FallbackReason"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "notices": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notices",
+            "type": "array"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "response": {
+            "$ref": "#/components/schemas/QueryResponse",
+            "description": "Respuesta que se muestra: la redactada o, si falló, la determinista"
+          },
+          "rulesAnswer": {
+            "description": "Texto de la respuesta determinista (siempre disponible)",
+            "title": "Rulesanswer",
+            "type": "string"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GenerationUsage-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "response",
+          "answerMode",
+          "rulesAnswer",
+          "provider",
+          "model",
+          "fallbackReason",
+          "fallbackDetail",
+          "usage",
+          "attempts",
+          "notices"
+        ],
+        "title": "ComposeResponse",
+        "type": "object"
+      },
       "ConnectionStart": {
         "properties": {
           "label": {
@@ -2598,7 +2700,8 @@
           "solo_localhost",
           "solicitado",
           "contador_no_disponible",
-          "limite_global"
+          "limite_global",
+          "sin_evidencia"
         ],
         "title": "FallbackReason",
         "type": "string"
@@ -3790,6 +3893,17 @@
           "context": {
             "$ref": "#/components/schemas/PublicContext"
           },
+          "followUp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QueryContext-Input"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`followUpContext` de la respuesta anterior; sin él cada pregunta es independiente"
+          },
           "limit": {
             "default": 5,
             "maximum": 10.0,
@@ -4001,6 +4115,151 @@
         "title": "QueryCitation",
         "type": "object"
       },
+      "QueryContext-Input": {
+        "description": "Contexto estructurado mínimo de una respuesta anterior para resolver preguntas de seguimiento.\n\nSolo contiene identificadores y valores de catálogo; nunca el texto de respuestas ni de fuentes.",
+        "properties": {
+          "countries": {
+            "items": {
+              "maxLength": 3,
+              "minLength": 3,
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Countries",
+            "type": "array"
+          },
+          "evidenceIds": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 10,
+            "title": "Evidenceids",
+            "type": "array"
+          },
+          "indicators": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Indicators",
+            "type": "array"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/QueryIntent"
+          },
+          "snapshotId": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Snapshotid",
+            "type": "string"
+          },
+          "topicIds": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Topicids",
+            "type": "array"
+          },
+          "years": {
+            "items": {
+              "maximum": 2100.0,
+              "minimum": 1900.0,
+              "type": "integer"
+            },
+            "maxItems": 15,
+            "title": "Years",
+            "type": "array"
+          }
+        },
+        "required": [
+          "snapshotId",
+          "intent"
+        ],
+        "title": "QueryContext",
+        "type": "object"
+      },
+      "QueryContext-Output": {
+        "description": "Contexto estructurado mínimo de una respuesta anterior para resolver preguntas de seguimiento.\n\nSolo contiene identificadores y valores de catálogo; nunca el texto de respuestas ni de fuentes.",
+        "properties": {
+          "countries": {
+            "items": {
+              "maxLength": 3,
+              "minLength": 3,
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Countries",
+            "type": "array"
+          },
+          "evidenceIds": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 10,
+            "title": "Evidenceids",
+            "type": "array"
+          },
+          "indicators": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 6,
+            "title": "Indicators",
+            "type": "array"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/QueryIntent"
+          },
+          "snapshotId": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Snapshotid",
+            "type": "string"
+          },
+          "topicIds": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Topicids",
+            "type": "array"
+          },
+          "years": {
+            "items": {
+              "maximum": 2100.0,
+              "minimum": 1900.0,
+              "type": "integer"
+            },
+            "maxItems": 15,
+            "title": "Years",
+            "type": "array"
+          }
+        },
+        "required": [
+          "snapshotId",
+          "intent",
+          "topicIds",
+          "evidenceIds",
+          "countries",
+          "indicators",
+          "years"
+        ],
+        "title": "QueryContext",
+        "type": "object"
+      },
       "QueryHit": {
         "properties": {
           "bm25": {
@@ -4111,6 +4370,17 @@
       },
       "QueryRequest": {
         "properties": {
+          "followUp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QueryContext-Input"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`followUpContext` de la respuesta anterior; sin él cada pregunta es independiente"
+          },
           "limit": {
             "default": 5,
             "maximum": 10.0,
@@ -4180,6 +4450,24 @@
           "dataMode": {
             "$ref": "#/components/schemas/DataMode"
           },
+          "followUpContext": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QueryContext-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "followUpSuggestions": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 4,
+            "title": "Followupsuggestions",
+            "type": "array"
+          },
           "hits": {
             "items": {
               "$ref": "#/components/schemas/QueryHit"
@@ -4211,6 +4499,18 @@
             },
             "title": "Relatedtopicids",
             "type": "array"
+          },
+          "resolvedQuestion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Pregunta autónoma que se ejecutó cuando `question` era un seguimiento",
+            "title": "Resolvedquestion"
           },
           "retrieval": {
             "$ref": "#/components/schemas/RetrievalInfo"
@@ -4247,7 +4547,10 @@
           "snapshotId",
           "rulesVersion",
           "dataMode",
-          "retrieval"
+          "retrieval",
+          "resolvedQuestion",
+          "followUpContext",
+          "followUpSuggestions"
         ],
         "title": "QueryResponse",
         "type": "object"
@@ -7356,6 +7659,97 @@
         ]
       }
     },
+    "/api/v1/public/queries/compose": {
+      "post": {
+        "operationId": "public_query_compose_api_v1_public_queries_compose_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComposeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Public Query Compose",
+        "tags": [
+          "publico"
+        ]
+      }
+    },
     "/api/v1/public/topics/{topic_id}": {
       "post": {
         "operationId": "public_topic_api_v1_public_topics__topic_id__post",
@@ -7635,6 +8029,97 @@
           }
         },
         "summary": "Consulta en español con evidencia, citas y abstención",
+        "tags": [
+          "consultas"
+        ]
+      }
+    },
+    "/api/v1/queries/compose": {
+      "post": {
+        "operationId": "queries_compose_api_v1_queries_compose_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComposeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Redacta con IA (opcional) la respuesta con fuentes de una consulta; ante cualquier fallo conserva la de reglas",
         "tags": [
           "consultas"
         ]

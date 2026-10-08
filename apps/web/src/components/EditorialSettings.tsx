@@ -38,7 +38,7 @@ function RulesForm({ rules }: { rules: Rules }) {
     }}>
       <p className="text-sm text-ink-2">Ajusta qué merece atención. Cada cambio conserva su responsable, motivo y versión; las categorías y la evidencia mantienen sus reglas.</p>
       {api.kind === 'mock' && <Notice tone="warn" title="Edición no disponible en demostración" />}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+      <div data-testid="rules-weight-grid" className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {COMPONENTS.map(([key, label]) => <Field key={key} htmlFor={`${id}-${key}`} label={`${key} · ${label}`}>
           <NumberField id={`${id}-${key}`} testId={`rules-weight-${key}`} disabled={disabled} value={weights[key] ?? Number.NaN} onValueChange={(n) => { setWeights({ ...weights, [key]: n }); setSaved(null); }} />
         </Field>)}

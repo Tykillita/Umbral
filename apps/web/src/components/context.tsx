@@ -9,7 +9,7 @@ export interface AppCtx {
   go: (r: Route) => void;
   reviewer: string;
   setReviewer: (name: string) => void;
-  openAssistant: (prompt?: string) => void;
+  openAssistant: (prompt?: string, topicId?: string, topicTitle?: string) => void;
   authMode: 'public' | 'local' | 'firebase-anonymous';
 }
 

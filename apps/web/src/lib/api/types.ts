@@ -41,6 +41,10 @@ export type DraftResponse = S['DraftResponse'];
 export type EditorialPackage = S['EditorialPackage-Output'];
 export type ValidationReport = S['ValidationReport-Output'];
 export type QueryResponse = S['QueryResponse'];
+export type QueryContext = S['QueryContext-Output'];
+export type ComposeResponse = S['ComposeResponse'];
+/** Cuerpo de una consulta; `followUp` es el `followUpContext` de la respuesta anterior (solo identificadores, nunca texto). */
+export type QueryRequestBody = { question: string; topicId?: string | null; limit?: number; followUp?: S['QueryContext-Input'] | null };
 export type QueryCitation = S['QueryCitation'];
 export type QueryHit = S['QueryHit'];
 export type ExportResponse = S['ExportResponse'];

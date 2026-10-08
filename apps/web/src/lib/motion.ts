@@ -16,10 +16,8 @@ export const MOTION = {
   card: { duration: 280, stagger: 40, maxTotal: 480, offset: 12 },
   press: { duration: 160, scale: 0.97, shift: 2 },
   burst: { duration: 180 },
-  assistant: { enter: 240, exit: 140, offset: 20 },
   disclosure: { duration: 180, offset: 6 },
   notice: { duration: 220, offset: 8, errorDuration: 160, errorOffset: 4 },
-  bubble: { duration: 220, offset: 10 },
   stamp: { duration: 220 },
   /** En pantallas estrechas los desplazamientos se reducen. */
   compactFactor: 0.6,
@@ -165,48 +163,6 @@ export function playDisclosure(el: Element | null | undefined): Animation | null
       { opacity: 1, transform: 'none', clipPath: 'inset(0 0 0 0)' },
     ],
     { duration: MOTION.disclosure.duration, easing: MOTION.easing.out },
-  );
-}
-
-export function playPanelIn(el: Element | null | undefined): Animation | null {
-  const o = dist(MOTION.assistant.offset);
-  return play(
-    el,
-    'enter',
-    [
-      { opacity: 0, transform: `translateX(${o}px)` },
-      { opacity: 1, transform: `translateX(${-o * 0.2}px)`, offset: 0.6 },
-      { opacity: 1, transform: 'none' },
-    ],
-    { duration: MOTION.assistant.enter, easing: MOTION.easing.out, fill: 'backwards' },
-  );
-}
-
-/** La salida conserva su último fotograma (`forwards`) hasta que quien llama retira el panel. */
-export function playPanelOut(el: Element | null | undefined): Animation | null {
-  const o = dist(MOTION.assistant.offset);
-  return play(
-    el,
-    'exit',
-    [
-      { opacity: 1, transform: 'none' },
-      { opacity: 0, transform: `translateX(${o * 0.6}px)` },
-    ],
-    { duration: MOTION.assistant.exit, easing: MOTION.easing.in, fill: 'forwards' },
-  );
-}
-
-export function playBubble(el: Element | null | undefined, side: 'right' | 'left' = 'left'): Animation | null {
-  const o = dist(MOTION.bubble.offset);
-  settle(MOTION.bubble.duration);
-  return play(
-    el,
-    'enter',
-    [
-      { opacity: 0, transform: `translateY(${o}px) scale(.94)`, transformOrigin: side === 'right' ? '100% 100%' : '0 100%' },
-      { opacity: 1, transform: 'none', transformOrigin: side === 'right' ? '100% 100%' : '0 100%' },
-    ],
-    { duration: MOTION.bubble.duration, easing: MOTION.easing.bounce, fill: 'backwards' },
   );
 }
 

@@ -204,6 +204,7 @@ export function SavedInline({ children, testId }: { children: ReactNode; testId?
 export function Button({
   variant = 'secondary',
   icon: Ico,
+  iconOnly = false,
   children,
   busy,
   className = '',
@@ -211,6 +212,7 @@ export function Button({
 }: {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   icon?: Icon;
+  iconOnly?: boolean;
   busy?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement> & { 'data-testid'?: string }) {
   const styles = {
@@ -226,7 +228,7 @@ export function Button({
       {...rest}
       disabled={rest.disabled || busy}
       aria-busy={busy || undefined}
-      className={`comic-button ${variant === 'ghost' ? 'comic-ghost' : ''} inline-flex min-h-10 items-center justify-center gap-2 border px-3.5 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${styles} ${className}`}
+      className={`comic-button ${iconOnly ? 'comic-icon-button' : ''} ${variant === 'ghost' ? 'comic-ghost' : ''} inline-flex min-h-11 items-center justify-center gap-2 border px-3.5 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${styles} ${className}`}
     >
       {lead && (
         <span className="comic-icon-slot">
@@ -234,7 +236,7 @@ export function Button({
           {variant === 'primary' && Ico && <InkStrokes />}
         </span>
       )}
-      {children}
+      {!iconOnly && children}
     </button>
   );
 }

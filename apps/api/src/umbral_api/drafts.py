@@ -16,7 +16,7 @@ from .models import (
 from .retrieval import fold
 from .security import leaks_secret
 from .topics import HEADLINE_NOTICE, MASKED_TITLE, TopicBase
-from .util import fmt_date_pa, marker_ids, strip_markers, word_count
+from .util import fmt_date_pa, fmt_value, marker_ids, strip_markers, word_count
 
 BRIEF_MAX_WORDS = 250
 COPY_MAX_WORDS = 80
@@ -60,7 +60,7 @@ def build_pack(base: TopicBase) -> EvidencePack:
         if p.is_missing or p.value is None:
             continue
         pack.items[p.id] = {
-            "value": f"{p.value:g}",
+            "value": fmt_value(p.value),
             "unit": p.unit or "",
             "year": str(p.year),
             "countryIso3": p.country_iso3,

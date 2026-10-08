@@ -490,13 +490,13 @@ export function Sources() {
   useEntrance(ref, 'fuentes', !snapshot.isLoading);
   return (
     <div ref={ref} data-testid="sources-view" className="space-y-4">
-      <div data-motion="heading">
+      <header data-motion="heading" className="comic-page-heading space-y-2">
         <p className="kicker">Fuentes y evaluación</p>
-        <h2 className="font-display text-2xl font-bold">Procedencia, calidad y métricas</h2>
+        <h1 className="font-display text-3xl font-bold leading-tight">Procedencia, calidad y métricas</h1>
         <p className="mt-1 text-sm text-ink-2">
           Todo lo que se muestra sale del snapshot servido y de ejecuciones reales. Si algo no se ejecutó, se indica «sin ejecutar» en lugar de inventar un valor.
         </p>
-      </div>
+      </header>
       <SnapshotCard />
       <CatalogCard />
       <QualityCard />

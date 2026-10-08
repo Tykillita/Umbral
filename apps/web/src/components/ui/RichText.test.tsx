@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { RichText, parseBlocks } from './RichText';
 
 const AGENDA = [
@@ -42,4 +42,22 @@ describe('RichText', () => {
     expect(container.querySelectorAll('ul > li')).toHaveLength(2);
     expect(container.querySelectorAll('p')).toHaveLength(1);
   });
+
+  it('convierte [n] en botones solo cuando hay fuente n y no dentro de una cita entre «»', () => {
+    const onCite = vi.fn();
+    const { container } = render(<RichText text={'Hay un titular [1] y otro dato [2]. Cita: «Noticia [2] literal» y [9].'} citing={{ count: 2, onCite }} />);
+    const markers = container.querySelectorAll('button.cite-marker');
+    expect([...markers].map((item) => item.getAttribute('data-cite-index'))).toEqual(['1', '2']);
+    expect(container.textContent).toContain('«Noticia [2] literal»');
+    expect(container.textContent).toContain('[9]');
+    fireEvent.click(markers[1]!);
+    expect(onCite).toHaveBeenCalledWith(2);
+  });
+
+  it('no crea botones sin contexto de citas', () => {
+    const { container } = render(<RichText text="Texto con [1] suelto" />);
+    expect(container.querySelectorAll('button')).toHaveLength(0);
+    expect(container.textContent).toBe('Texto con [1] suelto');
+  });
 });
+

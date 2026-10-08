@@ -16,7 +16,7 @@ export function ScoreBreakdown({
 }) {
   if (variant === 'compact') {
     return (
-      <ul className="grid grid-cols-5 gap-1.5" aria-label="Componentes del puntaje">
+      <ul className="comic-score-grid grid grid-cols-5 gap-1.5" aria-label="Componentes del puntaje">
         {components.map((c) => (
           <li
             key={c.key}
@@ -25,26 +25,27 @@ export function ScoreBreakdown({
             data-points={String(c.points)}
             className="comic-score-cell border border-rule text-center"
           >
-            <Tooltip block content={`${COMPONENT_NAME[c.key] ?? c.label}: ${c.rule}`} className="px-1.5 py-1">
-            <span className="block w-full">
-            <span className="block text-[11px] font-bold tracking-wide text-ink-3">
-              {c.key} · {c.weight}
-            </span>
-            <span className="block text-sm font-bold tabular-nums">{fmtNumber(c.points, 1)}</span>
-            <span
-              className="mt-0.5 block h-1 rounded bg-sunk"
-              role="img"
-              aria-label={`${COMPONENT_NAME[c.key] ?? c.label}: valor normalizado ${fmtNumber(c.value, 2)} de 1`}
+            <Tooltip
+              block
+              content={`${COMPONENT_NAME[c.key] ?? c.label} · peso ${c.weight}: ${c.rule}${c.limits.length ? ` Límites: ${c.limits.join(' ')}` : ' Sin límites declarados.'}`}
+              className="comic-score-tooltip px-1.5 py-1"
             >
-              <span className="block h-1 rounded bg-amber-600" style={{ width: `${Math.round(c.value * 100)}%` }} />
-            </span>
-            {c.limits.length > 0 && (
-              <span className="mt-0.5 flex items-center justify-center gap-0.5 text-[10px] text-warn">
-                <Info size={10} aria-hidden="true" />
-                {c.limits.length} límite{c.limits.length > 1 ? 's' : ''}
+              <span className="comic-score-cell-content">
+                <span className="comic-score-weight block text-[11px] font-bold tracking-wide text-ink-3">
+                  {c.key} · {c.weight}
+                </span>
+                <span className="block text-sm font-bold tabular-nums">{fmtNumber(c.points, 1)}</span>
+                <span
+                  className="block h-1 rounded bg-sunk"
+                  role="img"
+                  aria-label={`${COMPONENT_NAME[c.key] ?? c.label}: valor normalizado ${fmtNumber(c.value, 2)} de 1`}
+                >
+                  <span className="block h-1 rounded bg-amber-600" style={{ width: `${Math.round(c.value * 100)}%` }} />
+                </span>
+                <span className="comic-score-limits text-warn" aria-hidden="true">
+                  {c.limits.length > 0 ? <><Info size={10} /> {c.limits.length} límite{c.limits.length > 1 ? 's' : ''}</> : '—'}
+                </span>
               </span>
-            )}
-            </span>
             </Tooltip>
           </li>
         ))}

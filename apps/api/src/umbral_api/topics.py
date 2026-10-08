@@ -28,6 +28,7 @@ from .models import (
 )
 from .retrieval import fold, stem
 from .snapshot import Corpus
+from .util import fmt_value
 
 MASKED_TITLE = "[texto con instrucciones omitido]"
 HEADLINE_NOTICE = "Basado únicamente en titular/metadatos: no se leyó el artículo completo ni se le atribuyen detalles adicionales."
@@ -486,10 +487,10 @@ def _supported_claims(arts: list[EvidenceArticle], inds: list[IndicatorPoint]) -
                 type=ClaimType.hecho,
                 text=(
                     f"Según el Banco Mundial, {p.indicator_name} de {p.country_name or p.country_iso3} en {p.year} fue "
-                    f"{p.value:g} ({p.unit or 'sin unidad'}); dato anual de referencia, no una medición de hoy."
+                    f"{fmt_value(p.value)} ({p.unit or 'sin unidad'}); dato anual de referencia, no una medición de hoy."
                 ),
                 citations=[
-                    Citation(evidence_id=p.id, field="value", passage=f"{p.value:g}"),
+                    Citation(evidence_id=p.id, field="value", passage=fmt_value(p.value)),
                     Citation(evidence_id=p.id, field="year", passage=str(p.year)),
                 ],
             )

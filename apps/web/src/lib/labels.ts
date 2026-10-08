@@ -87,6 +87,7 @@ export const FALLBACK_LABEL: Record<FallbackReason, string> = {
   validacion_fallida: 'la validación de citas falló',
   solo_localhost: 'conexión personal solo disponible en localhost',
   solicitado: 'solicitado por el usuario',
+  sin_evidencia: 'no hay una respuesta con fuentes que redactar',
 };
 
 export const PROVIDER_CHOICES: { value: string; label: string; help: string }[] = [

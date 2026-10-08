@@ -21,6 +21,14 @@ def _need_build():
 
 
 @pytest.fixture(scope="session")
+def stub_stack(server_factory):
+    """Stack local con el stub de Gemini (UMBRAL_GEMINI_STUB=ok): sin red ni credenciales, para probar la redacción con IA."""
+    _need_build()
+    with server_factory(web_dist=DIST, UMBRAL_AUTH_MODE="local", UMBRAL_GEMINI_STUB="ok") as srv:
+        yield srv
+
+
+@pytest.fixture(scope="session")
 def stack(server_factory):
     """Stack local: FastAPI + SQLite temporal + build de Astro; usuario único (auth local)."""
     _need_build()
