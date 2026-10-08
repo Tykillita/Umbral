@@ -22,7 +22,7 @@
 
 <img src="apps/web/public/brand/social.png" width="720" alt="Tarjeta social de Umbral: una agenda priorizada de cinco viñetas">
 
-<p><a href="#funciones">Funciones</a> &bull; <a href="#inicio-rápido">Inicio rápido</a> &bull; <a href="#arquitectura">Arquitectura</a> &bull; <a href="#aplicación-de-windows">App de Windows</a> &bull; <a href="#límites-conocidos">Límites conocidos</a> &bull; <a href="SECURITY.md">Política de seguridad</a></p>
+<p><a href="https://site-umbral.web.app/app">Abrir la app</a> &bull; <a href="#funciones">Funciones</a> &bull; <a href="#inicio-rápido">Inicio rápido</a> &bull; <a href="#arquitectura">Arquitectura</a> &bull; <a href="#aplicación-de-windows">App de Windows</a> &bull; <a href="#límites-conocidos">Límites conocidos</a> &bull; <a href="SECURITY.md">Política de seguridad</a></p>
 
 <sub>Noticias de Panamá e indicadores oficiales · Interfaz en español · Solo planes gratuitos</sub>
 
