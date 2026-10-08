@@ -6,6 +6,10 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ## [Unreleased]
 
+### Documentation
+
+- Registra la prueba real de instalación y actualización de la app de escritorio mediante GitHub Releases.
+
 ## [0.1.1] — 2026-10-08
 
 ### Changed
