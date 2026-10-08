@@ -12,6 +12,10 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 - Stateless public API under `/api/v1/public` (agenda, topic, queries, drafts, validation), with a global Gemini quota of 20 calls per UTC day (retries included) and a citation-backed template as fallback.
 - Daily snapshot feed (`data/current.json` plus the last seven valid snapshots) that the API and the desktop app download only when it changes, verifying SHA-256 and keeping the last valid snapshot on failure.
 - Windows desktop app (Electron + NSIS, per-user) bundling the API, the pipeline, PyTorch CPU and the pinned Laya weights; offline reclassification in a separate process.
+- Local Laya calibration workflow for headline classification: agent-review provenance, full-precision logits, model-bound temperature and threshold profiles, an untouched-test gate, and shared web/desktop profile packaging.
+- Local preparation and cache verification for a calibrated Laya artifact, bound to the fixed review labels, base snapshot, split hashes, and test gate.
+- Hosted verification can require an exact Laya model version, calibration profile, and profile hash from the API's active snapshot.
+- Calibrated Laya snapshot `20261007-e704e952` with 991 real headlines, preserved raw logits, and the baseline snapshot retained for rollback.
 - Custom, keyboard-accessible controls replacing every native browser control, with a static guard and end-to-end tests.
 - Floating evidence assistant with compact and expanded layouts, minimized dock, scope-aware independent questions, readable citations and query metadata, retry/edit states, response copy, and per-identity IndexedDB conversation history.
 - Assistant: in-flight queries can be cancelled (a real `AbortSignal` through the HTTP, browser-workspace and mock API layers), completion/cancellation is announced to screen readers, and editing a failed question asks before replacing an unsent draft.

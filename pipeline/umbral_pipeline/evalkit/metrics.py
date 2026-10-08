@@ -92,18 +92,21 @@ def ratio(num: int, den: int) -> dict[str, float | int | None]:
     return {"numerator": num, "denominator": den, "value": (num / den) if den else None}
 
 
-def probability_quality(y_true: Sequence[str], predictions: Sequence[dict], labels: Sequence[str], bins: int = 10) -> dict:
-    """Uncalibrated confidence: multiclass Brier and top-label ECE, no fitting.
+def probability_quality(
+    y_true: Sequence[str], predictions: Sequence[dict], labels: Sequence[str], bins: int = 10, *, calibrated: bool = False
+) -> dict:
+    """Multiclass NLL/Brier and top-label ECE; fitting and provenance stay with the caller.
 
     Evaluates only supplied labels; caller must preserve human/synthetic provenance.
     Uses the probability of the actual predicted category, including indeterminate.
     """
     if not y_true:
-        return {"n": 0, "brier": None, "ece": None, "bins": [], "calibrated": False}
+        return {"n": 0, "brier": None, "ece": None, "bins": [], "calibrated": calibrated}
     if len(y_true) != len(predictions) or bins < 1:
         raise ValueError("Longitudes diferentes o cantidad de bins inválida")
     groups: list[list[tuple[float, bool]]] = [[] for _ in range(bins)]
     brier_values = []
+    nll_values = []
     for gold, prediction in zip(y_true, predictions, strict=True):
         if gold not in labels or prediction["category"] not in labels:
             raise ValueError("Categoría desconocida en evaluación de probabilidades")
@@ -116,6 +119,7 @@ def probability_quality(y_true: Sequence[str], predictions: Sequence[dict], labe
         correct = prediction["category"] == gold
         groups[min(bins - 1, int(confidence * bins))].append((confidence, correct))
         brier_values.append(sum((probabilities[label] - int(gold == label)) ** 2 for label in labels))
+        nll_values.append(-math.log(max(probabilities[gold], 1e-12)))
     rows = []
     ece = 0.0
     for index, values in enumerate(groups):
@@ -125,6 +129,9 @@ def probability_quality(y_true: Sequence[str], predictions: Sequence[dict], labe
         observed = sum(v[1] for v in values) / len(values)
         ece += len(values) / len(y_true) * abs(confidence - observed)
         rows.append({"bin": index, "n": len(values), "meanConfidence": confidence, "accuracy": observed})
-    return {"n": len(y_true), "brier": sum(brier_values) / len(brier_values), "ece": ece,
-            "bins": rows, "calibrated": False,
-            "note": "Diagnóstico crudo; no ajuste/calibración de probabilidades ni exactitud humana sin etiquetas."}
+    return {"n": len(y_true), "nll": sum(nll_values) / len(nll_values),
+            "brier": sum(brier_values) / len(brier_values), "ece": ece,
+            "bins": rows, "calibrated": calibrated,
+            "note": ("Se evalúa una distribución tras aplicar el perfil; esto no acredita calidad editorial humana."
+                     if calibrated else
+                     "Diagnóstico de probabilidades crudas; no implica ajuste ni exactitud humana." )}

@@ -15,6 +15,8 @@ def evaluation_kind(rows: list[dict]) -> str:
         return "synthetic_control"
     if all(r.get("labelMethod") == "human" and str(r.get("labeler") or "").strip() for r in rows):
         return "human"
+    if all(r.get("labelMethod") == "agent_review" for r in rows):
+        return "agent_review"
     return "unverified_labels"
 
 

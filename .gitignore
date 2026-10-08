@@ -105,7 +105,8 @@ data/raw/
 !/data/snapshots/*/DATA_DICTIONARY.md
 !/data/snapshots/*/TERMS_OF_USE.md
 
-# Datos: solo el corte vigente se versiona; los intermedios quedan en local.
+# Datos: el corte vigente y su respaldo de rollback se versionan; los intermedios quedan en local.
 data/snapshots/*
 !data/snapshots/CURRENT
 !data/snapshots/20261007-cfa338b6/
+!data/snapshots/20261007-e704e952/

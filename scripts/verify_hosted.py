@@ -46,11 +46,38 @@ def json_response(url: str, method: str = "GET", body: dict | None = None, web_o
         raise ValueError("El servidor aún no entrega JSON (posible arranque en frío).")
     value = json.loads(raw)
     if not isinstance(value, dict):
-        raise ValueError("La respuesta JSON no cumple el contrato de objeto.")
+        raise TypeError("La respuesta JSON no cumple el contrato de objeto.")
     return status, headers, value
 
 
-def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wait_seconds: float = 90) -> dict:
+def verify_model_identity(snapshot_info: dict, model_version: str, profile_id: str,
+                          profile_sha256: str) -> dict:
+    """Require the API's active snapshot to expose the exact expected calibrated model."""
+    manifest = snapshot_info.get("manifest") or {}
+    classifier = manifest.get("classifier") or {}
+    actual = {
+        "modelVersion": classifier.get("modelVersion"),
+        "calibrated": classifier.get("calibrated"),
+        "calibrationProfileId": classifier.get("calibrationProfileId"),
+        "calibrationProfileSha256": classifier.get("calibrationProfileSha256"),
+    }
+    expected = {
+        "modelVersion": model_version,
+        "calibrated": True,
+        "calibrationProfileId": profile_id,
+        "calibrationProfileSha256": profile_sha256,
+    }
+    if snapshot_info.get("snapshotId") != manifest.get("snapshotId") or actual != expected:
+        raise ValueError(f"La identidad calibrada servida por la API no coincide: {actual}.")
+    return actual
+
+
+def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wait_seconds: float = 90,
+           expected_model_version: str | None = None, expected_profile_id: str | None = None,
+           expected_profile_sha256: str | None = None) -> dict:
+    expected_model = (expected_model_version, expected_profile_id, expected_profile_sha256)
+    if any(expected_model) and not all(expected_model):
+        raise ValueError("La verificación del modelo requiere versión, perfil y SHA-256.")
     started = time.monotonic()
     checks: list[str] = []
     for route, label in (("/", "Portada"), ("/app", "Aplicación")):
@@ -77,7 +104,7 @@ def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wai
             if status == 200 and candidate.get("snapshotId") == expected_snapshot:
                 health = candidate
                 break
-        except (OSError, URLError, ValueError):
+        except (OSError, URLError, TypeError, ValueError):
             pass
         time.sleep(min(5, max(0, deadline - time.monotonic())))
     if health is None:
@@ -90,6 +117,14 @@ def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wai
         or integrity.get("predictionsHashVerified") is not True):
         raise ValueError("La API no cumple el modo público con datos Laya reales e íntegros.")
     checks.extend(["API pública sin Authorization", "CORS del origen alojado", "Snapshot Laya sin fixtures e íntegro"])
+    model_identity = None
+    if expected_model_version:
+        status, _, snapshot_info = json_response(api_url + "/api/v1/snapshot", web_origin=web_url)
+        if status != 200 or snapshot_info.get("snapshotId") != expected_snapshot:
+            raise ValueError("La ficha de snapshot de la API no coincide con el candidato verificado.")
+        model_identity = verify_model_identity(snapshot_info, expected_model_version,
+                                               expected_profile_id or "", expected_profile_sha256 or "")
+        checks.append("Versión y perfil calibrados de Laya coinciden exactamente")
     context = {"snapshotId": expected_snapshot}
     prefix = api_url + "/api/v1/public"
     status, _, agenda = json_response(prefix + "/agenda", "POST", {"context": context}, web_url)
@@ -115,6 +150,7 @@ def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wai
     checks.append("Escritura privada rechazada HTTP 403")
     return {"status": "passed", "finishedAtUtc": datetime.now(UTC).isoformat(), "webUrl": web_url, "apiUrl": api_url,
             "snapshotId": expected_snapshot, "counts": health.get("counts"), "checks": checks,
+            "model": model_identity,
             "durationSeconds": round(time.monotonic() - started, 3),
             "limitations": ["Gemini real no se llama en este verificador", "No acredita sustento humano ni instalación limpia de Windows"]}
 
@@ -124,14 +160,19 @@ def main() -> int:
     parser.add_argument("--web-url", required=True)
     parser.add_argument("--api-url", required=True)
     parser.add_argument("--expected-snapshot-file", type=Path)
+    parser.add_argument("--expected-model-version")
+    parser.add_argument("--expected-calibration-profile-id")
+    parser.add_argument("--expected-calibration-profile-sha256")
     parser.add_argument("--wait-seconds", type=float, default=90)
     parser.add_argument("--allow-loopback", action="store_true")
     parser.add_argument("--out", type=Path, default=Path(".production/hosted-receipt.json"))
     args = parser.parse_args()
     expected = args.expected_snapshot_file.read_text(encoding="utf-8").strip() if args.expected_snapshot_file else None
     try:
-        result = verify(origin(args.web_url, args.allow_loopback), origin(args.api_url, args.allow_loopback), expected, args.wait_seconds)
-    except (OSError, ValueError) as error:
+        result = verify(origin(args.web_url, args.allow_loopback), origin(args.api_url, args.allow_loopback),
+                        expected, args.wait_seconds, args.expected_model_version,
+                        args.expected_calibration_profile_id, args.expected_calibration_profile_sha256)
+    except (OSError, TypeError, ValueError) as error:
         result = {"status": "failed", "finishedAtUtc": datetime.now(UTC).isoformat(), "error": str(error)}
     result["command"] = "python scripts/verify_hosted.py --web-url <web verificada> --api-url <api verificada>"
     args.out.parent.mkdir(parents=True, exist_ok=True)

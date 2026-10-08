@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-08T16:47:46Z",
+  "news": {
+    "fetched": 991,
+    "valid": 991,
+    "invalid": 0,
+    "invalidByCode": {},
+    "uniqueCanonicalUrls": 991,
+    "duplicateUrlsCollapsed": 152,
+    "tvnValid": 122,
+    "gdeltValid": 869,
+    "fixtureValid": 0,
+    "nullPublishedAt": 714,
+    "targetMet": true,
+    "minimumMet": true,
+    "tvnMinimumMet": true,
+    "tvnCoverage": {
+      "validTvn": 122,
+      "source": "tvn_rss+tvn_news_sitemap+gdelt_doc",
+      "publishedFrom": "2026-07-09T17:36:21Z",
+      "publishedTo": "2026-10-07T08:01:00Z",
+      "note": "Cobertura observada, sin presuponer días cubiertos por los feeds."
+    },
+    "coverageWindow": {
+      "start": "2026-07-09T17:36:21Z",
+      "end": "2026-10-07T08:01:00Z",
+      "days": 90
+    },
+    "widenedTo90Days": true
+  },
+  "indicators": {
+    "expectedCombinations": 540,
+    "rows": 540,
+    "pdfStatedCombinations": 1350,
+    "discrepancyNote": "PDF §6B: 'Seis países ... Años: 2010–2024. Seis indicadores' y 'Cuadrícula de 1.350 combinaciones'. 6×6×15 = 540, no 1.350 (1.350 exigiría 15 países o 15 indicadores). Se exportan las 540 combinaciones que el propio PDF enumera; ver DECISIONES.",
+    "withValue": 540,
+    "missing": 0,
+    "missingByIndicator": {},
+    "missingByCountry": {}
+  },
+  "classification": {
+    "classifier": "laya",
+    "byCategory": {
+      "indeterminado": 659,
+      "turismo": 38,
+      "regulacion": 71,
+      "servicios_publicos": 51,
+      "economia": 124,
+      "eventos_naturales": 12,
+      "logistica_canal": 36
+    },
+    "indeterminate": 659,
+    "byGeo": {
+      "panama": 468,
+      "none": 193,
+      "indeterminate": 273,
+      "regional": 57
+    }
+  },
+  "clusters": {
+    "count": 912,
+    "duplicatesMerged": 79,
+    "ambiguous": 31,
+    "recirculation": 48,
+    "linkMethods": {
+      "title_exact": 56,
+      "title_fuzzy": 11,
+      "bm25_laya": 12,
+      "gray_unresolved": 0,
+      "tiebreak_calls": 35
+    },
+    "contradictionCandidates": 9
+  },
+  "checks": [
+    {
+      "id": "predictions_cover_articles",
+      "ok": true,
+      "detail": "991 predicciones / 991 artículos"
+    },
+    {
+      "id": "indicator_grid_complete",
+      "ok": true,
+      "detail": "540 combinaciones"
+    },
+    {
+      "id": "minimum_100_unique",
+      "ok": true,
+      "detail": "Mínimo operativo"
+    },
+    {
+      "id": "minimum_20_tvn",
+      "ok": true,
+      "detail": "Cobertura TVN"
+    }
+  ],
+  "warnings": [],
+  "snapshotId": "20261007-e704e952",
+  "refresh": {
+    "previousSnapshotId": "20261007-cfa338b6",
+    "errors": [],
+    "cachedPredictions": 0,
+    "newPredictions": 991
+  }
+}

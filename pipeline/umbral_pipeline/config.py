@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-SCHEMA_VERSION = "1.0.3"
+SCHEMA_VERSION = "1.1.0"
 
 CATEGORIES = [
     "economia",

@@ -195,7 +195,9 @@ class DesktopJobs:
                                                                                       str(Path(__file__).resolve()), "--pipeline"]
         command += ["--data-dir", str(self.data_dir), "reclassify", "--previous", str(previous),
                     "--no-set-current", "--json-progress"]
-        env = dict(os.environ, UMBRAL_LAYA_MODEL_DIR=str(self.resources / "laya"),
+        env = {key: value for key, value in os.environ.items()
+               if key != "UMBRAL_LAYA_CALIBRATION_PROFILE"}
+        env.update(UMBRAL_LAYA_MODEL_DIR=str(self.resources / "laya"),
                    HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", TOKENIZERS_PARALLELISM="false")
         error_output = subprocess.DEVNULL
         error_file = None

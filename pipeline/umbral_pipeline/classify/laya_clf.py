@@ -9,6 +9,8 @@ sobreconfiados): se miden contra etiquetas propias en eval/ antes de usarlas com
 
 from __future__ import annotations
 
+import importlib
+import math
 import os
 import re
 import time
@@ -19,6 +21,7 @@ from typing import Any
 from ..config import CATEGORIES, INDETERMINATE
 from ..util import iso_z, now_utc, sha256_hex
 from . import input_hash, input_text_for
+from .calibration import load_profile, resolve_model_version
 from .geo import METHOD as GEO_METHOD
 from .geo import geo_content_v2
 
@@ -171,11 +174,53 @@ class LayaClassifier:
         else:
             self.agent = laya.load(REPO, subfolder=SUBFOLDER, revision=revision, device="cpu")
         self.load_seconds = round(time.time() - t0, 1)
-        self.model_version = revision
+        self.model_version = resolve_model_version(local, revision)
+        self.calibration_profile = load_profile(self.model_version, local)
+        if self.calibration_profile is not None:
+            self.threshold = self.calibration_profile.threshold
+        self._install_calibration_capture()
         self.laya_version = getattr(laya, "__version__", "unknown")
         self.run_at = iso_z(now_utc())
         self.log = log
         self.calls = 0
+
+    def _install_calibration_capture(self) -> None:
+        """Captura logits de categoría antes del redondeo de la API de Laya fijada."""
+        module = importlib.import_module(self.agent.__class__.__module__)
+        required = ("_option_logits", "temp_bucket", "QTYPES", "unpermute_probs", "np")
+        if any(not hasattr(module, name) for name in required):
+            raise RuntimeError("La versión fijada de Laya no permite capturar logits de calibración")
+        decode = self.agent._decode_answers
+
+        def decode_with_logits(*args, **kwargs):
+            if len(args) < 6:
+                return decode(*args, **kwargs)
+            logits, _act, items, ids, internal, offset = args[:6]
+            rows = module._option_logits(logits, items, offset)
+            answers = decode(*args, **kwargs)
+            for index, question_id in enumerate(ids):
+                if question_id != "category" or question_id not in answers:
+                    continue
+                question = internal[question_id]
+                question_type = module.QTYPES[question["t"]]
+                option_count = len(items[index]["markers"])
+                bucket = module.temp_bucket(question_type, option_count)
+                base_temperature = self.agent.temperature_by_options.get(
+                    bucket, self.agent.temperature[question_type])
+                row = module.np.asarray(rows[index], dtype=module.np.float64) / float(base_temperature)
+                probabilities = module.np.exp(row - row.max())
+                probabilities /= probabilities.sum()
+                probabilities = module.unpermute_probs(probabilities, question.get("option_order"))
+                keys = list(question["crit"].keys())
+                raw_logits = {key: math.log(max(float(value), 1e-300))
+                              for key, value in zip(keys, probabilities, strict=True)}
+                answers[question_id]["calibration_logits"] = raw_logits
+                if self.calibration_profile is not None:
+                    answers[question_id]["umbral_calibrated_probabilities"] = (
+                        self.calibration_profile.apply_logits(raw_logits))
+            return answers
+
+        self.agent._decode_answers = decode_with_logits
 
     # ---- clasificacion ----
     def _answer(self, text: str, questions: dict[str, Any]) -> dict[str, Any]:
@@ -189,9 +234,20 @@ class LayaClassifier:
             ans = self._answer(input_text_for(a), CATEGORY_QUESTION)
             cat_probs: dict[str, float] = ans["category"]["probabilities"]
             geo_probs: dict[str, float] = ans["geo"]["probabilities"]
-            category, p_best = decide_category(cat_probs, self.threshold)
             probs = {c: round(float(cat_probs.get(c, 0.0)), 6) for c in CATEGORIES}
             probs[INDETERMINATE] = round(float(cat_probs.get("otro", 0.0)), 6)
+            raw_logits = ans["category"].get("calibration_logits")
+            if raw_logits is None:
+                raise RuntimeError("Laya no devolvió los logits necesarios para calibración")
+            calibrated_choice_probs = ans["category"].get("umbral_calibrated_probabilities")
+            calibrated_probs = None
+            if calibrated_choice_probs is not None:
+                calibrated_probs = {c: round(float(calibrated_choice_probs.get(c, 0.0)), 6)
+                                    for c in CATEGORIES}
+                calibrated_probs[INDETERMINATE] = round(
+                    float(calibrated_choice_probs.get("otro", 0.0)), 6)
+            decision_probs = calibrated_choice_probs or cat_probs
+            category, p_best = decide_category(decision_probs, self.threshold)
             # relevancia geográfica por CONTENIDO (regla léxica auditable); la respuesta cruda de Laya se conserva como diagnóstico
             geo, geo_ev = geo_content_v2(a)
             geo_raw = {k: round(float(v), 6) for k, v in geo_probs.items()}
@@ -205,6 +261,9 @@ class LayaClassifier:
                     "category": category,
                     "probability": round(p_best, 6),
                     "probabilities": probs,
+                    "calibrationLogits": raw_logits,
+                    **({"calibratedProbabilities": calibrated_probs}
+                       if calibrated_probs is not None else {}),
                     "threshold": self.threshold,
                     "geoRelevance": geo,
                     "geoEvidence": geo_ev,
@@ -214,7 +273,9 @@ class LayaClassifier:
                     "modelId": self.model_id,
                     "modelVersion": self.model_version,
                     "predictedAt": ts,
-                    "calibrated": False,
+                    "calibrated": self.calibration_profile is not None,
+                    **({"calibrationProfileId": self.calibration_profile.profile_id}
+                       if self.calibration_profile is not None else {}),
                     "provisional": True,
                 }
             )
@@ -237,9 +298,14 @@ class LayaClassifier:
             "layaPackageVersion": self.laya_version, "torchVersion": self._torch.__version__,
             "runAt": self.run_at, "device": "cpu",
             "loadSeconds": self.load_seconds, "forwardCalls": self.calls, "threshold": self.threshold,
+            "calibrated": self.calibration_profile is not None,
+            "calibrationProfileId": self.calibration_profile.profile_id if self.calibration_profile else None,
+            "calibrationProfileSha256": self.calibration_profile.sha256 if self.calibration_profile else None,
+            "calibrationTemperature": self.calibration_profile.temperature if self.calibration_profile else None,
             "questions": {"category": f"choice 6+otro ({SCOPE_METHOD})", "geo": f"relevancia por contenido ({GEO_METHOD}); la pregunta geo de Laya se guarda en geoLayaRaw"},
             "scopeMethod": SCOPE_METHOD,
-            "note": "Probabilidades sin calibrar (calibrated=false).",
+            "note": ("Temperature scaling validado; se conservan las probabilidades crudas."
+                     if self.calibration_profile else "Perfil de calibración pendiente; calibrated=false."),
         }
 
 

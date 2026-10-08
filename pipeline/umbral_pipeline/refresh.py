@@ -10,6 +10,7 @@ from __future__ import annotations
 import copy
 import json
 import math
+import os
 import re
 import shutil
 from collections import Counter
@@ -19,6 +20,7 @@ from typing import Any
 
 from .build import TRANSFORMATIONS, _load_raw
 from .classify import input_hash
+from .classify.calibration import load_profile, profile_path, resolve_model_version
 from .classify.geo import METHOD as GEO_METHOD
 from .classify.geo import geo_content_v2
 from .classify.laya_clf import CATEGORY_QUESTION, PAIR_QUESTION, PINNED_REVISION, LayaClassifier
@@ -33,7 +35,15 @@ def rules_hash() -> str:
     # A frozen executable has no Python source files; include all lexical data.
     from .classify import geo
 
-    payload = {"category": CATEGORY_QUESTION, "pair": PAIR_QUESTION, "threshold": 0.5,
+    model_dir = Path(os.environ["UMBRAL_LAYA_MODEL_DIR"]) if os.environ.get("UMBRAL_LAYA_MODEL_DIR") else None
+    model_version = resolve_model_version(model_dir, PINNED_REVISION)
+    profile = load_profile(model_version, model_dir)
+    active_profile = profile_path(model_dir)
+    payload = {"category": CATEGORY_QUESTION, "pair": PAIR_QUESTION,
+               "threshold": profile.threshold if profile else LayaClassifier.threshold,
+               "calibrationProfileId": profile.profile_id if profile else None,
+               "calibrationProfileSha256": sha256_hex(active_profile.read_text(encoding="utf-8"))
+               if profile and active_profile else None,
                "geoMethod": GEO_METHOD, "geoTerms": [geo.PANAMA_TERMS, geo.REGION_TERMS, geo.FOREIGN_TERMS],
                "geoPatterns": [geo.PANAMA_RX.pattern, geo.BALBOA_RX.pattern, geo.CJK_PANAMA_RX.pattern]}
     return sha256_hex(json.dumps(payload, ensure_ascii=False, sort_keys=True))
@@ -57,13 +67,15 @@ def classify_cached(articles: list[dict], previous: dict[str, Any], *, force: bo
                     classifier_factory=LayaClassifier, progress=None, log=print):
     fingerprint = rules_hash()
     info = previous["manifest"]["classifier"]
+    model_dir = Path(os.environ["UMBRAL_LAYA_MODEL_DIR"]) if os.environ.get("UMBRAL_LAYA_MODEL_DIR") else None
+    model_version = resolve_model_version(model_dir, PINNED_REVISION)
     compatible = (not force and info.get("classifier") == "laya"
-                  and info.get("modelVersion") == PINNED_REVISION and info.get("rulesHash") == fingerprint)
+                  and info.get("modelVersion") == model_version and info.get("rulesHash") == fingerprint)
     cache = {p["articleId"]: p for p in previous["predictions"]} if compatible else {}
     cached, pending = {}, []
     for article in articles:
         pred = cache.get(article["articleId"])
-        if pred and pred["inputHash"] == input_hash(article) and pred["modelVersion"] == PINNED_REVISION:
+        if pred and pred["inputHash"] == input_hash(article) and pred["modelVersion"] == model_version:
             # Geography depends on metadata as well as the headline, so always recompute it.
             pred = copy.deepcopy(pred)
             pred["geoRelevance"], pred["geoEvidence"] = geo_content_v2(article)

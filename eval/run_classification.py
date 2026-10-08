@@ -50,15 +50,25 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--labels", type=Path, default=Path("eval/labels/cls_labels.jsonl"))
     ap.add_argument("--snapshot", action="append", required=True, help="nombre=ruta (p. ej. laya=data/snapshots/ID)")
+    ap.add_argument("--split", choices=("train", "validation", "calibration", "test", "difficult"),
+                    help="Evalúa solo una partición, útil para mantener intacto el conjunto de prueba")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
 
-    labels = {r["articleId"]: r for r in read_jsonl(a.labels) if r.get("label")}
+    source_labels = [r for r in read_jsonl(a.labels) if r.get("label")]
+    labels = {r["articleId"]: r for r in source_labels}
+    if len(labels) != len(source_labels):
+        raise ValueError("El archivo de etiquetas contiene articleId duplicados")
+    if a.split:
+        labels = {article_id: row for article_id, row in labels.items() if row.get("split") == a.split}
+        if not labels:
+            raise ValueError(f"No hay etiquetas para split={a.split}")
     if any(r["label"] not in LABELS or (r.get("geo") and r["geo"] not in GEO) for r in labels.values()):
         raise ValueError("Etiqueta de categoría/geografía inválida")
     report: dict = {
         "command": " ".join(sys.argv), "ranAt": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "python": platform.python_version(), "labelsFile": str(a.labels), "labelsTotal": len(labels),
+        "split": a.split,
         "labelMethod": sorted({r.get("labelMethod", "") for r in labels.values()}),
         "labelers": sorted({r.get("labeler", "") for r in labels.values()}),
         "results": {},
@@ -97,6 +107,10 @@ def main() -> int:
             }
             res[scope]["probabilityQuality"] = probability_quality(
                 [labels[i]["label"] for i in sel], [preds[i] for i in sel], LABELS)
+            if all(preds[i].get("calibratedProbabilities") for i in sel):
+                calibrated = [dict(preds[i], probabilities=preds[i]["calibratedProbabilities"]) for i in sel]
+                res[scope]["calibratedProbabilityQuality"] = probability_quality(
+                    [labels[i]["label"] for i in sel], calibrated, LABELS, calibrated=True)
         report["results"][name] = res
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

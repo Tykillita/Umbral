@@ -11,6 +11,7 @@ import re
 import shutil
 from pathlib import Path
 
+from umbral_pipeline.classify.calibration import load_profile, resolve_model_version
 from umbral_pipeline.classify.laya_clf import PINNED_REVISION
 from umbral_pipeline.refresh import load_verified
 from umbral_pipeline.util import iso_z, now_utc, sha256_file
@@ -61,6 +62,20 @@ def stage(snapshot_dir: Path | None = None, model_dir: Path | None = None):
         target.parent.mkdir(exist_ok=True)
         if not target.exists() or sha256_file(target) != sha256_file(model_dir / name):
             shutil.copyfile(model_dir / name, target)
+    model_metadata = model_dir / "umbral-model.json"
+    staged_metadata = destination / "umbral-model.json"
+    if model_metadata.is_file():
+        shutil.copyfile(model_metadata, staged_metadata)
+    elif staged_metadata.exists():
+        staged_metadata.unlink()
+    calibration_profile = model_dir / "umbral-calibration.json"
+    if not calibration_profile.is_file():
+        calibration_profile = ROOT / "pipeline/umbral_pipeline/classify/umbral-calibration.json"
+    staged_profile = destination / "umbral-calibration.json"
+    if calibration_profile.is_file():
+        shutil.copyfile(calibration_profile, staged_profile)
+    elif staged_profile.exists():
+        staged_profile.unlink()
     # Pre-normalize tokenizer metadata at build time: resources stay read-only at runtime.
     cfg_path = destination / "tokenizer/tokenizer_config.json"
     cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
@@ -85,8 +100,13 @@ def stage(snapshot_dir: Path | None = None, model_dir: Path | None = None):
         for path in sorted(directory.rglob("*")):
             if path.is_file():
                 files[path.relative_to(staging).as_posix()] = {"sha256": sha256_file(path), "sizeBytes": path.stat().st_size}
+    active_model_version = resolve_model_version(destination, PINNED_REVISION)
+    active_profile = load_profile(active_model_version, destination, use_environment=False)
     manifest = {"version": 1, "createdAt": iso_z(now_utc()), "snapshotId": snapshot_dir.name,
                 "layaRevision": PINNED_REVISION, "modelWeightsSha256": sha256_file(destination / "model.safetensors"),
+                "modelVersion": active_model_version,
+                "calibrationProfileId": active_profile.profile_id if active_profile else None,
+                "calibrationProfileSha256": sha256_file(staged_profile) if active_profile else None,
                 "files": files, "runtime": {name: importlib.metadata.version(name)
                 for name in ("torch", "laya", "transformers", "PyInstaller", "umbral-api", "umbral-pipeline")}}
     inline_hashes = set()

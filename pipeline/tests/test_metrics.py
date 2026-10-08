@@ -8,6 +8,7 @@ from umbral_pipeline.evalkit.metrics import (
     percentile,
     precision_at_k,
     prf_per_class,
+    probability_quality,
 )
 
 
@@ -43,3 +44,11 @@ def test_precision_at_k_and_percentiles():
     assert math.isclose(percentile([1, 2, 3, 4], 50), 2.5)
     s = latency_summary([1.0, 2.0, 3.0, 4.0, 100.0])
     assert s["median"] == 3.0 and s["p95"] > 50 and s["n"] == 5
+
+
+def test_probability_quality_reports_the_input_calibration_state():
+    prediction = {"category": "a", "probabilities": {"a": 0.8, "b": 0.2}}
+    raw = probability_quality(["a"], [prediction], ["a", "b"])
+    calibrated = probability_quality(["a"], [prediction], ["a", "b"], calibrated=True)
+    assert raw["calibrated"] is False and "crudas" in raw["note"]
+    assert calibrated["calibrated"] is True and "perfil" in calibrated["note"]
