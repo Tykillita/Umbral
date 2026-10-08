@@ -7,7 +7,7 @@ No sustituye una revisión visual humana.
 from __future__ import annotations
 
 import pytest
-from e2e.helpers import open_app, open_first_ficha, tid
+from e2e.helpers import open_app, open_first_ficha, settle_motion, tid
 from playwright.sync_api import Page, expect
 
 pytestmark = pytest.mark.e2e
@@ -50,15 +50,19 @@ def test_zonas_tactiles_de_44px_en_movil(page: Page, stack, w, h):
     open_app(page, stack.url)
     problems: list[str] = []
     tid(page, "filters-toggle").click()
+    settle_motion(page)  # la animación de pulsación escala el botón (~0,98) y falsearía la medida
     problems += [f"agenda: {x}" for x in page.evaluate(JS_SMALL_TARGETS, MIN_TOUCH)]
     open_first_ficha(page)
     tid(page, "impact-form").locator("button[aria-expanded]").first.click()
+    settle_motion(page)
     problems += [f"ficha: {x}" for x in page.evaluate(JS_SMALL_TARGETS, MIN_TOUCH)]
     tid(page, "nav-borradores").click()
     page.wait_for_timeout(400)
+    settle_motion(page)
     problems += [f"borradores: {x}" for x in page.evaluate(JS_SMALL_TARGETS, MIN_TOUCH)]
     tid(page, "nav-fuentes").click()
     page.wait_for_timeout(500)
+    settle_motion(page)
     problems += [f"fuentes: {x}" for x in page.evaluate(JS_SMALL_TARGETS, MIN_TOUCH)]
     assert not problems, "zonas táctiles menores de 44 px: " + "; ".join(problems)
 
