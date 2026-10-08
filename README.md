@@ -22,7 +22,7 @@
 
 <img src="apps/web/public/brand/social.png" width="720" alt="Umbral social card: a five-panel prioritised agenda">
 
-<p><a href="#features">Features</a> &bull; <a href="#quick-start">Quick start</a> &bull; <a href="#architecture">Architecture</a> &bull; <a href="#windows-app">Windows app</a> &bull; <a href="#known-limits">Known limits</a> &bull; <a href="SECURITY.md">Security policy</a></p>
+<p><a href="https://site-umbral.web.app/app">Open the app</a> &bull; <a href="#features">Features</a> &bull; <a href="#quick-start">Quick start</a> &bull; <a href="#architecture">Architecture</a> &bull; <a href="#windows-app">Windows app</a> &bull; <a href="#known-limits">Known limits</a> &bull; <a href="SECURITY.md">Security policy</a></p>
 
 <sub>Panama news and official indicators · Spanish interface · Free tiers only</sub>
 

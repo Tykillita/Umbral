@@ -51,11 +51,21 @@ Compilada y probada en el equipo de desarrollo el 2026-10-07:
 - Instalador NSIS sin firma, 822.606.812 bytes, SHA-256 `74ea5c55f643742388a4e414c3b4d17608b0ea13f688b23c418fcb7de5b750c3`; ejecutable sin empaquetar `4b3d4a19d8aa0f401fa0befcd392100904a0a4c01740131fbe4ecbcf88cc31da`.
 - Pruebas propias del escritorio: 2 de Node y 7 de Python aprobadas.
 
-## 5. Pendiente (no ejecutado)
+## 5. CI remota y despliegue alojado
 
-- **CI remota en GitHub**, despliegue en Render y Firebase Hosting, y la prueba online con `verify_hosted.py`.
-- Generación real con Gemini sostenida y arranque en frío medido en Render.
-- Que Render entregue `CF-Connecting-IP` y el límite por visitante la use; si falta, se conserva el límite compartido por socket.
+- **CI remota (GitHub Actions), 2026-10-08:** el PR #1 y la integración en `main` pasaron las 5 comprobaciones (higiene, API, pipeline, web, integración y E2E). En la primera ejecución del PR falló una prueba de zonas táctiles que depende del tiempo de la animación de pulsación (43 px en vez de 44 px en el ejecutor Linux); se corrigió esperando a que terminen las animaciones antes de medir (PR #2).
+- **Despliegue (workflow «Despliegue», 2026-10-08):**
+  - API en Render Free (`https://umbral-m330.onrender.com`): commit `67c9846ba4f733651520ed93184a61ea562e80e9`, `status: ok`, modo público sin persistencia, snapshot `20261007-cfa338b6` (991 noticias, integridad verificada, sin fixtures), clasificador Laya.
+  - Web en Firebase Hosting (`https://site-umbral.web.app`), publicada solo después de verificar la API.
+  - Prueba online `scripts/verify_hosted.py`: **12 comprobaciones aprobadas** (portada, aplicación, descubrimiento de la API, descriptor de datos, CORS del origen de Hosting, snapshot íntegro, agenda, ficha con evidencia, consulta en español, plantilla con citas y escritura privada rechazada con HTTP 403).
+  - La primera ejecución del workflow falló en la autenticación de Firebase Hosting por una credencial inválida; Hosting no se modificó. Se sustituyó la credencial y la segunda ejecución pasó.
+
+Esta prueba **no llama a Gemini real** y no acredita revisión humana.
+
+## 6. Pendiente (no ejecutado)
+
+- Generación real con Gemini sostenida, el contador de cuota de Firestore de producción y el arranque en frío medido en Render.
+- Que Render entregue `CF-Connecting-IP` y el límite por visitante la use (las respuestas pasan por Cloudflare, pero la cabecera hacia el origen no se ha comprobado); si falta, se conserva el límite compartido por socket.
 - **Dos ciclos reales** del workflow diario, rechazo de un snapshot corrupto en producción y continuidad de casos archivados.
 - **Instalación en un Windows limpio**, uso sin internet y actualización del instalador sin pérdida de trabajo.
 - **Revisión humana:** clasificación y geografía, agrupación de duplicados, sustento de afirmaciones, Precision@5 editorial de la agenda y el benchmark reservado de 20 consultas, que vive fuera de este repositorio y no se ha leído.

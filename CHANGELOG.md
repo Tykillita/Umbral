@@ -17,6 +17,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 - `UMBRAL_CORS_PREVIEW_PROJECT` to allow only the Firebase Hosting preview channels (`<project>--pr-<n>-<hash>`) of one project.
 - Publication checks: `scripts/check_public_files.py` (publishable files only, no personal paths, no AI-tool credits, no broken links, commit messages) and `scripts/wait_for_deploy.py`.
 - GitHub Actions: per-PR Firebase Hosting previews and a single deployment orchestrator (Render, verification, Hosting, online check); a scheduled daily data workflow, disabled until explicitly enabled.
+- First hosted deployment: API on Render Free and web on Firebase Hosting, verified end to end by `scripts/verify_hosted.py`.
 - English and Spanish READMEs, a security policy and public architecture, deployment and validation guides.
 
 ### Changed
