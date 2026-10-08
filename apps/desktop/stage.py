@@ -31,14 +31,22 @@ def stage(snapshot_dir: Path | None = None, model_dir: Path | None = None):
     if not laya_license.is_file() or "Apache License" not in laya_license.read_text(encoding="utf-8"):
         raise ValueError("Falta la licencia Apache 2.0 verificada del paquete Laya.")
     shutil.copyfile(laya_license, licenses / "LAYA-APACHE-2.0.txt")
-    shutil.copyfile(DESKTOP / "licenses/laya-model-card.md", licenses / "LAYA-MODEL-CARD.md")
+    (licenses / "LAYA-MODEL-CARD.md").write_text(
+        "# Laya multilingual model\n\n"
+        "Umbral bundles the `convaiinnovations/laya` multilingual checkpoint at the pinned revision "
+        f"`{PINNED_REVISION}`. The checkpoint and runtime are distributed under Apache License 2.0.\n\n"
+        "This file identifies the bundled model; consult the upstream model card for its architecture, "
+        "intended use, evaluation, and limitations:\n\n"
+        f"https://huggingface.co/convaiinnovations/laya/blob/{PINNED_REVISION}/README.md\n",
+        encoding="utf-8",
+    )
     (licenses / "NOTICE.md").write_text(
         "# Licencias incluidas\n\nUmbral: MIT (UMBRAL-MIT.txt).\n\n"
         "Laya y checkpoint multilingüe: Apache 2.0 (LAYA-APACHE-2.0.txt). "
         f"Checkpoint fijado: {PINNED_REVISION}.\n"
         "Origen del modelo y su declaración de licencia: "
         f"https://huggingface.co/convaiinnovations/laya/blob/{PINNED_REVISION}/README.md\n\n"
-        "La ficha original del modelo se conserva en LAYA-MODEL-CARD.md; "
+        "LAYA-MODEL-CARD.md identifica el modelo incluido y enlaza su ficha original; "
         "sus resultados no constituyen una medición de Umbral.\n\n"
         "Electron/Chromium: LICENSE.electron.txt y LICENSES.chromium.html en la carpeta de la aplicación. "
         "Las licencias de las dependencias Python se conservan en sus carpetas dist-info del motor incluido.\n",
