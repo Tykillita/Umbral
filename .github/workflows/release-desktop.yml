@@ -42,13 +42,13 @@ jobs:
         run: |
           $tag = $env:GITHUB_REF_NAME
           $package = Get-Content apps/desktop/package.json -Raw | ConvertFrom-Json
-          $lock = Get-Content apps/desktop/package-lock.json -Raw | ConvertFrom-Json
+          $lock = Get-Content apps/desktop/package-lock.json -Raw | ConvertFrom-Json -AsHashtable
           $runtime = [regex]::Match((Get-Content apps/desktop/pyproject.toml -Raw), '(?m)^version = "([^"]+)"$')
           $version = $package.version
           if ($tag -notmatch '^v\d+\.\d+\.\d+$' -or $tag -ne "v$version") {
             throw "El tag $tag debe ser v$version y usar versionado estable."
           }
-          if ($lock.version -ne $version -or $lock.packages[''].version -ne $version -or !$runtime.Success -or $runtime.Groups[1].Value -ne $version) {
+          if ($lock['version'] -ne $version -or $lock['packages']['']['version'] -ne $version -or !$runtime.Success -or $runtime.Groups[1].Value -ne $version) {
             throw 'La versión de package.json debe coincidir con los locks de npm y Python.'
           }
           $escapedVersion = [regex]::Escape($version)
