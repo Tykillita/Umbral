@@ -9,6 +9,8 @@ import type {
   ExportResponse,
   Health,
   ImpactRequest,
+  ComposeResponse,
+  QueryRequestBody,
   QueryResponse,
   ReviewRequest,
   Rules,
@@ -47,7 +49,9 @@ export interface UmbralApi {
   snapshot(): Promise<SnapshotInfo>;
   topics(filters: TopicFilters): Promise<TopicsResponse>;
   topic(topicId: string): Promise<TopicDetail>;
-  query(req: { question: string; topicId?: string | null; limit?: number }): Promise<QueryResponse>;
+  query(req: QueryRequestBody, opts?: { signal?: AbortSignal }): Promise<QueryResponse>;
+  /** Redacción opcional con IA de la respuesta con fuentes; ante cualquier fallo devuelve la de reglas. */
+  compose(req: QueryRequestBody, opts?: { signal?: AbortSignal }): Promise<ComposeResponse>;
   createDraft(topicId: string, provider?: DraftProviderChoice): Promise<DraftResponse>;
   saveDraft(caseId: string, body: DraftEditRequest): Promise<CaseView>;
   review(caseId: string, body: ReviewRequest): Promise<CaseView>;
@@ -168,7 +172,7 @@ export class HttpApi implements UmbralApi {
       } finally { clearTimeout(timer); opts.signal?.removeEventListener('abort', abort); }
   }
 
-  publicRequest = <T>(path: string, body: unknown) => this.request<T>('POST', '/public' + path, { body, timeoutMs: path === '/drafts' ? 120_000 : 60_000 });
+  publicRequest = <T>(path: string, body: unknown, signal?: AbortSignal) => this.request<T>('POST', '/public' + path, { body, timeoutMs: path === '/drafts' || path === '/queries/compose' ? 120_000 : 60_000, signal });
   async waitUntilReady(onProgress?: (progress: BootProgress) => void, signal?: AbortSignal, budgetMs = 90_000): Promise<Health> {
     const started = Date.now();
     let attempt = 0;
@@ -216,8 +220,10 @@ export class HttpApi implements UmbralApi {
       },
     });
   topic = (id: string) => this.request<TopicDetail>('GET', `/topics/${encodeURIComponent(id)}`);
-  query = (req: { question: string; topicId?: string | null; limit?: number }) =>
-    this.request<QueryResponse>('POST', '/queries', { body: req });
+  query = (req: QueryRequestBody, opts: { signal?: AbortSignal } = {}) =>
+    this.request<QueryResponse>('POST', '/queries', { body: req, signal: opts.signal });
+  compose = (req: QueryRequestBody, opts: { signal?: AbortSignal } = {}) =>
+    this.request<ComposeResponse>('POST', '/queries/compose', { body: req, signal: opts.signal, timeoutMs: 120_000 });
   createDraft = (topicId: string, provider: DraftProviderChoice = 'auto') =>
     this.request<DraftResponse>('POST', `/topics/${encodeURIComponent(topicId)}/drafts`, {
       body: { provider },

@@ -16,7 +16,13 @@ _PATTERNS = [
     r"system\s*prompt",
     r"(act[uú]a|comp[oó]rtate|responde)\s+como\s+(si\s+fueras\s+)?(un|una|el|la)?\s*\w*\s*(sin\s+restricciones|administrador|root|dios)",
     r"you\s+are\s+now\s+(an?\s+)?\w+",
-    r"developer\s+mode|modo\s+desarrollador|jailbreak|\bDAN\b",
+    r"developer\s+mode|modo\s+desarrollador|jailbreak|(?-i:\bDAN\b)",
+    r"ignor[ae]\w*\s+(todo\s+)?(lo\s+)?anterior\b",
+    r"\beres\s+ahora\s+(un|una|el|la)\s+\w+",
+    r"(asistente|modelo|bot|ia)\s+sin\s+(reglas|restricciones|filtros)",
+    r"mensaje\s+del\s+sistema\s*:",
+    r"(mostrar|muestra\w*|revelar|revela\w*|imprimir|imprime\w*|lista\w*|dime)\s+(todas?\s+)?(las\s+)?variables\s+de\s+entorno",
+    r"/etc/(passwd|shadow)",
     r"(cambia|modifica|sobrescribe)\s+(las\s+)?(reglas|el\s+puntaje|la\s+puntuaci[oó]n|los\s+pesos)",
     r"asigna\w*\s+(prioridad|puntaje|impacto)\s+(alta|m[aá]xim\w+|100)",
     r"<\s*/?\s*(system|assistant|instruction)\s*>",
@@ -27,8 +33,18 @@ _PATTERNS = [
 _RE = re.compile("|".join(f"(?:{p})" for p in _PATTERNS), re.IGNORECASE)
 
 
+# Letras de otros alfabetos que se confunden a simple vista con las latinas (p. ej. la «о» cirílica en «Ignоra»).
+_CONFUSABLES = str.maketrans({
+    "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x", "у": "y", "к": "k", "м": "m", "т": "t", "н": "h", "в": "b",
+    "і": "i", "ѕ": "s", "ј": "j", "ο": "o", "α": "a", "ε": "e", "ι": "i", "ν": "v", "ρ": "p", "τ": "t", "υ": "u",
+})
+_SPACED_LETTERS = re.compile(r"(?<=\b\w) (?=\w\b)")
+
+
 def _fold(text: str) -> str:
-    return unicodedata.normalize("NFKC", text)
+    """NFKC + homoglifos a latino + letras separadas por un espacio («i g n o r a»), para que no eludan los patrones."""
+    folded = unicodedata.normalize("NFKC", text).translate(_CONFUSABLES)
+    return _SPACED_LETTERS.sub("", folded) if re.search(r"(?:\b\w ){4,}\w\b", folded) else folded
 
 
 def looks_like_instruction(text: str | None) -> bool:

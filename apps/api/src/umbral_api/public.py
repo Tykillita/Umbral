@@ -13,12 +13,21 @@ from typing import TYPE_CHECKING
 
 from .drafts import build_pack, validate_package
 from .errors import Forbidden, Unprocessable, VersionConflict
-from .models import GENERATION_LABELS, DraftProviderChoice, DraftRequest, GenerationMode, RulesRevision
+from .models import (
+    GENERATION_LABELS,
+    ComposeResponse,
+    DraftProviderChoice,
+    DraftRequest,
+    GenerationMode,
+    QueryRequest,
+    RulesRevision,
+)
 from .public_models import (
     ArchivedEvidence,
     PublicContext,
     PublicDraftRequest,
     PublicDraftResponse,
+    PublicQueryRequest,
     PublicValidationRequest,
     PublicValidationResponse,
 )
@@ -37,6 +46,8 @@ class PublicApi:
         # Serializa la reserva/cache de generación, evitando consumir dos llamadas para
         # el mismo resultado cuando llegan solicitudes simultáneas.
         self._draft_lock = threading.Lock()
+        self._compose_cache: OrderedDict[str, tuple[float, ComposeResponse]] = OrderedDict()
+        self._compose_lock = threading.Lock()
 
     def context(self, context: PublicContext, user: str, *, allow_archived: bool = False, seed: bool = True) -> Services:
         svc = self.services.request_view()
@@ -116,6 +127,30 @@ class PublicApi:
                 while len(self._cache) > 128:
                     self._cache.popitem(last=False)
             return response
+
+    def compose(self, body: PublicQueryRequest, user: str) -> ComposeResponse:
+        """Redacción con IA de una consulta pública. Reutiliza resultados verificados idénticos para no gastar la cuota diaria."""
+        svc = self.context(body.context, user)
+        svc.limiter.check(user, "compose", min(2, svc.settings.drafts_per_minute))
+        request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
+        payload = body.model_dump(mode="json") | {"model": svc.settings.gemini_model, "fallbackModel": svc.settings.gemini_fallback_model}
+        key = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+        with self._compose_lock:
+            now = time.monotonic()
+            while self._compose_cache and now - next(iter(self._compose_cache.values()))[0] > 3600:
+                self._compose_cache.popitem(last=False)
+            cached = self._compose_cache.get(key)
+            if cached is not None:
+                response = cached[1].model_copy(deep=True)
+                response.usage = None
+                response.notices.append("Se reutilizó una redacción ya verificada; no se llamó de nuevo a Gemini.")
+                return response
+            result = svc.compose_query(user, request, consume_limit=False)
+            if result.answer_mode == "modelo":  # solo resultados del modelo; nunca respaldos por reglas
+                self._compose_cache[key] = (now, result.model_copy(deep=True))
+                while len(self._compose_cache) > 128:
+                    self._compose_cache.popitem(last=False)
+            return result
 
     def with_evidence(self, context: PublicContext, evidence: ArchivedEvidence | None, user: str, topic_id: str) -> Services:
         svc = self.context(context, user, allow_archived=evidence is not None, seed=evidence is None)

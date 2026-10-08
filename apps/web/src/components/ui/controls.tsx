@@ -464,6 +464,8 @@ export function Disclosure({
   summary,
   children,
   defaultOpen = false,
+  open: controlledOpen,
+  onOpenChange,
   testId,
   className = '',
   triggerClassName = '',
@@ -471,11 +473,16 @@ export function Disclosure({
   summary: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
+  /** Si se pasa, el estado lo controla quien llama (p. ej. para abrir la zona desde un enlace interno). */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   testId?: string;
   className?: string;
   triggerClassName?: string;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [innerOpen, setInnerOpen] = useState(defaultOpen);
+  const open = controlledOpen ?? innerOpen;
+  const setOpen = (next: boolean) => { setInnerOpen(next); onOpenChange?.(next); };
   const uid = useId();
   const triggerId = `${uid}-trigger`;
   const panelId = `${uid}-panel`;
@@ -554,7 +561,11 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
       onFocusCapture={() => open(0)}
       onBlurCapture={hide}
       onKeyDown={(e) => {
-        if (e.key === 'Escape') hide();
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          hide();
+        }
       }}
     >
       {children}
@@ -569,5 +580,113 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
           document.body,
         )}
     </span>
+  );
+}
+
+/** Modal propio de Umbral. Evita el diálogo nativo y mantiene el foco dentro de la superficie abierta. */
+export function Modal({
+  open,
+  title,
+  description,
+  children,
+  onClose,
+  testId,
+}: {
+  open: boolean;
+  title: ReactNode;
+  description?: string;
+  children?: ReactNode;
+  onClose: () => void;
+  testId?: string;
+}) {
+  const id = useId();
+  const dialogRef = useRef<HTMLElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const titleId = `${id}-title`;
+
+  useEffect(() => {
+    if (!open) return;
+    const active = document.activeElement;
+    openerRef.current = active instanceof HTMLElement ? active : null;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    dialogRef.current?.querySelector<HTMLElement>('[data-modal-autofocus]')?.focus({ preventScroll: true });
+    if (!dialogRef.current?.contains(document.activeElement)) dialogRef.current?.focus({ preventScroll: true });
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      if (openerRef.current?.isConnected) openerRef.current.focus({ preventScroll: true });
+    };
+  }, [open]);
+
+  if (!open || typeof document === 'undefined') return null;
+
+  return createPortal(
+    <div
+      className="comic-modal-layer"
+      data-testid={testId ? `${testId}-layer` : undefined}
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          event.preventDefault();
+          onClose();
+        }
+      }}
+    >
+      <section
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={description ? `${id}-description` : undefined}
+        tabIndex={-1}
+        data-testid={testId}
+        className="comic-panel comic-modal-panel"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            event.stopPropagation();
+            onClose();
+            return;
+          }
+          if (event.key !== 'Tab') return;
+          const items = dialogRef.current?.querySelectorAll<HTMLElement>(
+            'a[href], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), [role="combobox"][tabindex="0"], [tabindex="0"]',
+          );
+          const focusable = [...new Set(Array.from(items ?? []))].filter((item) => item.getAttribute('aria-hidden') !== 'true');
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (!first || !last) {
+            event.preventDefault();
+          } else if (event.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+            event.preventDefault();
+            first.focus();
+          }
+        }}
+      >
+        <header className="comic-dialogue-header flex items-center justify-between gap-3 px-4 py-3">
+          <h2 id={titleId} className="font-display text-xl font-bold leading-tight">{title}</h2>
+          <button
+            type="button"
+            className="comic-button comic-icon-button inline-flex items-center justify-center border-2 border-transparent bg-transparent text-ink-2 hover:bg-sunk"
+            aria-label="Cerrar ventana"
+            onClick={onClose}
+            data-modal-autofocus=""
+          >
+            <X size={16} aria-hidden="true" />
+          </button>
+        </header>
+        <div className="comic-modal-content p-4">
+          {description && <p id={`${id}-description`} className="mb-3 text-ink-2">{description}</p>}
+          {children}
+        </div>
+      </section>
+    </div>,
+    document.body,
   );
 }

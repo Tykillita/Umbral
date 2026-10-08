@@ -240,3 +240,13 @@ def test_public_real_gemini_adapter_reserves_every_model_and_validation_retry(fi
 def test_public_mode_rejects_shared_persistence_and_unsafe_budget(fixture_dir, kwargs):
     with pytest.raises(RuntimeError):
         make_settings(fixture_dir, **({"auth_mode": "public", "persistence": "none", "local_mode": False} | kwargs)).validate()
+
+
+def test_public_queries_resolve_follow_ups_with_the_structured_context(fixture_dir):
+    c, svc = public_app(fixture_dir, queries_per_minute=10)
+    first = c.post(API + "/public/queries", json={"context": context(svc), "question": "desempleo de Panamá en 2023"}).json()
+    ctx = first["followUpContext"]
+    assert ctx["countries"] == ["PAN"] and ctx["years"] == [2023]
+    second = c.post(API + "/public/queries", json={"context": context(svc), "question": "¿Y en Colombia?", "followUp": ctx}).json()
+    assert second["resolvedQuestion"] == "Desempleo de Colombia en 2023"
+    assert second["followUpContext"]["countries"] == ["COL"]

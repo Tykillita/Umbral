@@ -50,8 +50,28 @@ export function parseBlocks(text: string): Block[] {
 }
 
 const INLINE = /(\*\*[^*\n]+\*\*|`[^`\n]+`)/g;
+const MARKER = /(\[\d{1,2}\])/g;
 
-export function Inline({ text }: { text: string }): ReactNode {
+/** Marcadores [n] fuera de «comillas»: dentro de una cita literal de una fuente un «[3]» es texto de la fuente, no una referencia. */
+function Markers({ text, citeCount, onCite }: { text: string; citeCount: number; onCite: (index: number) => void }): ReactNode {
+  let quoted = false;
+  return text.split(MARKER).map((part, i) => {
+    const match = /^\[(\d{1,2})\]$/.exec(part);
+    const index = match ? Number(match[1]) : 0;
+    const isMarker = !quoted && index >= 1 && index <= citeCount;
+    if (!match) for (const ch of part) { if (ch === '«') quoted = true; else if (ch === '»') quoted = false; }
+    if (!isMarker) return <Fragment key={i}>{part}</Fragment>;
+    return (
+      <button key={i} type="button" className="cite-marker" data-testid="assistant-cite-marker" data-cite-index={index}
+        aria-label={`Ver la fuente ${index}`} onClick={() => onCite(index)}>{index}</button>
+    );
+  });
+}
+
+export type Citing = { count: number; onCite: (index: number) => void };
+
+export function Inline({ text, citing }: { text: string; citing?: Citing }): ReactNode {
+  const plain = (value: string) => (citing && citing.count > 0 ? <Markers text={value} citeCount={citing.count} onCite={citing.onCite} /> : value);
   return text.split(INLINE).map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
       return (
@@ -67,24 +87,24 @@ export function Inline({ text }: { text: string }): ReactNode {
         </code>
       );
     }
-    return <Fragment key={i}>{part}</Fragment>;
+    return <Fragment key={i}>{plain(part)}</Fragment>;
   });
 }
 
-function Lines({ lines }: { lines: string[] }) {
+function Lines({ lines, citing }: { lines: string[]; citing?: Citing }) {
   return (
     <>
       {lines.map((l, i) => (
         <Fragment key={i}>
           {i > 0 && <br />}
-          <Inline text={l} />
+          <Inline text={l} citing={citing} />
         </Fragment>
       ))}
     </>
   );
 }
 
-export function RichText({ text, className = '', testId }: { text: string; className?: string; testId?: string }) {
+export function RichText({ text, className = '', testId, citing }: { text: string; className?: string; testId?: string; citing?: Citing }) {
   const blocks = parseBlocks(text);
   return (
     <div className={`rich-text space-y-3 ${className}`} data-testid={testId}>
@@ -92,7 +112,7 @@ export function RichText({ text, className = '', testId }: { text: string; class
         if (b.kind === 'p') {
           return (
             <p key={i} className="leading-relaxed">
-              <Lines lines={b.lines} />
+              <Lines lines={b.lines} citing={citing} />
             </p>
           );
         }
@@ -101,7 +121,7 @@ export function RichText({ text, className = '', testId }: { text: string; class
           <Tag key={i} className={`rich-list ${b.kind === 'ol' ? 'rich-list-ol' : 'rich-list-ul'}`}>
             {b.items.map((it, j) => (
               <li key={j} className="leading-snug">
-                <Lines lines={it.split('\n')} />
+                <Lines lines={it.split('\n')} citing={citing} />
               </li>
             ))}
           </Tag>

@@ -30,6 +30,7 @@ from .connections import (
 from .errors import ApiError
 from .models import (
     CaseView,
+    ComposeResponse,
     DraftEditRequest,
     DraftRequest,
     DraftResponse,
@@ -248,7 +249,13 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
     @api.post("/public/queries", response_model=QueryResponse, tags=["publico"], responses=_ERRORS)
     def public_query(body: PublicQueryRequest, user: User, svc=Depends(get_services)) -> QueryResponse:
         contextual = svc.public.context(body.context, user)
-        return contextual.query(user, QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit))
+        return contextual.query(
+            user, QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
+        )
+
+    @api.post("/public/queries/compose", response_model=ComposeResponse, tags=["publico"], responses=_ERRORS)
+    def public_query_compose(body: PublicQueryRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
+        return svc.public.compose(body, user)
 
     @api.post("/public/drafts", response_model=PublicDraftResponse, tags=["publico"], responses=_ERRORS)
     def public_draft(body: PublicDraftRequest, user: User, svc=Depends(get_services)) -> PublicDraftResponse:
@@ -348,6 +355,16 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
     )
     def queries(body: QueryRequest, user: User, svc=Depends(get_services)) -> QueryResponse:
         return svc.query(user, body)
+
+    @api.post(
+        "/queries/compose",
+        response_model=ComposeResponse,
+        tags=["consultas"],
+        summary="Redacta con IA (opcional) la respuesta con fuentes de una consulta; ante cualquier fallo conserva la de reglas",
+        responses=_ERRORS,
+    )
+    def queries_compose(body: QueryRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
+        return svc.compose_query(user, body)
 
     @api.post(
         "/topics/{topic_id}/drafts",

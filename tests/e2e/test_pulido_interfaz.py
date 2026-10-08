@@ -126,10 +126,42 @@ def test_botones_de_cada_tarjeta_tienen_el_mismo_ancho_en_movil(page: Page, stac
     page.set_viewport_size({"width": 390, "height": 844})
     open_app(page, stack.url)
     card = tid(page, "topic-card").first
-    buttons = card.locator("button")
+    buttons = card.locator(".topic-action-group button")
     assert buttons.count() == 2
     a, c = buttons.nth(0).bounding_box(), buttons.nth(1).bounding_box()
-    assert a and c and abs(a["width"] - c["width"]) <= 1 and abs(a["y"] - c["y"]) <= 1, f"botones desiguales: {a} {c}"
+    assert a and c and abs(a["width"] - c["width"]) <= 1 and c["y"] >= a["y"] + a["height"] - 1, f"botones desiguales: {a} {c}"
+
+
+@pytest.mark.parametrize("w", [1440, 1024, 768, 390, 320])
+def test_tarjetas_alinean_puntuacion_y_pies_con_detalles_abiertos(page: Page, stack, w):
+    page.set_viewport_size({"width": w, "height": 900 if w >= 768 else 844})
+    open_app(page, stack.url)
+    cards = tid(page, "topic-card")
+    if w >= 1024:
+        _, second, third = (cards.nth(i).bounding_box() for i in range(3))
+        assert second and third and second["y"] == pytest.approx(third["y"], abs=1)
+    else:
+        for index in range(4):
+            current, following = cards.nth(index).bounding_box(), cards.nth(index + 1).bounding_box()
+            assert current and following and following["y"] > current["y"]
+
+    if w >= 1024:
+        card = cards.nth(1)
+        details = card.get_by_test_id("topic-card-details")
+        details.get_by_role("button").click()
+        expect(details.get_by_role("region")).to_be_visible()
+        settle_motion(page)
+        peers = [cards.nth(i) for i in (1, 2)]
+        for selector in (".topic-score-box", ".topic-panel-footer"):
+            positions = [item.locator(selector).bounding_box() for item in peers]
+            assert positions[0] and positions[1]
+            assert positions[0]["y"] == pytest.approx(positions[1]["y"], abs=1), f"{selector} desalineado en {w}px: {positions}"
+        action_widths = [item.locator(".topic-action-group button").nth(0).bounding_box()["width"] for item in peers]
+        assert action_widths[0] == pytest.approx(action_widths[1], abs=1)
+    else:
+        for card in cards.all():
+            assert card.locator(".topic-score-box").count() == 1
+            assert card.locator(".topic-panel-footer").count() == 1
 
 
 def test_estado_de_datos_plegable_en_movil_y_visible_en_escritorio(page: Page, stack):
@@ -190,7 +222,10 @@ def test_respuesta_del_asistente_viene_organizada(page: Page, stack, w, h):
     open_app(page, stack.url)
     tid(page, "assistant-toggle").click()
     tid(page, "assistant-input").fill("Qué cinco temas merecen revisión para la agenda de Panamá")
-    page.keyboard.press("Enter")
+    if w < 1024:
+        tid(page, "assistant-send").click()
+    else:
+        page.keyboard.press("Enter")
     expect(tid(page, "assistant-answer")).to_have_count(1, timeout=40_000)
     text = tid(page, "assistant-answer-text").first
     assert text.locator("p").count() >= 2, "la respuesta debe separar párrafos"

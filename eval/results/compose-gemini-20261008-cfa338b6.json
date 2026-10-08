@@ -1,0 +1,337 @@
+{
+  "command": "eval/run_compose_eval.py --snapshot data/snapshots/20261007-cfa338b6 --out eval/results/compose-gemini-20261008-cfa338b6.json",
+  "ranAt": "2026-10-08T06:07:56Z",
+  "environment": {
+    "python": "3.12.14",
+    "os": "Windows-11-10.0.26200-SP0",
+    "snapshotId": "20261007-cfa338b6",
+    "provider": "gemini (Free Tier, sin facturación; sin salto a pago)",
+    "model": "gemini-3.1-flash-lite",
+    "geminiAvailableAtStart": true,
+    "persistence": "memory"
+  },
+  "scriptSha256": "7ebd53f6e764e8416164a3218ebc1184f71e02cca87109e1f490f4d54bd86905",
+  "benchmarkFiles": {
+    "benchmark_dev.jsonl": "9cf5d87977683d5c123948f7d9eb377c05a7168fcf9150f6dee569beb2d1b177",
+    "benchmark_dev_ext.jsonl": "b5248889456cf377eb8dd6a89b1b80b9a21a35c50dc3af9df7fd3f795d5c8520"
+  },
+  "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050",
+  "apiSourceSha256": "b3515a20e6015352da5b3ba62c04a74f2925c16997d4c4b427f4170f2223f9b8",
+  "caveats": [
+    "Muestra pequeña de consultas escritas por el agente: los intervalos de Wilson son anchos; no es un benchmark final.",
+    "Un único modelo y un único día; el Free Tier puede dar 429/503 y eso se cuenta como respaldo por reglas, no como fallo de validación.",
+    "Que el texto pase la validación por código prueba estructura (ids, campos, pasajes literales, cifras), no sustento.",
+    "El sustento humano de cada afirmación está pendiente."
+  ],
+  "summary": {
+    "casesAttempted": 10,
+    "modelCallsUsed": 11,
+    "callBudget": 20,
+    "composed": {
+      "numerator": 10,
+      "denominator": 10,
+      "value": 1.0,
+      "ci95": [
+        0.7225,
+        1.0
+      ]
+    },
+    "firstAttemptValid": {
+      "numerator": 9,
+      "denominator": 10,
+      "value": 0.9,
+      "ci95": [
+        0.5958,
+        0.9821
+      ]
+    },
+    "rescuedByRetry": {
+      "numerator": 1,
+      "denominator": 10,
+      "value": 0.1,
+      "ci95": [
+        0.0179,
+        0.4042
+      ]
+    },
+    "validationRate": {
+      "numerator": 10,
+      "denominator": 10,
+      "value": 1.0,
+      "ci95": [
+        0.7225,
+        1.0
+      ]
+    },
+    "fallbackReasons": {},
+    "newNumbersInComposedText": {
+      "numerator": 0,
+      "denominator": 10,
+      "value": 0.0,
+      "ci95": [
+        0.0,
+        0.2775
+      ]
+    },
+    "latencySecondsClient": {
+      "median": 1.504,
+      "max": 5.713,
+      "n": 10
+    },
+    "totalTokensComposed": {
+      "mean": 843,
+      "n": 10
+    },
+    "humanSupport": {
+      "status": "pendiente",
+      "value": null,
+      "reason": "Requiere que una persona juzgue cada afirmación contra su fuente."
+    }
+  },
+  "cases": [
+    {
+      "id": "ext_33",
+      "question": "¿Qué cinco temas merecen revisión para la agenda y por qué?",
+      "followUp": false,
+      "intent": "agenda",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 4.011,
+      "usage": {
+        "promptTokens": 1068,
+        "outputTokens": 587,
+        "totalTokens": 1655,
+        "thinkingTokens": null,
+        "latencyMs": 3619.6
+      },
+      "statements": 5,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El Canal de Panamá aumentó sus tránsitos diarios a 33 y el calado máximo a 49 pies. [1]\n- La Comisión de Presupuesto gestiona traslados y créditos por casi 100 millones de dólares para seis instituciones. [2]\n- La Comisión de Comercio aprobó en primer debate el proyecto de ley sobre reforma eléctrica impulsado por el Ejecutivo. [3]\n- Un exejecutivo bancario enfrenta detención provisional en el Caso Pandora por autorizar pagos de créditos fiscales de la DGI. [4]\n- El Mides solicitó 47 millones de dólares para finalizar el pago de transferencias monetarias correspondientes al año 2026. [5]",
+      "rulesAnswer": "**Temas que merecen revisión** según `scoring-v1` (snapshot 20261007-cfa338b6).\n\nBasado únicamente en titular/metadatos: el puntaje ordena, no demuestra verdad ni habilita publicación.\n\n1. **Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .** [1]\nPuntaje **76.70** (alto) · evidencia parcial.\n2. **Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones** [2]\nPuntaje **74.55** (alto) · evidencia insuficiente · requiere investigación (prioridad alta con evidencia insuficiente).\n3. **Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo** [3]\nPuntaje **74.55** (alto) · evidencia insuficiente · requiere investigación (prioridad alta con evidencia insuficiente).\n4. **Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI** [4]\nPuntaje **74.55** (alto) · evidencia insuficiente · requiere investigación (prioridad alta con evidencia insuficiente).\n5. **Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026** [5]\nPuntaje **74.55** (alto) · evidencia insuficiente · requiere investigación (prioridad alta con evidencia insuficiente).",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "ext_35",
+      "question": "¿Cuáles son las fuentes del segundo?",
+      "followUp": true,
+      "intent": "agenda",
+      "answerMode": "modelo",
+      "attempts": 2,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 2.573,
+      "usage": {
+        "promptTokens": 583,
+        "outputTokens": 223,
+        "totalTokens": 806,
+        "thinkingTokens": null,
+        "latencyMs": 1388.13
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- La Comisión de Presupuesto tramita traslados y créditos por un monto cercano a los 100 millones de dólares para seis instituciones, según reportó TVN Panamá. [1]",
+      "rulesAnswer": "Fuentes de la respuesta anterior (basado únicamente en titular/metadatos):\n- TVN Panamá (publicado 2026-10-06): «Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones» [1]",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "dev_13",
+      "question": "¿Qué titular hay sobre Sánchez presenta ante el Congreso español decretos de vivienda con nuevas medidas?",
+      "followUp": false,
+      "intent": "busqueda",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.269,
+      "usage": {
+        "promptTokens": 547,
+        "outputTokens": 169,
+        "totalTokens": 716,
+        "thinkingTokens": null,
+        "latencyMs": 1188.15
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El medio TVN Panamá publicó el titular: Sánchez presenta ante el Congreso español decretos de vivienda con nuevas medidas. [1]",
+      "rulesAnswer": "Lo que reporta el corpus (basado únicamente en titular/metadatos; no se leyó el artículo completo):\n- TVN Panamá (publicado 2026-10-07): «Sánchez presenta ante el Congreso español decretos de vivienda con nuevas medidas» [1]\n  (1 nota(s), 1 procedencia(s) independiente(s); evidencia insuficiente)",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "ext_38",
+      "question": "¿Cuáles son las fuentes?",
+      "followUp": true,
+      "intent": "busqueda",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 5.713,
+      "usage": {
+        "promptTokens": 534,
+        "outputTokens": 169,
+        "totalTokens": 703,
+        "thinkingTokens": null,
+        "latencyMs": 5634.97
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El medio TVN Panamá informó sobre la presentación de decretos de vivienda por parte de Sánchez ante el Congreso español. [1]",
+      "rulesAnswer": "Fuentes de la respuesta anterior (basado únicamente en titular/metadatos):\n- TVN Panamá (publicado 2026-10-07): «Sánchez presenta ante el Congreso español decretos de vivienda con nuevas medidas» [1]",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "dev_01",
+      "question": "¿Cuál fue el crecimiento anual del PIB de Panamá en 2024?",
+      "followUp": false,
+      "intent": "contexto_economico",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.269,
+      "usage": {
+        "promptTokens": 538,
+        "outputTokens": 218,
+        "totalTokens": 756,
+        "thinkingTokens": null,
+        "latencyMs": 1196.87
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El crecimiento anual del PIB de Panamá registrado en 2024 fue de 2.74784%. [1]",
+      "rulesAnswer": "Contexto oficial (Banco Mundial, snapshot 20261007-cfa338b6):\n- Crecimiento del PIB de Panamá, 2024: 2.74784 % anual (dato anual de referencia, no una medición de hoy). [1]",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "ext_25",
+      "question": "¿Y en Costa Rica?",
+      "followUp": true,
+      "intent": "contexto_economico",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.656,
+      "usage": {
+        "promptTokens": 529,
+        "outputTokens": 225,
+        "totalTokens": 754,
+        "thinkingTokens": null,
+        "latencyMs": 1591.21
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El crecimiento del Producto Interno Bruto de Costa Rica fue de 4.08292% anual en 2024. [1]",
+      "rulesAnswer": "Contexto oficial (Banco Mundial, snapshot 20261007-cfa338b6):\n- Crecimiento del PIB de Costa Rica, 2024: 4.08292 % anual (dato anual de referencia, no una medición de hoy). [1]",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "ext_34",
+      "question": "¿Qué falta verificar del primero?",
+      "followUp": true,
+      "intent": "verificaciones",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.352,
+      "usage": {
+        "promptTokens": 628,
+        "outputTokens": 223,
+        "totalTokens": 851,
+        "thinkingTokens": null,
+        "latencyMs": 1290.92
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El Canal de Panamá aumentó el tránsito diario a 33 buques y el calado máximo a 49 pies. [1]",
+      "rulesAnswer": "Verificaciones pendientes para «Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .» (evidencia parcial, basado únicamente en titular/metadatos):\n- Leer el artículo completo en la fuente original antes de redactar; hoy solo hay titular/metadatos.\n- Localizar la fuente primaria u oficial (comunicado, entidad, base de datos oficial).",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "dev_14",
+      "question": "¿Qué titular hay sobre Trump no reembolsará a los contribuyentes el dinero usado para anuncios de TV?",
+      "followUp": false,
+      "intent": "busqueda",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.171,
+      "usage": {
+        "promptTokens": 547,
+        "outputTokens": 166,
+        "totalTokens": 713,
+        "thinkingTokens": null,
+        "latencyMs": 1100.12
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- El medio TVN Panamá publicó un titular indicando que Trump no reembolsará a los contribuyentes el dinero utilizado para anuncios de televisión. [1]",
+      "rulesAnswer": "Lo que reporta el corpus (basado únicamente en titular/metadatos; no se leyó el artículo completo):\n- TVN Panamá (publicado 2026-10-07): «Trump no reembolsará a los contribuyentes el dinero usado para anuncios de TV» [1]\n  (1 nota(s), 1 procedencia(s) independiente(s); evidencia insuficiente)",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "dev_02",
+      "question": "¿Cuál fue el población total de Panamá en 2024?",
+      "followUp": false,
+      "intent": "contexto_economico",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.264,
+      "usage": {
+        "promptTokens": 532,
+        "outputTokens": 213,
+        "totalTokens": 745,
+        "thinkingTokens": null,
+        "latencyMs": 1226.21
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- La población total de Panamá en 2024 fue de 4,515,577 personas, según datos del Banco Mundial. [1]",
+      "rulesAnswer": "Contexto oficial (Banco Mundial, snapshot 20261007-cfa338b6):\n- Población total de Panamá, 2024: 4,515,577 personas (dato anual de referencia, no una medición de hoy). [1]",
+      "humanSupport": "pendiente"
+    },
+    {
+      "id": "ext_26",
+      "question": "¿Y la población?",
+      "followUp": true,
+      "intent": "contexto_economico",
+      "answerMode": "modelo",
+      "attempts": 1,
+      "fallbackReason": null,
+      "fallbackDetail": null,
+      "model": "gemini-3.1-flash-lite",
+      "elapsedSeconds": 1.662,
+      "usage": {
+        "promptTokens": 522,
+        "outputTokens": 207,
+        "totalTokens": 729,
+        "thinkingTokens": null,
+        "latencyMs": 1618.84
+      },
+      "statements": 1,
+      "newNumbersInComposedText": [],
+      "composedAnswer": "Respuesta redactada con IA a partir de las fuentes citadas (basado únicamente en titular/metadatos):\n- La población total de Panamá en 2024 fue de 4,515,577 personas. [1]",
+      "rulesAnswer": "Contexto oficial (Banco Mundial, snapshot 20261007-cfa338b6):\n- Población total de Panamá, 2024: 4,515,577 personas (dato anual de referencia, no una medición de hoy). [1]",
+      "humanSupport": "pendiente"
+    }
+  ],
+  "postProcessing": {
+    "scriptSha256AfterRefinement": "20f275ef0f141232b2ed490357d08060b839b2f5f96ee3f78c258d0fc73343fd",
+    "note": "La comprobación independiente de cifras nuevas se afinó (ceros a la izquierda) tras ver dos falsas alarmas de formato de fecha («2026-10-07» reescrita como «7 de octubre»). Se recalculó sobre los textos guardados; el modelo no se volvió a llamar."
+  }
+}

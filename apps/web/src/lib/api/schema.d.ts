@@ -259,6 +259,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/queries/compose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Public Query Compose */
+        post: operations["public_query_compose_api_v1_public_queries_compose_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/public/topics/{topic_id}": {
         parameters: {
             query?: never;
@@ -304,6 +321,23 @@ export interface paths {
         put?: never;
         /** Consulta en español con evidencia, citas y abstención */
         post: operations["queries_api_v1_queries_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/queries/compose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Redacta con IA (opcional) la respuesta con fuentes de una consulta; ante cualquier fallo conserva la de reglas */
+        post: operations["queries_compose_api_v1_queries_compose_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -750,6 +784,40 @@ export interface components {
          * @enum {string}
          */
         ClaimType: "hecho" | "declaracion" | "inferencia" | "hipotesis";
+        /**
+         * ComposeResponse
+         * @description Resultado de redactar con IA una respuesta con fuentes. Si el modelo falla, `response` conserva la respuesta por reglas.
+         */
+        ComposeResponse: {
+            /**
+             * Answermode
+             * @enum {string}
+             */
+            answerMode: "reglas" | "modelo";
+            /**
+             * Attempts
+             * @description Llamadas al modelo hechas para esta redacción (0 si no se llegó a llamar; 2 si hubo reintento)
+             * @default 0
+             */
+            attempts: number;
+            /** Fallbackdetail */
+            fallbackDetail: string | null;
+            fallbackReason: components["schemas"]["FallbackReason"] | null;
+            /** Model */
+            model: string | null;
+            /** Notices */
+            notices: string[];
+            /** Provider */
+            provider: string | null;
+            /** @description Respuesta que se muestra: la redactada o, si falló, la determinista */
+            response: components["schemas"]["QueryResponse"];
+            /**
+             * Rulesanswer
+             * @description Texto de la respuesta determinista (siempre disponible)
+             */
+            rulesAnswer: string;
+            usage: components["schemas"]["GenerationUsage-Output"] | null;
+        };
         /** ConnectionStart */
         ConnectionStart: {
             /**
@@ -1355,7 +1423,7 @@ export interface components {
          * FallbackReason
          * @enum {string}
          */
-        FallbackReason: "modo_sin_conexion" | "cuota_agotada" | "limite_por_usuario" | "proveedor_no_disponible" | "proveedor_no_conectado" | "sin_credenciales" | "validacion_fallida" | "solo_localhost" | "solicitado" | "contador_no_disponible" | "limite_global";
+        FallbackReason: "modo_sin_conexion" | "cuota_agotada" | "limite_por_usuario" | "proveedor_no_disponible" | "proveedor_no_conectado" | "sin_credenciales" | "validacion_fallida" | "solo_localhost" | "solicitado" | "contador_no_disponible" | "limite_global" | "sin_evidencia";
         /** Gap */
         Gap: {
             /** Code */
@@ -1757,6 +1825,8 @@ export interface components {
         /** PublicQueryRequest */
         PublicQueryRequest: {
             context: components["schemas"]["PublicContext"];
+            /** @description `followUpContext` de la respuesta anterior; sin él cada pregunta es independiente */
+            followUp?: components["schemas"]["QueryContext-Input"] | null;
             /**
              * Limit
              * @default 5
@@ -1810,6 +1880,48 @@ export interface components {
             /** Url */
             url: string | null;
         };
+        /**
+         * QueryContext
+         * @description Contexto estructurado mínimo de una respuesta anterior para resolver preguntas de seguimiento.
+         *
+         *     Solo contiene identificadores y valores de catálogo; nunca el texto de respuestas ni de fuentes.
+         */
+        "QueryContext-Input": {
+            /** Countries */
+            countries?: string[];
+            /** Evidenceids */
+            evidenceIds?: string[];
+            /** Indicators */
+            indicators?: string[];
+            intent: components["schemas"]["QueryIntent"];
+            /** Snapshotid */
+            snapshotId: string;
+            /** Topicids */
+            topicIds?: string[];
+            /** Years */
+            years?: number[];
+        };
+        /**
+         * QueryContext
+         * @description Contexto estructurado mínimo de una respuesta anterior para resolver preguntas de seguimiento.
+         *
+         *     Solo contiene identificadores y valores de catálogo; nunca el texto de respuestas ni de fuentes.
+         */
+        "QueryContext-Output": {
+            /** Countries */
+            countries: string[];
+            /** Evidenceids */
+            evidenceIds: string[];
+            /** Indicators */
+            indicators: string[];
+            intent: components["schemas"]["QueryIntent"];
+            /** Snapshotid */
+            snapshotId: string;
+            /** Topicids */
+            topicIds: string[];
+            /** Years */
+            years: number[];
+        };
         /** QueryHit */
         QueryHit: {
             /** Bm25 */
@@ -1847,6 +1959,8 @@ export interface components {
         QueryIntent: "agenda" | "contexto_economico" | "verificaciones" | "busqueda";
         /** QueryRequest */
         QueryRequest: {
+            /** @description `followUpContext` de la respuesta anterior; sin él cada pregunta es independiente */
+            followUp?: components["schemas"]["QueryContext-Input"] | null;
             /**
              * Limit
              * @default 5
@@ -1872,6 +1986,9 @@ export interface components {
             /** Contradictions */
             contradictions: components["schemas"]["Contradiction-Output"][];
             dataMode: components["schemas"]["DataMode"];
+            followUpContext: components["schemas"]["QueryContext-Output"] | null;
+            /** Followupsuggestions */
+            followUpSuggestions: string[];
             /** Hits */
             hits: components["schemas"]["QueryHit"][];
             intent: components["schemas"]["QueryIntent"];
@@ -1883,6 +2000,11 @@ export interface components {
             question: string;
             /** Relatedtopicids */
             relatedTopicIds: string[];
+            /**
+             * Resolvedquestion
+             * @description Pregunta autónoma que se ejecutó cuando `question` era un seguimiento
+             */
+            resolvedQuestion: string | null;
             retrieval: components["schemas"]["RetrievalInfo"];
             /** Rulesversion */
             rulesVersion: string;
@@ -3753,6 +3875,84 @@ export interface operations {
             };
         };
     };
+    public_query_compose_api_v1_public_queries_compose_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublicQueryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComposeResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     public_topic_api_v1_public_topics__topic_id__post: {
         parameters: {
             query?: never;
@@ -3931,6 +4131,84 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QueryResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    queries_compose_api_v1_queries_compose_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QueryRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComposeResponse"];
                 };
             };
             /** @description No autenticado */

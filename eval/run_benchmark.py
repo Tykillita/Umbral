@@ -37,17 +37,28 @@ from umbral_pipeline.util import read_jsonl, sha256_file
 
 
 def run(items: list[dict], base: str, timeout: float, headers: dict[str, str]) -> list[dict]:
+    """Ejecuta los casos en orden. Un caso con `followUpOf` reenvía el `followUpContext` de la respuesta de su padre."""
     results = []
+    responses: dict[str, dict] = {}
     with httpx.Client(base_url=base, timeout=timeout, headers=headers) as c:
         for it in items:
             t0 = time.perf_counter()
             rec: dict = {"id": it["id"], "type": it["type"], "question": it["question"]}
+            body: dict = {"question": it["question"], "limit": 5}
+            if it.get("followUpOf"):
+                context = (responses.get(it["followUpOf"]) or {}).get("followUpContext")
+                if not context:
+                    rec.update({"latencySeconds": 0.0, "error": f"el caso padre {it['followUpOf']} no devolvió contexto de seguimiento"})
+                    results.append(rec)
+                    continue
+                body["followUp"] = context
             try:
-                r = c.post("/api/v1/queries", json={"question": it["question"], "limit": 5})
+                r = c.post("/api/v1/queries", json=body)
                 rec["latencySeconds"] = time.perf_counter() - t0
                 rec["httpStatus"] = r.status_code
                 if r.status_code == 200:
                     rec["response"] = r.json()
+                    responses[it["id"]] = rec["response"]
                 else:
                     rec["error"] = r.text[:300]
             except Exception as exc:  # noqa: BLE001
@@ -57,8 +68,44 @@ def run(items: list[dict], base: str, timeout: float, headers: dict[str, str]) -
     return results
 
 
+def check_expectations(it: dict, resp: dict, parent: dict | None) -> list[str]:
+    """Comprobaciones estructurales de un caso con `expect`. Devuelve los motivos de fallo (vacío si todas pasan)."""
+    expect = it.get("expect") or {}
+    problems: list[str] = []
+    resolved = resp.get("resolvedQuestion")
+    if "intent" in expect and resp.get("intent") != expect["intent"]:
+        problems.append(f"intención {resp.get('intent')!r} en lugar de {expect['intent']!r}")
+    for needle in expect.get("resolvedContains", []):
+        if not resolved or needle.lower() not in resolved.lower():
+            problems.append(f"la pregunta interpretada no contiene «{needle}» (resolvedQuestion={resolved!r})")
+    if expect.get("resolvedNull") and resolved is not None:
+        problems.append(f"debía ignorar el contexto y interpretó «{resolved}»")
+    if expect.get("clarifies") and not (resp.get("answerStatus") == "abstencion" and "pude resolver" in resp.get("answer", "")
+                                        or "varios temas" in resp.get("answer", "")):
+        problems.append("debía pedir aclaración")
+    cited = {c["evidenceId"] for c in resp.get("citations", [])}
+    if expect.get("citationsNonEmpty") and not cited:
+        problems.append("sin citas")
+    if expect.get("citationsSubsetOfParent"):
+        parent_cited = {c["evidenceId"] for c in (parent or {}).get("citations", [])}
+        if not cited or not cited <= parent_cited:
+            problems.append("las fuentes no coinciden con las de la respuesta anterior")
+    answer = resp.get("answer", "")
+    for forbidden in expect.get("answerNotContains", []):
+        if forbidden.lower() in answer.lower():
+            problems.append(f"la respuesta contiene «{forbidden}»")
+    if "relatedTopicIsParentIndex" in expect:
+        topics = ((parent or {}).get("followUpContext") or {}).get("topicIds", [])
+        index = expect["relatedTopicIsParentIndex"]
+        if index >= len(topics) or resp.get("relatedTopicIds") != [topics[index]]:
+            problems.append(f"no se limitó al tema nº {index + 1} de la respuesta anterior")
+    return problems
+
+
 def score(items: list[dict], results: list[dict], known_evidence_ids: set[str] | None = None) -> dict:
     by_id = {r["id"]: r for r in results}
+    exp_num = exp_den = 0
+    warn_num = warn_den = 0
     failures: list[dict] = []
     p5_vals: list[float] = []
     cite_num = cite_den = 0
@@ -121,6 +168,19 @@ def score(items: list[dict], results: list[dict], known_evidence_ids: set[str] |
                 failures.append({"id": it["id"], "why": "adversarial no superado", "leaked": leaked, "status": status})
         if it.get("expectedStatus") and status == it["expectedStatus"]:
             status_ok += 1
+        if it.get("isInjection"):
+            # Diagnóstico del detector de instrucciones (solo advierte; la protección real es no obedecer ni citar).
+            warn_den += 1
+            if any("forma de instrucción" in w for w in resp.get("warnings", [])):
+                warn_num += 1
+        if it.get("expect"):
+            exp_den += 1
+            parent_resp = (by_id.get(it.get("followUpOf") or "") or {}).get("response")
+            problems = check_expectations(it, resp, parent_resp)
+            if problems:
+                failures.append({"id": it["id"], "why": "comprobación estructural fallida", "problems": problems})
+            else:
+                exp_num += 1
     return {
         "n": len(items),
         "byType": dict(Counter(i["type"] for i in items)),
@@ -140,6 +200,8 @@ def score(items: list[dict], results: list[dict], known_evidence_ids: set[str] |
         "incorrectAbstentionOnAnswerable": ratio(abst_bad_num, abst_bad_den),
         "adversarialPassed": ratio(adv_num, adv_den),
         "expectedStatusMatch": ratio(status_ok, sum(1 for i in items if i.get("expectedStatus"))),
+        "structuralExpectations": ratio(exp_num, exp_den),
+        "instructionWarningDetected": ratio(warn_num, warn_den),
         "latencySeconds": latency_summary(lat),
         "failures": failures,
     }

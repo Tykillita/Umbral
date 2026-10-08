@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { Bot, ChevronDown, Database, FileSearch, FlaskConical, ListOrdered, PenLine, WifiOff } from 'lucide-react';
+import { Bot, ChevronDown, Database, FileSearch, FlaskConical, ListOrdered, PenLine, TriangleAlert, WifiOff } from 'lucide-react';
 import type { BootProgress, UmbralApi } from '../lib/api/client';
 import { resolveApi } from '../lib/api';
 import { initAuth, type AuthState } from '../lib/auth';
@@ -16,8 +16,9 @@ import { Agenda } from './views/Agenda';
 import { Ficha } from './views/Ficha';
 import { Drafts } from './views/Drafts';
 import { Sources } from './views/Sources';
-import { Assistant } from './Assistant';
+import { AssistantPanel } from './AssistantPanel';
 import { Button, ErrorBox, Loading, Notice, Pill } from './ui';
+import { Modal, Tooltip } from './ui/controls';
 
 const NAV: { view: Route['view']; label: string; icon: typeof ListOrdered; testId: string }[] = [
   { view: 'agenda', label: 'Agenda', icon: ListOrdered, testId: 'nav-agenda' },
@@ -107,12 +108,6 @@ function StatusBar() {
           Sirven para probar el recorrido; no representan noticias ni indicadores reales. Se muestran etiquetados como tales.
         </Notice>
       )}
-      {h?.classifier === 'laya' && (
-        <Notice tone="warn" title="Clasificación automática sin calibración validada" testId="classification-limit">
-          <span className="sm:hidden">Revisa la categoría y el impacto antes de usar el ranking.</span>
-          <span className="hidden sm:inline">Laya puede asignar categorías erróneas y sus porcentajes no son confianza editorial: revisa categoría e impacto antes de usar el ranking.</span>
-        </Notice>
-      )}
       {h && h.integrity.errors.length > 0 && (
         <Notice tone="bad" title="Falló la verificación de integridad del snapshot" testId="integrity-errors" role="alert">
           {h.integrity.errors.join(' · ')}
@@ -122,10 +117,15 @@ function StatusBar() {
   );
 }
 
-function Shell({ assistantOpen, setAssistantOpen, seed }: { assistantOpen: boolean; setAssistantOpen: (v: boolean) => void; seed: { text: string; n: number } }) {
+type AssistantVisibility = 'closed' | 'minimized' | 'open';
+
+function Shell({ assistantState, setAssistantState, assistantClosing, openAssistantPanel, closeAssistantPanel, seed, assistantUnread, onAssistantUnread }: { assistantUnread: number; onAssistantUnread: (count: number) => void; assistantState: AssistantVisibility; setAssistantState: (v: AssistantVisibility) => void; assistantClosing: boolean; openAssistantPanel: () => void; closeAssistantPanel: () => void; seed: { text: string; topicId: string | null; topicTitle: string; n: number } }) {
   const { route, go } = useApp();
   const [mobile, setMobile] = useState(false);
+  const [classificationOpen, setClassificationOpen] = useState(false);
+  const { data: health } = useHealth();
   const mainRef = useRef<HTMLElement>(null);
+  const mastheadRef = useRef<HTMLElement>(null);
   const lastTopic = useRef<string | null>(null);
   if ('topicId' in route && route.topicId) lastTopic.current = route.topicId;
 
@@ -140,6 +140,30 @@ function Shell({ assistantOpen, setAssistantOpen, seed }: { assistantOpen: boole
     return () => media.removeEventListener('change', update);
   }, []);
 
+  useEffect(() => {
+    const header = mastheadRef.current;
+    if (!header) return;
+    const measure = () => document.documentElement.style.setProperty('--assistant-top', `${Math.ceil(header.getBoundingClientRect().bottom + 16)}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    window.addEventListener('resize', measure);
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => { frame = 0; measure(); });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  const assistantOpen = assistantState === 'open' && !assistantClosing;
+
   // Mover el foco al contenido principal al cambiar de vista (accesibilidad de SPA).
   useEffect(() => {
     mainRef.current?.focus({ preventScroll: true });
@@ -147,11 +171,11 @@ function Shell({ assistantOpen, setAssistantOpen, seed }: { assistantOpen: boole
   }, [route.view]);
 
   return (
-    <div data-testid="app-root" className={assistantOpen ? 'lg:pr-[26rem]' : ''}>
+    <div data-testid="app-root" inert={classificationOpen || undefined}>
       <a href="#contenido" inert={assistantOpen && mobile} className="skip-link">
         Saltar al contenido
       </a>
-      <header inert={assistantOpen && mobile} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
+      <header ref={mastheadRef} inert={assistantOpen && mobile} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
         <div className="mx-auto flex max-w-6xl items-center gap-x-6 px-4 py-2 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-4">
           <a href="/" className="comic-brand md:justify-self-start" aria-label="Umbral, inicio">
             Umbral<span className="text-amber-600">.</span>
@@ -186,17 +210,40 @@ function Shell({ assistantOpen, setAssistantOpen, seed }: { assistantOpen: boole
               );
             })}
           </nav>
-          <Button
-            variant={assistantOpen ? 'primary' : 'secondary'}
-            icon={Bot}
-            onClick={() => setAssistantOpen(!assistantOpen)}
-            aria-expanded={assistantOpen}
-            aria-controls="assistant-panel"
-            data-testid="assistant-toggle"
-            className="ml-auto md:ml-0 md:justify-self-end"
-          >
-            <span className="@max-3xl:sr-only">Asistente</span>
-          </Button>
+          <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:justify-self-end">
+            {health?.classifier === 'laya' && (
+              <Tooltip content="Limitaciones de la clasificación automática de Laya">
+                <Button
+                  variant="secondary"
+                  icon={TriangleAlert}
+                  iconOnly
+                  aria-label="Advertencia sobre la clasificación automática"
+                  aria-haspopup="dialog"
+                  aria-expanded={classificationOpen}
+                  aria-controls="classification-warning"
+                  onClick={() => setClassificationOpen(true)}
+                  data-testid="classification-warning-toggle"
+                />
+              </Tooltip>
+            )}
+            <Button
+              variant={assistantOpen ? 'primary' : 'secondary'}
+              icon={Bot}
+              onClick={() => assistantOpen ? closeAssistantPanel() : openAssistantPanel()}
+              aria-expanded={assistantOpen}
+              aria-controls={assistantState !== 'closed' ? 'assistant-panel' : undefined}
+              data-testid="assistant-toggle"
+              className="ml-auto md:ml-0 md:justify-self-end"
+            >
+              <span className="@max-3xl:sr-only">Asistente</span>
+              {assistantUnread > 0 && !assistantOpen && (
+                <>
+                  <span className="assistant-unread ml-1" aria-hidden="true" data-testid="assistant-toggle-unread">{assistantUnread}</span>
+                  <span className="sr-only">{assistantUnread === 1 ? ', 1 respuesta nueva' : `, ${assistantUnread} respuestas nuevas`}</span>
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -212,7 +259,14 @@ function Shell({ assistantOpen, setAssistantOpen, seed }: { assistantOpen: boole
           Umbral prioriza la atención editorial y prepara borradores para revisión humana. No publica, no etiqueta noticias como verdaderas o falsas y no sustituye el criterio del equipo.
         </footer>
       </main>
-      <Assistant open={assistantOpen} modal={mobile} onClose={() => setAssistantOpen(false)} seed={seed} />
+      <AssistantPanel state={assistantState} modal={mobile} closing={assistantClosing} onStateChange={setAssistantState} onClose={closeAssistantPanel} seed={seed} onUnreadChange={onAssistantUnread} />
+      <Modal
+        open={classificationOpen}
+        title="Clasificación automática sin calibración validada"
+        description="Laya puede asignar categorías erróneas y sus porcentajes no son confianza editorial: revisa categoría e impacto antes de usar el ranking."
+        onClose={() => setClassificationOpen(false)}
+        testId="classification-warning"
+      />
     </div>
   );
 }
@@ -227,8 +281,28 @@ function Inner() {
   const [bootError, setBootError] = useState<string | null>(null);
   const [route, go] = useRoute();
   const [reviewer, setReviewerState] = useState(() => readLocal('umbral.reviewer', ''));
-  const [assistantOpen, setAssistantOpen] = useState(false);
-  const [seed, setSeed] = useState({ text: '', n: 0 });
+  const [assistantState, setAssistantState] = useState<AssistantVisibility>('closed');
+  const [assistantUnread, setAssistantUnread] = useState(0);
+  const [assistantClosing, setAssistantClosing] = useState(false);
+  const assistantCloseTimer = useRef<number | undefined>(undefined);
+  const [seed, setSeed] = useState({ text: '', topicId: null as string | null, topicTitle: '', n: 0 });
+
+  const openAssistantPanel = useCallback(() => {
+    window.clearTimeout(assistantCloseTimer.current);
+    assistantCloseTimer.current = undefined;
+    setAssistantClosing(false);
+    setAssistantState('open');
+  }, []);
+  const closeAssistantPanel = useCallback(() => {
+    window.clearTimeout(assistantCloseTimer.current);
+    setAssistantClosing(true);
+    assistantCloseTimer.current = window.setTimeout(() => {
+      setAssistantState('closed');
+      setAssistantClosing(false);
+      assistantCloseTimer.current = undefined;
+    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 120);
+  }, []);
+  useEffect(() => () => window.clearTimeout(assistantCloseTimer.current), []);
 
   useEffect(() => {
     let live = true;
@@ -259,10 +333,10 @@ function Inner() {
     setReviewerState(name);
     writeLocal('umbral.reviewer', name);
   }, []);
-  const openAssistant = useCallback((prompt?: string) => {
-    setAssistantOpen(true);
-    if (prompt) setSeed((s) => ({ text: prompt, n: s.n + 1 }));
-  }, []);
+  const openAssistant = useCallback((prompt?: string, topicId?: string, topicTitle?: string) => {
+    openAssistantPanel();
+    if (prompt) setSeed((s) => ({ text: prompt, topicId: topicId ?? null, topicTitle: topicTitle ?? '', n: s.n + 1 }));
+  }, [openAssistantPanel]);
 
   const ctx = useMemo(
     () =>
@@ -285,7 +359,7 @@ function Inner() {
   if (!ctx) return <div className="mx-auto max-w-xl p-6" data-testid="app-loading"><Loading label={progress?.message ?? "Iniciando Umbral…"} />{progress && <p className="text-sm text-ink-3" aria-live="polite">Intento {progress.attempt} · {Math.floor(progress.elapsedMs / 1000)} s. El primer inicio puede tardar hasta 90 segundos.</p>}</div>;
   return (
     <AppContext.Provider value={ctx}>
-      <Shell assistantOpen={assistantOpen} setAssistantOpen={setAssistantOpen} seed={seed} />
+      <Shell assistantState={assistantState} setAssistantState={setAssistantState} assistantClosing={assistantClosing} openAssistantPanel={openAssistantPanel} closeAssistantPanel={closeAssistantPanel} seed={seed} assistantUnread={assistantUnread} onAssistantUnread={setAssistantUnread} />
     </AppContext.Provider>
   );
 }

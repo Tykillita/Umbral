@@ -8,7 +8,7 @@ import { useDisclosureMotion, useEntrance, useRevealNew } from '../../lib/useMot
 import { useApp } from '../context';
 import { BandPill, Button, ErrorBox, EvidencePill, Loading, Notice, Pill, ReviewPill, inputCls } from '../ui';
 import { ScoreBreakdown } from '../ScoreBreakdown';
-import { Select, Tooltip, type SelectOption } from '../ui/controls';
+import { Disclosure, Select, Tooltip, type SelectOption } from '../ui/controls';
 
 function FilterSelect<T extends string>({
   id,
@@ -94,7 +94,7 @@ function TopicCard({ t, onOpen }: { t: TopicSummary; onOpen: (id: string) => voi
             {t.rank ?? '–'}
           </span>
         </div>
-        <div className="topic-copy space-y-2">
+        <div className="topic-copy">
           <p className="kicker">{CATEGORY_LABEL[t.category] ?? t.categoryLabel}</p>
           <h3 className="font-display text-xl font-bold leading-snug">
             <a
@@ -113,13 +113,19 @@ function TopicCard({ t, onOpen }: { t: TopicSummary; onOpen: (id: string) => voi
             <span className="font-semibold text-ink">Por qué: </span>
             {t.topReason}
           </p>
-          <p className="text-xs text-ink-3">Pertinencia geográfica: {t.relevanceReason}</p>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 topic-card-flags">
             <EvidencePill status={t.evidenceStatus} />
             <ReviewPill status={t.reviewStatus} testId="topic-review-status" />
             <TopicFlags t={t} />
           </div>
-          <p className="text-xs text-ink-3">
+          <Disclosure
+            className="topic-card-details"
+            testId="topic-card-details"
+            summary={<span className="text-xs font-semibold">Ver detalles de clasificación y geografía</span>}
+          >
+            <p className="max-w-prose text-xs text-ink-2">Pertinencia geográfica: {t.relevanceReason}</p>
+          </Disclosure>
+          <p className="topic-card-meta text-xs text-ink-3">
             {t.articleCount} noticia{t.articleCount === 1 ? '' : 's'} · {t.independentProvenances} procedencia
             {t.independentProvenances === 1 ? '' : 's'} independiente{t.independentProvenances === 1 ? '' : 's'} · última publicación:{' '}
             {fmtDateTime(t.lastPublishedAt)}
@@ -142,7 +148,7 @@ function TopicCard({ t, onOpen }: { t: TopicSummary; onOpen: (id: string) => voi
       </div>
       <div className="topic-panel-footer mt-3 flex flex-wrap items-center justify-between gap-2 pt-3">
         <p className="text-xs text-ink-3">Ordena la atención; no prueba verdad ni habilita publicación.</p>
-        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+        <div className="topic-action-group" role="group" aria-label="Acciones del tema">
           <Button icon={FileSearch} onClick={() => onOpen(t.id)}>
             Abrir ficha
           </Button>

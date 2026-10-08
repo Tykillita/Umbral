@@ -679,10 +679,11 @@ function TopicPicker() {
   useEntrance(ref, 'borradores', Boolean(q.data));
   return (
     <div ref={ref} data-testid="draft-view" className="space-y-4">
+      <header data-motion="heading" className="comic-page-heading space-y-2">
+        <p className="kicker">Borradores</p>
+        <h1 className="font-display text-3xl font-bold leading-tight">Elige un tema para redactar</h1>
+      </header>
       <SavedCases />
-      <SectionTitle kicker="Borradores" heading>
-        Elige un tema para redactar
-      </SectionTitle>
       {q.isLoading && <Loading label="Cargando temas…" />}
       {q.error && <ErrorBox error={q.error} onRetry={() => q.refetch()} />}
       <ul className="space-y-3">
@@ -728,9 +729,9 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
       <SectionTitle id="create-title" kicker="Generación">
         {caseView.currentDraft ? 'Generar otro borrador' : 'Crear borrador'}
       </SectionTitle>
-      <div className="flex flex-wrap items-end gap-3">
-        <div className="min-w-56 flex-1">
-          <Field label="Proveedor de redacción" htmlFor={id} hint={choice?.help}>
+      <div className="draft-create-row">
+        <div className="min-w-0">
+          <Field label="Proveedor de redacción" htmlFor={id}>
             <Select id={id} testId="draft-provider" value={provider} onChange={setProvider} options={choices.map((p) => ({ value: p.value, label: p.label }))} />
           </Field>
         </div>
@@ -738,7 +739,8 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
           {create.isPending ? 'Generando…' : 'Generar borrador'}
         </Button>
       </div>
-      <p className="mt-2 text-xs text-ink-3">
+      {choice?.help && <p className="-mt-2 text-xs text-ink-3">{choice.help}</p>}
+      <p className="text-xs text-ink-3">
         Se usa solo la evidencia recuperada del corpus. Si el modelo no está disponible, hay cuota agotada o no hay conexión, se recurre a un borrador recuperado o a la plantilla con citas; nunca a un proveedor de pago.
       </p>
       <div aria-live="polite" className="mt-2 space-y-2">
@@ -775,7 +777,7 @@ function DraftBody({ detail }: { detail: TopicDetail }) {
 
   return (
     <div ref={ref} data-testid="draft-view" data-topic-id={s.id} className="space-y-4">
-      <div data-motion="heading">
+      <header data-motion="heading" className="comic-page-heading space-y-2">
         <a
           href="#/borradores"
           className="comic-link -ml-1 gap-1 px-1 text-sm text-ink-2 underline-offset-4 hover:text-amber-700 hover:underline"
@@ -787,9 +789,9 @@ function DraftBody({ detail }: { detail: TopicDetail }) {
           <ArrowLeft size={14} aria-hidden="true" /> Cambiar de tema
         </a>
         <p className="kicker">Borradores · snapshot {detail.snapshotId} · {detail.rulesVersion}</p>
-        <h2 className="font-display text-2xl font-bold leading-snug" data-testid="draft-topic-title">
+        <h1 className="font-display text-3xl font-bold leading-tight" data-testid="draft-topic-title">
           {s.title}
-        </h2>
+        </h1>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <EvidencePill status={s.evidenceStatus} />
           <ReviewPill status={caseView.status} />
@@ -812,7 +814,7 @@ function DraftBody({ detail }: { detail: TopicDetail }) {
             Ver ficha
           </a>
         </div>
-      </div>
+      </header>
 
       {s.needsInvestigation && (
         <Notice tone="amber" icon={ShieldAlert} title="Requiere investigación: no habilita publicación" testId="topic-needs-investigation">

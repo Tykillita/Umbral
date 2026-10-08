@@ -314,7 +314,7 @@ function FichaBody({ d }: { d: TopicDetail }) {
   useEntrance(ref, `ficha:${s.id}`);
   return (
     <article ref={ref} data-testid="ficha" data-topic-id={s.id} className="space-y-6">
-      <header data-motion="heading" className="space-y-3">
+      <header data-motion="heading" className="comic-page-heading space-y-3">
         <button
           type="button"
           onClick={() => go({ view: 'agenda' })}
@@ -330,11 +330,11 @@ function FichaBody({ d }: { d: TopicDetail }) {
           <ReviewPill status={d.case.status} testId="ficha-review-status" />
           <TopicFlags t={s} />
         </div>
-        <div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+        <div className="comic-action-pair">
           <Button variant="primary" icon={FilePlus2} onClick={() => go({ view: 'borradores', topicId: s.id })} data-testid="go-drafts">
             Borradores y revisión
           </Button>
-          <Button icon={Bot} onClick={() => openAssistant(`¿Qué falta verificar de «${s.title}»?`)}>
+          <Button icon={Bot} onClick={() => openAssistant(`¿Qué falta verificar de «${s.title}»?`, s.id, s.title)}>
             Preguntar al asistente sobre este tema
           </Button>
         </div>

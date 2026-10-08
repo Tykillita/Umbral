@@ -4,7 +4,6 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-libra
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactNode } from 'react';
-import { useState } from 'react';
 import { Bot } from 'lucide-react';
 import type { Route } from './router';
 import { MockApi } from './mock/mockApi';
@@ -12,7 +11,6 @@ import { MOTION, endSettling, playCards, playHeading, settle, staggerStep } from
 import { installInteractions } from './interactions';
 import { AppContext } from '../components/context';
 import { Agenda } from '../components/views/Agenda';
-import { Assistant } from '../components/Assistant';
 import { Button, Notice } from '../components/ui';
 
 type Call = { el: Element; frames: Keyframe[]; options: KeyframeAnimationOptions; anim: FakeAnimation };
@@ -269,92 +267,3 @@ describe('avisos y confirmaciones', () => {
   });
 });
 
-describe('asistente', () => {
-  const seed = { text: '', n: 0 };
-
-  function Harness() {
-    const [open, setOpen] = useState(false);
-    return (
-      <>
-        <button type="button" data-testid="toggle" onClick={() => setOpen((o) => !o)}>
-          Alternar
-        </button>
-        <Assistant open={open} onClose={() => setOpen(false)} seed={seed} />
-      </>
-    );
-  }
-  const panelCalls = (kind: 'enter' | 'exit') =>
-    forTestId('assistant-panel').filter((c) => c.options.duration === (kind === 'enter' ? 240 : 140));
-
-  it('entra en 240 ms; al cerrar retira la interacción 140 ms, devuelve el foco, conserva la conversación y se desmonta', async () => {
-    mount(<Harness />);
-    const toggle = screen.getByTestId('toggle');
-    toggle.focus();
-    fireEvent.click(toggle);
-    expect(panelCalls('enter')).toHaveLength(1);
-    expect(screen.getByTestId('assistant-panel').hasAttribute('inert')).toBe(false);
-
-    const input = screen.getByTestId('assistant-input');
-    fireEvent.change(input, { target: { value: 'Canal neopanamax' } });
-    fireEvent.keyDown(input, { key: 'Enter' });
-    await screen.findByTestId('assistant-answer');
-    const bubbles = () => calls.filter((c) => c.el.hasAttribute('data-bubble-id'));
-    expect(bubbles().map((c) => c.options.duration)).toEqual([220, 220]);
-
-    fireEvent.keyDown(screen.getByTestId('assistant-input'), { key: 'Escape' });
-    const panel = screen.getByTestId('assistant-panel');
-    const exit = must(panelCalls('exit')[0]);
-    expect(exit.options.fill).toBe('forwards');
-    expect(panel.hasAttribute('inert')).toBe(true);
-    expect(panel.getAttribute('aria-hidden')).toBe('true');
-    expect(document.activeElement).toBe(toggle);
-
-    await act(async () => exit.anim.finish());
-    expect(screen.queryByTestId('assistant-panel')).toBeNull();
-
-    fireEvent.click(toggle);
-    expect(screen.getByTestId('assistant-turn').textContent).toContain('Canal neopanamax');
-    expect(panelCalls('enter')).toHaveLength(2);
-    // Las preguntas y respuestas ya vistas no vuelven a animarse al reabrir.
-    expect(bubbles()).toHaveLength(2);
-  });
-
-  it('reabrir durante la salida la cancela, devuelve la interacción y no repite la entrada', async () => {
-    mount(<Harness />);
-    const toggle = screen.getByTestId('toggle');
-    fireEvent.click(toggle);
-    fireEvent.click(toggle);
-    const exit = must(panelCalls('exit')[0]);
-    expect(screen.getByTestId('assistant-panel').hasAttribute('inert')).toBe(true);
-    fireEvent.click(toggle);
-    expect(exit.anim.cancelled).toBe(true);
-    expect(screen.getByTestId('assistant-panel').hasAttribute('inert')).toBe(false);
-    expect(panelCalls('enter')).toHaveLength(1);
-    await act(async () => {});
-    expect(screen.getByTestId('assistant-panel')).toBeTruthy();
-  });
-
-  it('sin soporte de animaciones cierra al instante', () => {
-    delete (HTMLElement.prototype as { animate?: unknown }).animate;
-    mount(<Harness />);
-    const toggle = screen.getByTestId('toggle');
-    fireEvent.click(toggle);
-    expect(screen.getByTestId('assistant-panel')).toBeTruthy();
-    fireEvent.click(toggle);
-    expect(screen.queryByTestId('assistant-panel')).toBeNull();
-  });
-
-  it('un error de la API entra de forma sobria y no se repite al reabrir', async () => {
-    const api = new MockApi();
-    vi.spyOn(api, 'query').mockRejectedValue(new Error('sin red'));
-    mount(<Harness />, api);
-    fireEvent.click(screen.getByTestId('toggle'));
-    const input = screen.getByTestId('assistant-input');
-    fireEvent.change(input, { target: { value: 'Pregunta fallida' } });
-    fireEvent.keyDown(input, { key: 'Enter' });
-    await screen.findByTestId('assistant-error');
-    const sober = calls.filter((c) => c.el.getAttribute('data-testid') === 'assistant-error');
-    expect(sober).toHaveLength(1);
-    expect(must(sober[0]).options.duration).toBe(160);
-  });
-});

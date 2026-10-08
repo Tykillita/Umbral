@@ -22,6 +22,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from .compose import ModelCompose, stub_compose_from_prompt
 from .config import Settings, repo_root
 from .connections import ChatGPTConnections
 from .drafts import (
@@ -120,7 +121,7 @@ def build_user_content(topic_title: str, pack: EvidencePack, meta: dict[str, str
 
 @dataclass
 class ProviderResult:
-    output: ModelOutput
+    output: Any  # ModelOutput (borradores) o ModelCompose (redacción de consultas)
     model: str
     usage: GenerationUsage | None = None
 
@@ -139,11 +140,11 @@ def extract_json(text: str) -> dict:
         raise ProviderError(FallbackReason.validacion_fallida, f"JSON inválido del modelo: {exc.msg}") from exc
 
 
-def parse_output(data: dict) -> ModelOutput:
+def parse_output(data: dict, schema: type[BaseModel] = ModelOutput) -> Any:
     try:
-        return ModelOutput.model_validate(data)
+        return schema.model_validate(data)
     except Exception as exc:
-        raise ProviderError(FallbackReason.validacion_fallida, "La salida del modelo no cumple el esquema editorial.") from exc
+        raise ProviderError(FallbackReason.validacion_fallida, "La salida del modelo no cumple el esquema esperado.") from exc
 
 
 class DraftProvider(ABC):
@@ -159,7 +160,7 @@ class DraftProvider(ABC):
     def status(self) -> ProviderStatus: ...
 
     @abstractmethod
-    def generate(self, system: str, user: str) -> ProviderResult: ...
+    def generate(self, system: str, user: str, *, schema: type[BaseModel] = ModelOutput) -> ProviderResult: ...
 
     def _status(self, available: bool, reason: str | None, model: str | None) -> ProviderStatus:
         return ProviderStatus(
@@ -179,7 +180,8 @@ class GeminiProvider(DraftProvider):
             return self._status(False, "GEMINI_API_KEY no configurada (Free Tier sin facturación).", s.gemini_model)
         return self._status(True, None, s.gemini_model)
 
-    def generate(self, system: str, user: str, *, before_call: Callable[[], None] | None = None) -> ProviderResult:
+    def generate(self, system: str, user: str, *, before_call: Callable[[], None] | None = None,
+                 schema: type[BaseModel] = ModelOutput) -> ProviderResult:
         s = self.settings
         if s.offline:
             raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamada externa bloqueada.")
@@ -198,11 +200,12 @@ class GeminiProvider(DraftProvider):
             ),
         )
         try:
-            return self._generate_with_client(client, system, user, before_call=before_call)
+            return self._generate_with_client(client, system, user, before_call=before_call, schema=schema)
         finally:
             client.close()
 
-    def _generate_with_client(self, client: Any, system: str, user: str, *, before_call: Callable[[], None] | None = None) -> ProviderResult:
+    def _generate_with_client(self, client: Any, system: str, user: str, *, before_call: Callable[[], None] | None = None,
+                              schema: type[BaseModel] = ModelOutput) -> ProviderResult:
         from google.genai import errors, types
 
         s = self.settings
@@ -218,7 +221,7 @@ class GeminiProvider(DraftProvider):
                 cfg = types.GenerateContentConfig(
                     system_instruction=system,
                     response_mime_type="application/json",
-                    response_schema=ModelOutput,
+                    response_schema=schema,
                     temperature=0.2,
                     max_output_tokens=6000,
                 )
@@ -234,11 +237,11 @@ class GeminiProvider(DraftProvider):
                     latency_ms=round((time.perf_counter() - started) * 1000, 2),
                 )
                 parsed = getattr(resp, "parsed", None)
-                if isinstance(parsed, ModelOutput):
+                if isinstance(parsed, schema):
                     return ProviderResult(parsed, model, usage)
                 if isinstance(parsed, dict):
-                    return ProviderResult(parse_output(parsed), model, usage)
-                return ProviderResult(parse_output(extract_json(resp.text or "")), model, usage)
+                    return ProviderResult(parse_output(parsed, schema), model, usage)
+                return ProviderResult(parse_output(extract_json(resp.text or ""), schema), model, usage)
             except ProviderError as exc:
                 raise exc
             except errors.APIError as exc:
@@ -325,7 +328,9 @@ class ChatGPTProvider(DraftProvider):
             return self._status(False, "Elige CHATGPT_MODEL del catálogo de la cuenta autorizada.", None)
         return self._status(True, "Token configurado; acceso al modelo pendiente de inferencia completada.", s.chatgpt_model)
 
-    def generate(self, system: str, user: str) -> ProviderResult:
+    def generate(self, system: str, user: str, *, schema: type[BaseModel] = ModelOutput) -> ProviderResult:
+        if schema is not ModelOutput:
+            raise ProviderError(FallbackReason.proveedor_no_disponible, "Este adaptador solo redacta borradores editoriales.")
         s = self.settings
         if s.offline:
             raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamada externa bloqueada.")
@@ -344,7 +349,7 @@ class ChatGPTProvider(DraftProvider):
             raise ProviderError(FallbackReason.proveedor_no_conectado, "ChatGPT no está conectado (sin token OAuth local).")
         import httpx
 
-        schema = ModelOutput.model_json_schema()
+        output_schema = ModelOutput.model_json_schema()
         try:
             with httpx.stream(
                 "POST", "https://api.openai.com/v1/responses",
@@ -352,7 +357,7 @@ class ChatGPTProvider(DraftProvider):
                 json={
                     "model": model, "instructions": system,
                     "input": [{"role": "user", "content": user}], "store": False, "stream": True,
-                    "text": {"format": {"type": "json_schema", "name": "umbral_draft", "schema": schema, "strict": False}},
+                    "text": {"format": {"type": "json_schema", "name": "umbral_draft", "schema": output_schema, "strict": False}},
                 }, timeout=s.gemini_timeout_s,
             ) as response:
                 if response.status_code == 429:
@@ -421,7 +426,9 @@ class ClaudeCliProvider(DraftProvider):
             return self._status(False, f"CLI «{s.claude_cli}» no encontrado en PATH.", s.claude_model)
         return self._status(True, "Consume créditos de la cuenta del usuario; fuera de la ruta gratuita.", s.claude_model)
 
-    def generate(self, system: str, user: str) -> ProviderResult:
+    def generate(self, system: str, user: str, *, schema: type[BaseModel] = ModelOutput) -> ProviderResult:
+        if schema is not ModelOutput:
+            raise ProviderError(FallbackReason.proveedor_no_disponible, "Este adaptador solo redacta borradores editoriales.")
         s = self.settings
         if s.offline:
             raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamada externa bloqueada.")
@@ -430,9 +437,9 @@ class ClaudeCliProvider(DraftProvider):
         exe = self._bin()
         if not exe:
             raise ProviderError(FallbackReason.proveedor_no_conectado, "CLI de Claude no disponible.")
-        schema = json.dumps(ModelOutput.model_json_schema(), ensure_ascii=False)
-        prompt = f"{system}\n\nResponde SOLO con un objeto JSON que cumpla este esquema:\n{schema}\n\n{user}"
-        cmd = [exe, "--bare", "-p", "--output-format", "json", "--json-schema", schema, "--tools", "",
+        output_schema = json.dumps(ModelOutput.model_json_schema(), ensure_ascii=False)
+        prompt = f"{system}\n\nResponde SOLO con un objeto JSON que cumpla este esquema:\n{output_schema}\n\n{user}"
+        cmd = [exe, "--bare", "-p", "--output-format", "json", "--json-schema", output_schema, "--tools", "",
                "--disallowedTools", "mcp__*", "--no-session-persistence", "--setting-sources", "",
                "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}']
         if s.claude_model:
@@ -514,7 +521,7 @@ class StubGeminiProvider(DraftProvider):
             return self._status(False, "STUB de pruebas: proveedor desconectado.", "gemini-stub")
         return self._status(True, "STUB de pruebas (UMBRAL_GEMINI_STUB): no es Gemini real.", "gemini-stub")
 
-    def generate(self, system: str, user: str) -> ProviderResult:
+    def generate(self, system: str, user: str, *, schema: type[BaseModel] = ModelOutput) -> ProviderResult:
         if self.settings.offline:
             raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamada externa bloqueada.")
         self.calls += 1
@@ -524,6 +531,8 @@ class StubGeminiProvider(DraftProvider):
             raise ProviderError(FallbackReason.proveedor_no_disponible, "STUB: servicio no disponible (503).")
         if self.behavior == "no_key":
             raise ProviderError(FallbackReason.sin_credenciales, "STUB: proveedor desconectado.")
+        if schema is ModelCompose:
+            return ProviderResult(stub_compose_from_prompt(user, self.behavior), "gemini-stub")
         return ProviderResult(stub_output_from_prompt(user, self.behavior), "gemini-stub")
 
 

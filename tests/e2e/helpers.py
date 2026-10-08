@@ -58,6 +58,9 @@ def open_first_ficha(page: Page, index: int = 0) -> str:
 
 def draft_and_review(page: Page, reviewer: str = "Revisora E2E") -> None:
     """Desde una ficha abierta: crear borrador, revisar (en_revision) y exportar a Markdown."""
+    if tid(page, "assistant-panel").is_visible():
+        tid(page, "assistant-close").click()
+        expect(tid(page, "assistant-panel")).to_have_count(0)
     tid(page, "go-drafts").click()
     expect(tid(page, "draft-generate")).to_be_visible(timeout=30_000)
     tid(page, "draft-generate").click()
