@@ -34,9 +34,17 @@ FAKE_GEMINI_KEY = "TESTKEY_NOT_A_REAL_KEY_0123456789"  # centinela: nunca debe a
 
 
 def _free_port() -> int:
-    with socket.socket() as s:
-        s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
+    # Chromium rejects several otherwise valid server ports, and some Windows
+    # configurations include 4045 in the ephemeral range. Stay in the high
+    # dynamic range and bind-probe so local services already using a port are skipped.
+    for port in range(49152, 65536):
+        with socket.socket() as s:
+            try:
+                s.bind(("127.0.0.1", port))
+            except OSError:
+                continue
+            return port
+    raise OSError("No hay puertos locales libres en el rango dinámico seguro para Chromium.")
 
 
 def _unavailable(msg: str):

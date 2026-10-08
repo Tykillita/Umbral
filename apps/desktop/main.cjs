@@ -5,9 +5,13 @@ const { randomBytes } = require('node:crypto');
 const { mkdirSync, readFileSync, writeFileSync } = require('node:fs');
 const path = require('node:path');
 const readline = require('node:readline');
-const { sameOrigin, canOpenExternal, assertSender } = require('./security.cjs');
+const { pathToFileURL } = require('node:url');
+const { autoUpdater } = require('electron-updater');
+const { sameOrigin, canOpenExternal, assertSender, assertChromeSender } = require('./security.cjs');
+const { readMotionPreference, saveMotionPreference } = require('./motion-preference.cjs');
+const { createUpdateManager } = require('./update-manager.cjs');
 
-let window, child, origin, timer, stopping = false;
+let window, child, origin, timer, stopUpdateChecks, stopping = false;
 const token = randomBytes(32).toString('hex');
 const desktopRoot = __dirname;
 const resources = app.isPackaged ? process.resourcesPath : path.join(desktopRoot, 'staging');
@@ -56,7 +60,46 @@ async function request(endpoint, method = 'GET') {
   if (!response.ok) throw new Error(response.status === 409 ? 'Ya hay una tarea de datos en curso.' : 'No se pudo completar la operación local.');
   return response.json();
 }
+const startupFile = path.join(desktopRoot, 'startup.html');
+const windowActions = {
+  minimize: () => window.minimize(),
+  'toggle-maximize': () => { if (window.isMaximized()) window.unmaximize(); else window.maximize(); },
+  close: () => window.close(),
+  state: () => {},
+};
+const motionPreferenceFile = path.join(dataDir, 'motion-preference.json');
+const updateManager = createUpdateManager({ app, autoUpdater,
+  publishState: (state) => { if (window && !window.isDestroyed()) window.webContents.send('umbral:update:state', state); } });
 function setupIpc() {
+  // The comic title bar replaces the native frame; only the main frame of the app or startup page may drive the window.
+  ipcMain.handle('umbral:window', (event, action) => {
+    assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+    if (!Object.hasOwn(windowActions, action)) throw new Error('Acción de ventana no válida.');
+    windowActions[action]();
+    return { maximized: window.isMaximized() };
+  });
+  ipcMain.on('umbral:motion-preference:get', (event) => {
+    try {
+      assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+      event.returnValue = readMotionPreference(motionPreferenceFile);
+    } catch { event.returnValue = 'system'; }
+  });
+  ipcMain.handle('umbral:motion-preference:set', (event, preference) => {
+    assertSender(event, window, origin);
+    return saveMotionPreference(motionPreferenceFile, preference);
+  });
+  ipcMain.handle('umbral:update:state', (event) => {
+    assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+    return updateManager.getState();
+  });
+  ipcMain.handle('umbral:update:check', (event) => {
+    assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+    return updateManager.check();
+  });
+  ipcMain.handle('umbral:update:install', (event) => {
+    assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+    return updateManager.install();
+  });
   ipcMain.on('umbral:configuration', (event) => {
     try { assertSender(event, window, origin); event.returnValue = { version: app.getVersion(), apiToken: token }; }
     catch { event.returnValue = { version: app.getVersion(), apiToken: '' }; }
@@ -69,6 +112,7 @@ async function stop() {
   if (stopping) return;
   stopping = true;
   clearInterval(timer);
+  stopUpdateChecks?.();
   try { if (origin) await request('shutdown', 'POST'); } catch { /* bounded process tree cleanup below */ }
   if (child && child.exitCode === null) {
     await new Promise((resolve) => {
@@ -82,15 +126,19 @@ app.on('window-all-closed', () => app.quit());
 app.whenReady().then(async () => {
   BrowserWindow.removeMenu?.();
   window = new BrowserWindow({ width: 1320, height: 900, minWidth: 640, minHeight: 480, show: false,
-    title: 'Umbral', backgroundColor: '#f3ead7', autoHideMenuBar: true,
+    title: 'Umbral', backgroundColor: '#f3ead7', autoHideMenuBar: true, frame: false,
+    // Windows would paint the theme accent colour (e.g. green) around a frameless window; keep it on Umbral's ink.
+    accentColor: '#172337',
     icon: app.isPackaged ? path.join(resources, 'umbral.ico') : path.join(desktopRoot, '..', 'web', 'public', 'brand', 'umbral-desktop.ico'),
     webPreferences: { preload: path.join(desktopRoot, 'preload.cjs'), contextIsolation: true, sandbox: true,
       nodeIntegration: false, nodeIntegrationInWorker: false, webSecurity: true, webviewTag: false,
       allowRunningInsecureContent: false } });
   window.removeMenu();
   setupIpc();
+  for (const event of ['maximize', 'unmaximize']) window.on(event, () => window.webContents.send('umbral:window-state', { maximized: window.isMaximized() }));
   window.once('ready-to-show', () => { if (process.env.UMBRAL_DESKTOP_SMOKE !== '1') window.show(); });
-  await window.loadFile(path.join(desktopRoot, 'startup.html'));
+  await window.loadFile(startupFile);
+  stopUpdateChecks = process.env.UMBRAL_DESKTOP_SMOKE === '1' ? () => {} : updateManager.start();
   try {
     origin = await startSidecar();
     session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));

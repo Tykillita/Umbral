@@ -98,6 +98,14 @@ uv sync --locked
 ./build.ps1 -Installer
 ```
 
-El build usa el Node 24 de `apps/web`, verifica el snapshot y el checkpoint de Laya, empaqueta el motor con PyInstaller y muestra el SHA-256 del instalador. Los datos del usuario viven en `%LOCALAPPDATA%\Umbral` (SQLite, snapshots, preferencias y respaldos); los recursos instalados son de solo lectura y se hace un respaldo antes de abrir una versión nueva. La actualización de la aplicación es manual. Con conexión descarga el snapshot diario y usa la generación pública de Gemini; sin conexión funciona con los datos disponibles y plantillas con citas.
+El build usa el Node 24 de `apps/web`, verifica el snapshot y el checkpoint de Laya, empaqueta el motor con PyInstaller y genera el SHA-256 del instalador. Los datos del usuario viven en `%LOCALAPPDATA%\Umbral` (SQLite, snapshots, preferencias y respaldos); los recursos instalados son de solo lectura y se hace un respaldo antes de abrir una versión nueva.
+
+Las versiones estables se publican en GitHub Releases al crear un tag `vX.Y.Z` que coincida con `apps/desktop/package.json`. El workflow `release-desktop.yml` compila el instalador NSIS para Windows, publica `latest.yml` y los artefactos que necesita Electron para actualizar, y adjunta el SHA-256. La app empaquetada comprueba releases estables al iniciar y cada 24 horas; descarga en segundo plano y muestra un aviso propio de Umbral. Se instala al elegir **Reiniciar e instalar** o al cerrar la aplicación después de que la descarga haya terminado. No se consultan borradores ni versiones preliminares. Los builds locales nunca publican.
+
+Las instalaciones anteriores a la primera versión con updater deben instalar manualmente ese instalador una vez; no contienen el código que consulta las releases. Las siguientes versiones podrán llegar automáticamente y el instalador por usuario conserva `%LOCALAPPDATA%\Umbral`.
+
+La publicación usa el `GITHUB_TOKEN` temporal de Actions con permiso `contents: write`; no requiere un secreto adicional. El tag sigue siendo una decisión explícita para cada hito. La release debe conservar el instalador y `latest.yml` para que las instalaciones existentes puedan actualizarse.
+
+Con conexión la app descarga el snapshot diario y usa la generación pública de Gemini; sin conexión funciona con los datos disponibles y plantillas con citas.
 
 El instalador **no está firmado** (no hay certificado de pago), por lo que Windows puede mostrar un aviso. Publica siempre el SHA-256 junto al instalador. Una instalación y actualización en un Windows limpio es una comprobación aparte que no se da por hecha por el solo hecho de que el build funcione en el equipo de desarrollo.

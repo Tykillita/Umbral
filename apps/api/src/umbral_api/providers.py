@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from .compose import ModelCompose, stub_compose_from_prompt
 from .config import Settings, repo_root
 from .connections import ChatGPTConnections
+from .connections_claude import ClaudeSession, clean_env
 from .drafts import (
     BRIEF_MAX_WORDS,
     COPY_MAX_WORDS,
@@ -329,8 +330,8 @@ class ChatGPTProvider(DraftProvider):
         return self._status(True, "Token configurado; acceso al modelo pendiente de inferencia completada.", s.chatgpt_model)
 
     def generate(self, system: str, user: str, *, schema: type[BaseModel] = ModelOutput) -> ProviderResult:
-        if schema is not ModelOutput:
-            raise ProviderError(FallbackReason.proveedor_no_disponible, "Este adaptador solo redacta borradores editoriales.")
+        if schema not in (ModelOutput, ModelCompose):
+            raise ProviderError(FallbackReason.proveedor_no_disponible, "Este adaptador solo redacta borradores y respuestas con fuentes.")
         s = self.settings
         if s.offline:
             raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamada externa bloqueada.")
@@ -349,7 +350,8 @@ class ChatGPTProvider(DraftProvider):
             raise ProviderError(FallbackReason.proveedor_no_conectado, "ChatGPT no está conectado (sin token OAuth local).")
         import httpx
 
-        output_schema = ModelOutput.model_json_schema()
+        output_schema = schema.model_json_schema()
+        schema_name = "umbral_compose" if schema is ModelCompose else "umbral_draft"
         try:
             with httpx.stream(
                 "POST", "https://api.openai.com/v1/responses",
@@ -357,7 +359,7 @@ class ChatGPTProvider(DraftProvider):
                 json={
                     "model": model, "instructions": system,
                     "input": [{"role": "user", "content": user}], "store": False, "stream": True,
-                    "text": {"format": {"type": "json_schema", "name": "umbral_draft", "schema": output_schema, "strict": False}},
+                    "text": {"format": {"type": "json_schema", "name": schema_name, "schema": output_schema, "strict": False}},
                 }, timeout=s.gemini_timeout_s,
             ) as response:
                 if response.status_code == 429:
@@ -369,7 +371,7 @@ class ChatGPTProvider(DraftProvider):
                 text = completed_response_text(response.iter_lines())
         except httpx.HTTPError as exc:
             raise ProviderError(FallbackReason.proveedor_no_disponible, f"ChatGPT no disponible: {type(exc).__name__}") from exc
-        return ProviderResult(parse_output(extract_json(text)), model)
+        return ProviderResult(parse_output(extract_json(text), schema), model)
 
 
 def completed_response_text(lines) -> str:  # noqa: ANN001
@@ -405,13 +407,19 @@ def completed_response_text(lines) -> str:  # noqa: ANN001
 
 
 class ClaudeCliProvider(DraftProvider):
-    """Claude vía CLI oficial (`claude -p`). SOLO localhost, opcional, con consumo de créditos (fuera de la ruta gratuita).
+    """Claude vía CLI oficial (`claude -p`) con la sesión de suscripción ya abierta. SOLO localhost, opcional.
 
-    Invoca el CLI ya autenticado por el usuario; no gestiona credenciales ni habilita herramientas.
+    Invoca el CLI autenticado por el usuario; no gestiona credenciales ni habilita herramientas. No usa ``--bare``
+    (ignora la sesión OAuth y solo acepta ANTHROPIC_API_KEY) y el entorno del hijo no hereda claves de API, para que
+    nunca se facture por API: solo la suscripción (``connections_claude.ClaudeSession``).
     """
 
     name = "claude"
     local_only = True
+
+    def __init__(self, settings: Settings):
+        super().__init__(settings)
+        self.session = ClaudeSession(settings)
 
     def _bin(self) -> str | None:
         return shutil.which(self.settings.claude_cli)
@@ -424,11 +432,14 @@ class ClaudeCliProvider(DraftProvider):
             return self._status(False, "Solo disponible en ejecución local (localhost).", s.claude_model)
         if not self._bin():
             return self._status(False, f"CLI «{s.claude_cli}» no encontrado en PATH.", s.claude_model)
-        return self._status(True, "Consume créditos de la cuenta del usuario; fuera de la ruta gratuita.", s.claude_model)
+        connection = self.session.status()
+        if not connection.logged_in:
+            return self._status(False, connection.reason or "Sin sesión de Claude.", s.claude_model)
+        return self._status(True, "Sesión de Claude reconocida; consume tu suscripción, fuera de la ruta gratuita.", s.claude_model)
 
     def generate(self, system: str, user: str, *, schema: type[BaseModel] = ModelOutput) -> ProviderResult:
-        if schema is not ModelOutput:
-            raise ProviderError(FallbackReason.proveedor_no_disponible, "Este adaptador solo redacta borradores editoriales.")
+        if schema not in (ModelOutput, ModelCompose):
+            raise ProviderError(FallbackReason.proveedor_no_disponible, "Este adaptador solo redacta borradores y respuestas con fuentes.")
         s = self.settings
         if s.offline:
             raise ProviderError(FallbackReason.modo_sin_conexion, "Modo sin conexión: llamada externa bloqueada.")
@@ -437,31 +448,32 @@ class ClaudeCliProvider(DraftProvider):
         exe = self._bin()
         if not exe:
             raise ProviderError(FallbackReason.proveedor_no_conectado, "CLI de Claude no disponible.")
-        output_schema = json.dumps(ModelOutput.model_json_schema(), ensure_ascii=False)
+        output_schema = json.dumps(schema.model_json_schema(), ensure_ascii=False)
         prompt = f"{system}\n\nResponde SOLO con un objeto JSON que cumpla este esquema:\n{output_schema}\n\n{user}"
-        cmd = [exe, "--bare", "-p", "--output-format", "json", "--json-schema", output_schema, "--tools", "",
+        cmd = [exe, "-p", "--output-format", "json", "--json-schema", output_schema, "--tools", "",
                "--disallowedTools", "mcp__*", "--no-session-persistence", "--setting-sources", "",
                "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}']
         if s.claude_model:
             cmd += ["--model", s.claude_model]
         try:
-            proc = subprocess.run(  # noqa: S603 - binario del usuario, sin shell, entrada por stdin
-                cmd, input=prompt, capture_output=True, text=True, timeout=s.gemini_timeout_s * 2, encoding="utf-8"
+            proc = subprocess.run(  # noqa: S603 - binario del usuario, sin shell, entrada por stdin, sin claves de API
+                cmd, input=prompt, capture_output=True, text=True, timeout=s.gemini_timeout_s * 2, encoding="utf-8", env=clean_env()
             )
         except (subprocess.TimeoutExpired, OSError) as exc:
             raise ProviderError(FallbackReason.proveedor_no_disponible, f"CLI de Claude falló: {type(exc).__name__}") from exc
         if proc.returncode != 0:
             raise ProviderError(FallbackReason.proveedor_no_conectado, "El CLI de Claude devolvió un error (¿sesión no iniciada?).")
+        model = s.claude_model or "claude-cli"
         try:
             envelope = json.loads(proc.stdout)
             if isinstance(envelope, dict) and envelope.get("is_error"):
                 raise ProviderError(FallbackReason.proveedor_no_disponible, "Claude no completó la generación.")
             if isinstance(envelope, dict) and isinstance(envelope.get("structured_output"), dict):
-                return ProviderResult(parse_output(envelope["structured_output"]), s.claude_model or "claude-cli")
+                return ProviderResult(parse_output(envelope["structured_output"], schema), model)
             text = envelope.get("result", "") if isinstance(envelope, dict) else proc.stdout
         except ValueError:
             text = proc.stdout
-        return ProviderResult(parse_output(extract_json(text)), s.claude_model or "claude-cli")
+        return ProviderResult(parse_output(extract_json(text), schema), model)
 
 
 def stub_output_from_prompt(user: str, behavior: str = "ok") -> ModelOutput:

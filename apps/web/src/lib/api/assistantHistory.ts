@@ -1,5 +1,5 @@
 import { ANSWER_LABEL } from '../labels';
-import type { QueryContext, QueryResponse } from './types';
+import type { ComposeProvider, QueryContext, QueryResponse } from './types';
 
 export type AssistantTurn = {
   id: string;
@@ -59,6 +59,7 @@ const TOMBSTONES = 'tombstones';
 const memory = new Map<string, AssistantConversation>();
 const memoryTombstones = new Set<string>();
 const lastByNamespace = new Map<string, string>();
+const composeProviderByNamespace = new Map<string, ComposeProvider>();
 const channels = new Map<string, { channel: BroadcastChannel; listeners: number }>();
 let database: Promise<IDBDatabase> | null = null;
 
@@ -231,6 +232,38 @@ export async function loadAssistantHistory(namespace: string): Promise<Assistant
   }
 }
 
+/** Proveedor de composición por identidad, en el mismo registro de ajustes que la conversación activa. */
+export async function loadAssistantComposeProvider(namespace: string): Promise<ComposeProvider> {
+  try {
+    const db = await openDatabase();
+    const tx = db.transaction(SETTINGS, 'readonly');
+    const settings = await requestValue(tx.objectStore(SETTINGS).get(namespace) as IDBRequest<{ composeProvider?: ComposeProvider } | undefined>);
+    const saved = settings?.composeProvider;
+    if (saved === 'gemini' || saved === 'chatgpt' || saved === 'claude') {
+      composeProviderByNamespace.set(namespace, saved);
+      return saved;
+    }
+  } catch { /* Mantiene la preferencia en memoria si IndexedDB no está disponible. */ }
+  return composeProviderByNamespace.get(namespace) ?? 'gemini';
+}
+
+export async function saveAssistantComposeProvider(namespace: string, provider: ComposeProvider): Promise<boolean> {
+  composeProviderByNamespace.set(namespace, provider);
+  try {
+    const db = await openDatabase();
+    const tx = db.transaction(SETTINGS, 'readwrite');
+    const store = tx.objectStore(SETTINGS);
+    const request = store.get(namespace) as IDBRequest<Record<string, unknown> | undefined>;
+    request.onsuccess = () => store.put({ ...(request.result ?? {}), namespace, composeProvider: provider });
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error ?? new Error('No se pudo guardar el proveedor del asistente'));
+      tx.onabort = () => reject(tx.error ?? new Error('Se canceló el guardado del proveedor del asistente'));
+    });
+    return true;
+  } catch { return false; }
+}
+
 /** Lee una sola conversación (recarga selectiva tras un aviso de otra pestaña). `null` si no existe o fue eliminada. */
 export async function loadAssistantConversation(namespace: string, id: string): Promise<AssistantConversation | null> {
   const memoryKey = key(namespace, id);
@@ -282,8 +315,17 @@ export async function setLastAssistantConversation(namespace: string, id: string
   try {
     const db = await openDatabase();
     const tx = db.transaction(SETTINGS, 'readwrite');
-    if (id) tx.objectStore(SETTINGS).put({ namespace, lastConversationId: id });
-    else tx.objectStore(SETTINGS).delete(namespace);
+    const store = tx.objectStore(SETTINGS);
+    const request = store.get(namespace) as IDBRequest<Record<string, unknown> | undefined>;
+    request.onsuccess = () => {
+      const settings: Record<string, unknown> = { ...(request.result ?? {}), namespace };
+      if (id) store.put({ ...settings, lastConversationId: id });
+      else {
+        delete settings.lastConversationId;
+        if (Object.keys(settings).some((key) => key !== 'namespace')) store.put(settings);
+        else store.delete(namespace);
+      }
+    };
     await new Promise<void>((resolve, reject) => {
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error ?? new Error('No se pudo guardar la conversación activa'));
@@ -304,7 +346,12 @@ export async function deleteAssistantConversation(namespace: string, id: string)
     tx.objectStore(TOMBSTONES).put({ key: key(namespace, id), namespace, id, deletedAt: new Date().toISOString() });
     const settings = tx.objectStore(SETTINGS).get(namespace);
     settings.onsuccess = () => {
-      if (settings.result?.lastConversationId === id) tx.objectStore(SETTINGS).delete(namespace);
+      if (settings.result?.lastConversationId === id) {
+        const next = { ...settings.result };
+        delete next.lastConversationId;
+        if (Object.keys(next).some((key) => key !== 'namespace')) tx.objectStore(SETTINGS).put(next);
+        else tx.objectStore(SETTINGS).delete(namespace);
+      }
     };
     await new Promise<void>((resolve, reject) => {
       tx.oncomplete = () => resolve();

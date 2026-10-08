@@ -1,0 +1,991 @@
+{"articleId": "art_ae21e71d0bb9e24c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7ac8d122ceb7d175", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_37829b7e83cc0a85", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b93e0f182b49afe5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ac549230891511eb", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1cf8078547cb907c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f0823c96deb6cc13", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_01074caf805c938b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c0372f870560e3b0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_14375a40545fef05", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e7e78e24fcf7d3a2", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f0fef5d22a5031ee", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_026cf5448833ed75", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7655da278715917b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_89ad1c18a66e254e", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1b78adf77f8f99cf", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_141bcdfeaa6773ce", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a82782945024c809", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4882cff83dce0997", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0324ef8050dca1e9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_acdf1836cd9adf16", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b87a31bdb29acff2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8b32af7e8f8a9832", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8ff7daad1aefd789", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fa0d1b8a5d8a1977", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4141cfd6a1f046f4", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a6fa5359fb054f59", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1920cadadab0eac9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0b90fb3c7c13f928", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1d0ed083ecf8b64d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_36a08c087c41a01d", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a28f6b659b796641", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a41a9b13e0cb4979", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_828f473759a08aa0", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f4bd166a160421ab", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1c5afb8d684736fb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f3d679d286f41205", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cdbf23d2e27ef2ed", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6b0508e1cd9414be", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a52e7dc3abba2363", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5979872c223c05f4", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5e5ae7209a996292", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_65acf8b2fde76b9a", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7195bc485555aa00", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_addb72ed0aeea5c2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ebba1bb50d10851e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f79188aea6b6fa85", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4254c22d9fe41b11", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5cdc133b7c2b93a4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fd23ed2ea4f21311", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_44808c7513832013", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6c6d04ba4a3fed06", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b91d5bec26a34baf", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_098a3cd67341e5c2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0d52797fe0088f74", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_21f63617a004d2f1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_229fb517500da25b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2d5ff21d852f5d19", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3ef238fd3c808cc9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6dc3b468f84b2d3e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7990f1f2ac6779ae", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7fe8d9b2829e71d0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_978d69d4bf75db4a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9badf10651f7b63e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b08a7a83eff77581", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b2da113ded539f78", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_baf833cd6e63c5ab", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_daad850437566f38", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e32f06afb65e4c5b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ff3bec77cf89add8", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2b40d38ceb0e8683", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cceefc9177e86a52", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2c263250bc002736", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_840418da0d9fff0f", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b42c1eec6aa1fa9e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4329add3a845895a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_515800fbe95e31f0", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5556d9f10410b1a0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cf834ccf3bb133b6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_100fce4dada8a9e0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_570743a7752ae5e9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_fce1659f85eaf5dd", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_feb4e3ae7e876b19", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1384b266b0a3601b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_16c3cf23ac67676b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4251e52a7638c715", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6a333af942a3642a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6ace7c893c7bca8b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_922d11239593af7b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b0b4009d9091d149", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ce5d08fa1307592a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_daea82b25cc224d5", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_faf3305a1ecd0519", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_081c1ec234cef4ba", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0c3ef0def5353ca7", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1853bebee33cf30e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4266e2ec5f642ba4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_46485c743e1f6dcd", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_47ccfe126a18e0cf", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_592e628b408fac2b", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_60f8b4dfc53784f7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7ab919b195e85b71", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_ae2a0d8c540e03bc", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bc523a0cb77f9d1b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c6b96445abff9e19", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f52e70d2ebfd61dd", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f6dfac0e2a644c80", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0f7b2b0f14f07735", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3d52893116b82ea7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_81dfbaa2edb98534", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a0f59a18fa3fa85e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1fa1915011a6f917", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2105837e2d1362d8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_229ae143e907a779", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3f0ea812475ec845", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_51e32e1caf3c4871", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5465c6fbef9d0881", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_662cfc569b9ac2a8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_880d05e939cd7063", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a771a5255831d2b5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f5808536d4b67b15", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f6c31a2175528a6f", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3daafa888ccf440f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_472becbf141f89c9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_74eb24c6f5181088", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_02b51669f3e3aeaa", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_093a5b6af8f4a00e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_12c6f682dbc66781", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3a0ea7c5283dfb35", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_74d0d6097805532d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_be3709b8a3f38d8d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_feeb0f833314df8c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_af21e2549ecdd363", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2995dd9b6f6f7277", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4949b89d4c27fb15", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_299c125cc3e44680", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_732ff18d056f12fd", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_758df49ef6951333", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c145c5b292ed87ee", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_04a0735046d9e59b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_1137f5f542d51bca", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2f0a005af74b34f4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_38b9c051c6e68b50", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a94d3ed2bed7e8fc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_01385f63b3920e71", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3d4544e0d98d96aa", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_451f8c89c8690c19", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6d5786e2f380f940", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8d39610d23b2c53f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9e516870262cd53f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ed105e0ba25cb3cc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bcd55f05e7830d08", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_64cb7fcafa4daffc", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3e379acea68fffbd", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_37f03c3453848799", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b5413347affc5fdf", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_005fdf741e4f4a95", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_01b5116ed67181c8", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_05b7c76212770513", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_43d18cc4d9e3ce03", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5612cd123ec8957a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_754d37d9d6bf983a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7ed2357ff474dc9f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a89e065bb64117fd", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ad4b03c12398ac0b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c0743afad96f4e8b", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_cb1f4b304eee426a", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ed9b3efccb924b6a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ee96c06c17fd07fa", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2ac3689a7e62006d", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f0ec6ff0f33a0c0e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c258c142188e5f76", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4930012d3911f469", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_68f9cff986969915", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d446f2d659b74dfc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f39f8bcfaa9b4c0d", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3f779ba58e8aa14d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2e0c287fbe399d94", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d5a0ac7bb28f9b02", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_af693b99363438a0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_975e7b3050a8abfd", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fd4f6d067dac5a55", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_be83cccfa8e2f4b1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_277777ec636cae6e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_259610eb8b0c7629", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0a46c657d2a4fb78", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_255f7da7e5c558c3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_454b41e8a6fb9413", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6a63fcdc9d7561cb", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_9b680c0bee358231", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_31febfb428f41877", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_165d3ccd1177c627", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_02c4f4997857f36b", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_9f43ffe73d0e7927", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_00cb357af99595d0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a74ec7614bb40d20", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_17219c1c06d4e6ef", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4679c2d38c7201bc", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_6df3708adfcb0ff8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7de31f1031363e7a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8664d42277c26319", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9322a5668f0847c8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_32cdfa549ace024d", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b24883aaa3b9b850", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_cdc6dae283115831", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_cebebc1018db99d4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_64694f31a36ebbf5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7b92112a3107fb71", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9cdc63ab370ffad3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b32d5023ac75244a", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_be7a37db1bc8e1f8", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_bfa7ede8454ae006", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4da05cf6a2c17e8f", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_0c814f9bb4d2ec65", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_22423cae2a0b23d4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5dc86082d7daebca", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d56b75e9ff63ab25", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_40144019ebde12b4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9c9f6252f64297be", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a44a6034576f44a1", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d51ec1a58c66e09a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f3df3d2d9573abc5", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_74a3d2c710316b03", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2c0dd07dd6e017a9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_833519b23a183210", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9522e1d78c209bf7", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_095bf9284e3ad4f3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1f15305b813930ec", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4d6dbb48f44cba3a", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8270be132d56c220", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d1229600e7830775", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d865f6d59b86b3c1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2c85142c1b6f71de", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2ef52e557366aefb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ced9ddf26c53b471", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7786998e478a59e2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8726211122ac326a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4abe57c8bb503339", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3e4888eadd82c5f5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_749a4ef5b5d4bd0b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d06b613096078ef0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_dd96fec87522ef17", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ecc729015e6199b9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_955a8eb00bf8c877", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3561a78427f2b020", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_43e66364d51e6dc9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_bf67aabe60f9386b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_00e622cf8dd14863", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_0f0acc5cd80cd489", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_115a652bef45ca01", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_139787bb6787c7ab", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2fb7d5d207309486", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ba65d5ea1524edf9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9b7d7f582a165bff", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_14a79197a446c085", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_de6b41f2587dbe81", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_097b0bd5bda3b22f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_11a89229db0c9b27", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_249f283f10e974b5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2c15ac2fa47086d5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8fc1665362cce17c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e564c3eceb61d314", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_281ecff3a4042d13", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5a14cc447aeed8ee", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_78c00aa2a8fc4da2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a51f2f039b414ec8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a5d6fdf3f0e413a6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bce2805049512b22", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d09f2103f599bef1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d9fd6050379bdf75", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e03faadf687cc256", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1304d01afb2ba251", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_166cc1507d0f88fa", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2d208c6f14060ec3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4ad024ca55064501", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7f83b81133c78598", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_87b93663741b589b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8e80e5237aed10c9", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_912412317220bf2a", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b3e900544003153b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_ffddf95ff7761d10", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_298271b66f6b5d12", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_45da6e51621c1926", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_84a35b88373891ca", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_aad18ebb3b627551", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cbc766a67a3e7bf7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_465d38c16bc9a1b5", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7269094854fea6d0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9f17006804cb5d7e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4c7577043fe6479e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a015ad17dff06457", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d4025d585f5bd21b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4917994b5525ba7a", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_40d350f2a9d6290d", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_afc60a8aa9ab6dc9", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9f522a4a6e987ba2", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_adfc51a71e823909", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_75f5ce9bd981336f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1e8eca233e0a95a3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_25e59422ee80cefd", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3474a587614eae63", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4f81ba3703f32018", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_579a20a90419fc8a", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8de3bf5df90a1cef", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_983a07b347e1ddb9", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a092b35a4380d380", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bf8119aecdca5dc1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c476e48a05009d57", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c509bb6d87778539", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c81d642a64281f02", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f0c2df26064484d2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f288e2a71b036e46", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_322575ffefd9d49a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_17e7a5356b83cd8c", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_1c24993814d244e2", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2b1863e724f837ab", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_58c4c92f4e4e1d7c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_618e7e4bae18888d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_905fc94fb23e8524", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_90ae34eb9a4e7446", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ad3c5dffa3580846", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b039652bb6594ac2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ccd6fbb7ff4ee231", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e20035152d66a075", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ed9d203ce1276928", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f3dca563ac186604", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_48d901e828a694d3", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_344588e764908137", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d0ed1cf44777c26d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_16cf8ac4f457aa56", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_17b5ed50fed7d6dc", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_25e5b75c83d76bf4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_25f7ce48e9dc9594", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_67caca7989f21bed", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7835a65aee4cf2c2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_904f4f585dfa4022", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ea97427e97698801", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_06687faa4cc2700e", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_145e08124b153988", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_32d52642c56a3271", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7b491b795332df32", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8d0c9df5ad712ce3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_98e623908252e5c7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ae2af8938d0dfbb1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_af662242ea0bb792", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d87c41c724b3d956", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_0e598e95c6b88ee5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_108b270c2fccd2ec", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_207cf6696a115fe8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2e858637a6083430", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4cb641184fcd1a13", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_539cea73afe77f3e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_55044da68237228f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8e3b5e819e469426", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9a41284ca9600862", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b4704c513acc0e62", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ceaff0834dc40868", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_e5421abf1f119506", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_872cac7a321c77e8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6e04aab0267ff21f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7039c3151a2ca2b5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_97a0e7e1865bf394", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4ddeb80f7d9afbf0", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_75bdb7b9676763fd", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_20dd1a714fbc5f72", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2fc8737b711dbde9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_534f0b8d06826fca", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8bdf0bd7f22566a6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_95b1c7569760eace", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b02f0fdb01884c98", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4274a6f5f7ef6f97", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_399b5235e1f3ea36", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_08cbdb2bc83a03db", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2bf1f150e579ff7e", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_48866dbc0256d2dc", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_1eb7404d0cdc23b3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_94747fb56063e6b2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c0153411a99b2524", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_325d77aae665374a", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_9e8d36a73c9f4731", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a16686e4cc42bd27", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b086e99aa68ddc8a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e0dec27872791526", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e3245b74732cfb65", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f21aa03a1bd29b62", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_09e8041630cbf5e0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_932067659ec2d882", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9b473aa08f935ddf", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_e422096cadd0e597", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_10a2962e77076f4a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_46f1b3bd9b81b549", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b487fc3289cabf0d", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_e004ba423624004b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5d3870e74e69d638", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_71e765fe0e9ba5f3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fefe7dc82ab09025", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1177e312c75b1324", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2d79e16a4944665a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_30d0fc6bccc445c6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_35be60ab0dd98b5b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7be0de93eb393aa9", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7c0e423099df1347", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_940b12477a21538e", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a4fde9cc851b47c6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d711179a283ac64d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_10ef93c769be4970", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4e907b41e51bf242", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5faa2918c3ddf7f7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_62a4f9b12959e211", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6e3d9b2e7b350ae7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9bc9b94c2b8b4881", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9e50a1f0921fd76b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b33b36c66b0dc8b9", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d02481fa6512d366", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d4c34f26dfb37988", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f0ad4ff930a7c417", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_03e0124724faac98", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_909d567ae7fb323b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a27aa47f70001515", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a388c9de90a7c75c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_26ce40acc5c5f60c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8a0e22701226d5d3", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8b729f2b5fc9618c", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_981b5725ddc0e5e0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_acc7ada3a451d292", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d57138da938ff694", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3fe7df72d87740b9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_58727f537dcf0907", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f5f0e584dd6b7f22", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_31f7e0a764b8898f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_56fd707a27dd8717", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_11c5c35aa5d5e4b2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_40c4ba2698f6a91a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6b925e4c34b2d496", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b8cb88badf9518e6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5b743a47deeb0fdc", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7dea5225e36748f7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9ec90905484a0c65", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c1cef6a41a379d91", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d39253fe63a75a91", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f788ee71cddb7d57", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_834e566ab9d558bd", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_74a69fb6943c985a", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_1b9227a98a4e0c28", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1dbd7dc9965e8c29", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_898fc26a51256c79", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7da6f422b191f1d1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d3a35f06a2289a02", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1a063945f8863c04", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f4e5f4ed9426cdf0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f350de35cdd43fd9", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_070f6a99e2b4b88e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_10e38daa636dedb4", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1f7c94a02224d358", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0036345355df214b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9078261042b46ad6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bc76d1244f130144", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_401846b0ae4c68ac", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_24611564b940e76b", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0570a31ab54efba6", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2b4bbbefc0e1799c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2ce4c28acbdd2d78", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_146da913d16f49af", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5838a88e68c4b831", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_76074d6ab910d464", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a2bf7b024a0bb143", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_ad290422acac797e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_1d26954b9ffa8c2a", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_32d750363768725d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_27235a737f51d7fa", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_51a1e5f6c3fd49fa", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ad907adccd93c1a3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_db4c00bac2e28d7d", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_453a9aefd7e26544", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_68520e3f3924ace0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d55fdd50d578b5ab", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_38c7285a3e0ee774", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_48a2e5f2a7bd13a6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_97e04d0f4aa4c7b2", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_accb602aeb89ea61", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c912bb495e976405", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_50b0c3dfa0f71d93", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f92cab4056838133", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0193d30507061a0f", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1bb4e9e0d3c80e37", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3b4ab93fe28ff192", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_76883b4b4c7385a0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bfe37070bc291671", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d8ff1b637969b15a", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e2cb012a6ac6054c", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fb7a253ac2941cf1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0a1d0d773c1caa03", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_145235471542ec54", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_39b0b889f687abef", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5eb9ae6618a81f2e", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_72406ed03af9ba35", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_60c8276e0741934a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_869ba00bb231e93b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_933761141b7362b7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c23b915a4e0b9ac7", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f46824fa6fd1b985", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_324f55b1f2294b7a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_361214a7db89960c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d5234ba4bedd9206", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f152538470f75747", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_358bfe3a8c2b2de4", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_552e36f87361aeac", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6a289abb5c1f8c16", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_72b3123b60e5d923", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2ce6803db8448226", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_473703b1c0d73909", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a4a834647e6d484e", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_00d00c8e45a2e90d", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5e47b44858ebcbab", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6ae85a32a240e292", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_932abd6bc9b1a2c1", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0bc8faa8d9fae306", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0cf4651bf413e0d7", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8576e623e9f9a1d4", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9691a3326315f04c", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_17eeb23980b1d846", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5f8335fc8c48ab3a", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_72498cfc5980f84f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_87031c2676353dab", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_887d8267908f5ddd", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ed266ecdd16c98f7", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cc0c7104f1863ef8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1200299af30cb69b", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_29c94663d4f4662e", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2ac26b0af5bd6654", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_47e64673eb3012b8", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_507abb7b4bc368e3", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a6ebbb5c46c9be69", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4bc3bf3e7f4f44d2", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9d0b888d8ec6e526", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a12b4a592eb30218", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_41f803ea339ca0b3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5c6d2cfa258f23fe", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_81f8888f78b63f7f", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_940fe59c5a4da3a3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_bcc88d989c8620c8", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4ccbbc4efbdf2e69", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4f4a13c57bae202a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a840b5ca8cd9ab42", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f8892ad422a7303c", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_01a1e95f0be863fb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2066155081929cbe", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9edeab33261ba617", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cda2fc8fe3f5dae0", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1b5604635f20294c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_21990aebe9388cd1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4ef6ef6b67309421", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5caa5e5475473d7f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5d76e42b80a49357", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c8b2d36ee4c61ccb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f0730991f7aaffe9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_45814196d6d96e50", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_64ff2a799e658e2a", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_74009cf5abb6222f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cc0ce6831ba8187d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d437991dbc4f4098", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0ac6709fc7445c05", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bdf665ec24528dd5", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c1805488c89a6b20", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0f113eafbbd22c14", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7731e871d5e97692", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_eac998b30059b2f8", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_86d99e62d714c52d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7a78e99ea8fd9668", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c3cbcb60cffe99a3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ea924af617c8ea73", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b5bc868e5871dd4b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_00006733c7aabfd4", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e747696f0a56cf6e", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d94461f03e891232", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_151ee957a4538205", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_aadb5f885120c991", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_39666969ba302f59", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_396e78d1a1b995f3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5df2bc6e7257d8a1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_92110409651001d1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fdfd6602d7b4fc13", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3c838c027d3547c6", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a48992ef2321d0d0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_156d60136857163e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_86082bb0c12b33ce", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b5c6a54bb796fd6e", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_255e37bbbec6be39", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_30b999431c508267", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8e5d26298ddec480", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_92dab34bc67d74ec", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_964ec8efae307be2", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a055316e14960594", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_de94cb515331b9e1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d26d654582f5dc64", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6d38e00d9f28a92e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2e0fc6c3d858ac1d", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9953bb5327256768", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_92fff79020ce94f0", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5343c9d96f748d1d", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2db16c5bd59fa99f", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_26bea7c56d04ac89", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e8ec75809fb6ddcb", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2a60f65cdef59679", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3d4592c4f66e8aa8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e9cfe92f75548f01", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_505b14a34e21b791", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_839a8d4587b8542c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_097371616488ee5e", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e7f6a05193878b8d", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_86964ffdb664466e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_9fe8ea28ebe9bc9f", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cba91a55f7865bbf", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8ff3bc9707673d5a", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8581d3df61f86e88", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a8f50520d45b564e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ecfac94f3d6dfdd4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fbdf9a6939df7b87", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_42c4b9b4ef8a1262", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_710b34bc2c005ca1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c3cc501736acf08c", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8dfcd92658f05909", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cc884c5d5b224a6a", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b31875d54b237659", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_efff5e2330678888", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6418420489d22721", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f46ae3b71357d97f", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9142762853606b1b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_895be6f98cc32ae8", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_631f7f967290926a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c1648fff95cb0c5e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c6536a8959caf4c0", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d53921a934a9f3c8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_724a8fd4f272abb4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_edca1120f9c83bee", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_12d4bded7b44e8c8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_939e5c962e5b7d42", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_98457e79a2d06cd6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b32081a4e2a38c00", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f72c1505d54a3d02", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_fbb143517c802592", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_200fa7c808ae5eab", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5c4f1cb149c277c2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_054fc6e98a075e2b", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0a3514b0c1001136", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_18f9e302b55ee2dc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1aca5bb6e7f72318", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_607f391670643f55", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6a725065ee1ec2be", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_864f18f8e12540ac", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a8d88653a855ad82", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a943f8516d6cd418", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c2a3d2194ae52fd5", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ebab158f921bff69", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3079bd4c630820f9", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_88db16270f492423", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_00e8208d7be241f9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_11019a611fe6672e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e7c4ca0ee9d137c7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_88fe4a5145798aba", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2774424f37d74756", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fee9c0bb6403bbf4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2b59f6265b96573b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8bad19442e450735", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_17b81f51320342e2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_04939472635f9f6f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5a85838df6f4ddef", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b5c4fbe15dfd5595", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c7d1cf481fb272a8", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0d1f1252435f16ed", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ac678311fcf1614c", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ebe33e0c3a87387a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_006262b3388a973f", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3f8615e5fd9776c2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_82da0de0448e2e21", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_95b007fbb1ec7a51", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_56097222a97649ec", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a253d3b09d74b9b9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e384bd08e0982f65", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_565ede4094d595f1", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c53fb4cb0c82f8f6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7f66d2d96c04fcf5", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1713f55ddb85a481", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_1f05f2e6ede5bd8f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_275d65fc2529fb5c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c54ef769dfe09236", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f55a51d7101bd2b3", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f9be44e1b54b8568", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7369cf0380a3454d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d5f058bdae4e5cf7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_33f4285e48297e94", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_388b122d57257f74", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_549cf0ad43c3eb23", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_aa00e7fa265318fe", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d00fcad8e97eaea9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_de93dcd90a10d7bc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2644f36089ae831d", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2ec84cdf7a89806c", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_976fa7ea75701f32", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b4f2068cf8658e05", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ccdfbd9bd226c9eb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d5c245db60dda2e8", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0161e21eb547bd7d", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4e00fb72f5d2ebaa", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6b032dbfda6efca3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_771bdad4e9df5a0c", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_914fdd0d61eb773a", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8caedf3c010947f0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8f9bc1a6dd3dd5b7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d1e3313c7272fc4f", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d50ed84f1714446a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d511985941507f08", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_82ae1b23b3f05248", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_98bac35e2776a56d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bc0981f4a586713f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_3ccc68a117a98ae3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_32c44a330ef17a4b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_58f92ccc1b4e1173", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_74ace16e6288e3e5", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_83bb870c4f9918b1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f7e7ffce8385dbdf", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ff1ca0ae73dcbf8e", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ff9add671ea70f54", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b8073dc7a7820110", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_06976108362c2360", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_11f4b3c52b7baf84", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_244473e45e962842", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_44d0bbbc14e2fc52", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7ac33d693e22130e", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_82fe96a291887fed", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9f8003f4ee092d90", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_536e0f6d26f559b2", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_72e0058742eb49ac", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_82d60280e511dcc1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8ce851c55237489e", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_a653d7f68b99eab2", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b56a7fab5fce7ec4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cfc82c69cf1ebaa4", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3ee280c0eb9e0cf2", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8195bf36596fc6c8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_822b8969d061d1b7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f57696993069d408", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_71fd2ead043bc744", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4853737a840cfb29", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_616ddf8b9542212b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_73233c646065c805", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8035ac1574dd3902", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f432fb6148bf2e76", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_540dfd519af9e2c8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_77cb810d5c8ef159", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_346572996de4492e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9108cb299fd69ac5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4054796e5beed6dd", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b6d38af3151ed02d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f13736c70dcfe093", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_83d09545245c0011", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fbc8137acb928355", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_61ce9fba4d04b30b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_9dcd0c16fa2525a3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cb439e74eebfd263", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_e4645ea7b3566cc6", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_060243552972d1a3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_52986c32d8209226", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2fa644a64e3871a9", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_330af2fed751b424", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_46af949d38409a21", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9549e76b03a9932c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e8ce9b122bc0c0ff", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_59ef96ef85bc2a23", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_879d035d0db209c1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_89b2fe2cf92ca351", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_92781a0b537f6dad", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c88d65a1ab7d9506", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_c891b77331ed6a3c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cc97f7e1a111eb61", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d575b8ddb323776c", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_e57d737c60dfb86e", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_fbd7d3724125d75c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fc069790abb22040", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0dd7ad421404aa03", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_29833449d55e69ca", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2d62a1d2c88e60f0", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2ffde9ceb585d0dc", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_86c04e7d1ac655de", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8aa6933691b36c28", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ac231a7a92c9e4f0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e4ceedeeaeaa0c55", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e6eca33d7d091782", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ea7f94d1a8193424", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8ec7f7f491ba677d", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b7d410146b095482", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_056b79601443992c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2d729595bb7e22c9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3f9e3bc280bf3067", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4e6a7b1f37c9f717", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6c5a07c5e0bc0df3", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_adfdb7c8b5b812a7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b681196f533903b7", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_bd420f868704c0cb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_07e0923bbc1fad05", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_22508587930a29c9", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_374db66a91c765ae", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3a3cb3ed440a9858", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3e4497df454263ca", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_58d373bcb46b58e0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_601cfbfae131ab17", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_62ef4b56e4df42d4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_90bd3f9c08699b80", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_9d68e6ea53eeffba", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9edd04dcf2ab4a0b", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a1c129f0271bc7f2", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_bdefe0cf7f99c77c", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d5ffa6533e2a12f5", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e604530132c8ae74", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e7507f7687cb26b6", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1cd0cd6f7f844fdb", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bad06ecbb8fe6b8a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c3af32dfdfbf2b3d", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_034d4875076c2907", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0f40376632558c18", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_76cb9aebf25df5fd", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b38b406b0c0be6bc", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ef25850c4be72572", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1a1ccc1b7058c8ee", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_30f760c8a4c5c181", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bae38e10c930e556", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_75c1f55804f0c7d9", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_87f439daede4e24e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b0de83958d40bc28", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ed06337b964d06ff", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_fe32f2a2e64d1da1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4996c43e1be8f575", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_49d7e7ca40cbc340", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b5070fbc4d1567a7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_df4373827a385b4f", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_4634f50b7d96810e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_55eb3babab97ac9a", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_617ccf3606265df1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_77479ef8d0acbc56", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_cffd24dc6939ca54", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6e20d71997b291d8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a6b3427c7b51c95e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0222bc561911c57a", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7cc5b2455ed28b23", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ad84825b3f64e798", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d2a8d6cbd3dbac05", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_facbc2f986b9851a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2d53f328f5997740", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_47f684abcc303f4d", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_48f49414e78c7ef4", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_7b716a4e31006cf6", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_80da2cef2f830e93", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8d93678ad0a867da", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9de1ebfc972ae06a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b03996f63626708f", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_72086f07cc352067", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8f0a2e81dbb58e4c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_99a25cc9dae1b9e3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3ec87719e6df3204", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_79b55e20f2dbb395", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_feabaf056cc49f29", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_42308f005926a82e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_39a38ce575511f16", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b197972b6a31dd74", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cca429471fd22fc1", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cf6f96725f5884a7", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_dd73be08a7e1cfe2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ebce367169add69c", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_48f25d05c86ad893", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b2d641de6e2a9642", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_098cec137336d07b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3f42ee1016218188", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_57a786b684cb546b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b35aa63a4ecb5a2d", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c3cef532eb96febc", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_cf185ab4cfafb425", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0d20752ef24e367c", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8dfdff870c2143a2", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2d7810aab8a277c1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_448d68cdfadaca7e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_858bc12139f67709", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b8d9050a4db9fb96", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fb995b4a4668ba2c", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_294c78a82780aebc", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_801826774777b56c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_83a6fcb5a7a575d8", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_85aa38ecd408f67e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9fc3b5403ca4804f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_121b1f251203a84a", "label": "logistica_canal", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1f40c209b192b420", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2ef5cde6ecaaeeae", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_56b5d2bbe175b4bc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_595b84a16c81aa97", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_6191b1d49353285d", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_65323ad8f545a31b", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_899561d87e480e0e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_8d5e702001201ff2", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_94bcef689912962f", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b17c3b7820fb7ec3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b560e06181b5c35e", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c1e799e1209413f0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_d0e39d948061a395", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_dd6d756f6843f9fb", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0abc9e79ef4b99e3", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_194f5448212d475d", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2ef8e4c6c61b98fa", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5432c02835a49e41", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9b7a81100a1710a9", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ab8312cbe645be01", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_abf1c8c863b10b29", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ee5063c514621275", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3954bc6e0293373c", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_5ea8607372b58b54", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_bf7bbfd994ff06c9", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_fd8052609f9c2e02", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_00aca046723506d5", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_029ba7f0bcb4cdbc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_4da4083ad55c46e2", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1c7787bb3d9e4861", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e92b49c5b42a5cc2", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e12523da20e12edb", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_923070b477479941", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e66e4785c1eccf19", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_6faf2bff68e8fa4f", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_44f8ce26b64de274", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_412a3e33a42c3829", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f9d24d4be1b1f478", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_921722ceac924e31", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_cd345ce45b2aacc4", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1511bbffed67eca8", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9de181fc05c922ac", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1791cd5a1bcf94a1", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_617919f9dcab52df", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_72020673e6ca464c", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_27536ec56780be99", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2a4224f0ad160125", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b4b838bca8f34e7e", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_fbfc0bc874d44f93", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_518c000d49921a20", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_25714dceed79f82f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3abb28b5d8798cdc", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1c6d8cb493938936", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_07e09608451b575c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_762e2c3d1b202fd3", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_aadab2ef62517fa1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_b61e0e7873e9817a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a8880a4de0b142ea", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_048a031b6c2ae4f0", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_070267d40bdc6d08", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f6ca5d164948b67b", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_59b4f2b8930e179f", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_195f153cd8a91417", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_07dfb586865b60f3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_00707d4eb439bb47", "label": "eventos_naturales", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_9d3221c59bad664f", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_34ec23de659835cc", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f925fac3816fe3d7", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_8e5685256320eb1d", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e4bf8f806263e402", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_e778154c312d0303", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_1276b7ad8874be52", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_2d5cae6bdc191577", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_17d8778eb2b97ef0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_2dcbf84e2b74a8b4", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_22c14cedb8296e13", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_a77dc554a0d49bfc", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f402f1c874cf0df4", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_b90e832b182f1114", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_144fda2aaa9b12f3", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_f94391c558606ac1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_ac7f596bb3dd1017", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0e6c783388e9a799", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_102bce1ac967384a", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_3d8e176a6b0d0474", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_96caf7104c3f4cac", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_fb81e240af1620a1", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_e6d294c22d5ba0bf", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_cd73f54cb7e0f734", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_07a599a0354e6598", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_731b82c4337166bb", "label": "servicios_publicos", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_7ec07b57b74f8924", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f7f47c30cd9607f8", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_c049aa1aad1d4868", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_14a4b97865bf7290", "label": "turismo", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_5ddd9e6a9ade949b", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_f61dd23d68f66106", "label": "economia", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_d116edbd8187982c", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_0090006cf8c61003", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_bdac83bba51e1d16", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent"}
+{"articleId": "art_45ebb68ccfe9bce0", "label": "indeterminado", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}
+{"articleId": "art_30141b4460487963", "label": "regulacion", "labelMethod": "agent_review", "labeler": "codex-agent", "difficulty": "difficult"}

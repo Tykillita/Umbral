@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshotId": "20261007-cfa338b6",
+  "sourceArticlesSha256": "4c719044cb745234d370d5263ed96e2a5b67f110f776c6db462b9577e578c070",
+  "sourceReviewLabelsSha256": "b2cc6e02ad7777ea51e01b9ccca28f13cc70b16b2be43cde5e79ec3bc11435d6",
+  "outputLabelsSha256": "14c3d5ea7444a169da6a0a1dd79e688ac01147e702a9192e6d2b176b66dc6b59",
+  "labelMethod": "agent_review",
+  "labeler": "codex-agent",
+  "reviewBasis": "headline_only",
+  "groupSplitSeed": "umbral-laya-agent-review-split-v1",
+  "createdAt": "2026-10-08T08:25:42Z",
+  "total": 991,
+  "eventGroups": 910,
+  "groupsBySplit": {
+    "train": 400,
+    "validation": 96,
+    "calibration": 141,
+    "test": 183,
+    "difficult": 90
+  },
+  "countsBySplit": {
+    "train": 448,
+    "calibration": 151,
+    "validation": 101,
+    "test": 200,
+    "difficult": 91
+  },
+  "supportByClassAndSplit": {
+    "train": {
+      "indeterminado": 268,
+      "regulacion": 34,
+      "economia": 68,
+      "eventos_naturales": 7,
+      "servicios_publicos": 32,
+      "logistica_canal": 16,
+      "turismo": 23
+    },
+    "validation": {
+      "indeterminado": 59,
+      "servicios_publicos": 8,
+      "eventos_naturales": 2,
+      "economia": 15,
+      "logistica_canal": 4,
+      "regulacion": 8,
+      "turismo": 5
+    },
+    "calibration": {
+      "indeterminado": 89,
+      "servicios_publicos": 11,
+      "economia": 23,
+      "logistica_canal": 5,
+      "regulacion": 12,
+      "turismo": 8,
+      "eventos_naturales": 3
+    },
+    "test": {
+      "servicios_publicos": 15,
+      "indeterminado": 118,
+      "economia": 30,
+      "turismo": 10,
+      "regulacion": 16,
+      "logistica_canal": 7,
+      "eventos_naturales": 4
+    },
+    "difficult": {
+      "indeterminado": 30,
+      "logistica_canal": 10,
+      "regulacion": 25,
+      "eventos_naturales": 1,
+      "turismo": 7,
+      "economia": 7,
+      "servicios_publicos": 11
+    }
+  },
+  "interpretation": "Acuerdo con revisión de IA sobre titulares; no equivale a validación humana/editorial."
+}

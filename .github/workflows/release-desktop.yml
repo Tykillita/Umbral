@@ -1,0 +1,84 @@
+name: Release de escritorio
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    name: Compilar y publicar instalador Windows
+    runs-on: windows-2022
+    timeout-minutes: 240
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: apps/web/package.json
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            apps/desktop/uv.lock
+            apps/api/uv.lock
+            pipeline/uv.lock
+      - name: Validar que el tag coincide con la versión del instalador
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $package = Get-Content apps/desktop/package.json -Raw | ConvertFrom-Json
+          $lock = Get-Content apps/desktop/package-lock.json -Raw | ConvertFrom-Json -AsHashtable
+          $runtime = [regex]::Match((Get-Content apps/desktop/pyproject.toml -Raw), '(?m)^version = "([^"]+)"$')
+          $version = $package.version
+          if ($tag -notmatch '^v\d+\.\d+\.\d+$' -or $tag -ne "v$version") {
+            throw "El tag $tag debe ser v$version y usar versionado estable."
+          }
+          if ($lock['version'] -ne $version -or $lock['packages']['']['version'] -ne $version -or !$runtime.Success -or $runtime.Groups[1].Value -ne $version) {
+            throw 'La versión de package.json debe coincidir con los locks de npm y Python.'
+          }
+          $escapedVersion = [regex]::Escape($version)
+          $changelog = Get-Content CHANGELOG.md -Raw
+          $notes = [regex]::Match($changelog, "(?ms)^## \[$escapedVersion\][^\r\n]*\r?\n(?<notes>.*?)(?=^## \[|\z)")
+          if (!$notes.Success -or !$notes.Groups['notes'].Value.Trim()) {
+            throw "Faltan notas de publicación para $version en CHANGELOG.md."
+          }
+          git fetch origin main
+          git merge-base --is-ancestor $env:GITHUB_SHA origin/main
+          if ($LASTEXITCODE -ne 0) { throw 'El tag de release debe apuntar a un commit integrado en main.' }
+      - name: Instalar dependencias de Node con locks
+        run: |
+          npm ci --prefix apps/desktop
+          pnpm --dir apps/web install --frozen-lockfile
+      - name: Preparar runtime de escritorio y checkpoint Laya fijado
+        shell: pwsh
+        run: |
+          uv sync --locked --project apps/desktop
+          uv run --locked --project apps/desktop python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='convaiinnovations/laya', revision='7b928d828b7b0e022f929d9bd2e44165aa270148', allow_patterns=['multilingual/**'])"
+      - name: Compilar y publicar instalador NSIS con updater
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: .\apps\desktop\build.ps1 -Installer -Publish
+      - name: Adjuntar SHA-256 del instalador a la release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $checksums = Get-ChildItem -LiteralPath apps/desktop/release -Filter '*.sha256' | ForEach-Object { $_.FullName }
+          if (!$checksums) { throw 'No se generó el SHA-256 del instalador.' }
+          gh release upload $env:GITHUB_REF_NAME @checksums --repo Tykillita/Umbral --clobber

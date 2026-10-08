@@ -49,7 +49,7 @@ def main() -> int:
     snapshots = Path(__file__).resolve().parents[1] / "data" / "snapshots"
     snap = a.snapshot or snapshots / (snapshots / "CURRENT").read_text(encoding="utf-8").strip()
     snapshot_id = json.loads((snap / "manifest.json").read_text(encoding="utf-8"))["snapshotId"]
-    out: dict = {"schemaVersion": "1.1.0", "snapshotId": snapshot_id,
+    out: dict = {"schemaVersion": "1.2.0", "snapshotId": snapshot_id,
                  "generatedAt": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"), "sections": {}}
 
     cls = load(newest("classification-*.json"))
@@ -69,11 +69,42 @@ def main() -> int:
                         "geoMacroF1": round(r[scope]["geo"]["macroF1"], 4) if r[scope]["geo"]["macroF1"] is not None else None,
                         "confidenceVsAccuracy": r[scope]["confidenceVsAccuracy"],
                         "probabilityQuality": r[scope].get("probabilityQuality"),
+                        "calibratedProbabilityQuality": r[scope].get("calibratedProbabilityQuality"),
                         "supportByClass": {k: v["support"] for k, v in c["perClass"].items()},
                     }
         out["sections"]["classification"] = sec
     else:
         out["sections"]["classification"] = {"status": "pendiente", "reason": "Sin etiquetas humanas para el snapshot actual."}
+
+    agent_cls = load(newest("classification-agent-*.json"))
+    if (agent_cls and agent_cls.get("evaluationKind") == "agent_review"
+            and agent_cls.get("labelsTotal", 0) > 0
+            and any(r["snapshotId"] == snapshot_id for r in agent_cls.get("results", {}).values())):
+        sec = {"status": "ejecutado", "evaluationKind": "agent_review",
+               "interpretation": "Acuerdo con etiquetas revisadas por IA; no es revisión humana ni calidad editorial validada.",
+               "command": agent_cls["command"], "ranAt": agent_cls["ranAt"],
+               "labelsTotal": agent_cls["labelsTotal"], "byClassifier": {}}
+        for name, r in agent_cls["results"].items():
+            if r["snapshotId"] != snapshot_id:
+                continue
+            sec["byClassifier"][name] = {"snapshotId": r["snapshotId"], "classifier": r["classifier"],
+                                         "modelVersion": r["modelVersion"]}
+            for scope in ("all", "uniform"):
+                if scope not in r:
+                    continue
+                c = r[scope]["category"]
+                sec["byClassifier"][name][scope] = {
+                    "n": c["n"], "macroF1": round(c["macroF1"], 4),
+                    "accuracy": round(c["accuracy"], 4),
+                        "confidenceVsAccuracy": r[scope]["confidenceVsAccuracy"],
+                        "probabilityQuality": r[scope].get("probabilityQuality"),
+                        "calibratedProbabilityQuality": r[scope].get("calibratedProbabilityQuality"),
+                        "supportByClass": {k: v["support"] for k, v in c["perClass"].items()},
+                }
+        out["sections"]["classificationAgentReview"] = sec
+    else:
+        out["sections"]["classificationAgentReview"] = {
+            "status": "pendiente", "reason": "Sin evaluación asistida por IA para el snapshot actual."}
 
     clu = load(newest("clustering-*.json"))
     out["sections"]["clustering"] = (

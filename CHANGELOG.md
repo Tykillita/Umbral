@@ -6,15 +6,27 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ## [Unreleased]
 
+## [0.1.0] — 2026-10-08
+
 ### Added
 
+- Actualizaciones de Umbral Desktop desde GitHub Releases: descarga estable en segundo plano, aviso integrado con reinicio voluntario y workflow Windows que publica el instalador, metadatos de Electron y SHA-256 al crear un tag de versión coincidente.
+- Floating comic-style motion control with system, reduced, and full modes; the web browser and desktop app save independent preferences.
 - Public web mode without accounts: drafts, versions, reviews, impact notes and weights are stored in each browser's IndexedDB, with portable JSON copy/restore and Markdown export.
 - Stateless public API under `/api/v1/public` (agenda, topic, queries, drafts, validation), with a global Gemini quota of 20 calls per UTC day (retries included) and a citation-backed template as fallback.
 - Daily snapshot feed (`data/current.json` plus the last seven valid snapshots) that the API and the desktop app download only when it changes, verifying SHA-256 and keeping the last valid snapshot on failure.
 - Windows desktop app (Electron + NSIS, per-user) bundling the API, the pipeline, PyTorch CPU and the pinned Laya weights; offline reclassification in a separate process.
+- Local Laya calibration workflow for headline classification: agent-review provenance, full-precision logits, model-bound temperature and threshold profiles, an untouched-test gate, and shared web/desktop profile packaging.
+- Local preparation and cache verification for a calibrated Laya artifact, bound to the fixed review labels, base snapshot, split hashes, and test gate.
+- Hosted verification can require an exact Laya model version, calibration profile, and profile hash from the API's active snapshot.
+- Production workflows can prepare and verify the calibrated artifact, promote a changed versioned snapshot, and gate hosted rollout on the exact model and profile identity; the daily workflow remains disabled by default.
+- Calibrated Laya snapshot `20261007-e704e952` with 991 real headlines, preserved raw logits, and the baseline snapshot retained for rollback.
+- Desktop app: the native Windows title bar is replaced by a comic-style one (minimize, maximize/restore, close; drag area, custom tooltips, keyboard and 44 px targets) on the startup screen and in the app. The window is frameless; its controls go through a restricted IPC channel limited to the app origin and the startup page.
 - Custom, keyboard-accessible controls replacing every native browser control, with a static guard and end-to-end tests.
 - Floating evidence assistant with compact and expanded layouts, minimized dock, scope-aware independent questions, readable citations and query metadata, retry/edit states, response copy, and per-identity IndexedDB conversation history.
 - Assistant: in-flight queries can be cancelled (a real `AbortSignal` through the HTTP, browser-workspace and mock API layers), completion/cancellation is announced to screen readers, and editing a failed question asks before replacing an unsent draft.
+- Local model selection: Borradores and the evidence assistant show only connected and available providers, support ChatGPT OAuth and the existing Claude CLI subscription session, retain the assistant choice per identity, and explain when a provider becomes unavailable. No automatic switch to another personal account is made.
+- Assistant model picker: the provider and active model now have a dedicated, full-width control, while account management is a separate action; the option list remains legible on narrow desktop panels.
 - Assistant sources: answers now cite with numbered markers (`[1]`, `[2]`…) instead of raw evidence ids; each marker is a keyboard-accessible button that opens and focuses the matching source. Each source shows its cited passage (with the matched terms highlighted), sources excluded for containing agent-directed instructions are listed without their text, and every answer states that it comes from rules over sources, not an AI model.
 - Assistant retrieval: economic questions no longer abstain because of ordinary verbs or adjectives ("creció", "alta", "según"). Only unlinkable entities introduced by a preposition or a capital letter ("de Marte", "según el FMI") cause an abstention. Natural synonyms ("habitantes", "la economía creció"), year ranges ("entre 2021 y 2023"), an explicit note when no country was named (Panama is assumed), a statement of which query terms are covered or unsupported in partial answers, and a guard that reports the figure without presenting an annual aggregate as proof of a claim. The agenda is only computed for agenda questions.
 - Assistant follow-ups: `POST /queries` accepts an optional `followUp` (the previous answer's `followUpContext`: snapshot, intent, topic/evidence ids, countries, indicators and years — identifiers only, never text) and returns `resolvedQuestion`, `followUpContext` and `followUpSuggestions`. Elliptical questions ("¿Y en Colombia?", "¿Y la inflación?", "¿Qué falta verificar del primero?", "¿Cuáles son las fuentes del segundo?") are resolved by rules; self-contained questions ignore the context and unresolvable ones ask for clarification instead of guessing. The panel offers follow-up chips and a "continue with the previous context" switch.

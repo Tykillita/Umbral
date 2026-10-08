@@ -420,8 +420,8 @@ export const MOCK_HEALTH: Health = {
   persistence: 'memoria del navegador (mock)',
   provisional: true,
   providers: [
-    { name: 'plantilla', mode: 'plantilla', available: true, external: false, localOnly: false, model: null, reason: null },
-    { name: 'gemini', mode: 'modelo', available: false, external: true, localOnly: false, model: null, reason: 'No disponible en modo mock' },
+    { name: 'plantilla', mode: 'plantilla', available: true, external: false, localOnly: false, model: null, reason: null, signIn: null, account: null },
+    { name: 'gemini', mode: 'modelo', available: false, external: true, localOnly: false, model: null, reason: 'No disponible en modo mock', signIn: null, account: null },
   ],
   rulesVersion: MOCK_RULES_VERSION,
   serverTimeUtc: MOCK_CUTOFF,

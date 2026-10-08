@@ -27,9 +27,11 @@ from .connections import (
     ModelsResponse,
     ProfileChoice,
 )
+from .connections_claude import ClaudeConnection
 from .errors import ApiError
 from .models import (
     CaseView,
+    ComposeRequest,
     ComposeResponse,
     DraftEditRequest,
     DraftRequest,
@@ -49,6 +51,7 @@ from .models import (
 )
 from .public_models import (
     PublicAgendaRequest,
+    PublicComposeRequest,
     PublicDraftRequest,
     PublicDraftResponse,
     PublicQueryRequest,
@@ -188,7 +191,7 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
 
     api = APIRouter(prefix=API_PREFIX)
 
-    def personal_connection(request: Request):  # noqa: ANN202
+    def local_only_guard(request: Request) -> None:
         from .errors import Forbidden
 
         host = request.url.hostname
@@ -197,7 +200,26 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
             raise Forbidden("Las conexiones personales requieren una sesión local en localhost.")
         if origin and urlparse(origin).hostname not in {"127.0.0.1", "localhost", "::1"}:
             raise Forbidden("El origen de la solicitud no es local.")
+
+    def personal_connection(request: Request):  # noqa: ANN202
+        local_only_guard(request)
         return get_services(request).providers["chatgpt"].connection
+
+    def claude_session(request: Request):  # noqa: ANN202
+        local_only_guard(request)
+        return get_services(request).providers["claude"].session
+
+    @api.get("/connections/claude", response_model=ClaudeConnection, tags=["conexiones"], responses=_ERRORS)
+    def claude_status(request: Request, user: User) -> ClaudeConnection:
+        return claude_session(request).status()
+
+    @api.post("/connections/claude/login", response_model=ClaudeConnection, tags=["conexiones"], responses=_ERRORS)
+    def claude_login(request: Request, user: User) -> ClaudeConnection:
+        return claude_session(request).login()
+
+    @api.post("/connections/claude/logout", response_model=ClaudeConnection, tags=["conexiones"], responses=_ERRORS)
+    def claude_logout(request: Request, user: User) -> ClaudeConnection:
+        return claude_session(request).logout()
 
     @api.get("/connections/chatgpt", response_model=ConnectionsResponse, tags=["conexiones"], responses=_ERRORS)
     def connection_status(request: Request, user: User) -> ConnectionsResponse:
@@ -254,7 +276,7 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         )
 
     @api.post("/public/queries/compose", response_model=ComposeResponse, tags=["publico"], responses=_ERRORS)
-    def public_query_compose(body: PublicQueryRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
+    def public_query_compose(body: PublicComposeRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
         return svc.public.compose(body, user)
 
     @api.post("/public/drafts", response_model=PublicDraftResponse, tags=["publico"], responses=_ERRORS)
@@ -363,8 +385,9 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         summary="Redacta con IA (opcional) la respuesta con fuentes de una consulta; ante cualquier fallo conserva la de reglas",
         responses=_ERRORS,
     )
-    def queries_compose(body: QueryRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
-        return svc.compose_query(user, body)
+    def queries_compose(body: ComposeRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
+        request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
+        return svc.compose_query(user, request, provider=body.provider)
 
     @api.post(
         "/topics/{topic_id}/drafts",

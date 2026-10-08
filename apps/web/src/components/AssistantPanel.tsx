@@ -1,17 +1,19 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import {
-  Bot, ChevronDown, History, Maximize2, MessageSquarePlus, Minus, Minimize2, Trash2, X,
+  Bot, ChevronDown, Cpu, History, Maximize2, MessageSquarePlus, Minus, Minimize2, Settings2, Trash2, X,
 } from 'lucide-react';
-import type { QueryContext } from '../lib/api/types';
+import type { ComposeProvider, QueryContext } from '../lib/api/types';
 import { authState } from '../lib/auth';
 import {
-  exportAssistantMarkdown, newAssistantId, turnToMarkdown,
+  exportAssistantMarkdown, loadAssistantComposeProvider, newAssistantId, saveAssistantComposeProvider, turnToMarkdown,
   type AssistantConversation, type AssistantTurn,
 } from '../lib/api/assistantHistory';
 import { useHealth, useTopic } from '../lib/hooks';
 import { useApp } from './context';
 import { Button, Notice, inputCls } from './ui';
-import { Modal, Tooltip } from './ui/controls';
+import { Modal, Select, Tooltip } from './ui/controls';
+import { ConnectionsCard } from './EditorialSettings';
+import { COMPOSE_PROVIDER_HELP, COMPOSE_PROVIDER_LABEL } from '../lib/labels';
 import { Composer } from './assistant/Composer';
 import { HistoryView } from './assistant/HistoryView';
 import { TurnView } from './assistant/TurnView';
@@ -21,6 +23,8 @@ import {
 } from './assistant/shared';
 import { useAssistantHistory } from './assistant/useAssistantHistory';
 import { useAssistantQuery } from './assistant/useAssistantQuery';
+
+const COMPOSE_PROVIDERS: ComposeProvider[] = ['gemini', 'chatgpt', 'claude'];
 
 function IconAction({ label, content, icon: Icon, onClick, testId, pressed }: {
   label: string; content: string; icon: typeof X; onClick: () => void; testId?: string; pressed?: boolean;
@@ -39,6 +43,10 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
   const currentTopicTitle = topicQuery.data?.summary.title ?? '';
   const auth = authState();
   const namespace = `${window.location.origin}|${api.kind}|${apiNamespace()}|${authMode}|${auth.uid ?? 'anon'}`;
+  const [composeProvider, setComposeProvider] = useState<ComposeProvider>('gemini');
+  const [composeProviderNamespace, setComposeProviderNamespace] = useState<string | null>(null);
+  const composeProviderLoaded = composeProviderNamespace === namespace;
+  const [accountsOpen, setAccountsOpen] = useState(false);
 
   const inFlight = useRef(new Map<string, AbortController>());
   const history = useAssistantHistory({ namespace, busy: inFlight });
@@ -87,14 +95,44 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
   const turns = activeConversation?.turns ?? [];
   const latestContext: QueryContext | null = [...turns].reverse().find((turn) => turn.result?.followUpContext)?.result?.followUpContext ?? null;
   const latestSnapshot = [...turns].reverse().find((turn) => turn.result)?.result?.snapshotId ?? null;
-  const health = useHealth().data;
+  const healthQuery = useHealth();
+  const health = healthQuery.data;
   const currentSnapshot = health?.snapshotId;
-  const gemini = health?.providers.find((provider) => provider.name === 'gemini');
-  const canCompose = { ok: gemini ? gemini.available : true, reason: gemini?.reason };
+  const composeStatus = health?.providers.find((item) => item.name === composeProvider);
+  const canCompose = { ok: composeStatus?.available === true, reason: composeStatus?.reason ?? 'El estado del proveedor todavía no está disponible.' };
+  const composeOptions = useMemo(() => COMPOSE_PROVIDERS.map((provider) => {
+    const status = health?.providers.find((item) => item.name === provider);
+    const hint = status?.available
+      ? COMPOSE_PROVIDER_HELP[provider]
+      : status?.reason ?? 'Consulta Cuentas y modelos para iniciar sesión en este equipo.';
+    const label = status?.model ? `${COMPOSE_PROVIDER_LABEL[provider]} · ${status.model}` : COMPOSE_PROVIDER_LABEL[provider];
+    return { value: provider, label, hint, disabled: status?.available !== true };
+  }), [health]);
   const oldSnapshot = Boolean(latestSnapshot && currentSnapshot && latestSnapshot !== currentSnapshot);
   const turnStateStamp = turns.map((turn) => `${turn.id}:${turn.state}:${turn.result?.queryId ?? ''}`).join('|');
   const retryReadyAt = turns.reduce((latest, turn) => turn.state === 'error' && turn.retryAvailableAt ? Math.max(latest, Date.parse(turn.retryAvailableAt)) : latest, 0);
   const unread = unreadCount(conversations);
+
+  useEffect(() => {
+    let current = true;
+    void loadAssistantComposeProvider(namespace).then((saved) => {
+      if (!current) return;
+      setComposeProvider(saved);
+      setComposeProviderNamespace(namespace);
+    });
+    return () => { current = false; };
+  }, [namespace]);
+
+  useEffect(() => {
+    if (!composeProviderLoaded) return;
+    void saveAssistantComposeProvider(namespace, composeProvider);
+  }, [composeProvider, composeProviderLoaded, namespace]);
+
+  useEffect(() => {
+    if (!composeProviderLoaded || !health || composeProvider === 'gemini' || composeStatus?.available === true) return;
+    setComposeProvider('gemini');
+    setNotice(`${COMPOSE_PROVIDER_LABEL[composeProvider]} dejó de estar disponible; se eligió Gemini. No se cambiará automáticamente a otro proveedor personal.`);
+  }, [composeProvider, composeProviderLoaded, composeStatus?.available, health]);
 
   const query = useAssistantQuery({
     api, history, inFlight,
@@ -355,6 +393,9 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
 
   return (
     <>
+      <Modal open={accountsOpen} title="Cuentas y modelos" description="Las sesiones personales solo se usan en este equipo. Umbral no importa credenciales de otros clientes." onClose={() => setAccountsOpen(false)} testId="assistant-provider-accounts-modal">
+        <ConnectionsCard />
+      </Modal>
       {modal && <div className="assistant-backdrop" aria-hidden="true" onClick={onClose} />}
       <aside
         ref={panelRef}
@@ -392,6 +433,27 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
             <Button variant={view === 'history' ? 'primary' : 'ghost'} icon={History} onClick={() => setView(view === 'history' ? 'conversation' : 'history')} aria-pressed={view === 'history'} data-testid="assistant-history-toggle">Historial ({conversations.length})</Button>
             <Button variant="ghost" icon={MessageSquarePlus} onClick={startNewConversation} data-testid="assistant-new-conversation">Nueva conversación</Button>
           </nav>
+          <div className="assistant-model-row">
+            <span className="kicker">Redacción con</span>
+            <div className="assistant-model-controls">
+            <Select
+              id="assistant-compose-provider"
+              testId="assistant-model-selector"
+              value={composeProvider}
+              onChange={(value) => { setComposeProvider(value); setNotice(''); }}
+              options={composeOptions}
+              label={`Proveedor de redacción: ${COMPOSE_PROVIDER_LABEL[composeProvider]}`}
+              disabled={!composeProviderLoaded || healthQuery.isLoading}
+              className="assistant-model-trigger"
+              triggerIcon={<Cpu size={17} />}
+              triggerPrefix="Proveedor"
+              popoverMinWidth={320}
+            />
+              <Tooltip content="Cuentas y modelos">
+                <Button variant="ghost" icon={Settings2} iconOnly aria-label="Cuentas y modelos" onClick={() => setAccountsOpen(true)} data-testid="assistant-model-accounts" />
+              </Tooltip>
+            </div>
+          </div>
         </header>
 
         <p className="sr-only" role="status" aria-live="polite" data-testid="assistant-announcer">{announcement}</p>
@@ -411,8 +473,8 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
               {pendingSeed && <Notice tone="info" animate={false}><div className="flex items-start justify-between gap-2"><p>Hay una pregunta sugerida desde la ficha.</p><Button variant="ghost" onClick={() => { const item = ensureConversation(); patchConversation(item.id, (conversation) => ({ ...conversation, draft: pendingSeed.text, scopeTopicId: pendingSeed.topicId, scopeTopicTitle: pendingSeed.topicTitle || currentTopicTitle })); setPendingSeed(null); }}>Usar pregunta</Button></div></Notice>}
               {turns.map((turn, index) => (
                 <TurnView
-                  key={turn.id} turn={turn} isLast={index === turns.length - 1} running={runningIds.includes(turn.id)} composing={composingIds.includes(turn.id)} canCompose={canCompose} busy={Boolean(runningId)} now={now}
-                  onCompose={() => void composeTurn(activeId!, turn.id)}
+                  key={turn.id} turn={turn} isLast={index === turns.length - 1} running={runningIds.includes(turn.id)} composing={composingIds.includes(turn.id)} canCompose={canCompose} composeProvider={composeProvider} busy={Boolean(runningId)} now={now}
+                  onCompose={() => void composeTurn(activeId!, turn.id, composeProvider)}
                   onCancel={() => cancelTurn(activeId!)}
                   onRetry={(wait) => void runTurn(activeId!, turn.id, wait ?? 0)}
                   onEditQuestion={editQuestion}

@@ -1,10 +1,10 @@
-# Contrato del snapshot de datos (`snapshot-schema` v1.0.3)
+# Contrato del snapshot de datos (`snapshot-schema` v1.1.0)
 
-Adición v1.0.3: `origin.source=tvn_news_sitemap` y `publishedAtBasis=news_sitemap_publication`, para metadatos del sitemap Google News oficial declarado en robots.txt/índice TVN. `news:publication_date` es publicación; nunca se usa `lastmod` como publicación. No se guardan imágenes/cuerpos. Al fusionar raws, la ventana se limita a 90 días reales respecto al nuevo corte. `build --no-set-current` deja candidatos sin activar.
+Adición v1.1.0: `calibrationLogits`, `calibratedProbabilities` y `calibrationProfileId` para conservar logits precisos, probabilidades ajustadas y la identidad del perfil Laya. `probabilities` sigue siendo la salida cruda del checkpoint. La aplicación web consume el snapshot generado por el pipeline; la app empaquetada usa el mismo perfil al reclasificar sin conexión. Adición v1.0.3: `origin.source=tvn_news_sitemap` y `publishedAtBasis=news_sitemap_publication`, para metadatos del sitemap Google News oficial declarado en robots.txt/índice TVN. `news:publication_date` es publicación; nunca se usa `lastmod` como publicación. No se guardan imágenes/cuerpos. Al fusionar raws, la ventana se limita a 90 días reales respecto al nuevo corte. `build --no-set-current` deja candidatos sin activar.
 
 Propietario: pipeline (`pipeline/`). Consumidores: API (carga y servicio), pruebas (T01–T10, CI) e interfaz web (vía API). Cambios de contrato: `schemaVersion` + aviso por mensaje + línea `contrato` en `docs/board/events.log`.
 
-Estado: **v1.0.3** (1.0.2 = `geoRelevance` por contenido + `geoMethod` + `geoLayaRaw`; `independentProvenanceCount` también colapsa titulares contenidos íntegros en otro; `manifest.classifier.scopeMethod`. 1.0.1 = solo campos añadidos y aclaraciones: `urlVariantsSeen`, `ambiguousCandidateIds`, `contradictionCandidateIds`, indicadores fixture, 540 filas, `effectiveDate`, claves de `probabilities`). Los campos marcados *(opcional)* pueden faltar; el resto siempre existe (con `null` explícito cuando el valor es desconocido). Si algo cambia lo haré de forma **aditiva** (nuevos campos); no renombraré ni quitaré campos dentro de 1.x.
+Estado: **v1.1.0** (1.0.3 = metadatos de publicación del sitemap TVN; 1.0.2 = `geoRelevance` por contenido + `geoMethod` + `geoLayaRaw`; `independentProvenanceCount` también colapsa titulares contenidos íntegros en otro; `manifest.classifier.scopeMethod`. 1.0.1 = solo campos añadidos y aclaraciones: `urlVariantsSeen`, `ambiguousCandidateIds`, `contradictionCandidateIds`, indicadores fixture, 540 filas, `effectiveDate`, claves de `probabilities`). Los campos marcados *(opcional)* pueden faltar; el resto siempre existe (con `null` explícito cuando el valor es desconocido). Si algo cambia lo haré de forma **aditiva** (nuevos campos); no renombraré ni quitaré campos dentro de 1.x.
 
 ## 1. Reglas generales
 
@@ -100,6 +100,8 @@ Cuadrícula completa 6 países × 6 indicadores × 15 años (2010–2024) = **54
 | `category` | string | Una de §3. `indeterminado` si `probability < threshold` o margen pequeño. |
 | `probability` | number | Probabilidad de la categoría ganadora antes de aplicar `indeterminado` (0–1). Sin calibrar (`calibrated=false`) hasta evaluarla. |
 | `probabilities` | object | `{ categoria: p }` para las 6 categorías. Baseline: suma ≈ 1 sobre las 6. Laya: además la clave `indeterminado` = probabilidad de la opción «otro»; la suma sobre las 7 claves ≈ 1. |
+| `calibrationLogits` | object\|absent | *(1.1.0, opcional)* Logits de categoría posteriores a la temperatura interna de Laya y anteriores al ajuste de Umbral; conserva precisión completa para reproducir temperature scaling. Sus claves son las seis categorías y `otro`. |
+| `calibratedProbabilities` | object\|absent | *(1.1.0, opcional)* Distribución de las mismas 7 salidas tras temperature scaling; `probabilities` conserva la distribución cruda para auditoría. |
 | `threshold` | number | Umbral aplicado para `indeterminado`. |
 | `geoRelevance` | `"panama"\|"regional"\|"none"\|"indeterminate"` | Relevancia geográfica **por contenido del titular** (regla léxica auditable `lexical-content-v2`, no por modelo ni por medio): `panama` si nombra Panamá/lugares/entidades panameñas o «B/.»; `regional` si nombra países de la lista del PDF o Centroamérica/Latinoamérica/Caribe; `none` si nombra solo lugares/actores extranjeros; `panama` también si la fuente es panameña (TVN, `.pa` o `sourceCountry=Panama`) **y** el titular no nombra nada extranjero; si no hay señal, `indeterminate`. Alimenta R de `scoring-v1` (1 / 0,5 / 0 / 0). |
 | `geoEvidence` | string[] | Términos que activaron la regla (`contenido:chiriqui`, `extranjero:trump`, `fuente_panameña:sin_señal_extranjera`, …). Vacío si `indeterminate`. |
@@ -109,7 +111,8 @@ Cuadrícula completa 6 países × 6 indicadores × 15 años (2010–2024) = **54
 | `modelId` | string | `"convaiinnovations/laya"` o `"baseline-lexical-v1"`. |
 | `modelVersion` | string | Revisión/commit HF (o versión del baseline). |
 | `predictedAt` | string | UTC. |
-| `calibrated` | bool | `false` por defecto. |
+| `calibrated` | bool | `true` solo si se aplicó un perfil validado; `false` mientras el perfil esté pendiente. |
+| `calibrationProfileId` | string\|absent | *(1.1.0, opcional)* Identificador inmutable del perfil aplicado. |
 | `provisional` | bool | |
 
 ## 7. `clusters.jsonl` (agrupación de duplicados / evento)
@@ -180,6 +183,7 @@ Todo artículo pertenece a exactamente un cluster (los sin duplicados forman clu
   "counts": { "articlesValid": int, "articlesInvalid": int, "tvn": int, "gdelt": int,
               "indicatorRows": 540, "indicatorValues": int, "clusters": int, "predictions": int },
   "classifier": { "classifier": "laya|baseline", "modelId": "...", "modelVersion": "...",
+                  "calibrated": false, "calibrationProfileId": null, "calibrationProfileSha256": null,
                   "runAt": "...Z", "device": "cpu", "predictionsInputSha256": "...", "articlesSha256": "..." },
   "sources": [ {"id","name","url","extractedAt","coverage","fields","license","terms","transformations":[...]} ],
   "licenseNotes": "...",
@@ -191,6 +195,7 @@ Todo artículo pertenece a exactamente un cluster (los sin duplicados forman clu
 - `files[*].sha256` = SHA-256 hex del archivo en disco tal cual (`sha256sum`).
 - **`classifier.predictionsInputSha256`** = SHA-256 de las líneas `"{articleId}:{inputHash}\n"` ordenadas por `articleId`. El backend puede recalcularlo desde `articles.jsonl`+`predictions.jsonl` para comprobar que las predicciones publicadas corresponden al snapshot servido.
 - `classifier.articlesSha256` = `files["articles.jsonl"].sha256`.
+- `manifest.classifier.calibrationProfileSha256` = SHA-256 del perfil aplicado (`null` si `calibrated=false`); `calibrationProfileId` identifica ese mismo archivo.
 - Si `classifier.classifier == "baseline"`, la UI debe indicar «clasificador léxico (baseline), no Laya».
 
 ## 11. Verificación

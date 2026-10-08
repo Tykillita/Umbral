@@ -9,6 +9,7 @@ import { readLocal, writeLocal } from '../lib/storage';
 import { useHealth, useRules } from '../lib/hooks';
 import { DATA_MODE_LABEL } from '../lib/labels';
 import { installInteractions } from '../lib/interactions';
+import { reducedMotion } from '../lib/motion';
 import { useDisclosureMotion } from '../lib/useMotion';
 import { fmtDateTime } from '../lib/format';
 import { AppContext, useApp } from './context';
@@ -18,7 +19,7 @@ import { Drafts } from './views/Drafts';
 import { Sources } from './views/Sources';
 import { AssistantPanel } from './AssistantPanel';
 import { Button, ErrorBox, Loading, Notice, Pill } from './ui';
-import { Modal, Tooltip } from './ui/controls';
+import { Modal, MotionPreferenceSwitch, Tooltip } from './ui/controls';
 
 const NAV: { view: Route['view']; label: string; icon: typeof ListOrdered; testId: string }[] = [
   { view: 'agenda', label: 'Agenda', icon: ListOrdered, testId: 'nav-agenda' },
@@ -153,11 +154,11 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
       if (frame) return;
       frame = window.requestAnimationFrame(() => { frame = 0; measure(); });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
     return () => {
       observer.disconnect();
       window.removeEventListener('resize', measure);
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScroll, { capture: true });
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -168,10 +169,12 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   useEffect(() => {
     mainRef.current?.focus({ preventScroll: true });
     window.scrollTo({ top: 0 });
+    document.body.scrollTo({ top: 0 });
   }, [route.view]);
 
   return (
     <div data-testid="app-root" inert={classificationOpen || undefined}>
+      <MotionPreferenceSwitch />
       <a href="#contenido" inert={assistantOpen && mobile} className="skip-link">
         Saltar al contenido
       </a>
@@ -300,7 +303,7 @@ function Inner() {
       setAssistantState('closed');
       setAssistantClosing(false);
       assistantCloseTimer.current = undefined;
-    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 120);
+    }, reducedMotion() ? 0 : 120);
   }, []);
   useEffect(() => () => window.clearTimeout(assistantCloseTimer.current), []);
 

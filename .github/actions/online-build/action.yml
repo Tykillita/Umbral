@@ -13,11 +13,25 @@ inputs:
       de código no retroceda los datos del día. Vacío o 404 = se parte del snapshot versionado.
     required: false
     default: ''
+  snapshot-id:
+    description: >-
+      Snapshot versionado que debe promoverse explícitamente en este despliegue. Vacío conserva el feed vigente.
+    required: false
+    default: ''
 
 outputs:
   snapshot-id:
     description: Snapshot que se publica como vigente
     value: ${{ steps.data.outputs.snapshot-id }}
+  model-version:
+    description: Versión Laya del snapshot si está calibrado
+    value: ${{ steps.data.outputs.model-version }}
+  calibration-profile-id:
+    description: Perfil de calibración del snapshot si está calibrado
+    value: ${{ steps.data.outputs.calibration-profile-id }}
+  calibration-profile-sha256:
+    description: SHA-256 del perfil de calibración si está calibrado
+    value: ${{ steps.data.outputs.calibration-profile-sha256 }}
 
 runs:
   using: composite
@@ -51,10 +65,19 @@ runs:
       env:
         API_URL: ${{ inputs.api-url }}
         FEED_URL: ${{ inputs.feed-url }}
+        SNAPSHOT_ID: ${{ inputs.snapshot-id }}
       run: |
         set -euo pipefail
         root=.production/data/snapshots
         mkdir -p "$root"
+        snapshot_args=()
+        source=''
+        if [ -n "$SNAPSHOT_ID" ]; then
+          [[ "$SNAPSHOT_ID" =~ ^[0-9]{8}-[a-f0-9]{8}$ ]] || { echo 'snapshot-id no tiene el formato esperado.'; exit 1; }
+          source="data/snapshots/$SNAPSHOT_ID"
+          [ -d "$source" ] || { echo "No existe el snapshot versionado $SNAPSHOT_ID."; exit 1; }
+          snapshot_args=(--snapshot-id "$SNAPSHOT_ID")
+        fi
         code=skip
         if [ -n "$FEED_URL" ]; then
           code=$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 30 "${FEED_URL}current.json" || echo 000)
@@ -70,7 +93,36 @@ runs:
             echo "El feed respondió HTTP $code; no se publica con datos inciertos."
             exit 1 ;;
         esac
+        if [ -n "$SNAPSHOT_ID" ]; then
+          if [ -d "$root/$SNAPSHOT_ID" ]; then
+            diff -qr "$source" "$root/$SNAPSHOT_ID" > /dev/null || { echo 'El feed y el snapshot versionado difieren para el mismo ID.'; exit 1; }
+          else
+            cp -R "$source" "$root/$SNAPSHOT_ID"
+          fi
+        fi
         uv run --frozen --project pipeline python scripts/stage_hosting_data.py stage \
-          --snapshots-root "$root" --web-dist apps/web/dist --api-url "$API_URL"
+          --snapshots-root "$root" --web-dist apps/web/dist --api-url "$API_URL" "${snapshot_args[@]}"
         cp "$root/CURRENT" .production/candidate-id
-        echo "snapshot-id=$(tr -d '\r\n' < .production/candidate-id)" >> "$GITHUB_OUTPUT"
+        snapshot="$(tr -d '\r\n' < .production/candidate-id)"
+        echo "snapshot-id=$snapshot" >> "$GITHUB_OUTPUT"
+        python3 - "$root/$snapshot/manifest.json" "$SNAPSHOT_ID" "$GITHUB_OUTPUT" <<'PY'
+        import json
+        import sys
+        from pathlib import Path
+
+        manifest_path, requested_snapshot, output_path = sys.argv[1:]
+        classifier = json.loads(Path(manifest_path).read_text(encoding='utf-8'))['classifier']
+        if requested_snapshot and classifier.get('calibrated') is not True:
+            raise SystemExit('No se promueve un snapshot solicitado sin calibración Laya verificada.')
+        if classifier.get('calibrated') is True:
+            values = {
+                'model-version': classifier.get('modelVersion'),
+                'calibration-profile-id': classifier.get('calibrationProfileId'),
+                'calibration-profile-sha256': classifier.get('calibrationProfileSha256'),
+            }
+            if any(not value for value in values.values()):
+                raise SystemExit('El snapshot calibrado no tiene identidad completa del perfil.')
+            with open(output_path, 'a', encoding='utf-8') as output:
+                for key, value in values.items():
+                    output.write(f'{key}={value}\n')
+        PY

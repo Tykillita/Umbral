@@ -1,0 +1,117 @@
+[
+  {
+    "id": "tvn_news_sitemap",
+    "name": "TVN Panamá – sitemap Google News público",
+    "url": "https://www.tvn-2.com/tvn_sitemap_google_news.xml",
+    "license": "Sin licencia abierta. Solo titular, URL y fecha de publicación declarada por el editor.",
+    "terms": "Sitemap enlazado desde robots.txt/índice oficial. No se conservan imágenes ni cuerpos. news:publication_date es publicación; lastmod no se utiliza como publicación.",
+    "extractedAt": null,
+    "transformations": [
+      "html_unescape_titles",
+      "normalize_whitespace_nfc",
+      "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+      "collapse_duplicates_by_canonical_url",
+      "normalize_dates_utc_iso8601",
+      "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+      "validate_ids_urls_dates_fields -> invalid.jsonl",
+      "classify_category_and_geo",
+      "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+      "detect_recirculation(>14 d entre publicación y detección)",
+      "incremental_normalized_merge",
+      "prediction_cache_hash_revision_rules",
+      "laya_temperature_scaling"
+    ]
+  },
+  {
+    "id": "tvn_rss",
+    "name": "TVN Panamá – feed RSS público",
+    "url": "https://www.tvn-2.com/rss/",
+    "license": "Sin licencia abierta. Solo se conservan metadatos (titular, URL, fecha).",
+    "terms": "El RSS observado contiene noticias, fechas y descripciones; eso no implica licencia abierta sobre artículos, videos o imágenes (PDF §12). No se redistribuyen descripciones/extractos ni cuerpos; reutilización de extractos requiere autorización explícita del patrocinador.",
+    "extractedAt": "2026-10-07T08:14:34Z",
+    "transformations": [
+      "html_unescape_titles",
+      "normalize_whitespace_nfc",
+      "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+      "collapse_duplicates_by_canonical_url",
+      "normalize_dates_utc_iso8601",
+      "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+      "validate_ids_urls_dates_fields -> invalid.jsonl",
+      "classify_category_and_geo",
+      "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+      "detect_recirculation(>14 d entre publicación y detección)",
+      "incremental_normalized_merge",
+      "prediction_cache_hash_revision_rules",
+      "laya_temperature_scaling"
+    ]
+  },
+  {
+    "id": "gdelt_doc",
+    "name": "GDELT DOC 2.0 API (ArtList)",
+    "url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts",
+    "license": "GDELT es de uso libre con atribución; la API no transfiere derechos sobre los artículos de los medios enlazados.",
+    "terms": "Máx. 250 artículos por consulta; 1 consulta cada 5 s. 'seendate' es detección, no publicación. Se guardan titular, URL, dominio, idioma y país del medio.",
+    "extractedAt": "2026-10-07T08:08:20Z",
+    "transformations": [
+      "html_unescape_titles",
+      "normalize_whitespace_nfc",
+      "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+      "collapse_duplicates_by_canonical_url",
+      "normalize_dates_utc_iso8601",
+      "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+      "validate_ids_urls_dates_fields -> invalid.jsonl",
+      "classify_category_and_geo",
+      "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+      "detect_recirculation(>14 d entre publicación y detección)",
+      "incremental_normalized_merge",
+      "prediction_cache_hash_revision_rules",
+      "laya_temperature_scaling"
+    ]
+  },
+  {
+    "id": "world_bank",
+    "name": "Banco Mundial – Indicators API v2",
+    "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+    "license": "CC BY 4.0 (salvo excepciones de terceros indicadas en los metadatos de cada indicador)",
+    "terms": "Atribución obligatoria («World Bank Open Data»); revisar excepciones de terceros por indicador. Los datos pueden revisarse; el período de referencia no coincide con el año de extracción.",
+    "extractedAt": "2026-10-07T08:08:20Z",
+    "transformations": [
+      "html_unescape_titles",
+      "normalize_whitespace_nfc",
+      "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+      "collapse_duplicates_by_canonical_url",
+      "normalize_dates_utc_iso8601",
+      "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+      "validate_ids_urls_dates_fields -> invalid.jsonl",
+      "classify_category_and_geo",
+      "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+      "detect_recirculation(>14 d entre publicación y detección)",
+      "incremental_normalized_merge",
+      "prediction_cache_hash_revision_rules",
+      "laya_temperature_scaling"
+    ]
+  },
+  {
+    "id": "usgs",
+    "name": "USGS – catálogo sísmico (FDSN event)",
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1",
+    "license": "Dominio público del Gobierno de EE. UU. salvo elementos de terceros.",
+    "terms": "Usar solo para hechos sísmicos; nunca como evidencia de inundación o pérdidas económicas. La caja regional no equivale al territorio de Panamá.",
+    "extractedAt": "2026-10-07T08:08:20Z",
+    "transformations": [
+      "html_unescape_titles",
+      "normalize_whitespace_nfc",
+      "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+      "collapse_duplicates_by_canonical_url",
+      "normalize_dates_utc_iso8601",
+      "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+      "validate_ids_urls_dates_fields -> invalid.jsonl",
+      "classify_category_and_geo",
+      "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+      "detect_recirculation(>14 d entre publicación y detección)",
+      "incremental_normalized_merge",
+      "prediction_cache_hash_revision_rules",
+      "laya_temperature_scaling"
+    ]
+  }
+]

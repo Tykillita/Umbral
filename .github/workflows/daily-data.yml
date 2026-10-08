@@ -15,7 +15,7 @@ concurrency:
 jobs:
   refresh:
     # Activación explícita después de publicar y verificar la primera versión.
-    if: vars.UMBRAL_DAILY_ENABLED == 'true'
+    if: github.ref == 'refs/heads/main' && vars.UMBRAL_DAILY_ENABLED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     environment: production
@@ -28,6 +28,7 @@ jobs:
       ASTRO_TELEMETRY_DISABLED: '1'
       HF_HUB_DISABLE_TELEMETRY: '1'
       HF_HOME: ${{ github.workspace }}/.production/huggingface
+      UMBRAL_LAYA_MODEL_DIR: .production/laya-model
     steps:
       - name: Comprobar configuración de la versión publicada
         shell: bash
@@ -56,6 +57,42 @@ jobs:
         with:
           path: .production/huggingface/hub/models--convaiinnovations--laya
           key: laya-cpu-7b928d828b7b0e022f929d9bd2e44165aa270148
+      - uses: actions/cache@v4
+        with:
+          path: .production/laya-model
+          key: laya-calibrated-${{ hashFiles('eval/prepare_laya_production_model.py', 'eval/finetune_laya.py', 'eval/fit_calibration.py', 'eval/apply_laya_calibration_to_snapshot.py', 'eval/reclassify_laya_snapshot.py', 'eval/run_classification.py', 'eval/aggregate_metrics.py', 'eval/label_provenance.py', 'eval/labels/laya-agent-review-20261007-split.jsonl', 'eval/labels/laya-agent-review-20261007-split.manifest.json', 'data/snapshots/20261007-cfa338b6/manifest.json', 'pipeline/uv.lock', 'pipeline/umbral_pipeline/classify/calibration.py', 'pipeline/umbral_pipeline/classify/laya_clf.py', 'pipeline/umbral_pipeline/refresh.py') }}
+      - name: Preparar o verificar el artefacto Laya calibrado
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$UMBRAL_LAYA_MODEL_DIR"
+          uv run --frozen --project pipeline --extra laya python eval/prepare_laya_production_model.py \
+            --snapshot data/snapshots/20261007-cfa338b6 \
+            --labels eval/labels/laya-agent-review-20261007-split.jsonl \
+            --model-dir "$UMBRAL_LAYA_MODEL_DIR" \
+            --work-dir .production/laya-work > .production/laya-model-prepare.log 2>&1
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          receipt = None
+          for line in reversed(Path('.production/laya-model-prepare.log').read_text(encoding='utf-8').splitlines()):
+              try:
+                  candidate = json.loads(line)
+              except json.JSONDecodeError:
+                  continue
+              if candidate.get('baseSnapshotId') == '20261007-cfa338b6' and candidate.get('schemaVersion') == '1.0.0':
+                  receipt = candidate
+                  break
+          if receipt is None:
+              raise SystemExit('La preparación de Laya no produjo un recibo JSON verificable.')
+          Path('.production/laya-model-receipt.json').write_text(json.dumps(receipt, ensure_ascii=False) + '\n', encoding='utf-8')
+          if receipt.get('calibrated') is not True or receipt.get('testGatePassed') is not True:
+              raise SystemExit('El artefacto Laya no pasó la compuerta de calibración.')
+          for key in ('modelVersion', 'profileId', 'profileSha256'):
+              if not receipt.get(key):
+                  raise SystemExit(f'El recibo Laya no contiene {key}.')
+          PY
       - name: Recuperar únicamente los snapshots públicos verificados
         run: uv run --frozen --project pipeline python scripts/stage_hosting_data.py download --base-url https://site-umbral.web.app/data/ --snapshots-root .production/data/snapshots
       - name: Preparar candidato diario sin activar el anterior
@@ -65,12 +102,36 @@ jobs:
           previous="$(cat .production/data/snapshots/CURRENT)"
           uv run --frozen --project pipeline --extra laya python -m umbral_pipeline --data-dir .production/data daily --previous ".production/data/snapshots/$previous" --classifier laya --overlap-hours 48 --window-days 30 --no-set-current --json-progress > .production/daily-progress.jsonl
       - name: Identificar y verificar el candidato
+        id: candidate
         shell: bash
         run: |
           set -euo pipefail
           snapshot="$(python -c 'import json,pathlib; rows=[json.loads(x) for x in pathlib.Path(".production/daily-progress.jsonl").read_text().splitlines() if x.strip()]; print(next(r["snapshotId"] for r in reversed(rows) if "snapshotId" in r and "path" in r))')"
           [[ "$snapshot" =~ ^[0-9]{8}-[a-f0-9]{8}$ ]]
           uv run --frozen --project pipeline python -m umbral_pipeline verify ".production/data/snapshots/$snapshot"
+          python3 - "$snapshot" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          snapshot = sys.argv[1]
+          classifier = json.loads(Path(f'.production/data/snapshots/{snapshot}/manifest.json').read_text(encoding='utf-8'))['classifier']
+          receipt = json.loads(Path('.production/laya-model-receipt.json').read_text(encoding='utf-8'))
+          expected = {
+              'modelVersion': receipt['modelVersion'],
+              'calibrationProfileId': receipt['profileId'],
+              'calibrationProfileSha256': receipt['profileSha256'],
+          }
+          if classifier.get('calibrated') is not True or any(classifier.get(key) != value for key, value in expected.items()):
+              raise SystemExit('El snapshot candidato no usa el modelo y perfil Laya verificados.')
+          with open('.production/candidate-model.json', 'w', encoding='utf-8') as output:
+              json.dump(expected, output, ensure_ascii=False)
+              output.write('\n')
+          PY
+          model_version="$(python3 -c 'import json; print(json.load(open(".production/candidate-model.json", encoding="utf-8"))["modelVersion"])')"
+          profile_id="$(python3 -c 'import json; print(json.load(open(".production/candidate-model.json", encoding="utf-8"))["calibrationProfileId"])')"
+          profile_sha="$(python3 -c 'import json; print(json.load(open(".production/candidate-model.json", encoding="utf-8"))["calibrationProfileSha256"])')"
+          printf 'model_version=%s\nprofile_id=%s\nprofile_sha256=%s\n' "$model_version" "$profile_id" "$profile_sha" >> "$GITHUB_OUTPUT"
           printf '%s\n' "$snapshot" > .production/candidate-id
       - name: Reconstruir el frontend de la versión publicada y adjuntar datos
         shell: bash
@@ -87,13 +148,16 @@ jobs:
       - name: Publicar solo Hosting después de verificar el candidato
         run: npx --yes firebase-tools@15.32.1 deploy --only hosting --project site-umbral --non-interactive
       - name: Verificar el feed alojado y conservar el recibo
-        run: uv run --frozen --project pipeline python scripts/verify_hosted.py --web-url https://site-umbral.web.app --api-url "$PUBLIC_API_URL" --expected-snapshot-file .production/candidate-id --wait-seconds 960 --out .production/hosted-receipt.json
+        run: uv run --frozen --project pipeline python scripts/verify_hosted.py --web-url https://site-umbral.web.app --api-url "$PUBLIC_API_URL" --expected-snapshot-file .production/candidate-id --expected-model-version "${{ steps.candidate.outputs.model_version }}" --expected-calibration-profile-id "${{ steps.candidate.outputs.profile_id }}" --expected-calibration-profile-sha256 "${{ steps.candidate.outputs.profile_sha256 }}" --wait-seconds 960 --out .production/hosted-receipt.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: datos-diarios-recibos
           path: |
             .production/daily-progress.jsonl
+            .production/laya-model-prepare.log
+            .production/laya-model-receipt.json
+            .production/candidate-model.json
             .production/stage-receipt.json
             .production/hosted-receipt.json
           retention-days: 7

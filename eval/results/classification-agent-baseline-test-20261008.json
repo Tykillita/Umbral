@@ -1,0 +1,241 @@
+{
+  "command": "eval/run_classification.py --labels eval/labels/laya-agent-review-20261007-split.jsonl --snapshot baseline=data/snapshots/20261007-cfa338b6 --split test --out eval/results/classification-agent-baseline-test-20261008.json",
+  "ranAt": "2026-10-08T08:27:48Z",
+  "python": "3.12.14",
+  "labelsFile": "eval\\labels\\laya-agent-review-20261007-split.jsonl",
+  "labelsTotal": 200,
+  "split": "test",
+  "labelMethod": [
+    "agent_review"
+  ],
+  "labelers": [
+    "codex-agent"
+  ],
+  "results": {
+    "baseline": {
+      "snapshotId": "20261007-cfa338b6",
+      "classifier": "laya",
+      "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+      "labeledInSnapshot": 200,
+      "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050",
+      "all": {
+        "category": {
+          "n": 200,
+          "macroF1": 0.4236376270938483,
+          "macroF1AllLabels": 0.4236376270938483,
+          "accuracy": 0.655,
+          "perClass": {
+            "economia": {
+              "precision": 0.625,
+              "recall": 0.5,
+              "f1": 0.5556,
+              "support": 30,
+              "tp": 15,
+              "fp": 9,
+              "fn": 15
+            },
+            "logistica_canal": {
+              "precision": 1.0,
+              "recall": 0.4286,
+              "f1": 0.6,
+              "support": 7,
+              "tp": 3,
+              "fp": 0,
+              "fn": 4
+            },
+            "turismo": {
+              "precision": 0.5,
+              "recall": 0.2,
+              "f1": 0.2857,
+              "support": 10,
+              "tp": 2,
+              "fp": 2,
+              "fn": 8
+            },
+            "servicios_publicos": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 15,
+              "tp": 0,
+              "fp": 4,
+              "fn": 15
+            },
+            "eventos_naturales": {
+              "precision": 0.75,
+              "recall": 0.75,
+              "f1": 0.75,
+              "support": 4,
+              "tp": 3,
+              "fp": 1,
+              "fn": 1
+            },
+            "regulacion": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 16,
+              "tp": 0,
+              "fp": 0,
+              "fn": 16
+            },
+            "indeterminado": {
+              "precision": 0.6708,
+              "recall": 0.9153,
+              "f1": 0.7742,
+              "support": 118,
+              "tp": 108,
+              "fp": 53,
+              "fn": 10
+            }
+          },
+          "confusion": {
+            "servicios_publicos": {
+              "indeterminado": 13,
+              "economia": 2
+            },
+            "indeterminado": {
+              "indeterminado": 108,
+              "economia": 6,
+              "turismo": 2,
+              "eventos_naturales": 1,
+              "servicios_publicos": 1
+            },
+            "economia": {
+              "economia": 15,
+              "indeterminado": 15
+            },
+            "turismo": {
+              "indeterminado": 8,
+              "turismo": 2
+            },
+            "regulacion": {
+              "indeterminado": 13,
+              "servicios_publicos": 3
+            },
+            "logistica_canal": {
+              "indeterminado": 3,
+              "economia": 1,
+              "logistica_canal": 3
+            },
+            "eventos_naturales": {
+              "indeterminado": 1,
+              "eventos_naturales": 3
+            }
+          }
+        },
+        "geo": {
+          "n": 0,
+          "macroF1": null,
+          "macroF1AllLabels": null,
+          "accuracy": null,
+          "perClass": {
+            "panama": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "regional": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "none": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminate": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {}
+        },
+        "confidenceVsAccuracy": {
+          "meanConfidence": 0.8264,
+          "accuracy": 0.655,
+          "note": "Probabilidades sin calibrar; si meanConfidence >> accuracy el modelo está sobreconfiado."
+        },
+        "probabilityQuality": {
+          "n": 200,
+          "nll": 1.3106036329257338,
+          "brier": 0.5284114843,
+          "ece": 0.16851149999999998,
+          "bins": [
+            {
+              "bin": 0,
+              "n": 1,
+              "meanConfidence": 0.0992,
+              "accuracy": 0.0
+            },
+            {
+              "bin": 2,
+              "n": 1,
+              "meanConfidence": 0.2226,
+              "accuracy": 0.0
+            },
+            {
+              "bin": 4,
+              "n": 6,
+              "meanConfidence": 0.4517333333333333,
+              "accuracy": 0.3333333333333333
+            },
+            {
+              "bin": 5,
+              "n": 12,
+              "meanConfidence": 0.5658333333333333,
+              "accuracy": 0.3333333333333333
+            },
+            {
+              "bin": 6,
+              "n": 25,
+              "meanConfidence": 0.6561440000000001,
+              "accuracy": 0.52
+            },
+            {
+              "bin": 7,
+              "n": 29,
+              "meanConfidence": 0.7588999999999999,
+              "accuracy": 0.7241379310344828
+            },
+            {
+              "bin": 8,
+              "n": 40,
+              "meanConfidence": 0.86108,
+              "accuracy": 0.625
+            },
+            {
+              "bin": 9,
+              "n": 86,
+              "meanConfidence": 0.9537813953488372,
+              "accuracy": 0.7674418604651163
+            }
+          ],
+          "calibrated": false,
+          "note": "Diagnóstico crudo; no ajuste/calibración de probabilidades ni exactitud humana sin etiquetas."
+        }
+      }
+    }
+  },
+  "evaluationKind": "agent_review",
+  "labelsSha256": "14c3d5ea7444a169da6a0a1dd79e688ac01147e702a9192e6d2b176b66dc6b59",
+  "evaluatorSha256": "983e90fd3ec466defaf4a58391a3247d284c89f397d8202b089accde904a7099"
+}

@@ -43,8 +43,11 @@ export type ValidationReport = S['ValidationReport-Output'];
 export type QueryResponse = S['QueryResponse'];
 export type QueryContext = S['QueryContext-Output'];
 export type ComposeResponse = S['ComposeResponse'];
+export type ComposeProvider = 'gemini' | 'chatgpt' | 'claude';
+export type ClaudeConnection = S['ClaudeConnection'];
 /** Cuerpo de una consulta; `followUp` es el `followUpContext` de la respuesta anterior (solo identificadores, nunca texto). */
 export type QueryRequestBody = { question: string; topicId?: string | null; limit?: number; followUp?: S['QueryContext-Input'] | null };
+export type ComposeRequestBody = QueryRequestBody & { provider?: ComposeProvider };
 export type QueryCitation = S['QueryCitation'];
 export type QueryHit = S['QueryHit'];
 export type ExportResponse = S['ExportResponse'];

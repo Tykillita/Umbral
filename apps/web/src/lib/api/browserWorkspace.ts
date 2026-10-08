@@ -1,6 +1,6 @@
 import { ApiError, HttpApi, type UmbralApi } from './client';
 import { BrowserWorkspace, canonicalJson, conflict, parseWorkspace, type WorkspaceCase, type WorkspaceExport } from './workspace';
-import type { ArchivedEvidence, ComposeResponse, PublicContext, QueryRequestBody, PublicDraftResponse, PublicValidationResponse, Authorization, CaseView, Connections, ConnectionStart, Disconnect, DraftEditRequest, DraftProviderChoice, DraftRecord, DraftResponse, ExportResponse, Health, ImpactRequest, Models, QueryResponse, ReviewRequest, Rules, RulesRequest, TopicDetail, TopicFilters, TopicsResponse } from './types';
+import type { ArchivedEvidence, ClaudeConnection, ComposeRequestBody, ComposeResponse, PublicContext, QueryRequestBody, PublicDraftResponse, PublicValidationResponse, Authorization, CaseView, Connections, ConnectionStart, Disconnect, DraftEditRequest, DraftProviderChoice, DraftRecord, DraftResponse, ExportResponse, Health, ImpactRequest, Models, QueryResponse, ReviewRequest, Rules, RulesRequest, TopicDetail, TopicFilters, TopicsResponse } from './types';
 
 type Evidence = ArchivedEvidence;
 type Validated = PublicValidationResponse;
@@ -68,7 +68,7 @@ export class BrowserWorkspaceApi implements UmbralApi {
   }
   topics = (filters: TopicFilters) => this.currentRequest<TopicsResponse>('/agenda', { filters });
   query = (request: QueryRequestBody, opts: { signal?: AbortSignal } = {}) => this.currentRequest<QueryResponse>('/queries', request, opts.signal);
-  compose = (request: QueryRequestBody, opts: { signal?: AbortSignal } = {}) => this.currentRequest<ComposeResponse>('/queries/compose', request, opts.signal);
+  compose = (request: ComposeRequestBody, opts: { signal?: AbortSignal } = {}) => this.currentRequest<ComposeResponse>('/queries/compose', request, opts.signal);
   async topic(topicId: string): Promise<TopicDetail> {
     const entry = (await this.workspace.read()).cases.find((item) => item.case.topicId === topicId);
     // Un caso conserva la ficha exacta de su creación, incluso cuando un snapshot sustituye el tema.
@@ -204,10 +204,13 @@ export class BrowserWorkspaceApi implements UmbralApi {
   }
   async savedCases(): Promise<WorkspaceCase[]> { return (await this.workspace.read()).cases; }
   connections = async (): Promise<Connections> => ({ available: false, profiles: [], activeProfileId: null, reason: 'Las conexiones personales solo se guardan en la aplicación local.' });
+  claudeConnection = async (): Promise<ClaudeConnection> => ({ available: false, installed: false, loggedIn: false, loginPending: false, loginCommand: 'claude auth login', account: null, authMethod: null, reason: 'Las conexiones personales solo se guardan en la aplicación local.' });
   private unavailable(): never { throw new ApiError(403, { code: 'solo_localhost', message: 'Esta conexión está disponible en la aplicación local.' }); }
   startConnection = async (_body: ConnectionStart): Promise<Authorization> => this.unavailable();
   selectConnection = async (_profileId: string): Promise<Connections> => this.unavailable();
   connectionModels = async (): Promise<Models> => this.unavailable();
   selectConnectionModel = async (_model: string): Promise<Models> => this.unavailable();
   disconnect = async (_profileId: string): Promise<Disconnect> => this.unavailable();
+  startClaudeLogin = async (): Promise<ClaudeConnection> => this.unavailable();
+  claudeLogout = async (): Promise<ClaudeConnection> => this.unavailable();
 }
