@@ -1,0 +1,100 @@
+name: Datos diarios de Umbral
+
+on:
+  schedule:
+    - cron: '17 11 * * *' # 06:17 America/Panama (UTC-5)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: umbral-production-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    # Activación explícita después de publicar y verificar la primera versión.
+    if: vars.UMBRAL_DAILY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: production
+    env:
+      PRODUCTION_RELEASE_REF: ${{ vars.PRODUCTION_RELEASE_REF }}
+      FIREBASE_PROJECT_ID: site-umbral
+      PUBLIC_API_MODE: live
+      PUBLIC_AUTH_MODE: public
+      PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+      ASTRO_TELEMETRY_DISABLED: '1'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      HF_HOME: ${{ github.workspace }}/.production/huggingface
+    steps:
+      - name: Comprobar configuración de la versión publicada
+        shell: bash
+        run: |
+          test -n "$PRODUCTION_RELEASE_REF" || { echo 'Falta PRODUCTION_RELEASE_REF; no se publica.'; exit 1; }
+          case "$PUBLIC_API_URL" in https://*.onrender.com) ;; *) echo 'PUBLIC_API_URL debe ser la API HTTPS verificada de Render.'; exit 1 ;; esac
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.PRODUCTION_RELEASE_REF }}
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: apps/web/package.json
+      - name: Instalar pipeline CPU y frontend con locks congelados
+        run: |
+          uv sync --frozen --project pipeline --extra laya
+          pnpm --dir apps/web install --frozen-lockfile
+      - uses: actions/cache@v4
+        with:
+          path: .production/huggingface/hub/models--convaiinnovations--laya
+          key: laya-cpu-7b928d828b7b0e022f929d9bd2e44165aa270148
+      - name: Recuperar únicamente los snapshots públicos verificados
+        run: uv run --frozen --project pipeline python scripts/stage_hosting_data.py download --base-url https://site-umbral.web.app/data/ --snapshots-root .production/data/snapshots
+      - name: Preparar candidato diario sin activar el anterior
+        shell: bash
+        run: |
+          set -euo pipefail
+          previous="$(cat .production/data/snapshots/CURRENT)"
+          uv run --frozen --project pipeline --extra laya python -m umbral_pipeline --data-dir .production/data daily --previous ".production/data/snapshots/$previous" --classifier laya --overlap-hours 48 --window-days 30 --no-set-current --json-progress > .production/daily-progress.jsonl
+      - name: Identificar y verificar el candidato
+        shell: bash
+        run: |
+          set -euo pipefail
+          snapshot="$(python -c 'import json,pathlib; rows=[json.loads(x) for x in pathlib.Path(".production/daily-progress.jsonl").read_text().splitlines() if x.strip()]; print(next(r["snapshotId"] for r in reversed(rows) if "snapshotId" in r and "path" in r))')"
+          [[ "$snapshot" =~ ^[0-9]{8}-[a-f0-9]{8}$ ]]
+          uv run --frozen --project pipeline python -m umbral_pipeline verify ".production/data/snapshots/$snapshot"
+          printf '%s\n' "$snapshot" > .production/candidate-id
+      - name: Reconstruir el frontend de la versión publicada y adjuntar datos
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm --dir apps/web build
+          snapshot="$(cat .production/candidate-id)"
+          uv run --frozen --project pipeline python scripts/stage_hosting_data.py stage --snapshots-root .production/data/snapshots --web-dist apps/web/dist --snapshot-id "$snapshot" --api-url "$PUBLIC_API_URL" > .production/stage-receipt.json
+      - name: Autenticación exclusiva del operador de Hosting
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.FIREBASE_DEPLOY_SERVICE_ACCOUNT }}
+          export_environment_variables: true
+      - name: Publicar solo Hosting después de verificar el candidato
+        run: npx --yes firebase-tools@15.32.1 deploy --only hosting --project site-umbral --non-interactive
+      - name: Verificar el feed alojado y conservar el recibo
+        run: uv run --frozen --project pipeline python scripts/verify_hosted.py --web-url https://site-umbral.web.app --api-url "$PUBLIC_API_URL" --expected-snapshot-file .production/candidate-id --wait-seconds 960 --out .production/hosted-receipt.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: datos-diarios-recibos
+          path: |
+            .production/daily-progress.jsonl
+            .production/stage-receipt.json
+            .production/hosted-receipt.json
+          retention-days: 7
+          if-no-files-found: ignore

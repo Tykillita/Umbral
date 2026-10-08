@@ -1,0 +1,52 @@
+name: Vista previa
+
+# Un canal de Firebase Hosting por PR (pr-<número>, caduca a los 7 días). Usa la API real compartida.
+# Solo PRs del propio repositorio: los forks no reciben secretos. No comenta en el PR (no se pasa repoToken);
+# la URL queda en el resumen de la ejecución.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Canal pr-${{ github.event.pull_request.number }}
+    if: github.event.pull_request.head.repo.full_name == github.repository && vars.PUBLIC_API_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: build
+        uses: ./.github/actions/online-build
+        with:
+          api-url: ${{ vars.PUBLIC_API_URL }}
+      - id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_DEPLOY_SERVICE_ACCOUNT }}
+          projectId: site-umbral
+          channelId: pr-${{ github.event.pull_request.number }}
+          expires: 7d
+      - name: URL de la vista previa
+        env:
+          PR: ${{ github.event.pull_request.number }}
+          URL: ${{ steps.deploy.outputs.details_url }}
+          SNAPSHOT: ${{ steps.build.outputs.snapshot-id }}
+        run: |
+          {
+            echo "### Vista previa"
+            echo ""
+            echo "- Canal: pr-$PR (caduca en 7 días)"
+            echo "- Datos: $SNAPSHOT"
+            echo "- Detalle: $URL"
+            echo ""
+            echo "Usa la API real compartida; no es un entorno aislado."
+          } >> "$GITHUB_STEP_SUMMARY"

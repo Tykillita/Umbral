@@ -1,0 +1,58 @@
+{
+  "command": "eval/run_clustering_eval.py --labels eval/labels/pairs_sample.20261007-cfa338b6.jsonl --snapshot laya=data/snapshots/20261007-cfa338b6 --snapshot baseline=data/snapshots/20261007-55d70099 --out eval/results/clustering-pending-cfa338b6.json",
+  "ranAt": "2026-10-07T15:08:25Z",
+  "python": "3.12.14",
+  "pairsLabeled": 0,
+  "positives": 0,
+  "labelers": [],
+  "results": {
+    "laya": {
+      "snapshotId": "20261007-cfa338b6",
+      "classifier": "laya",
+      "skippedPairsNotInSnapshot": 0,
+      "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "tn": 0,
+      "byStratum": {},
+      "linkMethods": {
+        "title_exact": 56,
+        "title_fuzzy": 11,
+        "bm25_laya": 14,
+        "gray_unresolved": 0,
+        "tiebreak_calls": 34
+      },
+      "caveat": "Pares CANDIDATOS (BM25+RapidFuzz) etiquetados por revisor único; recall sobre pares candidatos, no sobre el universo."
+    },
+    "baseline": {
+      "snapshotId": "20261007-55d70099",
+      "classifier": "baseline",
+      "skippedPairsNotInSnapshot": 0,
+      "manifestSha256": "b5890022c50c5eee9ab11ba6fb7139b6bc4a5154ee2b363e3179d9c9b0853c55",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "tn": 0,
+      "byStratum": {},
+      "linkMethods": {
+        "title_exact": 56,
+        "title_fuzzy": 11,
+        "bm25_laya": 0,
+        "gray_unresolved": 39,
+        "tiebreak_calls": 0
+      },
+      "caveat": "Pares CANDIDATOS (BM25+RapidFuzz) etiquetados por revisor único; recall sobre pares candidatos, no sobre el universo."
+    }
+  },
+  "labelMethod": [],
+  "evaluationKind": "pending",
+  "labelsSha256": "738c92c227b54b8a6398381e56242f9fafef1e87683f41f7d4d888b636fa88b8",
+  "evaluatorSha256": "464c1628befc2482addec80d7de4e426288ebe88d2d342c572c85d4265e1768a"
+}

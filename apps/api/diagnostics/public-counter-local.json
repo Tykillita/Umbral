@@ -1,0 +1,44 @@
+{
+  "startedAtUtc": "2026-10-07T21:32:16.104105+00:00",
+  "completedAtUtc": "2026-10-07T21:32:17.299456+00:00",
+  "command": "uv run --extra firebase python scripts/verify_public_counter_local.py",
+  "scope": "Firestore SDK real en emulador loopback; 40 reservas concurrentes en una instancia API, segundo cliente y proceso nuevo tras agotar 20.",
+  "project": "demo-umbral-public-audit",
+  "host": "127.0.0.1:8088",
+  "accepted": 20,
+  "rejected": 20,
+  "storedValue": 20,
+  "newProcessProbe": {
+    "allowed": false,
+    "used": 20
+  },
+  "passed": true,
+  "sourceFiles": [
+    {
+      "path": "src/umbral_api/storage.py",
+      "sha256": "bc5f6e708ee010010f95fa6347e086e1e5bb5a60690a3f945220386e396d9164"
+    },
+    {
+      "path": "src/umbral_api/services.py",
+      "sha256": "65d682928fa8c5d93bbcb1b1b8f7394106508a10d4ee031686a75d61887ba0b2"
+    },
+    {
+      "path": "src/umbral_api/public.py",
+      "sha256": "b782cb74be65adc96479ac715404e42abfe8feb7efd02d4543749d89b2d53cb2"
+    },
+    {
+      "path": "src/umbral_api/config.py",
+      "sha256": "f6b1ff955252780aaad0188d1d26951ff1bec06dcb5c11531d89b3d94c3a6886"
+    }
+  ],
+  "priorAttempt": {
+    "scope": "Dos clientes concurrentes con escrituras en un mismo documento del emulador",
+    "result": "Falló por contención después de agotar reintentos SDK; no se llamó Gemini.",
+    "classification": "ServiceUnavailable, conserva contador Firestore y fallback por plantilla"
+  },
+  "notVerified": [
+    "Credenciales y contador en Firestore de producción",
+    "Escrituras simultáneas exitosas entre instancias distintas",
+    "Llamadas reales a Gemini"
+  ]
+}

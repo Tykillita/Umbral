@@ -1,0 +1,262 @@
+{
+  "startedAtUtc": "2026-10-07T21:54:12.268119+00:00",
+  "completedAtUtc": "2026-10-07T21:54:42.291090+00:00",
+  "command": "uv run --extra firebase python scripts/verify_backend_public.py",
+  "checks": [
+    {
+      "command": "uv run --extra firebase pytest",
+      "exitCode": 0,
+      "durationSeconds": 27.182,
+      "output": "........................................................................ [ 27%]\n........................................................................ [ 54%]\n........................................................................ [ 81%]\n.................................................                        [100%]\n265 passed in 25.29s"
+    },
+    {
+      "command": "uv run --extra firebase ruff check src tests scripts",
+      "exitCode": 0,
+      "durationSeconds": 0.204,
+      "output": "All checks passed!"
+    },
+    {
+      "command": "uv run --extra firebase mypy src",
+      "exitCode": 0,
+      "durationSeconds": 0.828,
+      "output": "Success: no issues found in 24 source files"
+    },
+    {
+      "command": "uv run --extra firebase python scripts/export_openapi.py --check",
+      "exitCode": 0,
+      "durationSeconds": 1.347,
+      "output": "openapi.json al día"
+    }
+  ],
+  "passed": true,
+  "sourceFiles": [
+    {
+      "path": ".env.example",
+      "sha256": "d4e735fd8482b36072938265f8f02fec400a99635d045d2fc507cebcc490f643"
+    },
+    {
+      "path": "openapi.json",
+      "sha256": "78b263ff9912e3456714a2c94e39863d11cfe5c0a13f324aa6095fdc3793fbb5"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "2c3db133f692cad0a89d8c8fcda4c769f7bcc281e84cfee2302cb4e6aeb3f72b"
+    },
+    {
+      "path": "scripts/diagnose_gemini.py",
+      "sha256": "a43ad96a3d07de7caadf408c95a8ffdc934938baf1419ed5b414c625fa14d52a"
+    },
+    {
+      "path": "scripts/export_openapi.py",
+      "sha256": "c7e113b4d24330cdf4373e7ad77ecf8d7d39ea7f30ff5a1d6efb311fff3c6d23"
+    },
+    {
+      "path": "scripts/verify_backend_public.py",
+      "sha256": "0dd80d10cbd0a0cb1798c415e5aa14445cdadb3779844b351afa8e6204a7cdcf"
+    },
+    {
+      "path": "scripts/verify_public_counter_local.py",
+      "sha256": "4a6a730eff69e634401f7d852a8c9a426173399767aa9135711d57352505aa89"
+    },
+    {
+      "path": "src/umbral_api/__init__.py",
+      "sha256": "08de4cb91f3e303985360ff0b20103e6654f8a5a08bbd06a636d967211c1fbbb"
+    },
+    {
+      "path": "src/umbral_api/app.py",
+      "sha256": "152177a480d57052f296ed772c4b8aeb0d947ee6fc764dce279b6ef36b5b1d3c"
+    },
+    {
+      "path": "src/umbral_api/auth.py",
+      "sha256": "ccbbcb71f53bc0ec9262e4c7bd3a889763f197ab551cdcfbbf1499503cc60423"
+    },
+    {
+      "path": "src/umbral_api/config.py",
+      "sha256": "542abd178a87e36a9600382bcdf517e234da77e3ceea275b4e1a0a326168f980"
+    },
+    {
+      "path": "src/umbral_api/connections.py",
+      "sha256": "e35c77a29d50cb18e1a59d000320a08cebae6d61b9b119b580d00149ee2b04bf"
+    },
+    {
+      "path": "src/umbral_api/drafts.py",
+      "sha256": "9620b9505b1b13d8b82e706b0034f21214893f429b247c22e063626c62f9ee30"
+    },
+    {
+      "path": "src/umbral_api/errors.py",
+      "sha256": "430d5db4fb2c3368440fb4e5dcda4feeafb4ee45f5742d8a00de61f3038bf80c"
+    },
+    {
+      "path": "src/umbral_api/export.py",
+      "sha256": "2557bf4ea94d0290ac4860e3d800d5a68580441153f895a7b84ce204764a9e89"
+    },
+    {
+      "path": "src/umbral_api/fixture_builder.py",
+      "sha256": "24f8aca17fcbedfc24bb4998434ea406ae974af0ee573dbb93050f2a2889ede2"
+    },
+    {
+      "path": "src/umbral_api/main.py",
+      "sha256": "29141922d3f3655ce1503ccc5f9c2676ea53c6c57e9aa9a17f2a6459cfc2aa28"
+    },
+    {
+      "path": "src/umbral_api/models.py",
+      "sha256": "060e82cec89009cc8cf428a4839abd154c2e67f6d96668da0bbc187aca7219c4"
+    },
+    {
+      "path": "src/umbral_api/providers.py",
+      "sha256": "8f8e265021a062779e0e4d3b3a48a0c88691a7698526b7e65126ea586f2b0a6c"
+    },
+    {
+      "path": "src/umbral_api/public.py",
+      "sha256": "b782cb74be65adc96479ac715404e42abfe8feb7efd02d4543749d89b2d53cb2"
+    },
+    {
+      "path": "src/umbral_api/public_models.py",
+      "sha256": "61e93564d91ca062fc101b43fd83fc111382f541b8ab94d15868d5e1ae4deb6c"
+    },
+    {
+      "path": "src/umbral_api/queries.py",
+      "sha256": "811b354bd17ee4e00552ebe57b20f1cc3d3ae613b52d6b8ade5bf6c374a35026"
+    },
+    {
+      "path": "src/umbral_api/retrieval.py",
+      "sha256": "99302cf6c7d03ef2a8675be5f7b5d3cfd6fee559a67779ec0c51ac865b85b647"
+    },
+    {
+      "path": "src/umbral_api/scoring.py",
+      "sha256": "59a83f042905704b649fc9e65fbda199b3eb564034bdb53383dddc6a2e58f0b3"
+    },
+    {
+      "path": "src/umbral_api/security.py",
+      "sha256": "3803397ed62829ea513b864442be3e2023e24eff7b25a5d0ab1de74d5220dceb"
+    },
+    {
+      "path": "src/umbral_api/services.py",
+      "sha256": "744719fdeba32d327ec106fdd24b75b61a37d05c8183ab1f68d59dd89ad9a38b"
+    },
+    {
+      "path": "src/umbral_api/snapshot.py",
+      "sha256": "854290b3751596e66c1eaca3cd3f111588dd1039906b56f0cbfabecb104893a1"
+    },
+    {
+      "path": "src/umbral_api/snapshot_feed.py",
+      "sha256": "fd9184d70f5cb9c54144a00c36d9016df1152017a3ba5940fd0a46aba15f2906"
+    },
+    {
+      "path": "src/umbral_api/storage.py",
+      "sha256": "bc5f6e708ee010010f95fa6347e086e1e5bb5a60690a3f945220386e396d9164"
+    },
+    {
+      "path": "src/umbral_api/topics.py",
+      "sha256": "60976d051e2120c0f1b23126ee697a493bb3d49ec932907aad99c5e252e10fa2"
+    },
+    {
+      "path": "src/umbral_api/util.py",
+      "sha256": "06c09095e33875c731cdd8e28149bdbc34f6669458cd1b7303d67ff20e324b1e"
+    },
+    {
+      "path": "tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "6f6eeabb7e78d86d003653aaa56f807d117634958a74ad69fb762497647388ae"
+    },
+    {
+      "path": "tests/test_api.py",
+      "sha256": "f154c1406e16728a157521347cff6718bb02105b82a657c124281fe40de40f83"
+    },
+    {
+      "path": "tests/test_connections.py",
+      "sha256": "ee22aa5e388e92cd164b1d0147fca9084c8e64747f7ff83660afc9d3386906bb"
+    },
+    {
+      "path": "tests/test_drafts.py",
+      "sha256": "88a43ad53e393d29b314d118133ddef91d565a593dbc800204b9275ed50eafca"
+    },
+    {
+      "path": "tests/test_evidence_scope.py",
+      "sha256": "bc738782a108b0c55fe1888d50c6ef5eed79462fb983a773f58015b5933ec6f6"
+    },
+    {
+      "path": "tests/test_modes.py",
+      "sha256": "0475b8f6b93a55bf973dbb8598acf5ddc20d9db32af2de496e81bdf11c4219af"
+    },
+    {
+      "path": "tests/test_provider_contracts.py",
+      "sha256": "bf86b9533cad68da69a559b1c06ce2c464ce2f4b3bdf3e37294fe200c735046c"
+    },
+    {
+      "path": "tests/test_public.py",
+      "sha256": "b9e607d09c2226c790245369d5880a964e5c5778a2fd4ca27e884c0e272882af"
+    },
+    {
+      "path": "tests/test_public_ip.py",
+      "sha256": "ed2a26fce6bc1a8a79ed331075ac84a282f307f5076f5edc80337239c676f1a1"
+    },
+    {
+      "path": "tests/test_queries.py",
+      "sha256": "e1a75a12be25cf74b2984760ce999e8dbd4ec676d1cbfa42d48654d01909e916"
+    },
+    {
+      "path": "tests/test_review.py",
+      "sha256": "f6dfc7b5e241f0440f04ccc1b74095837bce195dec47bd14904523602cb67c32"
+    },
+    {
+      "path": "tests/test_rules_versioning.py",
+      "sha256": "97f189e1b580844fdb001b6e928f10736cedc504b96697829975757e3eecd2de"
+    },
+    {
+      "path": "tests/test_scoring.py",
+      "sha256": "38ed393477185ed0cb125f77ac01ff88c47f30aa29b05f90d56a6918028662cf"
+    },
+    {
+      "path": "tests/test_snapshot.py",
+      "sha256": "e985fc73dba83269a580aa051503477eaff287bfc5c77eb9c098bcbdc278e6c2"
+    },
+    {
+      "path": "tests/test_snapshot_feed.py",
+      "sha256": "13155a126b9cdc115f27b5d9dd864278abcf2c4aa86832277017c5eb7a83d876"
+    },
+    {
+      "path": "tests/test_storage_contention.py",
+      "sha256": "8864b15aa60534536d0b1381a1b214427507f6c501dc584c15a3d34b0aa74dc9"
+    },
+    {
+      "path": "tests/test_workspace.py",
+      "sha256": "5b7cace371515622c75756e1236b3e8cf87c5504529167781d41179400bd5f70"
+    },
+    {
+      "path": "uv.lock",
+      "sha256": "3cd42695709ef05272d11eeeb6beeb11ce3996b6814b22e8cd9b86562beee78d"
+    }
+  ],
+  "sourceFingerprintSha256": "f6cc479b0f7bce0b96ee08c5dce0adc43aa8eb9c6712d8596da40a5af6b9d5dd",
+  "snapshotId": "20261007-cfa338b6",
+  "counts": {
+    "articles": 991,
+    "indicators": 540,
+    "indicatorValues": 540,
+    "clusters": 910
+  },
+  "containsFixtures": false,
+  "integrity": {
+    "manifestVerified": true,
+    "filesChecked": 12,
+    "predictionsHashVerified": true,
+    "predictionsSha256": "d2d97455999dee7ef148f127f7ca341fbabf98565384b1619d96aea5787d46b8",
+    "errors": [],
+    "checkedAt": "2026-10-07T21:54:42.256320Z"
+  },
+  "firestoreLocalReceipt": "diagnostics/public-counter-local.json",
+  "scope": "API pública/local, aislamiento, cuotas/reintentos/cache, contratos, snapshots verificados, copia/restauración y evidencia archivada.",
+  "notVerified": [
+    "Hosting/Render públicos",
+    "Credenciales/contador de Firestore de producción",
+    "Browser E2E",
+    "Instalador e inferencia Laya empaquetada",
+    "Actualización diaria alojada",
+    "Nuevas llamadas Gemini reales",
+    "Revisión humana de calidad editorial"
+  ]
+}

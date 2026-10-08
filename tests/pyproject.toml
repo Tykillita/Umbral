@@ -1,0 +1,23 @@
+[project]
+name = "umbral-tests"
+version = "0.1.0"
+description = "Pruebas de integración y E2E de Umbral (T01-T10 del reto + pruebas adicionales)"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+dependencies = ["pytest>=8", "httpx>=0.27", "pyyaml>=6"]
+
+[project.optional-dependencies]
+# Playwright (E2E). Los navegadores se descargan aparte: `uv run playwright install chromium`.
+e2e = ["pytest-playwright>=0.5", "playwright>=1.45"]
+
+[tool.pytest.ini_options]
+testpaths = ["integration", "e2e"]
+addopts = "-ra --basetemp=.pytest-tmp"
+markers = [
+  "e2e: requiere Playwright y el build de Astro",
+  "needs_pipeline: requiere el CLI de umbral_pipeline",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.uv]
+package = false

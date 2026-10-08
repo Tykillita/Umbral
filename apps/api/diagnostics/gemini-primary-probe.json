@@ -1,0 +1,25 @@
+{
+  "startedAtUtc": "2026-10-07T08:17:39.501332+00:00",
+  "model": "gemini-3.8-flash",
+  "stage": "probe",
+  "realNetwork": true,
+  "retryAttempts": 1,
+  "calls": [
+    {
+      "name": "plain",
+      "schemaBytes": 0,
+      "status": "api_error",
+      "code": 503,
+      "latencySeconds": 4.313
+    },
+    {
+      "name": "small_schema",
+      "schemaBytes": 120,
+      "status": "api_error",
+      "code": 503,
+      "latencySeconds": 5.531
+    }
+  ],
+  "result": "failed",
+  "completedAtUtc": "2026-10-07T08:17:49.402436+00:00"
+}

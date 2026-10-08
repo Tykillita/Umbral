@@ -1,0 +1,76 @@
+name: Build online de Umbral
+description: >-
+  Compila la web con acceso público apuntando a la API real y prepara los datos de Hosting
+  (descriptor y hasta siete snapshots verificados). No despliega nada.
+
+inputs:
+  api-url:
+    description: Origen HTTPS de la API en Render (https://<servicio>.onrender.com)
+    required: true
+  feed-url:
+    description: >-
+      Feed de datos ya publicado (https://<sitio>/data/). Si responde, se parte de él para que un despliegue
+      de código no retroceda los datos del día. Vacío o 404 = se parte del snapshot versionado.
+    required: false
+    default: ''
+
+outputs:
+  snapshot-id:
+    description: Snapshot que se publica como vigente
+    value: ${{ steps.data.outputs.snapshot-id }}
+
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+        cache-dependency-glob: pipeline/uv.lock
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24
+    - uses: pnpm/action-setup@v4
+      with:
+        package_json_file: apps/web/package.json
+    - name: Instalar con locks congelados
+      shell: bash
+      run: |
+        uv sync --frozen --project pipeline
+        pnpm --dir apps/web install --frozen-lockfile
+    - name: Compilar la web (acceso público, API real)
+      shell: bash
+      env:
+        PUBLIC_API_MODE: live
+        PUBLIC_AUTH_MODE: public
+        PUBLIC_API_URL: ${{ inputs.api-url }}
+        ASTRO_TELEMETRY_DISABLED: '1'
+      run: pnpm --dir apps/web exec astro build
+    - name: Preparar los datos de Hosting
+      id: data
+      shell: bash
+      env:
+        API_URL: ${{ inputs.api-url }}
+        FEED_URL: ${{ inputs.feed-url }}
+      run: |
+        set -euo pipefail
+        root=.production/data/snapshots
+        mkdir -p "$root"
+        code=skip
+        if [ -n "$FEED_URL" ]; then
+          code=$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 30 "${FEED_URL}current.json" || echo 000)
+        fi
+        case "$code" in
+          200)
+            echo "Feed publicado: se parte de sus snapshots verificados."
+            uv run --frozen --project pipeline python scripts/stage_hosting_data.py download --base-url "$FEED_URL" --snapshots-root "$root" ;;
+          skip|404)
+            echo "Sin feed previo ($code): se parte del snapshot versionado."
+            cp -R data/snapshots/. "$root/" ;;
+          *)
+            echo "El feed respondió HTTP $code; no se publica con datos inciertos."
+            exit 1 ;;
+        esac
+        uv run --frozen --project pipeline python scripts/stage_hosting_data.py stage \
+          --snapshots-root "$root" --web-dist apps/web/dist --api-url "$API_URL"
+        cp "$root/CURRENT" .production/candidate-id
+        echo "snapshot-id=$(tr -d '\r\n' < .production/candidate-id)" >> "$GITHUB_OUTPUT"

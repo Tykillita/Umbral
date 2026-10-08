@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-07T13:34:20Z",
+  "news": {
+    "fetched": 1381,
+    "valid": 991,
+    "invalid": 80,
+    "invalidByCode": {
+      "date_out_of_window": 79,
+      "missing_title": 1
+    },
+    "uniqueCanonicalUrls": 991,
+    "duplicateUrlsCollapsed": 152,
+    "tvnValid": 122,
+    "gdeltValid": 869,
+    "fixtureValid": 0,
+    "nullPublishedAt": 714,
+    "targetMet": true,
+    "minimumMet": true,
+    "tvnMinimumMet": true,
+    "tvnCoverage": {
+      "validTvn": 122,
+      "source": "tvn_rss",
+      "publishedFrom": "2026-07-09T17:36:21Z",
+      "publishedTo": "2026-10-07T08:01:00Z",
+      "note": "RSS oficiales de portada, nacionales y economía. La ventana efectiva está en publishedFrom/publishedTo; no se presupone que el RSS cubra todos los días. GDELT puede aportar otras procedencias si sus consultas funcionan."
+    },
+    "coverageWindow": {
+      "start": "2026-07-09T17:36:21Z",
+      "end": "2026-10-07T08:01:00Z",
+      "days": 90
+    },
+    "widenedTo90Days": true
+  },
+  "indicators": {
+    "expectedCombinations": 540,
+    "rows": 540,
+    "pdfStatedCombinations": 1350,
+    "discrepancyNote": "PDF §6B: 'Seis países ... Años: 2010–2024. Seis indicadores' y 'Cuadrícula de 1.350 combinaciones'. 6×6×15 = 540, no 1.350 (1.350 exigiría 15 países o 15 indicadores). Se exportan las 540 combinaciones que el propio PDF enumera; ver DECISIONES.",
+    "withValue": 540,
+    "missing": 0,
+    "missingByIndicator": {},
+    "missingByCountry": {}
+  },
+  "classification": {
+    "classifier": "laya",
+    "indeterminate": 801,
+    "byCategory": {
+      "indeterminado": 801,
+      "economia": 121,
+      "eventos_naturales": 15,
+      "turismo": 19,
+      "regulacion": 9,
+      "servicios_publicos": 11,
+      "logistica_canal": 15
+    },
+    "byGeo": {
+      "panama": 468,
+      "none": 193,
+      "indeterminate": 273,
+      "regional": 57
+    }
+  },
+  "clusters": {
+    "count": 910,
+    "duplicatesMerged": 81,
+    "ambiguous": 28,
+    "recirculation": 48,
+    "contradictionCandidates": 9,
+    "linkMethods": {
+      "title_exact": 56,
+      "title_fuzzy": 11,
+      "bm25_laya": 14,
+      "gray_unresolved": 0,
+      "tiebreak_calls": 34
+    }
+  },
+  "checks": [
+    {
+      "id": "ids_unique",
+      "ok": true,
+      "detail": "articleId únicos"
+    },
+    {
+      "id": "urls_canonical_unique",
+      "ok": true,
+      "detail": "canonicalUrl únicas"
+    },
+    {
+      "id": "predictions_cover_articles",
+      "ok": true,
+      "detail": "991 predicciones / 991 artículos"
+    },
+    {
+      "id": "indicator_grid_complete",
+      "ok": true,
+      "detail": "540 filas (esperadas 540)"
+    },
+    {
+      "id": "target_200_unique",
+      "ok": true,
+      "detail": "991 reales únicos (objetivo 200)"
+    },
+    {
+      "id": "minimum_100_unique",
+      "ok": true,
+      "detail": "mínimo operativo 100"
+    },
+    {
+      "id": "minimum_20_tvn",
+      "ok": true,
+      "detail": "122 de TVN (mínimo 20)"
+    }
+  ],
+  "warnings": [
+    "7 consultas GDELT fallaron (ver manifest.queries / fetch_meta.errors); cobertura posiblemente incompleta",
+    "714 noticias sin fecha de publicación (GDELT solo informa detección)"
+  ],
+  "snapshotId": "20261007-cfa338b6"
+}

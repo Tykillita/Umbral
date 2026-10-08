@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": "1.0.0",
+  "snapshotId": "20261007-cfa338b6",
+  "version": "1.0.0",
+  "provisional": true,
+  "provisionalReasons": [
+    "no_official_frozen_package",
+    "gdelt_query_failures"
+  ],
+  "containsFixtures": false,
+  "cutoffUtc": "2026-10-07T08:14:34Z",
+  "createdAt": "2026-10-07T13:34:20Z",
+  "pipeline": {
+    "name": "umbral_pipeline",
+    "version": "0.1.0",
+    "python": "3.12.14"
+  },
+  "window": {
+    "startUtc": "2026-07-09T08:14:34Z",
+    "endUtc": "2026-10-07T08:14:34Z",
+    "days": 90,
+    "widenedTo90": true,
+    "note": "Decisión del usuario (D-01 resuelta): se ignora el intervalo [2024-01-01, 2025-10-01) del PDF §7; ventana = días previos a la extracción (30, ampliable a 90); corte = fecha de extracción. La cobertura efectiva de los feeds TVN está en quality_report.news.tvnCoverage; GDELT registra cada consulta y su error."
+  },
+  "queries": [
+    {
+      "source": "tvn_rss",
+      "endpoint": "https://www.tvn-2.com/rss/",
+      "query": null,
+      "from": null,
+      "to": null,
+      "returned": 148
+    },
+    {
+      "source": "tvn_rss",
+      "endpoint": "https://www.tvn-2.com/rss/nacionales/",
+      "query": null,
+      "from": null,
+      "to": null,
+      "returned": 14
+    },
+    {
+      "source": "tvn_rss",
+      "endpoint": "https://www.tvn-2.com/rss/economia/",
+      "query": null,
+      "from": null,
+      "to": null,
+      "returned": 50
+    },
+    {
+      "source": "tvn_rss",
+      "endpoint": "https://www.tvn-2.com/rss/",
+      "query": null,
+      "from": null,
+      "to": null,
+      "returned": 148
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "PAN/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/FP.CPI.TOTL.ZG",
+      "query": "PAN/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/SL.UEM.TOTL.ZS",
+      "query": "PAN/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/SP.POP.TOTL",
+      "query": "PAN/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/IT.NET.USER.ZS",
+      "query": "PAN/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/NE.EXP.GNFS.ZS",
+      "query": "PAN/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "CRI/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/FP.CPI.TOTL.ZG",
+      "query": "CRI/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/SL.UEM.TOTL.ZS",
+      "query": "CRI/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/SP.POP.TOTL",
+      "query": "CRI/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/IT.NET.USER.ZS",
+      "query": "CRI/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/NE.EXP.GNFS.ZS",
+      "query": "CRI/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "COL/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/FP.CPI.TOTL.ZG",
+      "query": "COL/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/SL.UEM.TOTL.ZS",
+      "query": "COL/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/SP.POP.TOTL",
+      "query": "COL/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/IT.NET.USER.ZS",
+      "query": "COL/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/NE.EXP.GNFS.ZS",
+      "query": "COL/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "DOM/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/FP.CPI.TOTL.ZG",
+      "query": "DOM/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/SL.UEM.TOTL.ZS",
+      "query": "DOM/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/SP.POP.TOTL",
+      "query": "DOM/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/IT.NET.USER.ZS",
+      "query": "DOM/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/NE.EXP.GNFS.ZS",
+      "query": "DOM/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "MEX/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/FP.CPI.TOTL.ZG",
+      "query": "MEX/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/SL.UEM.TOTL.ZS",
+      "query": "MEX/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/SP.POP.TOTL",
+      "query": "MEX/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/IT.NET.USER.ZS",
+      "query": "MEX/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/NE.EXP.GNFS.ZS",
+      "query": "MEX/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "GTM/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/FP.CPI.TOTL.ZG",
+      "query": "GTM/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/SL.UEM.TOTL.ZS",
+      "query": "GTM/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/SP.POP.TOTL",
+      "query": "GTM/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/IT.NET.USER.ZS",
+      "query": "GTM/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/NE.EXP.GNFS.ZS",
+      "query": "GTM/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "domain:tvn-2.com",
+      "topic": "tvn",
+      "from": "2026-09-07T08:08:20Z",
+      "to": "2026-10-07T08:08:20Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(Panamá OR Panama) sourcelang:spanish",
+      "topic": "panama",
+      "from": "2026-09-07T08:08:20Z",
+      "to": "2026-09-17T08:08:20Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(Panamá OR Panama) sourcelang:spanish",
+      "topic": "panama",
+      "from": "2026-09-17T08:08:20Z",
+      "to": "2026-09-27T08:08:20Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "usgs",
+      "endpoint": "https://earthquake.usgs.gov/fdsnws/event/1/query",
+      "query": {
+        "format": "geojson",
+        "starttime": "2024-01-01",
+        "endtime": "2024-12-31T23:59:59",
+        "minlatitude": 5,
+        "maxlatitude": 12,
+        "minlongitude": -86,
+        "maxlongitude": -76,
+        "minmagnitude": 3,
+        "orderby": "time-asc"
+      },
+      "from": "2024-01-01",
+      "to": "2024-12-31",
+      "returned": 82
+    },
+    {
+      "source": "tvn_rss",
+      "endpoint": "https://www.tvn-2.com/rss/",
+      "query": null,
+      "from": null,
+      "to": null,
+      "returned": 147
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "domain:tvn-2.com",
+      "topic": "tvn",
+      "from": "2026-09-07T07:28:55Z",
+      "to": "2026-10-07T07:28:55Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(Panamá OR Panama) sourcelang:spanish",
+      "topic": "panama",
+      "from": "2026-09-07T07:28:55Z",
+      "to": "2026-09-17T07:28:55Z",
+      "returned": 250,
+      "truncated250": true
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(Panamá OR Panama) sourcelang:spanish",
+      "topic": "panama",
+      "from": "2026-09-17T07:28:55Z",
+      "to": "2026-09-27T07:28:55Z",
+      "returned": 250,
+      "truncated250": true
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(Panamá OR Panama) sourcelang:spanish",
+      "topic": "panama",
+      "from": "2026-09-27T07:28:55Z",
+      "to": "2026-10-07T07:28:55Z",
+      "returned": 250,
+      "truncated250": true
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(\"Canal de Panamá\" OR \"Panama Canal\" OR logística OR puerto OR contenedores) (Panamá OR Panama)",
+      "topic": "logistica",
+      "from": "2026-09-07T07:28:55Z",
+      "to": "2026-09-17T07:28:55Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(\"Canal de Panamá\" OR \"Panama Canal\" OR logística OR puerto OR contenedores) (Panamá OR Panama)",
+      "topic": "logistica",
+      "from": "2026-09-17T07:28:55Z",
+      "to": "2026-09-27T07:28:55Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(\"Canal de Panamá\" OR \"Panama Canal\" OR logística OR puerto OR contenedores) (Panamá OR Panama)",
+      "topic": "logistica",
+      "from": "2026-09-27T07:28:55Z",
+      "to": "2026-10-07T07:28:55Z",
+      "returned": 123,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(turismo OR turistas OR hoteles OR aeropuerto) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "turismo",
+      "from": "2026-09-07T07:28:55Z",
+      "to": "2026-09-17T07:28:55Z",
+      "returned": 1,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(turismo OR turistas OR hoteles OR aeropuerto) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "turismo",
+      "from": "2026-09-17T07:28:55Z",
+      "to": "2026-09-27T07:28:55Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(turismo OR turistas OR hoteles OR aeropuerto) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "turismo",
+      "from": "2026-09-27T07:28:55Z",
+      "to": "2026-10-07T07:28:55Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(economía OR inflación OR empleo OR inversión OR exportaciones OR PIB) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "economia",
+      "from": "2026-09-07T07:28:55Z",
+      "to": "2026-09-17T07:28:55Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(economía OR inflación OR empleo OR inversión OR exportaciones OR PIB) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "economia",
+      "from": "2026-09-17T07:28:55Z",
+      "to": "2026-09-27T07:28:55Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(economía OR inflación OR empleo OR inversión OR exportaciones OR PIB) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "economia",
+      "from": "2026-09-27T07:28:55Z",
+      "to": "2026-10-07T07:28:55Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(sismo OR terremoto OR inundación OR lluvias OR huracán OR sequía) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "naturales",
+      "from": "2026-09-07T07:28:55Z",
+      "to": "2026-09-17T07:28:55Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(sismo OR terremoto OR inundación OR lluvias OR huracán OR sequía) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "naturales",
+      "from": "2026-09-17T07:28:55Z",
+      "to": "2026-09-27T07:28:55Z",
+      "returned": 0,
+      "error": "HTTPStatusError: HTTP 429"
+    },
+    {
+      "source": "gdelt_doc",
+      "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+      "query": "(sismo OR terremoto OR inundación OR lluvias OR huracán OR sequía) (Panamá OR Panama) sourcelang:spanish",
+      "topic": "naturales",
+      "from": "2026-09-27T07:28:55Z",
+      "to": "2026-10-07T07:28:55Z",
+      "returned": 0,
+      "truncated250": false
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "PAN/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/FP.CPI.TOTL.ZG",
+      "query": "PAN/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/SL.UEM.TOTL.ZS",
+      "query": "PAN/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/SP.POP.TOTL",
+      "query": "PAN/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/IT.NET.USER.ZS",
+      "query": "PAN/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/PAN/indicator/NE.EXP.GNFS.ZS",
+      "query": "PAN/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "CRI/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/FP.CPI.TOTL.ZG",
+      "query": "CRI/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/SL.UEM.TOTL.ZS",
+      "query": "CRI/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/SP.POP.TOTL",
+      "query": "CRI/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/IT.NET.USER.ZS",
+      "query": "CRI/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/CRI/indicator/NE.EXP.GNFS.ZS",
+      "query": "CRI/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "COL/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/FP.CPI.TOTL.ZG",
+      "query": "COL/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/SL.UEM.TOTL.ZS",
+      "query": "COL/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/SP.POP.TOTL",
+      "query": "COL/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/IT.NET.USER.ZS",
+      "query": "COL/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/COL/indicator/NE.EXP.GNFS.ZS",
+      "query": "COL/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "DOM/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/FP.CPI.TOTL.ZG",
+      "query": "DOM/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/SL.UEM.TOTL.ZS",
+      "query": "DOM/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/SP.POP.TOTL",
+      "query": "DOM/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/IT.NET.USER.ZS",
+      "query": "DOM/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/DOM/indicator/NE.EXP.GNFS.ZS",
+      "query": "DOM/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "MEX/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/FP.CPI.TOTL.ZG",
+      "query": "MEX/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/SL.UEM.TOTL.ZS",
+      "query": "MEX/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/SP.POP.TOTL",
+      "query": "MEX/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/IT.NET.USER.ZS",
+      "query": "MEX/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/MEX/indicator/NE.EXP.GNFS.ZS",
+      "query": "MEX/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/NY.GDP.MKTP.KD.ZG",
+      "query": "GTM/NY.GDP.MKTP.KD.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/FP.CPI.TOTL.ZG",
+      "query": "GTM/FP.CPI.TOTL.ZG",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/SL.UEM.TOTL.ZS",
+      "query": "GTM/SL.UEM.TOTL.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/SP.POP.TOTL",
+      "query": "GTM/SP.POP.TOTL",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/IT.NET.USER.ZS",
+      "query": "GTM/IT.NET.USER.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "world_bank",
+      "endpoint": "https://api.worldbank.org/v2/country/GTM/indicator/NE.EXP.GNFS.ZS",
+      "query": "GTM/NE.EXP.GNFS.ZS",
+      "from": "2010",
+      "to": "2024",
+      "returned": 15
+    },
+    {
+      "source": "usgs",
+      "endpoint": "https://earthquake.usgs.gov/fdsnws/event/1/query",
+      "query": {
+        "format": "geojson",
+        "starttime": "2024-01-01",
+        "endtime": "2024-12-31T23:59:59",
+        "minlatitude": 5,
+        "maxlatitude": 12,
+        "minlongitude": -86,
+        "maxlongitude": -76,
+        "minmagnitude": 3,
+        "orderby": "time-asc"
+      },
+      "from": "2024-01-01",
+      "to": "2024-12-31",
+      "returned": 82
+    }
+  ],
+  "files": {
+    "articles.jsonl": {
+      "sha256": "4c719044cb745234d370d5263ed96e2a5b67f110f776c6db462b9577e578c070",
+      "bytes": 998822,
+      "records": 991
+    },
+    "indicators.jsonl": {
+      "sha256": "79f5f36cd2702b4bbc3b359db79fbf6a94335b9844d8f0398813b97e1b57cde3",
+      "bytes": 304566,
+      "records": 540
+    },
+    "predictions.jsonl": {
+      "sha256": "7390a638230cc88bee046ce8b51ed7e57ee39beacab38e2214475bc43a7ad8e4",
+      "bytes": 764568,
+      "records": 991
+    },
+    "clusters.jsonl": {
+      "sha256": "757391ce17032e900499418b71d4f96792a07bf6eb1cf8a2408ce11e67baf06f",
+      "bytes": 521689,
+      "records": 910
+    },
+    "invalid.jsonl": {
+      "sha256": "fee7e5eba837015f3c6788648eb076feaa8e9791c47ac321116c99d724cf40f2",
+      "bytes": 54790,
+      "records": 80
+    },
+    "quality_report.json": {
+      "sha256": "83f4164d6c6fa01a0495e06ad104bb5687a42ba871ed6c36416d3939ea9ddf52",
+      "bytes": 3249,
+      "records": null
+    },
+    "noticias.csv": {
+      "sha256": "7c82fa4512397bfb8de15abb66becf7c72b53931001561fd56deb52c2e496d69",
+      "bytes": 314059,
+      "records": null
+    },
+    "indicadores.csv": {
+      "sha256": "b8ef3e3a072060de3bd1738c998c8233cad283917d9efc5f97fbb8bab2a15252",
+      "bytes": 143814,
+      "records": null
+    },
+    "fuentes.json": {
+      "sha256": "6dbe3e24e2160484439a19fc0fe2c0f8b5d52e87357f137569b3e76a5e7f0551",
+      "bytes": 4268,
+      "records": null
+    },
+    "DATA_DICTIONARY.md": {
+      "sha256": "2740e51878e149a7a006c9e5a85e71c8fa972d951a5cc269f31d96b96510d9fc",
+      "bytes": 1911,
+      "records": null
+    },
+    "TERMS_OF_USE.md": {
+      "sha256": "39c75d29c8b631a62e9de2d9aef7369819c5ccce1a4bb19e71c4e5e529511e47",
+      "bytes": 1959,
+      "records": null
+    },
+    "events.geojson": {
+      "sha256": "7894f74637ac44b6e15071fedd47d168becda3a9bbe6da4fa226b6acc5323c4c",
+      "bytes": 35320,
+      "records": 82
+    }
+  },
+  "counts": {
+    "articlesValid": 991,
+    "articlesInvalid": 80,
+    "tvn": 122,
+    "gdelt": 869,
+    "fixture": 0,
+    "indicatorRows": 540,
+    "indicatorValues": 540,
+    "clusters": 910,
+    "predictions": 991
+  },
+  "classifier": {
+    "classifier": "laya",
+    "modelId": "convaiinnovations/laya/multilingual",
+    "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+    "layaPackageVersion": "0.3.28",
+    "torchVersion": "2.14.1+cpu",
+    "runAt": "2026-10-07T13:18:31Z",
+    "device": "cpu",
+    "loadSeconds": 8.6,
+    "forwardCalls": 1025,
+    "threshold": 0.5,
+    "questions": {
+      "category": "choice 6+otro (laya-category-v1)",
+      "geo": "relevancia por contenido (lexical-content-v2); la pregunta geo de Laya se guarda en geoLayaRaw"
+    },
+    "scopeMethod": "laya-category-v1",
+    "note": "Probabilidades sin calibrar (calibrated=false).",
+    "tiebreakCalls": 34,
+    "predictionsInputSha256": "d2d97455999dee7ef148f127f7ca341fbabf98565384b1619d96aea5787d46b8",
+    "articlesSha256": "4c719044cb745234d370d5263ed96e2a5b67f110f776c6db462b9577e578c070"
+  },
+  "sources": [
+    {
+      "id": "tvn_rss",
+      "name": "TVN Panamá – feed RSS público",
+      "url": "https://www.tvn-2.com/rss/",
+      "license": "Sin licencia abierta. Solo se conservan metadatos (titular, URL, fecha).",
+      "terms": "El RSS observado contiene noticias, fechas y descripciones; eso no implica licencia abierta sobre artículos, videos o imágenes (PDF §12). No se redistribuyen descripciones/extractos ni cuerpos; reutilización de extractos requiere autorización explícita del patrocinador.",
+      "extractedAt": "2026-10-07T08:14:34Z",
+      "transformations": [
+        "html_unescape_titles",
+        "normalize_whitespace_nfc",
+        "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+        "collapse_duplicates_by_canonical_url",
+        "normalize_dates_utc_iso8601",
+        "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+        "validate_ids_urls_dates_fields -> invalid.jsonl",
+        "classify_category_and_geo",
+        "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+        "detect_recirculation(>14 d entre publicación y detección)"
+      ]
+    },
+    {
+      "id": "gdelt_doc",
+      "name": "GDELT DOC 2.0 API (ArtList)",
+      "url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts",
+      "license": "GDELT es de uso libre con atribución; la API no transfiere derechos sobre los artículos de los medios enlazados.",
+      "terms": "Máx. 250 artículos por consulta; 1 consulta cada 5 s. 'seendate' es detección, no publicación. Se guardan titular, URL, dominio, idioma y país del medio.",
+      "extractedAt": "2026-10-07T08:08:20Z",
+      "transformations": [
+        "html_unescape_titles",
+        "normalize_whitespace_nfc",
+        "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+        "collapse_duplicates_by_canonical_url",
+        "normalize_dates_utc_iso8601",
+        "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+        "validate_ids_urls_dates_fields -> invalid.jsonl",
+        "classify_category_and_geo",
+        "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+        "detect_recirculation(>14 d entre publicación y detección)"
+      ]
+    },
+    {
+      "id": "world_bank",
+      "name": "Banco Mundial – Indicators API v2",
+      "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+      "license": "CC BY 4.0 (salvo excepciones de terceros indicadas en los metadatos de cada indicador)",
+      "terms": "Atribución obligatoria («World Bank Open Data»); revisar excepciones de terceros por indicador. Los datos pueden revisarse; el período de referencia no coincide con el año de extracción.",
+      "extractedAt": "2026-10-07T08:08:20Z",
+      "transformations": [
+        "html_unescape_titles",
+        "normalize_whitespace_nfc",
+        "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+        "collapse_duplicates_by_canonical_url",
+        "normalize_dates_utc_iso8601",
+        "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+        "validate_ids_urls_dates_fields -> invalid.jsonl",
+        "classify_category_and_geo",
+        "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+        "detect_recirculation(>14 d entre publicación y detección)"
+      ]
+    },
+    {
+      "id": "usgs",
+      "name": "USGS – catálogo sísmico (FDSN event)",
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1",
+      "license": "Dominio público del Gobierno de EE. UU. salvo elementos de terceros.",
+      "terms": "Usar solo para hechos sísmicos; nunca como evidencia de inundación o pérdidas económicas. La caja regional no equivale al territorio de Panamá.",
+      "extractedAt": "2026-10-07T08:08:20Z",
+      "transformations": [
+        "html_unescape_titles",
+        "normalize_whitespace_nfc",
+        "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+        "collapse_duplicates_by_canonical_url",
+        "normalize_dates_utc_iso8601",
+        "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+        "validate_ids_urls_dates_fields -> invalid.jsonl",
+        "classify_category_and_geo",
+        "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+        "detect_recirculation(>14 d entre publicación y detección)"
+      ]
+    }
+  ],
+  "licenseNotes": "Solo metadatos de noticias (sin cuerpos); Banco Mundial CC BY 4.0 con atribución; USGS dominio público. Ver TERMS_OF_USE.md.",
+  "transformations": [
+    "html_unescape_titles",
+    "normalize_whitespace_nfc",
+    "canonicalize_url(https, sin www, sin tracking, sin fragmento)",
+    "collapse_duplicates_by_canonical_url",
+    "normalize_dates_utc_iso8601",
+    "date_from_url_pattern(solo si no hay publicación; basis=url_pattern)",
+    "validate_ids_urls_dates_fields -> invalid.jsonl",
+    "classify_category_and_geo",
+    "cluster_duplicates(title_exact, title_fuzzy, bm25+tiebreak)",
+    "detect_recirculation(>14 d entre publicación y detección)"
+  ],
+  "snapshotHashInputs": "sha256(articles)+sha256(indicators)+sha256(predictions)+sha256(clusters)"
+}

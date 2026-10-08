@@ -1,0 +1,28 @@
+{
+  "command": "eval/run_classification.py --labels eval/labels/cls_sample.20261007-cfa338b6.jsonl --snapshot laya=data/snapshots/20261007-cfa338b6 --snapshot baseline=data/snapshots/20261007-55d70099 --out eval/results/classification-pending-cfa338b6.json",
+  "ranAt": "2026-10-07T15:08:25Z",
+  "python": "3.12.14",
+  "labelsFile": "eval\\labels\\cls_sample.20261007-cfa338b6.jsonl",
+  "labelsTotal": 0,
+  "labelMethod": [],
+  "labelers": [],
+  "results": {
+    "laya": {
+      "snapshotId": "20261007-cfa338b6",
+      "classifier": "laya",
+      "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+      "labeledInSnapshot": 0,
+      "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050"
+    },
+    "baseline": {
+      "snapshotId": "20261007-55d70099",
+      "classifier": "baseline",
+      "modelVersion": "1.0.0",
+      "labeledInSnapshot": 0,
+      "manifestSha256": "b5890022c50c5eee9ab11ba6fb7139b6bc4a5154ee2b363e3179d9c9b0853c55"
+    }
+  },
+  "evaluationKind": "pending",
+  "labelsSha256": "f7d78d07f08b698577afa55c246c15cdf291eb90899bf918709e63c1434f8269",
+  "evaluatorSha256": "c69b3ed8202d23f6e84a40646168edd533c3304bf29c7169c66bce202e5867a8"
+}

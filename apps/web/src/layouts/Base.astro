@@ -1,0 +1,29 @@
+---
+import '../styles/global.css';
+import '@fontsource/barlow-condensed/latin-700.css';
+import '@fontsource/barlow-condensed/latin-800.css';
+import '@fontsource/atkinson-hyperlegible/latin-400.css';
+import '@fontsource/atkinson-hyperlegible/latin-700.css';
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Umbral: agenda editorial priorizada, evidencia trazable y borradores para revisión humana (TVN Media).' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fff7df" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" href="/brand/favicon-32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/brand/favicon-16.png" sizes="16x16" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,4318 @@
+{
+  "command": "eval/exploratory/probe_scope.py --out eval/results/scope-probe-20261007.json",
+  "ranAt": "2026-10-07T12:13:46Z",
+  "status": "exploratorio (lista propia pequeña, un solo autor; no es macro-F1 ni etiquetas humanas)",
+  "model": {
+    "classifier": "laya",
+    "modelId": "convaiinnovations/laya/multilingual",
+    "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+    "layaPackageVersion": "0.3.28",
+    "torchVersion": "2.14.1+cpu",
+    "runAt": "2026-10-07T12:11:58Z",
+    "device": "cpu",
+    "loadSeconds": 8.7,
+    "forwardCalls": 264,
+    "threshold": 0.5,
+    "questions": {
+      "category": "choice 6+otro",
+      "geo": "choice panama/regional/none"
+    },
+    "note": "Probabilidades sin calibrar (calibrated=false)."
+  },
+  "summary": {
+    "v0_actual|margen=0.0|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 28,
+        "den": 36,
+        "value": 0.778
+      },
+      "inScopeRetained": {
+        "num": 25,
+        "den": 30,
+        "value": 0.833
+      },
+      "inScopeExactCategory": {
+        "num": 24,
+        "den": 30,
+        "value": 0.8
+      },
+      "score": 0.806,
+      "outOfScopeMissed": [
+        {
+          "title": "Policía aprehende a sospechosos de robar una tienda de conveniencia",
+          "pred": "economia"
+        },
+        {
+          "title": "Balacera deja dos heridos en un barrio de la ciudad",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Mujer denuncia que fue víctima de una estafa por redes sociales",
+          "pred": "economia"
+        },
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        },
+        {
+          "title": "Receta fácil de arroz con pollo para el almuerzo familiar",
+          "pred": "economia"
+        },
+        {
+          "title": "Incendio destruye una casa y deja a una familia sin hogar",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Accidente de tránsito deja un muerto en la carretera",
+          "pred": "logistica_canal"
+        }
+      ]
+    },
+    "v0_actual|margen=0.2|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 30,
+        "den": 36,
+        "value": 0.833
+      },
+      "inScopeRetained": {
+        "num": 25,
+        "den": 30,
+        "value": 0.833
+      },
+      "inScopeExactCategory": {
+        "num": 24,
+        "den": 30,
+        "value": 0.8
+      },
+      "score": 0.833,
+      "outOfScopeMissed": [
+        {
+          "title": "Policía aprehende a sospechosos de robar una tienda de conveniencia",
+          "pred": "economia"
+        },
+        {
+          "title": "Balacera deja dos heridos en un barrio de la ciudad",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Receta fácil de arroz con pollo para el almuerzo familiar",
+          "pred": "economia"
+        },
+        {
+          "title": "Incendio destruye una casa y deja a una familia sin hogar",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Accidente de tránsito deja un muerto en la carretera",
+          "pred": "logistica_canal"
+        }
+      ]
+    },
+    "v0_actual|margen=0.0|puerta>=0.8": {
+      "outOfScopeRecall": {
+        "num": 28,
+        "den": 36,
+        "value": 0.778
+      },
+      "inScopeRetained": {
+        "num": 25,
+        "den": 30,
+        "value": 0.833
+      },
+      "inScopeExactCategory": {
+        "num": 24,
+        "den": 30,
+        "value": 0.8
+      },
+      "score": 0.806,
+      "outOfScopeMissed": [
+        {
+          "title": "Policía aprehende a sospechosos de robar una tienda de conveniencia",
+          "pred": "economia"
+        },
+        {
+          "title": "Balacera deja dos heridos en un barrio de la ciudad",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Mujer denuncia que fue víctima de una estafa por redes sociales",
+          "pred": "economia"
+        },
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        },
+        {
+          "title": "Receta fácil de arroz con pollo para el almuerzo familiar",
+          "pred": "economia"
+        },
+        {
+          "title": "Incendio destruye una casa y deja a una familia sin hogar",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Accidente de tránsito deja un muerto en la carretera",
+          "pred": "logistica_canal"
+        }
+      ]
+    },
+    "v0_actual|margen=0.0|puerta>=0.95": {
+      "outOfScopeRecall": {
+        "num": 28,
+        "den": 36,
+        "value": 0.778
+      },
+      "inScopeRetained": {
+        "num": 25,
+        "den": 30,
+        "value": 0.833
+      },
+      "inScopeExactCategory": {
+        "num": 24,
+        "den": 30,
+        "value": 0.8
+      },
+      "score": 0.806,
+      "outOfScopeMissed": [
+        {
+          "title": "Policía aprehende a sospechosos de robar una tienda de conveniencia",
+          "pred": "economia"
+        },
+        {
+          "title": "Balacera deja dos heridos en un barrio de la ciudad",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Mujer denuncia que fue víctima de una estafa por redes sociales",
+          "pred": "economia"
+        },
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        },
+        {
+          "title": "Receta fácil de arroz con pollo para el almuerzo familiar",
+          "pred": "economia"
+        },
+        {
+          "title": "Incendio destruye una casa y deja a una familia sin hogar",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Accidente de tránsito deja un muerto en la carretera",
+          "pred": "logistica_canal"
+        }
+      ]
+    },
+    "v1_criterios|margen=0.0|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 22,
+        "den": 30,
+        "value": 0.733
+      },
+      "inScopeExactCategory": {
+        "num": 21,
+        "den": 30,
+        "value": 0.7
+      },
+      "score": 0.867,
+      "outOfScopeMissed": []
+    },
+    "v1_criterios|margen=0.2|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 22,
+        "den": 30,
+        "value": 0.733
+      },
+      "inScopeExactCategory": {
+        "num": 21,
+        "den": 30,
+        "value": 0.7
+      },
+      "score": 0.867,
+      "outOfScopeMissed": []
+    },
+    "v1_criterios|margen=0.0|puerta>=0.8": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 22,
+        "den": 30,
+        "value": 0.733
+      },
+      "inScopeExactCategory": {
+        "num": 21,
+        "den": 30,
+        "value": 0.7
+      },
+      "score": 0.867,
+      "outOfScopeMissed": []
+    },
+    "v1_criterios|margen=0.0|puerta>=0.95": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 22,
+        "den": 30,
+        "value": 0.733
+      },
+      "inScopeExactCategory": {
+        "num": 21,
+        "den": 30,
+        "value": 0.7
+      },
+      "score": 0.867,
+      "outOfScopeMissed": []
+    },
+    "v1b_criterios_ampliados|margen=0.0|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 34,
+        "den": 36,
+        "value": 0.944
+      },
+      "inScopeRetained": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "inScopeExactCategory": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "score": 0.789,
+      "outOfScopeMissed": [
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        }
+      ]
+    },
+    "v1b_criterios_ampliados|margen=0.2|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 34,
+        "den": 36,
+        "value": 0.944
+      },
+      "inScopeRetained": {
+        "num": 17,
+        "den": 30,
+        "value": 0.567
+      },
+      "inScopeExactCategory": {
+        "num": 17,
+        "den": 30,
+        "value": 0.567
+      },
+      "score": 0.756,
+      "outOfScopeMissed": [
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        }
+      ]
+    },
+    "v1b_criterios_ampliados|margen=0.0|puerta>=0.8": {
+      "outOfScopeRecall": {
+        "num": 34,
+        "den": 36,
+        "value": 0.944
+      },
+      "inScopeRetained": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "inScopeExactCategory": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "score": 0.789,
+      "outOfScopeMissed": [
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        }
+      ]
+    },
+    "v1b_criterios_ampliados|margen=0.0|puerta>=0.95": {
+      "outOfScopeRecall": {
+        "num": 34,
+        "den": 36,
+        "value": 0.944
+      },
+      "inScopeRetained": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "inScopeExactCategory": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "score": 0.789,
+      "outOfScopeMissed": [
+        {
+          "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+          "pred": "eventos_naturales"
+        },
+        {
+          "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+          "pred": "regulacion"
+        }
+      ]
+    },
+    "v2_v1+puerta|margen=0.0|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 15,
+        "den": 30,
+        "value": 0.5
+      },
+      "inScopeExactCategory": {
+        "num": 14,
+        "den": 30,
+        "value": 0.467
+      },
+      "score": 0.75,
+      "outOfScopeMissed": []
+    },
+    "v2_v1+puerta|margen=0.2|puerta>=0.5": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 15,
+        "den": 30,
+        "value": 0.5
+      },
+      "inScopeExactCategory": {
+        "num": 14,
+        "den": 30,
+        "value": 0.467
+      },
+      "score": 0.75,
+      "outOfScopeMissed": []
+    },
+    "v2_v1+puerta|margen=0.0|puerta>=0.8": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 20,
+        "den": 30,
+        "value": 0.667
+      },
+      "inScopeExactCategory": {
+        "num": 19,
+        "den": 30,
+        "value": 0.633
+      },
+      "score": 0.833,
+      "outOfScopeMissed": []
+    },
+    "v2_v1+puerta|margen=0.0|puerta>=0.95": {
+      "outOfScopeRecall": {
+        "num": 36,
+        "den": 36,
+        "value": 1.0
+      },
+      "inScopeRetained": {
+        "num": 22,
+        "den": 30,
+        "value": 0.733
+      },
+      "inScopeExactCategory": {
+        "num": 21,
+        "den": 30,
+        "value": 0.7
+      },
+      "score": 0.867,
+      "outOfScopeMissed": []
+    }
+  },
+  "rows": [
+    {
+      "id": "os00",
+      "title": "Hallan sin vida a un joven con heridas de arma blanca en una vivienda",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.3081,
+            "logistica_canal": 0.1004,
+            "turismo": 0.1842,
+            "servicios_publicos": 0.0647,
+            "eventos_naturales": 0.0909,
+            "regulacion": 0.0119,
+            "otro": 0.2397
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1146,
+            "logistica_canal": 0.0301,
+            "turismo": 0.0207,
+            "servicios_publicos": 0.0437,
+            "eventos_naturales": 0.0275,
+            "regulacion": 0.0142,
+            "otro": 0.7493
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0538,
+            "logistica_canal": 0.0443,
+            "turismo": 0.0582,
+            "servicios_publicos": 0.1922,
+            "eventos_naturales": 0.0317,
+            "regulacion": 0.008,
+            "otro": 0.6118
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1146,
+            "logistica_canal": 0.0301,
+            "turismo": 0.0207,
+            "servicios_publicos": 0.0437,
+            "eventos_naturales": 0.0275,
+            "regulacion": 0.0142,
+            "otro": 0.7493
+          },
+          "scope": {
+            "A": 0.0359,
+            "B": 0.9641
+          }
+        }
+      }
+    },
+    {
+      "id": "os01",
+      "title": "Policía aprehende a sospechosos de robar una tienda de conveniencia",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.5078,
+            "logistica_canal": 0.0517,
+            "turismo": 0.0767,
+            "servicios_publicos": 0.1425,
+            "eventos_naturales": 0.0161,
+            "regulacion": 0.017,
+            "otro": 0.1882
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0642,
+            "logistica_canal": 0.0184,
+            "turismo": 0.0231,
+            "servicios_publicos": 0.0708,
+            "eventos_naturales": 0.0103,
+            "regulacion": 0.0061,
+            "otro": 0.807
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.1036,
+            "logistica_canal": 0.059,
+            "turismo": 0.0722,
+            "servicios_publicos": 0.2648,
+            "eventos_naturales": 0.0186,
+            "regulacion": 0.0134,
+            "otro": 0.4683
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0642,
+            "logistica_canal": 0.0184,
+            "turismo": 0.0231,
+            "servicios_publicos": 0.0708,
+            "eventos_naturales": 0.0103,
+            "regulacion": 0.0061,
+            "otro": 0.807
+          },
+          "scope": {
+            "A": 0.0188,
+            "B": 0.9812
+          }
+        }
+      }
+    },
+    {
+      "id": "os02",
+      "title": "Condenan a 20 años de cárcel a hombre por homicidio de su vecino",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.2159,
+            "logistica_canal": 0.0928,
+            "turismo": 0.0363,
+            "servicios_publicos": 0.0545,
+            "eventos_naturales": 0.1665,
+            "regulacion": 0.0324,
+            "otro": 0.4015
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1345,
+            "logistica_canal": 0.0341,
+            "turismo": 0.0197,
+            "servicios_publicos": 0.0321,
+            "eventos_naturales": 0.0253,
+            "regulacion": 0.0296,
+            "otro": 0.7247
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.046,
+            "logistica_canal": 0.0315,
+            "turismo": 0.029,
+            "servicios_publicos": 0.1641,
+            "eventos_naturales": 0.0436,
+            "regulacion": 0.0081,
+            "otro": 0.6777
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1345,
+            "logistica_canal": 0.0341,
+            "turismo": 0.0197,
+            "servicios_publicos": 0.0321,
+            "eventos_naturales": 0.0253,
+            "regulacion": 0.0296,
+            "otro": 0.7247
+          },
+          "scope": {
+            "A": 0.0122,
+            "B": 0.9878
+          }
+        }
+      }
+    },
+    {
+      "id": "os03",
+      "title": "Detienen a conductor ebrio tras chocar contra un poste",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.3585,
+            "logistica_canal": 0.0628,
+            "turismo": 0.0567,
+            "servicios_publicos": 0.0373,
+            "eventos_naturales": 0.3704,
+            "regulacion": 0.0095,
+            "otro": 0.1048
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1001,
+            "logistica_canal": 0.0183,
+            "turismo": 0.0105,
+            "servicios_publicos": 0.0082,
+            "eventos_naturales": 0.0502,
+            "regulacion": 0.005,
+            "otro": 0.8077
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0899,
+            "logistica_canal": 0.057,
+            "turismo": 0.0547,
+            "servicios_publicos": 0.139,
+            "eventos_naturales": 0.1067,
+            "regulacion": 0.0135,
+            "otro": 0.5391
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1001,
+            "logistica_canal": 0.0183,
+            "turismo": 0.0105,
+            "servicios_publicos": 0.0082,
+            "eventos_naturales": 0.0502,
+            "regulacion": 0.005,
+            "otro": 0.8077
+          },
+          "scope": {
+            "A": 0.141,
+            "B": 0.859
+          }
+        }
+      }
+    },
+    {
+      "id": "os04",
+      "title": "Balacera deja dos heridos en un barrio de la ciudad",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0025,
+            "logistica_canal": 0.0845,
+            "turismo": 0.0053,
+            "servicios_publicos": 0.1991,
+            "eventos_naturales": 0.6926,
+            "regulacion": 0.001,
+            "otro": 0.015
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0147,
+            "logistica_canal": 0.141,
+            "turismo": 0.004,
+            "servicios_publicos": 0.1954,
+            "eventos_naturales": 0.3356,
+            "regulacion": 0.0022,
+            "otro": 0.3071
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0129,
+            "logistica_canal": 0.1461,
+            "turismo": 0.0101,
+            "servicios_publicos": 0.1329,
+            "eventos_naturales": 0.2024,
+            "regulacion": 0.0046,
+            "otro": 0.491
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0147,
+            "logistica_canal": 0.141,
+            "turismo": 0.004,
+            "servicios_publicos": 0.1954,
+            "eventos_naturales": 0.3356,
+            "regulacion": 0.0022,
+            "otro": 0.3071
+          },
+          "scope": {
+            "A": 0.0932,
+            "B": 0.9068
+          }
+        }
+      }
+    },
+    {
+      "id": "os05",
+      "title": "Mujer denuncia que fue víctima de una estafa por redes sociales",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.5053,
+            "logistica_canal": 0.0197,
+            "turismo": 0.0169,
+            "servicios_publicos": 0.0212,
+            "eventos_naturales": 0.0065,
+            "regulacion": 0.0069,
+            "otro": 0.4236
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1153,
+            "logistica_canal": 0.0087,
+            "turismo": 0.0085,
+            "servicios_publicos": 0.0094,
+            "eventos_naturales": 0.0032,
+            "regulacion": 0.0027,
+            "otro": 0.8522
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.1285,
+            "logistica_canal": 0.0123,
+            "turismo": 0.0261,
+            "servicios_publicos": 0.0815,
+            "eventos_naturales": 0.0058,
+            "regulacion": 0.0068,
+            "otro": 0.739
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1153,
+            "logistica_canal": 0.0087,
+            "turismo": 0.0085,
+            "servicios_publicos": 0.0094,
+            "eventos_naturales": 0.0032,
+            "regulacion": 0.0027,
+            "otro": 0.8522
+          },
+          "scope": {
+            "A": 0.2083,
+            "B": 0.7917
+          }
+        }
+      }
+    },
+    {
+      "id": "os06",
+      "title": "Incautan paquetes de droga en un operativo antidrogas",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.3878,
+            "logistica_canal": 0.0677,
+            "turismo": 0.0251,
+            "servicios_publicos": 0.0276,
+            "eventos_naturales": 0.0254,
+            "regulacion": 0.0705,
+            "otro": 0.396
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0739,
+            "logistica_canal": 0.016,
+            "turismo": 0.0043,
+            "servicios_publicos": 0.012,
+            "eventos_naturales": 0.0274,
+            "regulacion": 0.0105,
+            "otro": 0.8558
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0785,
+            "logistica_canal": 0.0604,
+            "turismo": 0.0268,
+            "servicios_publicos": 0.1668,
+            "eventos_naturales": 0.042,
+            "regulacion": 0.0328,
+            "otro": 0.5927
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0739,
+            "logistica_canal": 0.016,
+            "turismo": 0.0043,
+            "servicios_publicos": 0.012,
+            "eventos_naturales": 0.0274,
+            "regulacion": 0.0105,
+            "otro": 0.8558
+          },
+          "scope": {
+            "A": 0.0769,
+            "B": 0.9231
+          }
+        }
+      }
+    },
+    {
+      "id": "os07",
+      "title": "Selección nacional de fútbol vence 2-1 a su rival en partido amistoso",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0459,
+            "logistica_canal": 0.0128,
+            "turismo": 0.0038,
+            "servicios_publicos": 0.0094,
+            "eventos_naturales": 0.0267,
+            "regulacion": 0.0077,
+            "otro": 0.8936
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0102,
+            "logistica_canal": 0.0033,
+            "turismo": 0.0017,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.0084,
+            "regulacion": 0.0026,
+            "otro": 0.9712
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0332,
+            "logistica_canal": 0.0081,
+            "turismo": 0.0041,
+            "servicios_publicos": 0.1075,
+            "eventos_naturales": 0.0323,
+            "regulacion": 0.0045,
+            "otro": 0.8103
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0102,
+            "logistica_canal": 0.0033,
+            "turismo": 0.0017,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.0084,
+            "regulacion": 0.0026,
+            "otro": 0.9712
+          },
+          "scope": {
+            "A": 0.0169,
+            "B": 0.9831
+          }
+        }
+      }
+    },
+    {
+      "id": "os08",
+      "title": "Equipo de béisbol gana el campeonato tras once entradas",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.058,
+            "logistica_canal": 0.0165,
+            "turismo": 0.0049,
+            "servicios_publicos": 0.0087,
+            "eventos_naturales": 0.0475,
+            "regulacion": 0.0182,
+            "otro": 0.8463
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0102,
+            "logistica_canal": 0.0036,
+            "turismo": 0.0022,
+            "servicios_publicos": 0.0032,
+            "eventos_naturales": 0.0245,
+            "regulacion": 0.0089,
+            "otro": 0.9473
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0553,
+            "logistica_canal": 0.0064,
+            "turismo": 0.0043,
+            "servicios_publicos": 0.0798,
+            "eventos_naturales": 0.0447,
+            "regulacion": 0.0092,
+            "otro": 0.8004
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0102,
+            "logistica_canal": 0.0036,
+            "turismo": 0.0022,
+            "servicios_publicos": 0.0032,
+            "eventos_naturales": 0.0245,
+            "regulacion": 0.0089,
+            "otro": 0.9473
+          },
+          "scope": {
+            "A": 0.003,
+            "B": 0.997
+          }
+        }
+      }
+    },
+    {
+      "id": "os09",
+      "title": "Tenista lidera el ranking mundial después de ganar el torneo",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0195,
+            "logistica_canal": 0.0066,
+            "turismo": 0.0096,
+            "servicios_publicos": 0.0031,
+            "eventos_naturales": 0.0082,
+            "regulacion": 0.0013,
+            "otro": 0.9517
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0202,
+            "logistica_canal": 0.0026,
+            "turismo": 0.0102,
+            "servicios_publicos": 0.0017,
+            "eventos_naturales": 0.0141,
+            "regulacion": 0.0015,
+            "otro": 0.9497
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0112,
+            "logistica_canal": 0.0043,
+            "turismo": 0.0175,
+            "servicios_publicos": 0.0189,
+            "eventos_naturales": 0.0094,
+            "regulacion": 0.0012,
+            "otro": 0.9374
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0202,
+            "logistica_canal": 0.0026,
+            "turismo": 0.0102,
+            "servicios_publicos": 0.0017,
+            "eventos_naturales": 0.0141,
+            "regulacion": 0.0015,
+            "otro": 0.9497
+          },
+          "scope": {
+            "A": 0.0619,
+            "B": 0.9381
+          }
+        }
+      }
+    },
+    {
+      "id": "os10",
+      "title": "Boxeador defenderá su título el próximo mes en Las Vegas",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0816,
+            "logistica_canal": 0.0256,
+            "turismo": 0.1107,
+            "servicios_publicos": 0.0105,
+            "eventos_naturales": 0.0523,
+            "regulacion": 0.0272,
+            "otro": 0.6921
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0201,
+            "logistica_canal": 0.0071,
+            "turismo": 0.0361,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.0217,
+            "regulacion": 0.003,
+            "otro": 0.9094
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0008,
+            "logistica_canal": 0.0007,
+            "turismo": 0.002,
+            "servicios_publicos": 0.0009,
+            "eventos_naturales": 0.0009,
+            "regulacion": 0.0001,
+            "otro": 0.9945
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0201,
+            "logistica_canal": 0.0071,
+            "turismo": 0.0361,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.0217,
+            "regulacion": 0.003,
+            "otro": 0.9094
+          },
+          "scope": {
+            "A": 0.1928,
+            "B": 0.8072
+          }
+        }
+      }
+    },
+    {
+      "id": "os11",
+      "title": "Real Madrid y Barcelona empatan en el clásico",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.1033,
+            "logistica_canal": 0.0109,
+            "turismo": 0.0232,
+            "servicios_publicos": 0.0042,
+            "eventos_naturales": 0.0157,
+            "regulacion": 0.0019,
+            "otro": 0.8408
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0442,
+            "logistica_canal": 0.0033,
+            "turismo": 0.0095,
+            "servicios_publicos": 0.0024,
+            "eventos_naturales": 0.0098,
+            "regulacion": 0.0014,
+            "otro": 0.9294
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0246,
+            "logistica_canal": 0.0044,
+            "turismo": 0.0227,
+            "servicios_publicos": 0.0146,
+            "eventos_naturales": 0.009,
+            "regulacion": 0.0014,
+            "otro": 0.9232
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0442,
+            "logistica_canal": 0.0033,
+            "turismo": 0.0095,
+            "servicios_publicos": 0.0024,
+            "eventos_naturales": 0.0098,
+            "regulacion": 0.0014,
+            "otro": 0.9294
+          },
+          "scope": {
+            "A": 0.0484,
+            "B": 0.9516
+          }
+        }
+      }
+    },
+    {
+      "id": "os12",
+      "title": "Cantante lanza nuevo álbum y anuncia gira por Latinoamérica",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.089,
+            "logistica_canal": 0.0725,
+            "turismo": 0.07,
+            "servicios_publicos": 0.0504,
+            "eventos_naturales": 0.0925,
+            "regulacion": 0.0053,
+            "otro": 0.6204
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0105,
+            "logistica_canal": 0.0104,
+            "turismo": 0.0073,
+            "servicios_publicos": 0.0059,
+            "eventos_naturales": 0.0115,
+            "regulacion": 0.0009,
+            "otro": 0.9534
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0238,
+            "logistica_canal": 0.0235,
+            "turismo": 0.0432,
+            "servicios_publicos": 0.0271,
+            "eventos_naturales": 0.024,
+            "regulacion": 0.0014,
+            "otro": 0.8571
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0105,
+            "logistica_canal": 0.0104,
+            "turismo": 0.0073,
+            "servicios_publicos": 0.0059,
+            "eventos_naturales": 0.0115,
+            "regulacion": 0.0009,
+            "otro": 0.9534
+          },
+          "scope": {
+            "A": 0.2773,
+            "B": 0.7227
+          }
+        }
+      }
+    },
+    {
+      "id": "os13",
+      "title": "Actriz confirma su compromiso con su pareja tras años de relación",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.3009,
+            "logistica_canal": 0.0894,
+            "turismo": 0.079,
+            "servicios_publicos": 0.0226,
+            "eventos_naturales": 0.0448,
+            "regulacion": 0.0187,
+            "otro": 0.4446
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0006,
+            "logistica_canal": 0.0002,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0001,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.0,
+            "otro": 0.9989
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0028,
+            "logistica_canal": 0.0009,
+            "turismo": 0.0013,
+            "servicios_publicos": 0.0012,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.0001,
+            "otro": 0.9932
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0006,
+            "logistica_canal": 0.0002,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0001,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.0,
+            "otro": 0.9989
+          },
+          "scope": {
+            "A": 0.0626,
+            "B": 0.9374
+          }
+        }
+      }
+    },
+    {
+      "id": "os14",
+      "title": "Reina de belleza viaja para participar en el certamen internacional",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0574,
+            "logistica_canal": 0.0147,
+            "turismo": 0.2933,
+            "servicios_publicos": 0.0072,
+            "eventos_naturales": 0.3127,
+            "regulacion": 0.0045,
+            "otro": 0.3102
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0235,
+            "logistica_canal": 0.004,
+            "turismo": 0.0681,
+            "servicios_publicos": 0.0021,
+            "eventos_naturales": 0.0264,
+            "regulacion": 0.0018,
+            "otro": 0.8741
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0506,
+            "logistica_canal": 0.0207,
+            "turismo": 0.371,
+            "servicios_publicos": 0.0245,
+            "eventos_naturales": 0.0745,
+            "regulacion": 0.005,
+            "otro": 0.4538
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0235,
+            "logistica_canal": 0.004,
+            "turismo": 0.0681,
+            "servicios_publicos": 0.0021,
+            "eventos_naturales": 0.0264,
+            "regulacion": 0.0018,
+            "otro": 0.8741
+          },
+          "scope": {
+            "A": 0.4171,
+            "B": 0.5829
+          }
+        }
+      }
+    },
+    {
+      "id": "os15",
+      "title": "Famoso presentador revela detalles de su divorcio",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0977,
+            "logistica_canal": 0.0064,
+            "turismo": 0.0041,
+            "servicios_publicos": 0.0035,
+            "eventos_naturales": 0.0061,
+            "regulacion": 0.0022,
+            "otro": 0.88
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0366,
+            "logistica_canal": 0.0023,
+            "turismo": 0.0017,
+            "servicios_publicos": 0.0016,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.0006,
+            "otro": 0.9549
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0018,
+            "logistica_canal": 0.0002,
+            "turismo": 0.0003,
+            "servicios_publicos": 0.0005,
+            "eventos_naturales": 0.0002,
+            "regulacion": 0.0001,
+            "otro": 0.9969
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0366,
+            "logistica_canal": 0.0023,
+            "turismo": 0.0017,
+            "servicios_publicos": 0.0016,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.0006,
+            "otro": 0.9549
+          },
+          "scope": {
+            "A": 0.0596,
+            "B": 0.9404
+          }
+        }
+      }
+    },
+    {
+      "id": "os16",
+      "title": "Estrenan película que lidera la taquilla este fin de semana",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0948,
+            "logistica_canal": 0.0466,
+            "turismo": 0.2943,
+            "servicios_publicos": 0.0102,
+            "eventos_naturales": 0.1067,
+            "regulacion": 0.0025,
+            "otro": 0.445
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0239,
+            "logistica_canal": 0.0058,
+            "turismo": 0.0191,
+            "servicios_publicos": 0.0023,
+            "eventos_naturales": 0.0232,
+            "regulacion": 0.0009,
+            "otro": 0.9248
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.2258,
+            "logistica_canal": 0.0499,
+            "turismo": 0.1148,
+            "servicios_publicos": 0.0464,
+            "eventos_naturales": 0.0811,
+            "regulacion": 0.004,
+            "otro": 0.478
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0239,
+            "logistica_canal": 0.0058,
+            "turismo": 0.0191,
+            "servicios_publicos": 0.0023,
+            "eventos_naturales": 0.0232,
+            "regulacion": 0.0009,
+            "otro": 0.9248
+          },
+          "scope": {
+            "A": 0.7227,
+            "B": 0.2773
+          }
+        }
+      }
+    },
+    {
+      "id": "os17",
+      "title": "Humorista sorprende con un video viral en redes sociales",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0216,
+            "logistica_canal": 0.0167,
+            "turismo": 0.0392,
+            "servicios_publicos": 0.0166,
+            "eventos_naturales": 0.0206,
+            "regulacion": 0.0028,
+            "otro": 0.8825
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0048,
+            "logistica_canal": 0.0031,
+            "turismo": 0.009,
+            "servicios_publicos": 0.0022,
+            "eventos_naturales": 0.0073,
+            "regulacion": 0.0008,
+            "otro": 0.9728
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.002,
+            "logistica_canal": 0.0011,
+            "turismo": 0.007,
+            "servicios_publicos": 0.0052,
+            "eventos_naturales": 0.0033,
+            "regulacion": 0.0003,
+            "otro": 0.9811
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0048,
+            "logistica_canal": 0.0031,
+            "turismo": 0.009,
+            "servicios_publicos": 0.0022,
+            "eventos_naturales": 0.0073,
+            "regulacion": 0.0008,
+            "otro": 0.9728
+          },
+          "scope": {
+            "A": 0.1931,
+            "B": 0.8069
+          }
+        }
+      }
+    },
+    {
+      "id": "os18",
+      "title": "Perro rescatado se hace viral por reunirse con su dueño",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.4009,
+            "logistica_canal": 0.0241,
+            "turismo": 0.1102,
+            "servicios_publicos": 0.0166,
+            "eventos_naturales": 0.0964,
+            "regulacion": 0.0119,
+            "otro": 0.34
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0533,
+            "logistica_canal": 0.0044,
+            "turismo": 0.0166,
+            "servicios_publicos": 0.0041,
+            "eventos_naturales": 0.0193,
+            "regulacion": 0.0018,
+            "otro": 0.9005
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0642,
+            "logistica_canal": 0.0142,
+            "turismo": 0.0755,
+            "servicios_publicos": 0.0368,
+            "eventos_naturales": 0.0433,
+            "regulacion": 0.0044,
+            "otro": 0.7617
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0533,
+            "logistica_canal": 0.0044,
+            "turismo": 0.0166,
+            "servicios_publicos": 0.0041,
+            "eventos_naturales": 0.0193,
+            "regulacion": 0.0018,
+            "otro": 0.9005
+          },
+          "scope": {
+            "A": 0.5256,
+            "B": 0.4744
+          }
+        }
+      }
+    },
+    {
+      "id": "os19",
+      "title": "Horóscopo de hoy: qué dicen los astros para cada signo",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0271,
+            "logistica_canal": 0.0116,
+            "turismo": 0.0369,
+            "servicios_publicos": 0.0087,
+            "eventos_naturales": 0.8411,
+            "regulacion": 0.0272,
+            "otro": 0.0473
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0564,
+            "logistica_canal": 0.0122,
+            "turismo": 0.0272,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.4781,
+            "regulacion": 0.0259,
+            "otro": 0.3976
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0576,
+            "logistica_canal": 0.0191,
+            "turismo": 0.0236,
+            "servicios_publicos": 0.0138,
+            "eventos_naturales": 0.6991,
+            "regulacion": 0.0382,
+            "otro": 0.1485
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0564,
+            "logistica_canal": 0.0122,
+            "turismo": 0.0272,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.4781,
+            "regulacion": 0.0259,
+            "otro": 0.3976
+          },
+          "scope": {
+            "A": 0.4681,
+            "B": 0.5319
+          }
+        }
+      }
+    },
+    {
+      "id": "os20",
+      "title": "Presidente de Estados Unidos anuncia nuevos aranceles contra China",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.435,
+            "logistica_canal": 0.0133,
+            "turismo": 0.0035,
+            "servicios_publicos": 0.0053,
+            "eventos_naturales": 0.0014,
+            "regulacion": 0.5135,
+            "otro": 0.0279
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.399,
+            "logistica_canal": 0.0036,
+            "turismo": 0.0011,
+            "servicios_publicos": 0.0026,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.2253,
+            "otro": 0.3678
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0923,
+            "logistica_canal": 0.0066,
+            "turismo": 0.0028,
+            "servicios_publicos": 0.0142,
+            "eventos_naturales": 0.0007,
+            "regulacion": 0.6502,
+            "otro": 0.2334
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.399,
+            "logistica_canal": 0.0036,
+            "turismo": 0.0011,
+            "servicios_publicos": 0.0026,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.2253,
+            "otro": 0.3678
+          },
+          "scope": {
+            "A": 0.4864,
+            "B": 0.5136
+          }
+        }
+      }
+    },
+    {
+      "id": "os21",
+      "title": "Rusia y Ucrania intercambian prisioneros de guerra",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.3011,
+            "logistica_canal": 0.0715,
+            "turismo": 0.0332,
+            "servicios_publicos": 0.0289,
+            "eventos_naturales": 0.1196,
+            "regulacion": 0.0061,
+            "otro": 0.4396
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1411,
+            "logistica_canal": 0.0122,
+            "turismo": 0.0067,
+            "servicios_publicos": 0.0123,
+            "eventos_naturales": 0.0698,
+            "regulacion": 0.004,
+            "otro": 0.7539
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0735,
+            "logistica_canal": 0.0343,
+            "turismo": 0.0328,
+            "servicios_publicos": 0.1466,
+            "eventos_naturales": 0.0512,
+            "regulacion": 0.0046,
+            "otro": 0.6571
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1411,
+            "logistica_canal": 0.0122,
+            "turismo": 0.0067,
+            "servicios_publicos": 0.0123,
+            "eventos_naturales": 0.0698,
+            "regulacion": 0.004,
+            "otro": 0.7539
+          },
+          "scope": {
+            "A": 0.1846,
+            "B": 0.8154
+          }
+        }
+      }
+    },
+    {
+      "id": "os22",
+      "title": "Parlamento europeo debate la política migratoria del bloque",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.2992,
+            "logistica_canal": 0.0561,
+            "turismo": 0.0818,
+            "servicios_publicos": 0.0284,
+            "eventos_naturales": 0.0177,
+            "regulacion": 0.0193,
+            "otro": 0.4976
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0629,
+            "logistica_canal": 0.0098,
+            "turismo": 0.0062,
+            "servicios_publicos": 0.0053,
+            "eventos_naturales": 0.0049,
+            "regulacion": 0.0047,
+            "otro": 0.9062
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0557,
+            "logistica_canal": 0.0316,
+            "turismo": 0.0262,
+            "servicios_publicos": 0.0483,
+            "eventos_naturales": 0.0095,
+            "regulacion": 0.0059,
+            "otro": 0.8229
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0629,
+            "logistica_canal": 0.0098,
+            "turismo": 0.0062,
+            "servicios_publicos": 0.0053,
+            "eventos_naturales": 0.0049,
+            "regulacion": 0.0047,
+            "otro": 0.9062
+          },
+          "scope": {
+            "A": 0.2025,
+            "B": 0.7975
+          }
+        }
+      }
+    },
+    {
+      "id": "os23",
+      "title": "Elecciones en Francia: el partido de derecha lidera las encuestas",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.2845,
+            "logistica_canal": 0.0259,
+            "turismo": 0.0272,
+            "servicios_publicos": 0.0277,
+            "eventos_naturales": 0.0405,
+            "regulacion": 0.0063,
+            "otro": 0.588
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0436,
+            "logistica_canal": 0.0043,
+            "turismo": 0.0044,
+            "servicios_publicos": 0.0058,
+            "eventos_naturales": 0.006,
+            "regulacion": 0.0022,
+            "otro": 0.9337
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.1018,
+            "logistica_canal": 0.0196,
+            "turismo": 0.0289,
+            "servicios_publicos": 0.1427,
+            "eventos_naturales": 0.0155,
+            "regulacion": 0.0079,
+            "otro": 0.6835
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0436,
+            "logistica_canal": 0.0043,
+            "turismo": 0.0044,
+            "servicios_publicos": 0.0058,
+            "eventos_naturales": 0.006,
+            "regulacion": 0.0022,
+            "otro": 0.9337
+          },
+          "scope": {
+            "A": 0.0145,
+            "B": 0.9855
+          }
+        }
+      }
+    },
+    {
+      "id": "os24",
+      "title": "Papa pide por la paz en Oriente Medio durante su audiencia semanal",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0872,
+            "logistica_canal": 0.0594,
+            "turismo": 0.0505,
+            "servicios_publicos": 0.0658,
+            "eventos_naturales": 0.0962,
+            "regulacion": 0.0378,
+            "otro": 0.603
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0127,
+            "logistica_canal": 0.0136,
+            "turismo": 0.0085,
+            "servicios_publicos": 0.0091,
+            "eventos_naturales": 0.0186,
+            "regulacion": 0.0135,
+            "otro": 0.924
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0199,
+            "logistica_canal": 0.0313,
+            "turismo": 0.0248,
+            "servicios_publicos": 0.1715,
+            "eventos_naturales": 0.0271,
+            "regulacion": 0.0122,
+            "otro": 0.7133
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0127,
+            "logistica_canal": 0.0136,
+            "turismo": 0.0085,
+            "servicios_publicos": 0.0091,
+            "eventos_naturales": 0.0186,
+            "regulacion": 0.0135,
+            "otro": 0.924
+          },
+          "scope": {
+            "A": 0.1609,
+            "B": 0.8391
+          }
+        }
+      }
+    },
+    {
+      "id": "os25",
+      "title": "Murió el reconocido escritor a los 85 años",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0686,
+            "logistica_canal": 0.026,
+            "turismo": 0.2993,
+            "servicios_publicos": 0.0148,
+            "eventos_naturales": 0.3418,
+            "regulacion": 0.0047,
+            "otro": 0.2448
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0119,
+            "logistica_canal": 0.0036,
+            "turismo": 0.0049,
+            "servicios_publicos": 0.0023,
+            "eventos_naturales": 0.0182,
+            "regulacion": 0.0016,
+            "otro": 0.9575
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0136,
+            "logistica_canal": 0.0092,
+            "turismo": 0.0481,
+            "servicios_publicos": 0.0236,
+            "eventos_naturales": 0.0432,
+            "regulacion": 0.0022,
+            "otro": 0.8601
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0119,
+            "logistica_canal": 0.0036,
+            "turismo": 0.0049,
+            "servicios_publicos": 0.0023,
+            "eventos_naturales": 0.0182,
+            "regulacion": 0.0016,
+            "otro": 0.9575
+          },
+          "scope": {
+            "A": 0.0431,
+            "B": 0.9569
+          }
+        }
+      }
+    },
+    {
+      "id": "os26",
+      "title": "Médicos advierten sobre los beneficios de dormir ocho horas",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.3873,
+            "logistica_canal": 0.0142,
+            "turismo": 0.0484,
+            "servicios_publicos": 0.2686,
+            "eventos_naturales": 0.0288,
+            "regulacion": 0.062,
+            "otro": 0.1907
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0287,
+            "logistica_canal": 0.0023,
+            "turismo": 0.0026,
+            "servicios_publicos": 0.0913,
+            "eventos_naturales": 0.0059,
+            "regulacion": 0.0078,
+            "otro": 0.8614
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0139,
+            "logistica_canal": 0.004,
+            "turismo": 0.0064,
+            "servicios_publicos": 0.1854,
+            "eventos_naturales": 0.0158,
+            "regulacion": 0.0127,
+            "otro": 0.7618
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0287,
+            "logistica_canal": 0.0023,
+            "turismo": 0.0026,
+            "servicios_publicos": 0.0913,
+            "eventos_naturales": 0.0059,
+            "regulacion": 0.0078,
+            "otro": 0.8614
+          },
+          "scope": {
+            "A": 0.6876,
+            "B": 0.3124
+          }
+        }
+      }
+    },
+    {
+      "id": "os27",
+      "title": "Receta fácil de arroz con pollo para el almuerzo familiar",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.8455,
+            "logistica_canal": 0.0124,
+            "turismo": 0.0142,
+            "servicios_publicos": 0.0141,
+            "eventos_naturales": 0.0113,
+            "regulacion": 0.0041,
+            "otro": 0.0985
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1584,
+            "logistica_canal": 0.0059,
+            "turismo": 0.0119,
+            "servicios_publicos": 0.0076,
+            "eventos_naturales": 0.0268,
+            "regulacion": 0.0028,
+            "otro": 0.7867
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.3854,
+            "logistica_canal": 0.0161,
+            "turismo": 0.0416,
+            "servicios_publicos": 0.038,
+            "eventos_naturales": 0.0358,
+            "regulacion": 0.0078,
+            "otro": 0.4753
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1584,
+            "logistica_canal": 0.0059,
+            "turismo": 0.0119,
+            "servicios_publicos": 0.0076,
+            "eventos_naturales": 0.0268,
+            "regulacion": 0.0028,
+            "otro": 0.7867
+          },
+          "scope": {
+            "A": 0.6653,
+            "B": 0.3347
+          }
+        }
+      }
+    },
+    {
+      "id": "os28",
+      "title": "Cómo elegir el mejor teléfono celular según tu presupuesto",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0778,
+            "logistica_canal": 0.2278,
+            "turismo": 0.0014,
+            "servicios_publicos": 0.4737,
+            "eventos_naturales": 0.0008,
+            "regulacion": 0.1977,
+            "otro": 0.0209
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1489,
+            "logistica_canal": 0.0836,
+            "turismo": 0.0013,
+            "servicios_publicos": 0.1518,
+            "eventos_naturales": 0.0011,
+            "regulacion": 0.0162,
+            "otro": 0.5971
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.3412,
+            "logistica_canal": 0.1294,
+            "turismo": 0.0094,
+            "servicios_publicos": 0.2651,
+            "eventos_naturales": 0.0084,
+            "regulacion": 0.0886,
+            "otro": 0.1581
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1489,
+            "logistica_canal": 0.0836,
+            "turismo": 0.0013,
+            "servicios_publicos": 0.1518,
+            "eventos_naturales": 0.0011,
+            "regulacion": 0.0162,
+            "otro": 0.5971
+          },
+          "scope": {
+            "A": 0.964,
+            "B": 0.036
+          }
+        }
+      }
+    },
+    {
+      "id": "os29",
+      "title": "Lanzan nuevo videojuego que rompe récords de ventas",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.1594,
+            "logistica_canal": 0.0774,
+            "turismo": 0.0069,
+            "servicios_publicos": 0.0133,
+            "eventos_naturales": 0.0077,
+            "regulacion": 0.0058,
+            "otro": 0.7295
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0845,
+            "logistica_canal": 0.027,
+            "turismo": 0.006,
+            "servicios_publicos": 0.004,
+            "eventos_naturales": 0.0147,
+            "regulacion": 0.0035,
+            "otro": 0.8601
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.115,
+            "logistica_canal": 0.0329,
+            "turismo": 0.0118,
+            "servicios_publicos": 0.0244,
+            "eventos_naturales": 0.0252,
+            "regulacion": 0.0058,
+            "otro": 0.7849
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0845,
+            "logistica_canal": 0.027,
+            "turismo": 0.006,
+            "servicios_publicos": 0.004,
+            "eventos_naturales": 0.0147,
+            "regulacion": 0.0035,
+            "otro": 0.8601
+          },
+          "scope": {
+            "A": 0.2008,
+            "B": 0.7992
+          }
+        }
+      }
+    },
+    {
+      "id": "os30",
+      "title": "Incendio destruye una casa y deja a una familia sin hogar",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0445,
+            "logistica_canal": 0.0291,
+            "turismo": 0.0638,
+            "servicios_publicos": 0.0878,
+            "eventos_naturales": 0.6037,
+            "regulacion": 0.0094,
+            "otro": 0.1617
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0198,
+            "logistica_canal": 0.0039,
+            "turismo": 0.0081,
+            "servicios_publicos": 0.0034,
+            "eventos_naturales": 0.0645,
+            "regulacion": 0.0011,
+            "otro": 0.8992
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0109,
+            "logistica_canal": 0.005,
+            "turismo": 0.0139,
+            "servicios_publicos": 0.0092,
+            "eventos_naturales": 0.1384,
+            "regulacion": 0.0011,
+            "otro": 0.8214
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0198,
+            "logistica_canal": 0.0039,
+            "turismo": 0.0081,
+            "servicios_publicos": 0.0034,
+            "eventos_naturales": 0.0645,
+            "regulacion": 0.0011,
+            "otro": 0.8992
+          },
+          "scope": {
+            "A": 0.1847,
+            "B": 0.8153
+          }
+        }
+      }
+    },
+    {
+      "id": "os31",
+      "title": "Accidente de tránsito deja un muerto en la carretera",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0763,
+            "logistica_canal": 0.5144,
+            "turismo": 0.1346,
+            "servicios_publicos": 0.0144,
+            "eventos_naturales": 0.0144,
+            "regulacion": 0.0038,
+            "otro": 0.2421
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1053,
+            "logistica_canal": 0.0795,
+            "turismo": 0.2599,
+            "servicios_publicos": 0.0058,
+            "eventos_naturales": 0.0071,
+            "regulacion": 0.0037,
+            "otro": 0.5386
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.065,
+            "logistica_canal": 0.4481,
+            "turismo": 0.0412,
+            "servicios_publicos": 0.0457,
+            "eventos_naturales": 0.013,
+            "regulacion": 0.0048,
+            "otro": 0.3822
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1053,
+            "logistica_canal": 0.0795,
+            "turismo": 0.2599,
+            "servicios_publicos": 0.0058,
+            "eventos_naturales": 0.0071,
+            "regulacion": 0.0037,
+            "otro": 0.5386
+          },
+          "scope": {
+            "A": 0.027,
+            "B": 0.973
+          }
+        }
+      }
+    },
+    {
+      "id": "os32",
+      "title": "Diputados discuten entre sí durante la sesión de la comisión",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.1701,
+            "logistica_canal": 0.0356,
+            "turismo": 0.0281,
+            "servicios_publicos": 0.0335,
+            "eventos_naturales": 0.0093,
+            "regulacion": 0.009,
+            "otro": 0.7144
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0103,
+            "logistica_canal": 0.0048,
+            "turismo": 0.0048,
+            "servicios_publicos": 0.0072,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.002,
+            "otro": 0.9686
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0488,
+            "logistica_canal": 0.0231,
+            "turismo": 0.0274,
+            "servicios_publicos": 0.0512,
+            "eventos_naturales": 0.0094,
+            "regulacion": 0.0068,
+            "otro": 0.8334
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0103,
+            "logistica_canal": 0.0048,
+            "turismo": 0.0048,
+            "servicios_publicos": 0.0072,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.002,
+            "otro": 0.9686
+          },
+          "scope": {
+            "A": 0.2168,
+            "B": 0.7832
+          }
+        }
+      }
+    },
+    {
+      "id": "os33",
+      "title": "Declaraciones de un político generan polémica en redes",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.2776,
+            "logistica_canal": 0.0503,
+            "turismo": 0.0351,
+            "servicios_publicos": 0.0442,
+            "eventos_naturales": 0.0293,
+            "regulacion": 0.0103,
+            "otro": 0.5533
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0341,
+            "logistica_canal": 0.0148,
+            "turismo": 0.0096,
+            "servicios_publicos": 0.0101,
+            "eventos_naturales": 0.0122,
+            "regulacion": 0.0047,
+            "otro": 0.9144
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0558,
+            "logistica_canal": 0.0302,
+            "turismo": 0.0522,
+            "servicios_publicos": 0.0969,
+            "eventos_naturales": 0.0184,
+            "regulacion": 0.007,
+            "otro": 0.7395
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0341,
+            "logistica_canal": 0.0148,
+            "turismo": 0.0096,
+            "servicios_publicos": 0.0101,
+            "eventos_naturales": 0.0122,
+            "regulacion": 0.0047,
+            "otro": 0.9144
+          },
+          "scope": {
+            "A": 0.3342,
+            "B": 0.6658
+          }
+        }
+      }
+    },
+    {
+      "id": "os34",
+      "title": "Estudiantes celebran el día del padre en una escuela",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0582,
+            "logistica_canal": 0.0229,
+            "turismo": 0.0097,
+            "servicios_publicos": 0.0269,
+            "eventos_naturales": 0.026,
+            "regulacion": 0.0069,
+            "otro": 0.8493
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0065,
+            "logistica_canal": 0.0021,
+            "turismo": 0.0006,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.001,
+            "otro": 0.9851
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0189,
+            "logistica_canal": 0.0105,
+            "turismo": 0.0043,
+            "servicios_publicos": 0.0825,
+            "eventos_naturales": 0.0066,
+            "regulacion": 0.0033,
+            "otro": 0.8739
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0065,
+            "logistica_canal": 0.0021,
+            "turismo": 0.0006,
+            "servicios_publicos": 0.0025,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.001,
+            "otro": 0.9851
+          },
+          "scope": {
+            "A": 0.1317,
+            "B": 0.8683
+          }
+        }
+      }
+    },
+    {
+      "id": "os35",
+      "title": "Misa en honor a un santo reúne a miles de fieles",
+      "expected": "out_of_scope",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0283,
+            "logistica_canal": 0.0268,
+            "turismo": 0.0473,
+            "servicios_publicos": 0.0995,
+            "eventos_naturales": 0.29,
+            "regulacion": 0.0179,
+            "otro": 0.4902
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0045,
+            "logistica_canal": 0.0011,
+            "turismo": 0.0021,
+            "servicios_publicos": 0.017,
+            "eventos_naturales": 0.0227,
+            "regulacion": 0.0018,
+            "otro": 0.9508
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0075,
+            "logistica_canal": 0.0041,
+            "turismo": 0.0023,
+            "servicios_publicos": 0.071,
+            "eventos_naturales": 0.0339,
+            "regulacion": 0.0024,
+            "otro": 0.8787
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0045,
+            "logistica_canal": 0.0011,
+            "turismo": 0.0021,
+            "servicios_publicos": 0.017,
+            "eventos_naturales": 0.0227,
+            "regulacion": 0.0018,
+            "otro": 0.9508
+          },
+          "scope": {
+            "A": 0.0343,
+            "B": 0.9657
+          }
+        }
+      }
+    },
+    {
+      "id": "in_economia_0",
+      "title": "Inflación anual se ubicó en 0,5 % según el instituto de estadística",
+      "expected": "economia",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.9947,
+            "logistica_canal": 0.0001,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0001,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.0002,
+            "otro": 0.0047
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.9899,
+            "logistica_canal": 0.0001,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0001,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.0003,
+            "otro": 0.0093
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.9891,
+            "logistica_canal": 0.0001,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0007,
+            "eventos_naturales": 0.0002,
+            "regulacion": 0.0005,
+            "otro": 0.0093
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.9899,
+            "logistica_canal": 0.0001,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0001,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.0003,
+            "otro": 0.0093
+          },
+          "scope": {
+            "A": 0.9913,
+            "B": 0.0087
+          }
+        }
+      }
+    },
+    {
+      "id": "in_economia_1",
+      "title": "Economía crece 3,2 % en el primer semestre, informa el ministerio de economía",
+      "expected": "economia",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 1.0,
+            "logistica_canal": 0.0,
+            "turismo": 0.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 1.0,
+            "logistica_canal": 0.0,
+            "turismo": 0.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 1.0,
+            "logistica_canal": 0.0,
+            "turismo": 0.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 1.0,
+            "logistica_canal": 0.0,
+            "turismo": 0.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": {
+            "A": 0.9995,
+            "B": 0.0005
+          }
+        }
+      }
+    },
+    {
+      "id": "in_economia_2",
+      "title": "Desempleo baja al 7 % y se crean nuevos puestos de trabajo",
+      "expected": "economia",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.9662,
+            "logistica_canal": 0.0007,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0005,
+            "eventos_naturales": 0.0018,
+            "regulacion": 0.0127,
+            "otro": 0.0179
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.7926,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.001,
+            "eventos_naturales": 0.0029,
+            "regulacion": 0.004,
+            "otro": 0.1989
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.8977,
+            "logistica_canal": 0.0012,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.0076,
+            "eventos_naturales": 0.0026,
+            "regulacion": 0.0043,
+            "otro": 0.0859
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.7926,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.001,
+            "eventos_naturales": 0.0029,
+            "regulacion": 0.004,
+            "otro": 0.1989
+          },
+          "scope": {
+            "A": 0.8098,
+            "B": 0.1902
+          }
+        }
+      }
+    },
+    {
+      "id": "in_economia_3",
+      "title": "Gobierno recauda más impuestos y reduce el déficit fiscal",
+      "expected": "economia",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.8364,
+            "logistica_canal": 0.0067,
+            "turismo": 0.002,
+            "servicios_publicos": 0.0158,
+            "eventos_naturales": 0.002,
+            "regulacion": 0.0898,
+            "otro": 0.0473
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.7816,
+            "logistica_canal": 0.0028,
+            "turismo": 0.0012,
+            "servicios_publicos": 0.0155,
+            "eventos_naturales": 0.0038,
+            "regulacion": 0.0402,
+            "otro": 0.155
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.6746,
+            "logistica_canal": 0.0062,
+            "turismo": 0.0022,
+            "servicios_publicos": 0.1126,
+            "eventos_naturales": 0.0055,
+            "regulacion": 0.0501,
+            "otro": 0.1487
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.7816,
+            "logistica_canal": 0.0028,
+            "turismo": 0.0012,
+            "servicios_publicos": 0.0155,
+            "eventos_naturales": 0.0038,
+            "regulacion": 0.0402,
+            "otro": 0.155
+          },
+          "scope": {
+            "A": 0.843,
+            "B": 0.157
+          }
+        }
+      }
+    },
+    {
+      "id": "in_economia_4",
+      "title": "Bancos reportan aumento de los préstamos al sector empresarial",
+      "expected": "economia",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.6182,
+            "logistica_canal": 0.0371,
+            "turismo": 0.0046,
+            "servicios_publicos": 0.0145,
+            "eventos_naturales": 0.0034,
+            "regulacion": 0.2378,
+            "otro": 0.0843
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.5867,
+            "logistica_canal": 0.0035,
+            "turismo": 0.0012,
+            "servicios_publicos": 0.0034,
+            "eventos_naturales": 0.0011,
+            "regulacion": 0.095,
+            "otro": 0.3091
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.5901,
+            "logistica_canal": 0.0111,
+            "turismo": 0.0039,
+            "servicios_publicos": 0.0416,
+            "eventos_naturales": 0.0035,
+            "regulacion": 0.1197,
+            "otro": 0.23
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.5867,
+            "logistica_canal": 0.0035,
+            "turismo": 0.0012,
+            "servicios_publicos": 0.0034,
+            "eventos_naturales": 0.0011,
+            "regulacion": 0.095,
+            "otro": 0.3091
+          },
+          "scope": {
+            "A": 0.8448,
+            "B": 0.1552
+          }
+        }
+      }
+    },
+    {
+      "id": "in_logistica_canal_0",
+      "title": "Canal de Panamá aumenta los tránsitos diarios de buques neopanamax",
+      "expected": "logistica_canal",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0189,
+            "logistica_canal": 0.8806,
+            "turismo": 0.004,
+            "servicios_publicos": 0.0202,
+            "eventos_naturales": 0.0118,
+            "regulacion": 0.0042,
+            "otro": 0.0603
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0854,
+            "logistica_canal": 0.5755,
+            "turismo": 0.0027,
+            "servicios_publicos": 0.0058,
+            "eventos_naturales": 0.0224,
+            "regulacion": 0.0038,
+            "otro": 0.3044
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0351,
+            "logistica_canal": 0.5354,
+            "turismo": 0.0129,
+            "servicios_publicos": 0.0153,
+            "eventos_naturales": 0.0482,
+            "regulacion": 0.0163,
+            "otro": 0.3368
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0854,
+            "logistica_canal": 0.5755,
+            "turismo": 0.0027,
+            "servicios_publicos": 0.0058,
+            "eventos_naturales": 0.0224,
+            "regulacion": 0.0038,
+            "otro": 0.3044
+          },
+          "scope": {
+            "A": 0.9553,
+            "B": 0.0447
+          }
+        }
+      }
+    },
+    {
+      "id": "in_logistica_canal_1",
+      "title": "Puerto de contenedores moviliza récord de carga en el trimestre",
+      "expected": "logistica_canal",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.9413,
+            "logistica_canal": 0.0169,
+            "turismo": 0.001,
+            "servicios_publicos": 0.0024,
+            "eventos_naturales": 0.0005,
+            "regulacion": 0.003,
+            "otro": 0.035
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.8753,
+            "logistica_canal": 0.0045,
+            "turismo": 0.0003,
+            "servicios_publicos": 0.0014,
+            "eventos_naturales": 0.0002,
+            "regulacion": 0.0024,
+            "otro": 0.1159
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.3398,
+            "logistica_canal": 0.0753,
+            "turismo": 0.006,
+            "servicios_publicos": 0.01,
+            "eventos_naturales": 0.0053,
+            "regulacion": 0.0506,
+            "otro": 0.5131
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.8753,
+            "logistica_canal": 0.0045,
+            "turismo": 0.0003,
+            "servicios_publicos": 0.0014,
+            "eventos_naturales": 0.0002,
+            "regulacion": 0.0024,
+            "otro": 0.1159
+          },
+          "scope": {
+            "A": 0.9814,
+            "B": 0.0186
+          }
+        }
+      }
+    },
+    {
+      "id": "in_logistica_canal_2",
+      "title": "Autoridad del Canal anuncia nueva reserva de tránsitos por sequía",
+      "expected": "logistica_canal",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0001,
+            "logistica_canal": 0.9963,
+            "turismo": 0.0005,
+            "servicios_publicos": 0.0014,
+            "eventos_naturales": 0.0009,
+            "regulacion": 0.0003,
+            "otro": 0.0006
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0002,
+            "logistica_canal": 0.9879,
+            "turismo": 0.0003,
+            "servicios_publicos": 0.0003,
+            "eventos_naturales": 0.0004,
+            "regulacion": 0.0001,
+            "otro": 0.0108
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0004,
+            "logistica_canal": 0.9717,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.002,
+            "eventos_naturales": 0.0023,
+            "regulacion": 0.0008,
+            "otro": 0.0221
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0002,
+            "logistica_canal": 0.9879,
+            "turismo": 0.0003,
+            "servicios_publicos": 0.0003,
+            "eventos_naturales": 0.0004,
+            "regulacion": 0.0001,
+            "otro": 0.0108
+          },
+          "scope": {
+            "A": 0.6543,
+            "B": 0.3457
+          }
+        }
+      }
+    },
+    {
+      "id": "in_logistica_canal_3",
+      "title": "Naviera abre ruta marítima con escala en el puerto de Colón",
+      "expected": "logistica_canal",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0214,
+            "logistica_canal": 0.4709,
+            "turismo": 0.0123,
+            "servicios_publicos": 0.4454,
+            "eventos_naturales": 0.0077,
+            "regulacion": 0.0042,
+            "otro": 0.0381
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0123,
+            "logistica_canal": 0.3402,
+            "turismo": 0.0137,
+            "servicios_publicos": 0.0379,
+            "eventos_naturales": 0.0111,
+            "regulacion": 0.0024,
+            "otro": 0.5822
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0135,
+            "logistica_canal": 0.2161,
+            "turismo": 0.0106,
+            "servicios_publicos": 0.0202,
+            "eventos_naturales": 0.0453,
+            "regulacion": 0.0279,
+            "otro": 0.6663
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0123,
+            "logistica_canal": 0.3402,
+            "turismo": 0.0137,
+            "servicios_publicos": 0.0379,
+            "eventos_naturales": 0.0111,
+            "regulacion": 0.0024,
+            "otro": 0.5822
+          },
+          "scope": {
+            "A": 0.8942,
+            "B": 0.1058
+          }
+        }
+      }
+    },
+    {
+      "id": "in_logistica_canal_4",
+      "title": "Zona Libre de Colón reporta alza en reexportaciones",
+      "expected": "logistica_canal",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.382,
+            "logistica_canal": 0.1039,
+            "turismo": 0.3286,
+            "servicios_publicos": 0.0061,
+            "eventos_naturales": 0.0086,
+            "regulacion": 0.0223,
+            "otro": 0.1486
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0111,
+            "logistica_canal": 0.0119,
+            "turismo": 0.2268,
+            "servicios_publicos": 0.0015,
+            "eventos_naturales": 0.0065,
+            "regulacion": 0.0042,
+            "otro": 0.7379
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0251,
+            "logistica_canal": 0.0037,
+            "turismo": 0.0068,
+            "servicios_publicos": 0.0044,
+            "eventos_naturales": 0.0038,
+            "regulacion": 0.0029,
+            "otro": 0.9532
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0111,
+            "logistica_canal": 0.0119,
+            "turismo": 0.2268,
+            "servicios_publicos": 0.0015,
+            "eventos_naturales": 0.0065,
+            "regulacion": 0.0042,
+            "otro": 0.7379
+          },
+          "scope": {
+            "A": 0.8547,
+            "B": 0.1453
+          }
+        }
+      }
+    },
+    {
+      "id": "in_turismo_0",
+      "title": "Llegada de turistas internacionales crece 12 % este año",
+      "expected": "turismo",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0,
+            "logistica_canal": 0.0,
+            "turismo": 1.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0,
+            "logistica_canal": 0.0,
+            "turismo": 1.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0,
+            "logistica_canal": 0.0,
+            "turismo": 1.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0,
+            "logistica_canal": 0.0,
+            "turismo": 1.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0
+          },
+          "scope": {
+            "A": 0.9158,
+            "B": 0.0842
+          }
+        }
+      }
+    },
+    {
+      "id": "in_turismo_1",
+      "title": "Hoteles de Bocas del Toro alcanzan alta ocupación en el feriado",
+      "expected": "turismo",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0028,
+            "logistica_canal": 0.0001,
+            "turismo": 0.9921,
+            "servicios_publicos": 0.0001,
+            "eventos_naturales": 0.0002,
+            "regulacion": 0.0008,
+            "otro": 0.0038
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0185,
+            "logistica_canal": 0.0015,
+            "turismo": 0.7992,
+            "servicios_publicos": 0.0015,
+            "eventos_naturales": 0.0018,
+            "regulacion": 0.0018,
+            "otro": 0.1758
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0348,
+            "logistica_canal": 0.0062,
+            "turismo": 0.5321,
+            "servicios_publicos": 0.012,
+            "eventos_naturales": 0.0079,
+            "regulacion": 0.0093,
+            "otro": 0.3977
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0185,
+            "logistica_canal": 0.0015,
+            "turismo": 0.7992,
+            "servicios_publicos": 0.0015,
+            "eventos_naturales": 0.0018,
+            "regulacion": 0.0018,
+            "otro": 0.1758
+          },
+          "scope": {
+            "A": 0.7396,
+            "B": 0.2604
+          }
+        }
+      }
+    },
+    {
+      "id": "in_turismo_2",
+      "title": "Aerolínea abre nueva ruta directa para atraer visitantes a Panamá",
+      "expected": "turismo",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0012,
+            "logistica_canal": 0.0247,
+            "turismo": 0.9623,
+            "servicios_publicos": 0.0024,
+            "eventos_naturales": 0.0005,
+            "regulacion": 0.001,
+            "otro": 0.0079
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0021,
+            "logistica_canal": 0.0064,
+            "turismo": 0.9645,
+            "servicios_publicos": 0.0013,
+            "eventos_naturales": 0.0007,
+            "regulacion": 0.0004,
+            "otro": 0.0246
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0073,
+            "logistica_canal": 0.0394,
+            "turismo": 0.8261,
+            "servicios_publicos": 0.0075,
+            "eventos_naturales": 0.0039,
+            "regulacion": 0.0031,
+            "otro": 0.1127
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0021,
+            "logistica_canal": 0.0064,
+            "turismo": 0.9645,
+            "servicios_publicos": 0.0013,
+            "eventos_naturales": 0.0007,
+            "regulacion": 0.0004,
+            "otro": 0.0246
+          },
+          "scope": {
+            "A": 0.8238,
+            "B": 0.1762
+          }
+        }
+      }
+    },
+    {
+      "id": "in_turismo_3",
+      "title": "Autoridad de Turismo promociona destinos en una feria internacional",
+      "expected": "turismo",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0001,
+            "logistica_canal": 0.0,
+            "turismo": 0.9997,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0001
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0001,
+            "logistica_canal": 0.0,
+            "turismo": 0.9984,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0015
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0002,
+            "logistica_canal": 0.0001,
+            "turismo": 0.9962,
+            "servicios_publicos": 0.0003,
+            "eventos_naturales": 0.0003,
+            "regulacion": 0.0001,
+            "otro": 0.0028
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0001,
+            "logistica_canal": 0.0,
+            "turismo": 0.9984,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.0,
+            "otro": 0.0015
+          },
+          "scope": {
+            "A": 0.8034,
+            "B": 0.1966
+          }
+        }
+      }
+    },
+    {
+      "id": "in_turismo_4",
+      "title": "Cruceros arriban a Colón con miles de pasajeros",
+      "expected": "turismo",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0416,
+            "logistica_canal": 0.1857,
+            "turismo": 0.3882,
+            "servicios_publicos": 0.0855,
+            "eventos_naturales": 0.0716,
+            "regulacion": 0.0135,
+            "otro": 0.2139
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0354,
+            "logistica_canal": 0.0638,
+            "turismo": 0.1212,
+            "servicios_publicos": 0.0106,
+            "eventos_naturales": 0.0453,
+            "regulacion": 0.006,
+            "otro": 0.7175
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.1761,
+            "logistica_canal": 0.1159,
+            "turismo": 0.2162,
+            "servicios_publicos": 0.0303,
+            "eventos_naturales": 0.0647,
+            "regulacion": 0.0427,
+            "otro": 0.3541
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0354,
+            "logistica_canal": 0.0638,
+            "turismo": 0.1212,
+            "servicios_publicos": 0.0106,
+            "eventos_naturales": 0.0453,
+            "regulacion": 0.006,
+            "otro": 0.7175
+          },
+          "scope": {
+            "A": 0.8598,
+            "B": 0.1402
+          }
+        }
+      }
+    },
+    {
+      "id": "in_servicios_publicos_0",
+      "title": "Idaan anuncia corte de agua potable en varios corregimientos",
+      "expected": "servicios_publicos",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0027,
+            "logistica_canal": 0.0006,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.9941,
+            "eventos_naturales": 0.0008,
+            "regulacion": 0.0009,
+            "otro": 0.0009
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0073,
+            "logistica_canal": 0.0006,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.9433,
+            "eventos_naturales": 0.0016,
+            "regulacion": 0.0009,
+            "otro": 0.0462
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0086,
+            "logistica_canal": 0.0018,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.7985,
+            "eventos_naturales": 0.0029,
+            "regulacion": 0.0036,
+            "otro": 0.184
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0073,
+            "logistica_canal": 0.0006,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.9433,
+            "eventos_naturales": 0.0016,
+            "regulacion": 0.0009,
+            "otro": 0.0462
+          },
+          "scope": {
+            "A": 0.3056,
+            "B": 0.6944
+          }
+        }
+      }
+    },
+    {
+      "id": "in_servicios_publicos_1",
+      "title": "Apagón afecta a miles de usuarios de electricidad en la capital",
+      "expected": "servicios_publicos",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0276,
+            "logistica_canal": 0.0013,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.962,
+            "eventos_naturales": 0.0003,
+            "regulacion": 0.0068,
+            "otro": 0.0019
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1779,
+            "logistica_canal": 0.0022,
+            "turismo": 0.0004,
+            "servicios_publicos": 0.805,
+            "eventos_naturales": 0.0005,
+            "regulacion": 0.0069,
+            "otro": 0.0072
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0785,
+            "logistica_canal": 0.0055,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.813,
+            "eventos_naturales": 0.003,
+            "regulacion": 0.0057,
+            "otro": 0.0936
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1779,
+            "logistica_canal": 0.0022,
+            "turismo": 0.0004,
+            "servicios_publicos": 0.805,
+            "eventos_naturales": 0.0005,
+            "regulacion": 0.0069,
+            "otro": 0.0072
+          },
+          "scope": {
+            "A": 0.883,
+            "B": 0.117
+          }
+        }
+      }
+    },
+    {
+      "id": "in_servicios_publicos_2",
+      "title": "Ministerio de Salud inicia campaña de vacunación en escuelas",
+      "expected": "servicios_publicos",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0301,
+            "logistica_canal": 0.0064,
+            "turismo": 0.0036,
+            "servicios_publicos": 0.2612,
+            "eventos_naturales": 0.0034,
+            "regulacion": 0.0045,
+            "otro": 0.6908
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0068,
+            "logistica_canal": 0.0008,
+            "turismo": 0.0005,
+            "servicios_publicos": 0.0217,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.0024,
+            "otro": 0.9672
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0096,
+            "logistica_canal": 0.0015,
+            "turismo": 0.0009,
+            "servicios_publicos": 0.052,
+            "eventos_naturales": 0.0009,
+            "regulacion": 0.001,
+            "otro": 0.934
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0068,
+            "logistica_canal": 0.0008,
+            "turismo": 0.0005,
+            "servicios_publicos": 0.0217,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.0024,
+            "otro": 0.9672
+          },
+          "scope": {
+            "A": 0.0668,
+            "B": 0.9332
+          }
+        }
+      }
+    },
+    {
+      "id": "in_servicios_publicos_3",
+      "title": "Meduca anuncia el calendario del año escolar y nuevos docentes",
+      "expected": "servicios_publicos",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.1438,
+            "logistica_canal": 0.0264,
+            "turismo": 0.004,
+            "servicios_publicos": 0.0782,
+            "eventos_naturales": 0.0098,
+            "regulacion": 0.0241,
+            "otro": 0.7137
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0056,
+            "logistica_canal": 0.0017,
+            "turismo": 0.0006,
+            "servicios_publicos": 0.0018,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.0008,
+            "otro": 0.989
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0037,
+            "logistica_canal": 0.0051,
+            "turismo": 0.0013,
+            "servicios_publicos": 0.0295,
+            "eventos_naturales": 0.0014,
+            "regulacion": 0.0012,
+            "otro": 0.9578
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0056,
+            "logistica_canal": 0.0017,
+            "turismo": 0.0006,
+            "servicios_publicos": 0.0018,
+            "eventos_naturales": 0.0006,
+            "regulacion": 0.0008,
+            "otro": 0.989
+          },
+          "scope": {
+            "A": 0.2893,
+            "B": 0.7107
+          }
+        }
+      }
+    },
+    {
+      "id": "in_servicios_publicos_4",
+      "title": "Línea del Metro amplía su horario para los usuarios",
+      "expected": "servicios_publicos",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.1725,
+            "logistica_canal": 0.2282,
+            "turismo": 0.0145,
+            "servicios_publicos": 0.5001,
+            "eventos_naturales": 0.0016,
+            "regulacion": 0.0114,
+            "otro": 0.0716
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1029,
+            "logistica_canal": 0.0212,
+            "turismo": 0.0031,
+            "servicios_publicos": 0.2286,
+            "eventos_naturales": 0.0009,
+            "regulacion": 0.0023,
+            "otro": 0.6409
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0341,
+            "logistica_canal": 0.0959,
+            "turismo": 0.0052,
+            "servicios_publicos": 0.2241,
+            "eventos_naturales": 0.0016,
+            "regulacion": 0.0023,
+            "otro": 0.6367
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1029,
+            "logistica_canal": 0.0212,
+            "turismo": 0.0031,
+            "servicios_publicos": 0.2286,
+            "eventos_naturales": 0.0009,
+            "regulacion": 0.0023,
+            "otro": 0.6409
+          },
+          "scope": {
+            "A": 0.7015,
+            "B": 0.2985
+          }
+        }
+      }
+    },
+    {
+      "id": "in_eventos_naturales_0",
+      "title": "Sismo de magnitud 4,8 se siente en Chiriquí, informa Sinaproc",
+      "expected": "eventos_naturales",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0021,
+            "logistica_canal": 0.0021,
+            "turismo": 0.0017,
+            "servicios_publicos": 0.0011,
+            "eventos_naturales": 0.9921,
+            "regulacion": 0.0004,
+            "otro": 0.0005
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.005,
+            "logistica_canal": 0.0027,
+            "turismo": 0.0016,
+            "servicios_publicos": 0.0004,
+            "eventos_naturales": 0.9604,
+            "regulacion": 0.0004,
+            "otro": 0.0294
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0038,
+            "logistica_canal": 0.0018,
+            "turismo": 0.0015,
+            "servicios_publicos": 0.0012,
+            "eventos_naturales": 0.9704,
+            "regulacion": 0.0002,
+            "otro": 0.021
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.005,
+            "logistica_canal": 0.0027,
+            "turismo": 0.0016,
+            "servicios_publicos": 0.0004,
+            "eventos_naturales": 0.9604,
+            "regulacion": 0.0004,
+            "otro": 0.0294
+          },
+          "scope": {
+            "A": 0.0503,
+            "B": 0.9497
+          }
+        }
+      }
+    },
+    {
+      "id": "in_eventos_naturales_1",
+      "title": "Lluvias intensas provocan inundaciones en Darién",
+      "expected": "eventos_naturales",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0045,
+            "logistica_canal": 0.005,
+            "turismo": 0.0028,
+            "servicios_publicos": 0.0269,
+            "eventos_naturales": 0.9575,
+            "regulacion": 0.0014,
+            "otro": 0.002
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0006,
+            "logistica_canal": 0.0008,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0007,
+            "eventos_naturales": 0.9963,
+            "regulacion": 0.0001,
+            "otro": 0.0012
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0001,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0003,
+            "eventos_naturales": 0.9973,
+            "regulacion": 0.0001,
+            "otro": 0.0017
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0006,
+            "logistica_canal": 0.0008,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0007,
+            "eventos_naturales": 0.9963,
+            "regulacion": 0.0001,
+            "otro": 0.0012
+          },
+          "scope": {
+            "A": 0.2034,
+            "B": 0.7966
+          }
+        }
+      }
+    },
+    {
+      "id": "in_eventos_naturales_2",
+      "title": "Alerta por oleaje y marejadas en la costa del Pacífico",
+      "expected": "eventos_naturales",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.017,
+            "logistica_canal": 0.0216,
+            "turismo": 0.0071,
+            "servicios_publicos": 0.0776,
+            "eventos_naturales": 0.8687,
+            "regulacion": 0.0022,
+            "otro": 0.0059
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0119,
+            "logistica_canal": 0.021,
+            "turismo": 0.0019,
+            "servicios_publicos": 0.0118,
+            "eventos_naturales": 0.8396,
+            "regulacion": 0.0007,
+            "otro": 0.113
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0121,
+            "logistica_canal": 0.0149,
+            "turismo": 0.0068,
+            "servicios_publicos": 0.0075,
+            "eventos_naturales": 0.8222,
+            "regulacion": 0.0009,
+            "otro": 0.1355
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0119,
+            "logistica_canal": 0.021,
+            "turismo": 0.0019,
+            "servicios_publicos": 0.0118,
+            "eventos_naturales": 0.8396,
+            "regulacion": 0.0007,
+            "otro": 0.113
+          },
+          "scope": {
+            "A": 0.4527,
+            "B": 0.5473
+          }
+        }
+      }
+    },
+    {
+      "id": "in_eventos_naturales_3",
+      "title": "Sequía reduce el nivel del lago Gatún",
+      "expected": "eventos_naturales",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0016,
+            "logistica_canal": 0.0013,
+            "turismo": 0.0006,
+            "servicios_publicos": 0.0037,
+            "eventos_naturales": 0.9917,
+            "regulacion": 0.0005,
+            "otro": 0.0005
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0008,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0009,
+            "eventos_naturales": 0.9949,
+            "regulacion": 0.0002,
+            "otro": 0.0025
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0018,
+            "logistica_canal": 0.0011,
+            "turismo": 0.0005,
+            "servicios_publicos": 0.0007,
+            "eventos_naturales": 0.9774,
+            "regulacion": 0.0003,
+            "otro": 0.0181
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0008,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0009,
+            "eventos_naturales": 0.9949,
+            "regulacion": 0.0002,
+            "otro": 0.0025
+          },
+          "scope": {
+            "A": 0.5022,
+            "B": 0.4978
+          }
+        }
+      }
+    },
+    {
+      "id": "in_eventos_naturales_4",
+      "title": "Tormenta tropical se acerca al Caribe centroamericano",
+      "expected": "eventos_naturales",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0053,
+            "logistica_canal": 0.0029,
+            "turismo": 0.0043,
+            "servicios_publicos": 0.0028,
+            "eventos_naturales": 0.9833,
+            "regulacion": 0.0003,
+            "otro": 0.0012
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0291,
+            "logistica_canal": 0.0083,
+            "turismo": 0.0131,
+            "servicios_publicos": 0.0038,
+            "eventos_naturales": 0.7238,
+            "regulacion": 0.0012,
+            "otro": 0.2206
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0354,
+            "logistica_canal": 0.0338,
+            "turismo": 0.0269,
+            "servicios_publicos": 0.0239,
+            "eventos_naturales": 0.7264,
+            "regulacion": 0.004,
+            "otro": 0.1496
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0291,
+            "logistica_canal": 0.0083,
+            "turismo": 0.0131,
+            "servicios_publicos": 0.0038,
+            "eventos_naturales": 0.7238,
+            "regulacion": 0.0012,
+            "otro": 0.2206
+          },
+          "scope": {
+            "A": 0.3326,
+            "B": 0.6674
+          }
+        }
+      }
+    },
+    {
+      "id": "in_regulacion_0",
+      "title": "Asamblea aprueba en tercer debate proyecto de ley de contrataciones públicas",
+      "expected": "regulacion",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0444,
+            "logistica_canal": 0.0017,
+            "turismo": 0.0002,
+            "servicios_publicos": 0.0015,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.9498,
+            "otro": 0.0022
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.187,
+            "logistica_canal": 0.0084,
+            "turismo": 0.0013,
+            "servicios_publicos": 0.0824,
+            "eventos_naturales": 0.0011,
+            "regulacion": 0.0538,
+            "otro": 0.6661
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.1209,
+            "logistica_canal": 0.0138,
+            "turismo": 0.0025,
+            "servicios_publicos": 0.4397,
+            "eventos_naturales": 0.0015,
+            "regulacion": 0.2151,
+            "otro": 0.2065
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.187,
+            "logistica_canal": 0.0084,
+            "turismo": 0.0013,
+            "servicios_publicos": 0.0824,
+            "eventos_naturales": 0.0011,
+            "regulacion": 0.0538,
+            "otro": 0.6661
+          },
+          "scope": {
+            "A": 0.7561,
+            "B": 0.2439
+          }
+        }
+      }
+    },
+    {
+      "id": "in_regulacion_1",
+      "title": "Gobierno publica decreto que reglamenta la ley de zonas francas",
+      "expected": "regulacion",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0003,
+            "logistica_canal": 0.0002,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0004,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.9981,
+            "otro": 0.0008
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.0051,
+            "logistica_canal": 0.0009,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.0017,
+            "eventos_naturales": 0.001,
+            "regulacion": 0.8723,
+            "otro": 0.1183
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0167,
+            "logistica_canal": 0.0148,
+            "turismo": 0.0053,
+            "servicios_publicos": 0.1463,
+            "eventos_naturales": 0.0095,
+            "regulacion": 0.0285,
+            "otro": 0.7791
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.0051,
+            "logistica_canal": 0.0009,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.0017,
+            "eventos_naturales": 0.001,
+            "regulacion": 0.8723,
+            "otro": 0.1183
+          },
+          "scope": {
+            "A": 0.6234,
+            "B": 0.3766
+          }
+        }
+      }
+    },
+    {
+      "id": "in_regulacion_2",
+      "title": "Superintendencia de Bancos emite nueva resolución sobre cuentas",
+      "expected": "regulacion",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0272,
+            "logistica_canal": 0.024,
+            "turismo": 0.0066,
+            "servicios_publicos": 0.0528,
+            "eventos_naturales": 0.0059,
+            "regulacion": 0.7491,
+            "otro": 0.1344
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.006,
+            "logistica_canal": 0.0063,
+            "turismo": 0.0021,
+            "servicios_publicos": 0.0099,
+            "eventos_naturales": 0.0022,
+            "regulacion": 0.0971,
+            "otro": 0.8765
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0078,
+            "logistica_canal": 0.0136,
+            "turismo": 0.0043,
+            "servicios_publicos": 0.0894,
+            "eventos_naturales": 0.0044,
+            "regulacion": 0.1176,
+            "otro": 0.7628
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.006,
+            "logistica_canal": 0.0063,
+            "turismo": 0.0021,
+            "servicios_publicos": 0.0099,
+            "eventos_naturales": 0.0022,
+            "regulacion": 0.0971,
+            "otro": 0.8765
+          },
+          "scope": {
+            "A": 0.0626,
+            "B": 0.9374
+          }
+        }
+      }
+    },
+    {
+      "id": "in_regulacion_3",
+      "title": "Corte Suprema declara inconstitucional una norma tributaria",
+      "expected": "regulacion",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.1884,
+            "logistica_canal": 0.0098,
+            "turismo": 0.0057,
+            "servicios_publicos": 0.0084,
+            "eventos_naturales": 0.0027,
+            "regulacion": 0.7292,
+            "otro": 0.0557
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.1738,
+            "logistica_canal": 0.0071,
+            "turismo": 0.0034,
+            "servicios_publicos": 0.0065,
+            "eventos_naturales": 0.0025,
+            "regulacion": 0.6689,
+            "otro": 0.1379
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.1669,
+            "logistica_canal": 0.0139,
+            "turismo": 0.0097,
+            "servicios_publicos": 0.0377,
+            "eventos_naturales": 0.0034,
+            "regulacion": 0.3001,
+            "otro": 0.4683
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.1738,
+            "logistica_canal": 0.0071,
+            "turismo": 0.0034,
+            "servicios_publicos": 0.0065,
+            "eventos_naturales": 0.0025,
+            "regulacion": 0.6689,
+            "otro": 0.1379
+          },
+          "scope": {
+            "A": 0.194,
+            "B": 0.806
+          }
+        }
+      }
+    },
+    {
+      "id": "in_regulacion_4",
+      "title": "Reforma a la ley de la seguridad social entra en vigencia",
+      "expected": "regulacion",
+      "raw": {
+        "v0_actual": {
+          "category": {
+            "economia": 0.0002,
+            "logistica_canal": 0.0,
+            "turismo": 0.0,
+            "servicios_publicos": 0.0,
+            "eventos_naturales": 0.0,
+            "regulacion": 0.9996,
+            "otro": 0.0002
+          },
+          "scope": null
+        },
+        "v1_criterios": {
+          "category": {
+            "economia": 0.002,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0006,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.9421,
+            "otro": 0.0548
+          },
+          "scope": null
+        },
+        "v1b_criterios_ampliados": {
+          "category": {
+            "economia": 0.0081,
+            "logistica_canal": 0.0024,
+            "turismo": 0.0007,
+            "servicios_publicos": 0.014,
+            "eventos_naturales": 0.0003,
+            "regulacion": 0.9039,
+            "otro": 0.0706
+          },
+          "scope": null
+        },
+        "v2_v1+puerta": {
+          "category": {
+            "economia": 0.002,
+            "logistica_canal": 0.0004,
+            "turismo": 0.0001,
+            "servicios_publicos": 0.0006,
+            "eventos_naturales": 0.0001,
+            "regulacion": 0.9421,
+            "otro": 0.0548
+          },
+          "scope": {
+            "A": 0.359,
+            "B": 0.641
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+[project]
+name = "umbral-desktop-runtime"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["umbral-api", "umbral-pipeline[laya]", "laya==0.3.28", "pyinstaller==6.22.3", "torch==2.14.1+cpu"]
+
+[tool.uv.sources]
+umbral-api = { path = "../api", editable = true }
+umbral-pipeline = { path = "../../pipeline", editable = true }
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["release", "dist", "staging", "build", ".qa", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501", "B008"]

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.1.0",
+  "snapshotId": "20261007-cfa338b6",
+  "generatedAt": "2026-10-07T15:08:28Z",
+  "sections": {
+    "classification": {
+      "status": "pendiente",
+      "reason": "Sin etiquetas humanas para el snapshot actual."
+    },
+    "clustering": {
+      "status": "pendiente",
+      "reason": "Sin pares etiquetados para el snapshot actual."
+    },
+    "benchmarkDev": {
+      "status": "ejecutado",
+      "command": "eval/run_local_dev.py --snapshot data/snapshots/20261007-cfa338b6 --out eval/results/benchmark-dev-20261007-cfa338b6.json --claims-out eval/labels/claims_sample.20261007-cfa338b6.jsonl",
+      "ranAt": "2026-10-07T13:34:56Z",
+      "environment": {
+        "python": "3.12.14",
+        "os": "Windows-11-10.0.26200-SP0",
+        "api": "http://127.0.0.1:15298",
+        "snapshotId": "20261007-cfa338b6",
+        "dataMode": "provisional",
+        "classifier": "laya",
+        "offline": true,
+        "persistence": "memory",
+        "queriesPerMinute": 100
+      },
+      "benchmarkFile": "benchmark_dev.jsonl",
+      "benchmarkSha256": "9cf5d87977683d5c123948f7d9eb377c05a7168fcf9150f6dee569beb2d1b177",
+      "evaluatorSha256": "9fa7745210fb475b3292d861bd9edee55deb9b4abb834c42d88a783f640d2a11",
+      "labelMethods": [
+        "agent_authored_structural_probe"
+      ],
+      "humanReviewed": false,
+      "caveats": [
+        "40 pruebas públicas exploratorias escritas por el agente; no son el benchmark final60.",
+        "Relevancia parcial programática; no mide utilidad de agenda.",
+        "Citas presentes no prueban cobertura factual ni sustento humano.",
+        "Latencia local caliente; no incluye arranque frío Render ni generación Gemini."
+      ],
+      "n": 40,
+      "byType": {
+        "sustentada": 20,
+        "ambigua": 6,
+        "sin_respuesta": 7,
+        "adversarial": 7
+      },
+      "httpErrors": 0,
+      "retrievalPrecisionAt5": {
+        "mean": 0.2,
+        "queriesEvaluated": 20
+      },
+      "responseCitationPresence": {
+        "numerator": 20,
+        "denominator": 20,
+        "value": 1.0
+      },
+      "factualCitationCoverage": {
+        "status": "pendiente",
+        "value": null,
+        "reason": "QueryResponse no expone afirmaciones tipadas; requiere revisión por afirmación."
+      },
+      "agendaPrecisionAt5": {
+        "status": "pendiente",
+        "value": null,
+        "reason": "Falta juicio editorial independiente sobre cinco temas de agenda."
+      },
+      "humanSupport": {
+        "status": "pendiente",
+        "value": null
+      },
+      "correctAbstention": {
+        "numerator": 14,
+        "denominator": 14,
+        "value": 1.0
+      },
+      "incorrectAbstentionOnAnswerable": {
+        "numerator": 0,
+        "denominator": 20,
+        "value": 0.0
+      },
+      "adversarialPassed": {
+        "numerator": 7,
+        "denominator": 7,
+        "value": 1.0
+      },
+      "expectedStatusMatch": {
+        "numerator": 14,
+        "denominator": 14,
+        "value": 1.0
+      },
+      "latencySeconds": {
+        "n": 40,
+        "median": 0.05606230000012147,
+        "p95": 0.13336641499918184,
+        "max": 0.1453285000025062
+      },
+      "failureCount": 0
+    },
+    "benchmarkReserved": {
+      "status": "pendiente"
+    },
+    "humanSupport": {
+      "status": "pendiente",
+      "reason": "Revisión humana de afirmaciones pendiente."
+    },
+    "agendaPrecisionAt5": {
+      "status": "pendiente",
+      "reason": "Juicio editorial independiente pendiente."
+    }
+  }
+}

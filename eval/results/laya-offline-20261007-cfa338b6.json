@@ -1,0 +1,68 @@
+{
+  "status": "ejecutado",
+  "test": "T10_Laya_cached_no_network",
+  "command": "eval/verify_laya_offline.py --snapshot data/snapshots/20261007-cfa338b6 --out eval/results/laya-offline-20261007-cfa338b6.json",
+  "ranAt": "2026-10-07T15:09:25Z",
+  "snapshotId": "20261007-cfa338b6",
+  "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050",
+  "classifier": {
+    "classifier": "laya",
+    "modelId": "convaiinnovations/laya/multilingual",
+    "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+    "layaPackageVersion": "0.3.28",
+    "torchVersion": "2.14.1+cpu",
+    "runAt": "2026-10-07T15:09:24Z",
+    "device": "cpu",
+    "loadSeconds": 6.1,
+    "forwardCalls": 1,
+    "threshold": 0.5,
+    "questions": {
+      "category": "choice 6+otro (laya-category-v1)",
+      "geo": "relevancia por contenido (lexical-content-v2); la pregunta geo de Laya se guarda en geoLayaRaw"
+    },
+    "scopeMethod": "laya-category-v1",
+    "note": "Probabilidades sin calibrar (calibrated=false)."
+  },
+  "prediction": {
+    "predictionId": "pred_86292f7aa35d033e",
+    "articleId": "art_ae21e71d0bb9e24c",
+    "inputHash": "e674aeb590dbbdc383565f64d0c8659a4fcb881e71bfd92697ad6968a92f0e06",
+    "task": "category",
+    "category": "indeterminado",
+    "probability": 0.8475,
+    "probabilities": {
+      "economia": 0.1445,
+      "logistica_canal": 0.0027,
+      "turismo": 0.0015,
+      "servicios_publicos": 0.0016,
+      "eventos_naturales": 0.0008,
+      "regulacion": 0.0014,
+      "indeterminado": 0.8475
+    },
+    "threshold": 0.5,
+    "geoRelevance": "panama",
+    "geoEvidence": [
+      "contenido:panama"
+    ],
+    "geoMethod": "lexical-content-v2",
+    "geoLayaRaw": {
+      "panama": 0.275,
+      "regional": 0.211,
+      "none": 0.514
+    },
+    "classifier": "laya",
+    "modelId": "convaiinnovations/laya/multilingual",
+    "modelVersion": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+    "predictedAt": "2026-10-07T15:09:24Z",
+    "calibrated": false,
+    "provisional": true
+  },
+  "dnsProbeBlocked": true,
+  "modelExternalAttemptsBlocked": 0,
+  "offlineFlags": {
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1"
+  },
+  "netblockLog": "<repo>\\eval\\results\\laya-offline-cfa338b6-netblock.log",
+  "caveat": "Inferencia real sin red; no evaluación de exactitud ni macro-F1."
+}

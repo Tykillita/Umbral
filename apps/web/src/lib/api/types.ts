@@ -1,0 +1,68 @@
+// Alias legibles sobre los tipos generados desde apps/api/openapi.json (`pnpm gen:api`).
+import type { components } from './schema';
+
+type S = components['schemas'];
+
+export type Category = S['Category'];
+export type EvidenceStatus = S['EvidenceStatus'];
+export type ReviewStatus = S['ReviewStatus'];
+export type ScoreBand = S['ScoreBand'];
+export type GenerationMode = S['GenerationMode'];
+export type ClaimType = S['ClaimType'];
+export type AnswerStatus = S['AnswerStatus'];
+export type DataMode = S['DataMode'];
+export type ImpactLevel = S['ImpactLevel'];
+export type FallbackReason = S['FallbackReason'];
+export type DraftProviderChoice = S['DraftProviderChoice'];
+
+export type Health = S['HealthResponse'];
+export type Rules = S['RulesResponse-Output'];
+export type RulesRequest = S['RulesRequest'];
+export type Connections = S['ConnectionsResponse'];
+export type ConnectionStart = S['ConnectionStart'];
+export type Authorization = S['AuthorizationResponse'];
+export type Models = S['ModelsResponse'];
+export type Disconnect = S['DisconnectResponse'];
+export type SnapshotInfo = S['SnapshotInfoResponse'];
+export type TopicsResponse = S['TopicsResponse'];
+export type TopicSummary = S['TopicSummary-Output'];
+export type TopicDetail = S['TopicDetail-Output'];
+export type ScoreComponent = S['ScoreComponent-Output'];
+export type ScoreDetail = S['ScoreDetail-Output'];
+export type EvidenceArticle = S['EvidenceArticle-Output'];
+export type IndicatorPoint = S['IndicatorPoint-Output'];
+export type Claim = S['Claim-Output'];
+export type ClaimInput = S['ClaimInput'];
+export type Contradiction = S['Contradiction-Output'];
+export type CaseView = S['CaseView-Output'];
+export type CaseEvent = S['CaseEvent-Output'];
+export type DraftRecord = S['DraftRecord-Output'];
+export type DraftResponse = S['DraftResponse'];
+export type EditorialPackage = S['EditorialPackage-Output'];
+export type ValidationReport = S['ValidationReport-Output'];
+export type QueryResponse = S['QueryResponse'];
+export type QueryCitation = S['QueryCitation'];
+export type QueryHit = S['QueryHit'];
+export type ExportResponse = S['ExportResponse'];
+export type ErrorBody = S['ErrorResponse'];
+export type ProviderStatus = S['ProviderStatus'];
+export type ImpactRequest = S['ImpactRequest'];
+export type ReviewRequest = S['ReviewRequest'];
+export type DraftEditRequest = S['DraftEditRequest'];
+
+export interface TopicFilters {
+  scope?: 'in_scope' | 'all';
+  category?: Category | '';
+  evidence?: EvidenceStatus | '';
+  band?: ScoreBand | '';
+  reviewStatus?: ReviewStatus | '';
+  q?: string;
+  limit?: number;
+}
+
+export type PublicContext = S['PublicContext'];
+export type PublicDraftResponse = S['PublicDraftResponse'];
+export type PublicValidationResponse = S['PublicValidationResponse'];
+export type ArchivedEvidence = S['ArchivedEvidence-Output'];
+
+export type ImpactAssignment = S['ImpactAssignment-Output'];

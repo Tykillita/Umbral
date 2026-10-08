@@ -1,0 +1,8 @@
+build/
+dist/
+release/
+staging/
+.qa/*.log
+.qa/state/
+.qa/smoke-data/
+.qa/inference-data/

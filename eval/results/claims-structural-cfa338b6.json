@@ -1,0 +1,27 @@
+{
+  "command": "eval/run_claims_eval.py --snapshot data/snapshots/20261007-cfa338b6 --labels eval/labels/claims_review.20261007-cfa338b6.jsonl --out eval/results/claims-structural-cfa338b6.json",
+  "ranAt": "2026-10-07T15:08:25Z",
+  "snapshotId": "20261007-cfa338b6",
+  "evaluationKind": "pending",
+  "facts": 32,
+  "reviewedFacts": 0,
+  "factualCitationCoverageStructural": {
+    "numerator": 32,
+    "denominator": 32,
+    "value": 1.0
+  },
+  "humanSupport": {
+    "numerator": 0,
+    "denominator": 0,
+    "value": null
+  },
+  "humanCitationCorrect": {
+    "numerator": 0,
+    "denominator": 0,
+    "value": null
+  },
+  "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050",
+  "labelsSha256": "acb697f9d29685bddf2335723b7957c9d50b19f95f11148b40efaa50f48eb4a0",
+  "evaluatorSha256": "6d9370e74f38e9845760694e9981141af37d9b0acf3920401e064a315ff2ea1b",
+  "note": "Validez de campos/IDs no prueba sustento; los juicios requieren revisión independiente."
+}

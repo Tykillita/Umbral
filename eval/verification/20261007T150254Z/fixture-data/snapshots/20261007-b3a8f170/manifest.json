@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "1.0.3",
+  "snapshotId": "20261007-b3a8f170",
+  "version": "1.0.0",
+  "provisional": true,
+  "provisionalReasons": [
+    "synthetic_control_not_human_or_model_metrics"
+  ],
+  "containsFixtures": true,
+  "cutoffUtc": "2026-10-07T08:00:00Z",
+  "createdAt": "2026-10-07T15:02:55Z",
+  "pipeline": {
+    "name": "umbral_pipeline",
+    "version": "0.1.0",
+    "python": "3.12.14"
+  },
+  "window": {
+    "days": 30
+  },
+  "queries": [],
+  "files": {
+    "articles.jsonl": {
+      "sha256": "74dffe62eebea892379f1dca36349568b5244b072c9df7ae0afc89a4eb4a9404",
+      "bytes": 3410,
+      "records": 4
+    },
+    "indicators.jsonl": {
+      "sha256": "9d876b698e1d82baa24262ab16914c5f5ef1730e73877c0021a5b09a9daa09be",
+      "bytes": 256933,
+      "records": 540
+    },
+    "predictions.jsonl": {
+      "sha256": "8d9f26eaec3511d8d7fefb530a7fc550e8875c960c03dfc632bb4726757d3ea9",
+      "bytes": 2237,
+      "records": 4
+    },
+    "clusters.jsonl": {
+      "sha256": "ddcdf6e48a2ccdc006d796b8a2d9e9e61d5d460d2cc2dc4870cb2b4b875bdaf5",
+      "bytes": 186,
+      "records": 2
+    },
+    "invalid.jsonl": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "records": 0
+    },
+    "quality_report.json": {
+      "sha256": "93527bbbe8de5bf03993fc9bad8742e63903cf94da51d78f085ad80c515ac30e",
+      "bytes": 120,
+      "records": null
+    },
+    "noticias.csv": {
+      "sha256": "02e34f4887f135e6ca95b9cd80a75d1ad694f27af5eeef02870b11071a36bb7d",
+      "bytes": 1129,
+      "records": null
+    },
+    "indicadores.csv": {
+      "sha256": "662e86f4971272d2af84170b6fed79e7b4e3ad81769c5005b137fae2d56bac75",
+      "bytes": 96757,
+      "records": null
+    },
+    "fuentes.json": {
+      "sha256": "ffbc9c99d789abbb20a040a87f72109739c36977afc95d993ceeff7ba43cccb2",
+      "bytes": 2584,
+      "records": null
+    },
+    "DATA_DICTIONARY.md": {
+      "sha256": "2ec641d98f7bfe895457b6fa4eae3a04816b7723868eacf0c38c06ffad2b79bc",
+      "bytes": 1903,
+      "records": null
+    },
+    "TERMS_OF_USE.md": {
+      "sha256": "ebd1a7d67481d767f372112a5fbe19a9c87d6276a693686fbe1cd0655665a4db",
+      "bytes": 2177,
+      "records": null
+    }
+  },
+  "counts": {
+    "articlesValid": 4,
+    "articlesInvalid": 0,
+    "tvn": 0,
+    "gdelt": 0,
+    "fixture": 4,
+    "indicatorRows": 540,
+    "indicatorValues": 484,
+    "clusters": 2,
+    "predictions": 4
+  },
+  "classifier": {
+    "classifier": "baseline",
+    "modelVersion": "synthetic-v1",
+    "note": "Predicciones CONTROLADAS: no se ejecutó Laya ni se mide desempeño de dominio.",
+    "predictionsInputSha256": "7f37d2b89578bbc542240b982d0b03b90b4f84c42306ba4427472f7bcd189779",
+    "articlesSha256": "74dffe62eebea892379f1dca36349568b5244b072c9df7ae0afc89a4eb4a9404"
+  },
+  "sources": [
+    {
+      "id": "tvn_news_sitemap",
+      "name": "TVN Panamá – sitemap Google News público",
+      "url": "https://www.tvn-2.com/tvn_sitemap_google_news.xml",
+      "license": "Sin licencia abierta. Solo titular, URL y fecha de publicación declarada por el editor.",
+      "terms": "Sitemap enlazado desde robots.txt/índice oficial. No se conservan imágenes ni cuerpos. news:publication_date es publicación; lastmod no se utiliza como publicación.",
+      "extractedAt": null,
+      "transformations": [
+        "synthetic_control"
+      ]
+    },
+    {
+      "id": "tvn_rss",
+      "name": "TVN Panamá – feed RSS público",
+      "url": "https://www.tvn-2.com/rss/",
+      "license": "Sin licencia abierta. Solo se conservan metadatos (titular, URL, fecha).",
+      "terms": "El RSS observado contiene noticias, fechas y descripciones; eso no implica licencia abierta sobre artículos, videos o imágenes (PDF §12). No se redistribuyen descripciones/extractos ni cuerpos; reutilización de extractos requiere autorización explícita del patrocinador.",
+      "extractedAt": null,
+      "transformations": [
+        "synthetic_control"
+      ]
+    },
+    {
+      "id": "gdelt_doc",
+      "name": "GDELT DOC 2.0 API (ArtList)",
+      "url": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts",
+      "license": "GDELT es de uso libre con atribución; la API no transfiere derechos sobre los artículos de los medios enlazados.",
+      "terms": "Máx. 250 artículos por consulta; 1 consulta cada 5 s. 'seendate' es detección, no publicación. Se guardan titular, URL, dominio, idioma y país del medio.",
+      "extractedAt": null,
+      "transformations": [
+        "synthetic_control"
+      ]
+    },
+    {
+      "id": "world_bank",
+      "name": "Banco Mundial – Indicators API v2",
+      "url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+      "license": "CC BY 4.0 (salvo excepciones de terceros indicadas en los metadatos de cada indicador)",
+      "terms": "Atribución obligatoria («World Bank Open Data»); revisar excepciones de terceros por indicador. Los datos pueden revisarse; el período de referencia no coincide con el año de extracción.",
+      "extractedAt": null,
+      "transformations": [
+        "synthetic_control"
+      ]
+    },
+    {
+      "id": "fixture",
+      "name": "Fixtures sintéticos (T01–T04, T07)",
+      "url": "pipeline/umbral_pipeline/fixtures.py",
+      "license": "Sintéticos del equipo (MIT)",
+      "terms": "Dominios .example/.invalid; no representan noticias reales.",
+      "extractedAt": "2026-10-07T08:00:00Z",
+      "transformations": []
+    }
+  ],
+  "licenseNotes": "Solo metadatos de noticias (sin cuerpos); Banco Mundial CC BY 4.0 con atribución; USGS dominio público. Ver TERMS_OF_USE.md.",
+  "transformations": [
+    "synthetic_control"
+  ],
+  "snapshotHashInputs": "sha256(articles)+sha256(indicators)+sha256(predictions)+sha256(clusters)"
+}

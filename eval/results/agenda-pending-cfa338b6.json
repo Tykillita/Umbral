@@ -1,0 +1,14 @@
+{
+  "command": "eval/run_agenda_eval.py --snapshot data/snapshots/20261007-cfa338b6 --ranking eval/results/agenda-ranking-cfa338b6.json --labels eval/labels/agenda_review.cfa338b6.jsonl --out eval/results/agenda-pending-cfa338b6.json",
+  "ranAt": "2026-10-07T15:08:27Z",
+  "snapshotId": "20261007-cfa338b6",
+  "rulesVersion": "scoring-v1",
+  "evaluationKind": "pending",
+  "judgments": 0,
+  "precisionAt5": null,
+  "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050",
+  "rankingSha256": "ee53e524086b706689e94d8d9ff7a189a991edceb33018fc599701015906cf1f",
+  "labelsSha256": "ac836e060d97df246e6503a09c57d8b34c0051f6226bd5885713ce898219d059",
+  "evaluatorSha256": "b1ba77db81e8c6d7337df123cf39c6ce75748ff70dc405d71c9918b7d32f0ee7",
+  "note": "Juicios independientes de agenda; no confundir con recuperación de noticias."
+}

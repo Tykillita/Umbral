@@ -1,0 +1,565 @@
+{
+  "snapshotId": "20261007-cfa338b6",
+  "rulesVersion": "scoring-v1",
+  "dataMode": "provisional",
+  "cutoffUtc": "2026-10-07T08:14:34Z",
+  "total": 183,
+  "scope": "in_scope",
+  "outOfScopeCount": 727,
+  "items": [
+    {
+      "id": "evt_37a37cb02d7269d1",
+      "rank": 1,
+      "title": "Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .",
+      "category": "logistica_canal",
+      "categoryLabel": "Logística / Canal",
+      "score": 76.7,
+      "band": "alto",
+      "scoreComponents": [
+        {
+          "key": "R",
+          "label": "Relevancia",
+          "weight": 30,
+          "value": 1.0,
+          "points": 30.0,
+          "rule": "Panamá: 1; relación regional: 0,5; sin relación o indeterminada: 0.",
+          "justification": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_39666969ba302f59]: «Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .». Evidencia (regla de contenido o clasificador): contenido:panama.",
+          "limits": [
+            "Relevancia tomada del máximo entre los artículos del evento (clasificador, sin calibrar).",
+            "R no se edita en la API: si es incorrecta, corrige la clasificación en el pipeline (predictions) o descarta el caso con comentario."
+          ],
+          "evidenceIds": [
+            "art_39666969ba302f59",
+            "art_92fff79020ce94f0"
+          ]
+        },
+        {
+          "key": "I",
+          "label": "Impacto potencial",
+          "weight": 25,
+          "value": 1.0,
+          "points": 25.0,
+          "rule": "Asignación editorial: bajo 0,25; medio 0,5; alto 1. Requiere justificación con evidencia.",
+          "justification": "Impacto alto: Propuesta automática (3 de 3 factores): relación directa con Panamá; 2 procedencias independientes; alcance público amplio (Logística / Canal, con evidencia que lo corrobora). Requiere confirmación editorial.",
+          "limits": [
+            "Impacto propuesto automáticamente (heurística con evidencia); requiere confirmación editorial."
+          ],
+          "evidenceIds": [
+            "art_39666969ba302f59"
+          ]
+        },
+        {
+          "key": "U",
+          "label": "Urgencia",
+          "weight": 20,
+          "value": 0.0,
+          "points": 0.0,
+          "rule": "Publicación original dentro de 24 h del corte: 1; dentro de 7 días: 0,5; anterior o desconocida: 0.",
+          "justification": "Publicado hace 9 d respecto al corte (>7 d): 0.",
+          "limits": [],
+          "evidenceIds": [
+            "art_39666969ba302f59",
+            "art_92fff79020ce94f0"
+          ]
+        },
+        {
+          "key": "N",
+          "label": "Novedad",
+          "weight": 15,
+          "value": 1.0,
+          "points": 15.0,
+          "rule": "Evento nuevo: 1; recirculación: 0. Los duplicados conservan la puntuación del evento.",
+          "justification": "Evento nuevo: 1.",
+          "limits": [
+            "Los duplicados conservan la puntuación del evento: repetir no aumenta N."
+          ],
+          "evidenceIds": [
+            "art_39666969ba302f59",
+            "art_92fff79020ce94f0"
+          ]
+        },
+        {
+          "key": "E",
+          "label": "Evidencia disponible",
+          "weight": 10,
+          "value": 0.67,
+          "points": 6.7,
+          "rule": "Sin procedencia: 0; una: 0,33; dos independientes: 0,67; fuente primaria pertinente + cobertura original: 1.",
+          "justification": "2 procedencias independientes: 0,67.",
+          "limits": [
+            "Sin fuente primaria pertinente confirmada (una serie oficial vinculada por tema es solo contexto): máximo 0,67."
+          ],
+          "evidenceIds": [
+            "art_39666969ba302f59",
+            "art_92fff79020ce94f0"
+          ]
+        }
+      ],
+      "urgency": 0.0,
+      "evidenceStatus": "parcial",
+      "evidenceStatusLabel": "Parcial",
+      "articleCount": 2,
+      "independentProvenances": 2,
+      "firstPublishedAt": "2026-09-28T00:00:00Z",
+      "lastPublishedAt": "2026-09-28T00:00:00Z",
+      "geoRelevance": "panama",
+      "reviewStatus": "nuevo",
+      "reviewStatusLabel": "Nuevo",
+      "hasContradictions": false,
+      "hasSuspiciousSource": false,
+      "headlineOnly": true,
+      "isRecirculation": false,
+      "relevanceReason": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_39666969ba302f59]: «Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .». Evidencia (regla de contenido o clasificador): contenido:panama.",
+      "possibleSponsored": false,
+      "outOfScope": false,
+      "needsInvestigation": false,
+      "topReason": "Prioridad alto (76.7); mayores aportes: R 30, I 25; evidencia parcial"
+    },
+    {
+      "id": "evt_340bc1f6642b7bcf",
+      "rank": 2,
+      "title": "Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones",
+      "category": "economia",
+      "categoryLabel": "Economía",
+      "score": 74.55,
+      "band": "alto",
+      "scoreComponents": [
+        {
+          "key": "R",
+          "label": "Relevancia",
+          "weight": 30,
+          "value": 1.0,
+          "points": 30.0,
+          "rule": "Panamá: 1; relación regional: 0,5; sin relación o indeterminada: 0.",
+          "justification": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_7ec07b57b74f8924]: «Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+          "limits": [
+            "Relevancia tomada del máximo entre los artículos del evento (clasificador, sin calibrar).",
+            "R no se edita en la API: si es incorrecta, corrige la clasificación en el pipeline (predictions) o descarta el caso con comentario."
+          ],
+          "evidenceIds": [
+            "art_7ec07b57b74f8924"
+          ]
+        },
+        {
+          "key": "I",
+          "label": "Impacto potencial",
+          "weight": 25,
+          "value": 0.25,
+          "points": 6.25,
+          "rule": "Asignación editorial: bajo 0,25; medio 0,5; alto 1. Requiere justificación con evidencia.",
+          "justification": "Impacto bajo: Propuesta automática (1 de 3 factores): relación directa con Panamá. Requiere confirmación editorial.",
+          "limits": [
+            "Impacto propuesto automáticamente (heurística con evidencia); requiere confirmación editorial."
+          ],
+          "evidenceIds": [
+            "art_7ec07b57b74f8924"
+          ]
+        },
+        {
+          "key": "U",
+          "label": "Urgencia",
+          "weight": 20,
+          "value": 1.0,
+          "points": 20.0,
+          "rule": "Publicación original dentro de 24 h del corte: 1; dentro de 7 días: 0,5; anterior o desconocida: 0.",
+          "justification": "Publicado hace 7.9 h respecto al corte (≤24 h): 1.",
+          "limits": [],
+          "evidenceIds": [
+            "art_7ec07b57b74f8924"
+          ]
+        },
+        {
+          "key": "N",
+          "label": "Novedad",
+          "weight": 15,
+          "value": 1.0,
+          "points": 15.0,
+          "rule": "Evento nuevo: 1; recirculación: 0. Los duplicados conservan la puntuación del evento.",
+          "justification": "Evento nuevo: 1.",
+          "limits": [
+            "Los duplicados conservan la puntuación del evento: repetir no aumenta N."
+          ],
+          "evidenceIds": [
+            "art_7ec07b57b74f8924"
+          ]
+        },
+        {
+          "key": "E",
+          "label": "Evidencia disponible",
+          "weight": 10,
+          "value": 0.33,
+          "points": 3.3,
+          "rule": "Sin procedencia: 0; una: 0,33; dos independientes: 0,67; fuente primaria pertinente + cobertura original: 1.",
+          "justification": "Una procedencia: 0,33.",
+          "limits": [
+            "Una sola procedencia: la repetición no es corroboración."
+          ],
+          "evidenceIds": [
+            "art_7ec07b57b74f8924"
+          ]
+        }
+      ],
+      "urgency": 1.0,
+      "evidenceStatus": "insuficiente",
+      "evidenceStatusLabel": "Insuficiente",
+      "articleCount": 1,
+      "independentProvenances": 1,
+      "firstPublishedAt": "2026-10-07T00:21:09Z",
+      "lastPublishedAt": "2026-10-07T00:21:09Z",
+      "geoRelevance": "panama",
+      "reviewStatus": "nuevo",
+      "reviewStatusLabel": "Nuevo",
+      "hasContradictions": false,
+      "hasSuspiciousSource": false,
+      "headlineOnly": true,
+      "isRecirculation": false,
+      "relevanceReason": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_7ec07b57b74f8924]: «Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+      "possibleSponsored": false,
+      "outOfScope": false,
+      "needsInvestigation": true,
+      "topReason": "Prioridad alto (74.5); mayores aportes: R 30, U 20; evidencia insuficiente"
+    },
+    {
+      "id": "evt_56a6a12f071fbbf0",
+      "rank": 3,
+      "title": "Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo",
+      "category": "regulacion",
+      "categoryLabel": "Regulación",
+      "score": 74.55,
+      "band": "alto",
+      "scoreComponents": [
+        {
+          "key": "R",
+          "label": "Relevancia",
+          "weight": 30,
+          "value": 1.0,
+          "points": 30.0,
+          "rule": "Panamá: 1; relación regional: 0,5; sin relación o indeterminada: 0.",
+          "justification": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_2dcbf84e2b74a8b4]: «Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+          "limits": [
+            "Relevancia tomada del máximo entre los artículos del evento (clasificador, sin calibrar).",
+            "R no se edita en la API: si es incorrecta, corrige la clasificación en el pipeline (predictions) o descarta el caso con comentario."
+          ],
+          "evidenceIds": [
+            "art_2dcbf84e2b74a8b4"
+          ]
+        },
+        {
+          "key": "I",
+          "label": "Impacto potencial",
+          "weight": 25,
+          "value": 0.25,
+          "points": 6.25,
+          "rule": "Asignación editorial: bajo 0,25; medio 0,5; alto 1. Requiere justificación con evidencia.",
+          "justification": "Impacto bajo: Propuesta automática (1 de 3 factores): relación directa con Panamá. Requiere confirmación editorial.",
+          "limits": [
+            "Impacto propuesto automáticamente (heurística con evidencia); requiere confirmación editorial."
+          ],
+          "evidenceIds": [
+            "art_2dcbf84e2b74a8b4"
+          ]
+        },
+        {
+          "key": "U",
+          "label": "Urgencia",
+          "weight": 20,
+          "value": 1.0,
+          "points": 20.0,
+          "rule": "Publicación original dentro de 24 h del corte: 1; dentro de 7 días: 0,5; anterior o desconocida: 0.",
+          "justification": "Publicado hace 10.0 h respecto al corte (≤24 h): 1.",
+          "limits": [],
+          "evidenceIds": [
+            "art_2dcbf84e2b74a8b4"
+          ]
+        },
+        {
+          "key": "N",
+          "label": "Novedad",
+          "weight": 15,
+          "value": 1.0,
+          "points": 15.0,
+          "rule": "Evento nuevo: 1; recirculación: 0. Los duplicados conservan la puntuación del evento.",
+          "justification": "Evento nuevo: 1.",
+          "limits": [
+            "Los duplicados conservan la puntuación del evento: repetir no aumenta N."
+          ],
+          "evidenceIds": [
+            "art_2dcbf84e2b74a8b4"
+          ]
+        },
+        {
+          "key": "E",
+          "label": "Evidencia disponible",
+          "weight": 10,
+          "value": 0.33,
+          "points": 3.3,
+          "rule": "Sin procedencia: 0; una: 0,33; dos independientes: 0,67; fuente primaria pertinente + cobertura original: 1.",
+          "justification": "Una procedencia: 0,33.",
+          "limits": [
+            "Una sola procedencia: la repetición no es corroboración."
+          ],
+          "evidenceIds": [
+            "art_2dcbf84e2b74a8b4"
+          ]
+        }
+      ],
+      "urgency": 1.0,
+      "evidenceStatus": "insuficiente",
+      "evidenceStatusLabel": "Insuficiente",
+      "articleCount": 1,
+      "independentProvenances": 1,
+      "firstPublishedAt": "2026-10-06T22:14:00Z",
+      "lastPublishedAt": "2026-10-06T22:14:00Z",
+      "geoRelevance": "panama",
+      "reviewStatus": "nuevo",
+      "reviewStatusLabel": "Nuevo",
+      "hasContradictions": false,
+      "hasSuspiciousSource": false,
+      "headlineOnly": true,
+      "isRecirculation": false,
+      "relevanceReason": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_2dcbf84e2b74a8b4]: «Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+      "possibleSponsored": false,
+      "outOfScope": false,
+      "needsInvestigation": true,
+      "topReason": "Prioridad alto (74.5); mayores aportes: R 30, U 20; evidencia insuficiente"
+    },
+    {
+      "id": "evt_87a35159a963fdc8",
+      "rank": 4,
+      "title": "Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI",
+      "category": "economia",
+      "categoryLabel": "Economía",
+      "score": 74.55,
+      "band": "alto",
+      "scoreComponents": [
+        {
+          "key": "R",
+          "label": "Relevancia",
+          "weight": 30,
+          "value": 1.0,
+          "points": 30.0,
+          "rule": "Panamá: 1; relación regional: 0,5; sin relación o indeterminada: 0.",
+          "justification": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_96caf7104c3f4cac]: «Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+          "limits": [
+            "Relevancia tomada del máximo entre los artículos del evento (clasificador, sin calibrar).",
+            "R no se edita en la API: si es incorrecta, corrige la clasificación en el pipeline (predictions) o descarta el caso con comentario."
+          ],
+          "evidenceIds": [
+            "art_96caf7104c3f4cac"
+          ]
+        },
+        {
+          "key": "I",
+          "label": "Impacto potencial",
+          "weight": 25,
+          "value": 0.25,
+          "points": 6.25,
+          "rule": "Asignación editorial: bajo 0,25; medio 0,5; alto 1. Requiere justificación con evidencia.",
+          "justification": "Impacto bajo: Propuesta automática (1 de 3 factores): relación directa con Panamá. Requiere confirmación editorial.",
+          "limits": [
+            "Impacto propuesto automáticamente (heurística con evidencia); requiere confirmación editorial."
+          ],
+          "evidenceIds": [
+            "art_96caf7104c3f4cac"
+          ]
+        },
+        {
+          "key": "U",
+          "label": "Urgencia",
+          "weight": 20,
+          "value": 1.0,
+          "points": 20.0,
+          "rule": "Publicación original dentro de 24 h del corte: 1; dentro de 7 días: 0,5; anterior o desconocida: 0.",
+          "justification": "Publicado hace 8.3 h respecto al corte (≤24 h): 1.",
+          "limits": [],
+          "evidenceIds": [
+            "art_96caf7104c3f4cac"
+          ]
+        },
+        {
+          "key": "N",
+          "label": "Novedad",
+          "weight": 15,
+          "value": 1.0,
+          "points": 15.0,
+          "rule": "Evento nuevo: 1; recirculación: 0. Los duplicados conservan la puntuación del evento.",
+          "justification": "Evento nuevo: 1.",
+          "limits": [
+            "Los duplicados conservan la puntuación del evento: repetir no aumenta N."
+          ],
+          "evidenceIds": [
+            "art_96caf7104c3f4cac"
+          ]
+        },
+        {
+          "key": "E",
+          "label": "Evidencia disponible",
+          "weight": 10,
+          "value": 0.33,
+          "points": 3.3,
+          "rule": "Sin procedencia: 0; una: 0,33; dos independientes: 0,67; fuente primaria pertinente + cobertura original: 1.",
+          "justification": "Una procedencia: 0,33.",
+          "limits": [
+            "Una sola procedencia: la repetición no es corroboración."
+          ],
+          "evidenceIds": [
+            "art_96caf7104c3f4cac"
+          ]
+        }
+      ],
+      "urgency": 1.0,
+      "evidenceStatus": "insuficiente",
+      "evidenceStatusLabel": "Insuficiente",
+      "articleCount": 1,
+      "independentProvenances": 1,
+      "firstPublishedAt": "2026-10-06T23:57:05Z",
+      "lastPublishedAt": "2026-10-06T23:57:05Z",
+      "geoRelevance": "panama",
+      "reviewStatus": "nuevo",
+      "reviewStatusLabel": "Nuevo",
+      "hasContradictions": false,
+      "hasSuspiciousSource": false,
+      "headlineOnly": true,
+      "isRecirculation": false,
+      "relevanceReason": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_96caf7104c3f4cac]: «Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+      "possibleSponsored": false,
+      "outOfScope": false,
+      "needsInvestigation": true,
+      "topReason": "Prioridad alto (74.5); mayores aportes: R 30, U 20; evidencia insuficiente"
+    },
+    {
+      "id": "evt_8a5ce1f85d32cb77",
+      "rank": 5,
+      "title": "Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026",
+      "category": "economia",
+      "categoryLabel": "Economía",
+      "score": 74.55,
+      "band": "alto",
+      "scoreComponents": [
+        {
+          "key": "R",
+          "label": "Relevancia",
+          "weight": 30,
+          "value": 1.0,
+          "points": 30.0,
+          "rule": "Panamá: 1; relación regional: 0,5; sin relación o indeterminada: 0.",
+          "justification": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_cd73f54cb7e0f734]: «Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+          "limits": [
+            "Relevancia tomada del máximo entre los artículos del evento (clasificador, sin calibrar).",
+            "R no se edita en la API: si es incorrecta, corrige la clasificación en el pipeline (predictions) o descarta el caso con comentario."
+          ],
+          "evidenceIds": [
+            "art_cd73f54cb7e0f734"
+          ]
+        },
+        {
+          "key": "I",
+          "label": "Impacto potencial",
+          "weight": 25,
+          "value": 0.25,
+          "points": 6.25,
+          "rule": "Asignación editorial: bajo 0,25; medio 0,5; alto 1. Requiere justificación con evidencia.",
+          "justification": "Impacto bajo: Propuesta automática (1 de 3 factores): relación directa con Panamá. Requiere confirmación editorial.",
+          "limits": [
+            "Impacto propuesto automáticamente (heurística con evidencia); requiere confirmación editorial."
+          ],
+          "evidenceIds": [
+            "art_cd73f54cb7e0f734"
+          ]
+        },
+        {
+          "key": "U",
+          "label": "Urgencia",
+          "weight": 20,
+          "value": 1.0,
+          "points": 20.0,
+          "rule": "Publicación original dentro de 24 h del corte: 1; dentro de 7 días: 0,5; anterior o desconocida: 0.",
+          "justification": "Publicado hace 8.0 h respecto al corte (≤24 h): 1.",
+          "limits": [],
+          "evidenceIds": [
+            "art_cd73f54cb7e0f734"
+          ]
+        },
+        {
+          "key": "N",
+          "label": "Novedad",
+          "weight": 15,
+          "value": 1.0,
+          "points": 15.0,
+          "rule": "Evento nuevo: 1; recirculación: 0. Los duplicados conservan la puntuación del evento.",
+          "justification": "Evento nuevo: 1.",
+          "limits": [
+            "Los duplicados conservan la puntuación del evento: repetir no aumenta N."
+          ],
+          "evidenceIds": [
+            "art_cd73f54cb7e0f734"
+          ]
+        },
+        {
+          "key": "E",
+          "label": "Evidencia disponible",
+          "weight": 10,
+          "value": 0.33,
+          "points": 3.3,
+          "rule": "Sin procedencia: 0; una: 0,33; dos independientes: 0,67; fuente primaria pertinente + cobertura original: 1.",
+          "justification": "Una procedencia: 0,33.",
+          "limits": [
+            "Una sola procedencia: la repetición no es corroboración."
+          ],
+          "evidenceIds": [
+            "art_cd73f54cb7e0f734"
+          ]
+        }
+      ],
+      "urgency": 1.0,
+      "evidenceStatus": "insuficiente",
+      "evidenceStatusLabel": "Insuficiente",
+      "articleCount": 1,
+      "independentProvenances": 1,
+      "firstPublishedAt": "2026-10-07T00:14:52Z",
+      "lastPublishedAt": "2026-10-07T00:14:52Z",
+      "geoRelevance": "panama",
+      "reviewStatus": "nuevo",
+      "reviewStatusLabel": "Nuevo",
+      "hasContradictions": false,
+      "hasSuspiciousSource": false,
+      "headlineOnly": true,
+      "isRecirculation": false,
+      "relevanceReason": "R = 1. Regla aplicada: Panamá: 1 (clasificador de relevancia geográfica; máximo entre los artículos del evento). Titular que la justifica [art_cd73f54cb7e0f734]: «Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026». Evidencia (regla de contenido o clasificador): fuente_panameña:sin_señal_extranjera.",
+      "possibleSponsored": false,
+      "outOfScope": false,
+      "needsInvestigation": true,
+      "topReason": "Prioridad alto (74.5); mayores aportes: R 30, U 20; evidencia insuficiente"
+    }
+  ],
+  "applied": {
+    "limit": 5,
+    "scope": "in_scope"
+  },
+  "facets": {
+    "category": {
+      "logistica_canal": 13,
+      "indeterminado": 727,
+      "economia": 118,
+      "regulacion": 9,
+      "servicios_publicos": 10,
+      "eventos_naturales": 15,
+      "turismo": 18
+    },
+    "evidence": {
+      "parcial": 7,
+      "insuficiente": 903
+    },
+    "band": {
+      "alto": 36,
+      "medio": 391,
+      "bajo": 483
+    },
+    "reviewStatus": {
+      "nuevo": 910
+    }
+  },
+  "capturedAt": "2026-10-07T15:08:27Z",
+  "command": "eval/prepare_agenda_review.py --snapshot data/snapshots/20261007-cfa338b6 --ranking-out eval/results/agenda-ranking-cfa338b6.json --labels-out eval/labels/agenda_review.cfa338b6.jsonl",
+  "manifestSha256": "dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050"
+}

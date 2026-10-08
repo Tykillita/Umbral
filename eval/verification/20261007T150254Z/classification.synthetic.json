@@ -1,0 +1,658 @@
+{
+  "command": "<repo>\\eval\\run_classification.py --labels <repo>\\eval\\verification\\20261007T150254Z\\classification-labels.synthetic.jsonl --snapshot laya_control=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-1b6958de --snapshot baseline_control=<repo>\\eval\\verification\\20261007T150254Z\\fixture-data\\snapshots\\20261007-b3a8f170 --out <repo>\\eval\\verification\\20261007T150254Z\\classification.synthetic.json",
+  "ranAt": "2026-10-07T15:02:55Z",
+  "python": "3.12.14",
+  "labelsFile": "<repo>\\eval\\verification\\20261007T150254Z\\classification-labels.synthetic.jsonl",
+  "labelsTotal": 2,
+  "labelMethod": [
+    "synthetic_control"
+  ],
+  "labelers": [
+    "Deterministic test control"
+  ],
+  "results": {
+    "laya_control": {
+      "snapshotId": "20261007-1b6958de",
+      "classifier": "laya",
+      "modelVersion": "synthetic-v1",
+      "labeledInSnapshot": 2,
+      "manifestSha256": "4bddcaa5d61b6117f09c4018ccf425b827020990c8b3c90dfd8ca293ce0ca84a",
+      "all": {
+        "category": {
+          "n": 2,
+          "macroF1": 0.6666666666666666,
+          "macroF1AllLabels": 0.09523809523809523,
+          "accuracy": 0.5,
+          "perClass": {
+            "economia": {
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6667,
+              "support": 2,
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "logistica_canal": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "turismo": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "servicios_publicos": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "eventos_naturales": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "regulacion": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminado": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "economia": {
+              "economia": 1,
+              "turismo": 1
+            }
+          }
+        },
+        "geo": {
+          "n": 2,
+          "macroF1": 1.0,
+          "macroF1AllLabels": 0.5,
+          "accuracy": 1.0,
+          "perClass": {
+            "panama": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "regional": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "none": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminate": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "panama": {
+              "panama": 1
+            },
+            "regional": {
+              "regional": 1
+            }
+          }
+        },
+        "confidenceVsAccuracy": {
+          "meanConfidence": 0.85,
+          "accuracy": 0.5,
+          "note": "Probabilidades sin calibrar; si meanConfidence >> accuracy el modelo está sobreconfiado."
+        },
+        "probabilityQuality": {
+          "n": 2,
+          "brier": 0.6500000000000001,
+          "ece": 0.45,
+          "bins": [
+            {
+              "bin": 8,
+              "n": 1,
+              "meanConfidence": 0.8,
+              "accuracy": 0.0
+            },
+            {
+              "bin": 9,
+              "n": 1,
+              "meanConfidence": 0.9,
+              "accuracy": 1.0
+            }
+          ],
+          "calibrated": false,
+          "note": "Diagnóstico crudo; no ajuste/calibración de probabilidades ni exactitud humana sin etiquetas."
+        }
+      },
+      "uniform": {
+        "category": {
+          "n": 2,
+          "macroF1": 0.6666666666666666,
+          "macroF1AllLabels": 0.09523809523809523,
+          "accuracy": 0.5,
+          "perClass": {
+            "economia": {
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6667,
+              "support": 2,
+              "tp": 1,
+              "fp": 0,
+              "fn": 1
+            },
+            "logistica_canal": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "turismo": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "servicios_publicos": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "eventos_naturales": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "regulacion": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminado": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "economia": {
+              "economia": 1,
+              "turismo": 1
+            }
+          }
+        },
+        "geo": {
+          "n": 2,
+          "macroF1": 1.0,
+          "macroF1AllLabels": 0.5,
+          "accuracy": 1.0,
+          "perClass": {
+            "panama": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "regional": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "none": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminate": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "panama": {
+              "panama": 1
+            },
+            "regional": {
+              "regional": 1
+            }
+          }
+        },
+        "confidenceVsAccuracy": {
+          "meanConfidence": 0.85,
+          "accuracy": 0.5,
+          "note": "Probabilidades sin calibrar; si meanConfidence >> accuracy el modelo está sobreconfiado."
+        },
+        "probabilityQuality": {
+          "n": 2,
+          "brier": 0.6500000000000001,
+          "ece": 0.45,
+          "bins": [
+            {
+              "bin": 8,
+              "n": 1,
+              "meanConfidence": 0.8,
+              "accuracy": 0.0
+            },
+            {
+              "bin": 9,
+              "n": 1,
+              "meanConfidence": 0.9,
+              "accuracy": 1.0
+            }
+          ],
+          "calibrated": false,
+          "note": "Diagnóstico crudo; no ajuste/calibración de probabilidades ni exactitud humana sin etiquetas."
+        }
+      }
+    },
+    "baseline_control": {
+      "snapshotId": "20261007-b3a8f170",
+      "classifier": "baseline",
+      "modelVersion": "synthetic-v1",
+      "labeledInSnapshot": 2,
+      "manifestSha256": "ce1cb2596fe69753e6329177754cf7c734e058ec9120e5841767589afad94b3c",
+      "all": {
+        "category": {
+          "n": 2,
+          "macroF1": 1.0,
+          "macroF1AllLabels": 0.14285714285714285,
+          "accuracy": 1.0,
+          "perClass": {
+            "economia": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2,
+              "tp": 2,
+              "fp": 0,
+              "fn": 0
+            },
+            "logistica_canal": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "turismo": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "servicios_publicos": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "eventos_naturales": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "regulacion": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminado": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "economia": {
+              "economia": 2
+            }
+          }
+        },
+        "geo": {
+          "n": 2,
+          "macroF1": 1.0,
+          "macroF1AllLabels": 0.5,
+          "accuracy": 1.0,
+          "perClass": {
+            "panama": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "regional": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "none": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminate": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "panama": {
+              "panama": 1
+            },
+            "regional": {
+              "regional": 1
+            }
+          }
+        },
+        "confidenceVsAccuracy": {
+          "meanConfidence": 0.65,
+          "accuracy": 1.0,
+          "note": "Probabilidades sin calibrar; si meanConfidence >> accuracy el modelo está sobreconfiado."
+        },
+        "probabilityQuality": {
+          "n": 2,
+          "brier": 0.25000000000000006,
+          "ece": 0.35000000000000003,
+          "bins": [
+            {
+              "bin": 6,
+              "n": 1,
+              "meanConfidence": 0.6,
+              "accuracy": 1.0
+            },
+            {
+              "bin": 7,
+              "n": 1,
+              "meanConfidence": 0.7,
+              "accuracy": 1.0
+            }
+          ],
+          "calibrated": false,
+          "note": "Diagnóstico crudo; no ajuste/calibración de probabilidades ni exactitud humana sin etiquetas."
+        }
+      },
+      "uniform": {
+        "category": {
+          "n": 2,
+          "macroF1": 1.0,
+          "macroF1AllLabels": 0.14285714285714285,
+          "accuracy": 1.0,
+          "perClass": {
+            "economia": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2,
+              "tp": 2,
+              "fp": 0,
+              "fn": 0
+            },
+            "logistica_canal": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "turismo": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "servicios_publicos": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "eventos_naturales": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "regulacion": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminado": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "economia": {
+              "economia": 2
+            }
+          }
+        },
+        "geo": {
+          "n": 2,
+          "macroF1": 1.0,
+          "macroF1AllLabels": 0.5,
+          "accuracy": 1.0,
+          "perClass": {
+            "panama": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "regional": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1,
+              "tp": 1,
+              "fp": 0,
+              "fn": 0
+            },
+            "none": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "indeterminate": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            }
+          },
+          "confusion": {
+            "panama": {
+              "panama": 1
+            },
+            "regional": {
+              "regional": 1
+            }
+          }
+        },
+        "confidenceVsAccuracy": {
+          "meanConfidence": 0.65,
+          "accuracy": 1.0,
+          "note": "Probabilidades sin calibrar; si meanConfidence >> accuracy el modelo está sobreconfiado."
+        },
+        "probabilityQuality": {
+          "n": 2,
+          "brier": 0.25000000000000006,
+          "ece": 0.35000000000000003,
+          "bins": [
+            {
+              "bin": 6,
+              "n": 1,
+              "meanConfidence": 0.6,
+              "accuracy": 1.0
+            },
+            {
+              "bin": 7,
+              "n": 1,
+              "meanConfidence": 0.7,
+              "accuracy": 1.0
+            }
+          ],
+          "calibrated": false,
+          "note": "Diagnóstico crudo; no ajuste/calibración de probabilidades ni exactitud humana sin etiquetas."
+        }
+      }
+    }
+  },
+  "evaluationKind": "synthetic_control",
+  "labelsSha256": "6cf9fd3d68be7d03af6066ae3b72af94e698ace940acbc3e5e56f278761933f6",
+  "evaluatorSha256": "67941541ac21731c28211c82d277b6e088d52a968522714ae77abbc266307c30"
+}

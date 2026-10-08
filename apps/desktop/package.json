@@ -1,0 +1,37 @@
+{
+  "name": "umbral-desktop",
+  "version": "0.1.0",
+  "description": "Umbral para Windows con agenda editorial, API y Laya incluidos",
+  "private": true,
+  "main": "main.cjs",
+  "author": "Equipo Umbral",
+  "license": "MIT",
+  "engines": {"node": ">=24 <25"},
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "start": "electron .",
+    "pack": "electron-builder --win --x64 --dir",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {"electron": "^44.7.0", "electron-builder": "^26.15.3"},
+  "build": {
+    "appId": "org.umbral.editorial",
+    "productName": "Umbral",
+    "artifactName": "Umbral-${version}-Windows-x64.${ext}",
+    "directories": {"output": "release"},
+    "files": ["main.cjs", "preload.cjs", "security.cjs", "startup.html", "startup.css", "package.json"],
+    "extraResources": [
+      {"from": "dist/umbral-sidecar", "to": "sidecar"},
+      {"from": "staging/web", "to": "web"},
+      {"from": "staging/snapshots", "to": "snapshots"},
+      {"from": "staging/laya", "to": "laya"},
+      {"from": "staging/bundle-manifest.json", "to": "bundle-manifest.json"},
+      {"from": "staging/licenses", "to": "licenses"},
+      {"from": "../web/public/brand/umbral-desktop.ico", "to": "umbral.ico"}
+    ],
+    "win": {"icon": "../web/public/brand/umbral-desktop.ico", "target": ["nsis"], "signExecutable": false},
+    "nsis": {"oneClick": true, "perMachine": false, "allowElevation": false, "deleteAppDataOnUninstall": false,
+      "installerIcon": "../web/public/brand/umbral-desktop.ico", "uninstallerIcon": "../web/public/brand/umbral-desktop.ico"},
+    "publish": null
+  }
+}

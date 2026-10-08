@@ -1,0 +1,18 @@
+{
+  "startedAtUtc": "2026-10-07T08:18:49.763625+00:00",
+  "model": "gemini-3.1-flash-lite",
+  "stage": "probe",
+  "realNetwork": true,
+  "retryAttempts": 1,
+  "calls": [
+    {
+      "name": "small_schema",
+      "schemaBytes": 120,
+      "status": "success",
+      "parsed": true,
+      "latencySeconds": 1.094
+    }
+  ],
+  "result": "success",
+  "completedAtUtc": "2026-10-07T08:18:50.907168+00:00"
+}
