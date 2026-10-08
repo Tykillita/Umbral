@@ -31,7 +31,8 @@ export default function DesktopUpdateNotice() {
   if (!bridge || dismissed || (state.status !== 'downloading' && state.status !== 'downloaded' && state.status !== 'error')) return null;
   const title = state.status === 'downloaded'
     ? `Umbral ${state.version} está lista para instalar`
-    : state.status === 'error' ? 'No se pudo buscar una actualización' : 'Descargando una actualización de Umbral';
+    : state.status === 'error' ? 'No se pudo buscar una actualización'
+      : state.version ? `Descargando Umbral ${state.version}` : 'Descargando una actualización de Umbral';
   const message = state.status === 'downloaded'
     ? 'Reinicia la aplicación cuando quieras para completar la instalación.'
     : state.status === 'error' ? 'Puedes seguir trabajando. Comprueba de nuevo cuando tengas conexión.'

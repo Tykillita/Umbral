@@ -27,7 +27,7 @@ describe('aviso de actualizaciones del escritorio', () => {
     await waitFor(() => expect(window.umbralDesktop?.getUpdateState).toHaveBeenCalled());
     expect(screen.queryByTestId('desktop-update-notice')).toBeNull();
     act(() => emit({ status: 'downloading', version: '0.2.0', percent: 42 }));
-    expect(screen.getByText(/Descargando una actualización/)).toBeTruthy();
+    expect(screen.getByText('Descargando Umbral 0.2.0')).toBeTruthy();
     expect(screen.getByRole('progressbar', { name: 'Descarga de actualización' }).getAttribute('aria-valuenow')).toBe('42');
   });
 

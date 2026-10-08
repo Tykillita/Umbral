@@ -6,6 +6,12 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-10-08
+
+### Changed
+
+- El aviso de escritorio muestra la versión de destino mientras descarga una actualización.
+
 ## [0.1.0] — 2026-10-08
 
 ### Added
