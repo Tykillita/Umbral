@@ -512,20 +512,20 @@ export default function LandingExperience() {
                           <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
                         </span>
                       </button>
+                      <button
+                        type="button"
+                        className="landing-promise-handle"
+                        aria-label={`Mover ${promise.title}. Usa Alt y las flechas izquierda o derecha para cambiar su orden.`}
+                        onKeyDown={(event) => handlePromiseKeyDown(event, index)}
+                        onPointerDown={(event) => startPromiseDrag(event, index, id)}
+                        onPointerMove={movePromiseDrag}
+                        onPointerUp={finishPromiseDrag}
+                        onPointerCancel={cancelPromiseDrag}
+                        data-testid={`landing-promise-handle-${id}`}
+                      >
+                        <GripVertical size={20} aria-hidden="true" />
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      className="landing-promise-handle"
-                      aria-label={`Mover ${promise.title}. Usa Alt y las flechas izquierda o derecha para cambiar su orden.`}
-                      onKeyDown={(event) => handlePromiseKeyDown(event, index)}
-                      onPointerDown={(event) => startPromiseDrag(event, index, id)}
-                      onPointerMove={movePromiseDrag}
-                      onPointerUp={finishPromiseDrag}
-                      onPointerCancel={cancelPromiseDrag}
-                      data-testid={`landing-promise-handle-${id}`}
-                    >
-                      <GripVertical size={20} aria-hidden="true" />
-                    </button>
                   </article>
                 );
               })}
