@@ -459,6 +459,7 @@ class QueryRequest(ApiModel):
     question: str = Field(min_length=3, max_length=500)
     topic_id: str | None = Field(None, description="Limita la consulta a un tema")
     limit: int = Field(5, ge=1, le=10)
+    search_mode: Literal["auto", "snapshot", "live"] = Field("snapshot", description="Origen de búsqueda: corte verificado, fuentes vivas o selección automática.")
     follow_up: QueryContext | None = Field(
         None, description="`followUpContext` de la respuesta anterior; sin él cada pregunta es independiente"
     )
@@ -523,12 +524,33 @@ class QueryResponse(ApiModel):
     related_topic_ids: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     snapshot_id: str
+    search_mode: Literal["snapshot", "live", "hybrid"] = "snapshot"
+    live_checked_at: datetime | None = None
     rules_version: str
     data_mode: DataMode
     retrieval: RetrievalInfo
     resolved_question: str | None = Field(None, description="Pregunta autónoma que se ejecutó cuando `question` era un seguimiento")
     follow_up_context: QueryContext | None = None
     follow_up_suggestions: list[str] = Field(default_factory=list, max_length=4)
+
+
+class PublicAlert(ApiModel):
+    id: str
+    kind: Literal["sismo", "aviso", "noticia"]
+    title: str
+    source: str
+    url: str
+    published_at: datetime | None = None
+    occurred_at: datetime | None = None
+    magnitude: float | None = None
+    place: str | None = None
+    status: str | None = None
+
+
+class PublicAlertFeed(ApiModel):
+    checked_at: datetime
+    items: list[PublicAlert] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- borradores

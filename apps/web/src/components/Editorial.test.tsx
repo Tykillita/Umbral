@@ -206,8 +206,20 @@ describe('estados editoriales y teclado', () => {
     fireEvent.change(await screen.findByLabelText('Tu pregunta'), { target: { value: 'Qué falta verificar' } });
     fireEvent.click(screen.getByRole('button', { name: 'Consultar' }));
     expect((await screen.findByRole('alert')).textContent).toMatch(/Reintenta en 20 s/);
-    expect(query).toHaveBeenCalledWith({ question: 'Qué falta verificar', topicId: 'topic-test' }, { signal: expect.any(AbortSignal) });
+    expect(query).toHaveBeenCalledWith({ question: 'Qué falta verificar', topicId: 'topic-test', searchMode: 'auto' }, { signal: expect.any(AbortSignal) });
     expect(screen.getByTestId('assistant-turn').textContent).toMatch(/Qué falta verificar/);
+  });
+
+  it('permite pedir manualmente búsqueda fuera del snapshot', async () => {
+    const api = new MockApi();
+    const query = vi.spyOn(api, 'query');
+    mount(assistant, api);
+    fireEvent.click(await screen.findByRole('combobox', { name: 'Origen de búsqueda' }));
+    fireEvent.click(await screen.findByRole('option', { name: 'Buscar fuera del snapshot ahora' }));
+    fireEvent.change(await screen.findByLabelText('Tu pregunta'), { target: { value: 'Noticias sobre el Canal' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Consultar' }));
+    await waitFor(() => expect(query).toHaveBeenCalled());
+    expect(query.mock.calls[0]![0].searchMode).toBe('live');
   });
 
   it('el panel móvil conserva Tab dentro del diálogo y devuelve el foco al cerrarse', async () => {
@@ -381,11 +393,11 @@ describe('estados editoriales y teclado', () => {
     fireEvent.change(await screen.findByLabelText('Tu pregunta'), { target: { value: 'Desempleo de Panamá en 2023' } });
     fireEvent.click(screen.getByRole('button', { name: 'Consultar' }));
     await screen.findByTestId('assistant-answer');
-    expect(query.mock.calls[0]![0]).toEqual({ question: 'Desempleo de Panamá en 2023', topicId: null });
+    expect(query.mock.calls[0]![0]).toEqual({ question: 'Desempleo de Panamá en 2023', topicId: null, searchMode: 'auto' });
     // Un seguimiento enviado desde un chip lleva el contexto estructurado, nunca el texto de la respuesta.
     fireEvent.click(await screen.findByRole('button', { name: '¿Y en Colombia?' }));
     await waitFor(() => expect(query).toHaveBeenCalledTimes(2));
-    expect(query.mock.calls[1]![0]).toEqual({ question: '¿Y en Colombia?', topicId: null, followUp: context });
+    expect(query.mock.calls[1]![0]).toEqual({ question: '¿Y en Colombia?', topicId: null, followUp: context, searchMode: 'auto' });
     expect(JSON.stringify(query.mock.calls[1]![0])).not.toContain('Desempleo [1]');
     await waitFor(() => expect(screen.getAllByTestId('assistant-answer')).toHaveLength(2));
     expect(screen.getByTestId('assistant-resolved').textContent).toMatch(/Desempleo de Colombia en 2023/);
@@ -396,7 +408,7 @@ describe('estados editoriales y teclado', () => {
     fireEvent.change(screen.getByLabelText('Tu pregunta'), { target: { value: 'Inflación de México' } });
     fireEvent.click(screen.getByRole('button', { name: 'Consultar' }));
     await waitFor(() => expect(query).toHaveBeenCalledTimes(3));
-    expect(query.mock.calls[2]![0]).toEqual({ question: 'Inflación de México', topicId: null });
+    expect(query.mock.calls[2]![0]).toEqual({ question: 'Inflación de México', topicId: null, searchMode: 'auto' });
   });
 
   it('marca como no leída la respuesta que llega con el panel cerrado y la limpia al volver a mirarla', async () => {

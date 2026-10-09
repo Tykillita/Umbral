@@ -29,6 +29,7 @@ import type {
   TopicFilters,
   TopicsResponse,
   TopicSummary,
+  PublicAlertFeed,
 } from '../api/types';
 import {
   MOCK_CUTOFF,
@@ -146,6 +147,9 @@ export class MockApi implements UmbralApi {
   async snapshot() {
     return MOCK_SNAPSHOT;
   }
+  async alerts(): Promise<PublicAlertFeed> {
+    return { checkedAt: now(), items: [], warnings: ['La demostración no consulta fuentes de alertas en vivo.'] };
+  }
 
   async topics(f: TopicFilters): Promise<TopicsResponse> {
     await delay();
@@ -208,6 +212,8 @@ export class MockApi implements UmbralApi {
       resolvedQuestion: null,
       followUpContext: null,
       followUpSuggestions: [] as string[],
+      searchMode: 'snapshot' as const,
+      liveCheckedAt: null,
     };
     const topics = MOCK_SPECS.map((s) => buildDetail(s, this.getCaseSync(`case-${s.id}`)));
     const hits = topics.flatMap((t) =>

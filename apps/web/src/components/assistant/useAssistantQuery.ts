@@ -51,7 +51,7 @@ export function useAssistantQuery({ api, history, inFlight, isViewing, onViewedA
       if (controller.signal.aborted) throw new DOMException('Consulta cancelada', 'AbortError');
       // No se envían turnos anteriores ni textos: solo la pregunta, su ámbito y, si la conversación continúa, el contexto estructurado.
       const result = await api.query(
-        turn.followUp ? { question: turn.question, topicId: turn.topicId, followUp: turn.followUp } : { question: turn.question, topicId: turn.topicId },
+        turn.followUp ? { question: turn.question, topicId: turn.topicId, followUp: turn.followUp, searchMode: turn.searchMode ?? 'auto' } : { question: turn.question, topicId: turn.topicId, searchMode: turn.searchMode ?? 'auto' },
         { signal: controller.signal },
       );
       if (deletedIds.current.has(conversationId)) return;

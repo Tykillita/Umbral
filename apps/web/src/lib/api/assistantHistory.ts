@@ -1,5 +1,5 @@
 import { ANSWER_LABEL } from '../labels';
-import type { ComposeProvider, QueryContext, QueryResponse } from './types';
+import type { ComposeProvider, QueryContext, QueryResponse, SearchMode } from './types';
 
 export type AssistantTurn = {
   id: string;
@@ -8,6 +8,7 @@ export type AssistantTurn = {
   topicTitle?: string;
   /** Contexto estructurado de la respuesta anterior que se envió con esta pregunta (si la conversación continuaba). */
   followUp?: QueryContext | null;
+  searchMode?: SearchMode;
   createdAt: string;
   state: 'pending' | 'interrupted' | 'error' | 'complete';
   error?: string;

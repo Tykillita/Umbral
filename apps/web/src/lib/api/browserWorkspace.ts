@@ -22,6 +22,7 @@ export class BrowserWorkspaceApi implements UmbralApi {
     return { ...health, persistence: 'IndexedDB en este navegador', authMode: 'public', localMode: false };
   }
   snapshot = () => this.remote.snapshot();
+  alerts = () => this.remote.alerts();
   async rules(): Promise<Rules> {
     const state = await this.workspace.read();
     if (state.rules) return state.rules;

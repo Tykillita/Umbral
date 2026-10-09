@@ -1,12 +1,14 @@
 import type { KeyboardEvent, RefObject } from 'react';
 import { Send } from 'lucide-react';
 import type { QueryContext } from '../../lib/api/types';
+import type { SearchMode } from '../../lib/api/types';
 import { Button, inputCls } from '../ui';
 import { Checkbox, Select } from '../ui/controls';
 
 export function Composer({
   latestContext, continueContext, onContinueChange, scopeOptions, scopeTopicId, scopeTitle, onScope,
   draft, onDraft, onKeyDown, inputRef, touch, charCount, running, onSubmit,
+  searchMode, onSearchMode,
 }: {
   latestContext: QueryContext | null;
   continueContext: boolean;
@@ -25,6 +27,8 @@ export function Composer({
   charCount: number;
   running: boolean;
   onSubmit: () => void;
+  searchMode: SearchMode;
+  onSearchMode: (value: SearchMode) => void;
 }) {
   const invalidLength = charCount < 3 || charCount > 500;
   return (
@@ -38,6 +42,14 @@ export function Composer({
       <div className="assistant-scope-row">
         <label htmlFor="assistant-scope">Ámbito</label>
         <Select id="assistant-scope" value={scopeTopicId ?? 'agenda'} onChange={onScope} options={scopeOptions} label="Ámbito de consulta" testId="assistant-scope" />
+      </div>
+      <div className="assistant-scope-row">
+        <label htmlFor="assistant-search-mode">Búsqueda</label>
+        <Select id="assistant-search-mode" value={searchMode} onChange={(value) => onSearchMode(value as SearchMode)} options={[
+          { value: 'auto', label: 'Automática según actualidad' },
+          { value: 'live', label: 'Buscar fuera del snapshot ahora' },
+          { value: 'snapshot', label: 'Solo el snapshot verificado' },
+        ]} label="Origen de búsqueda" testId="assistant-search-mode" />
       </div>
       {scopeTopicId && <p className="assistant-scope-title">Ficha: {scopeTitle}</p>}
       <label htmlFor="assistant-input" className="sr-only">Tu pregunta</label>

@@ -37,6 +37,7 @@ import type {
   SlackShareRequest,
   TopicFilters,
   TopicsResponse,
+  PublicAlertFeed,
 } from './types';
 
 export interface BootProgress { attempt: number; elapsedMs: number; message: string }
@@ -63,6 +64,7 @@ export interface UmbralApi {
   startClaudeLogin(): Promise<ClaudeConnection>;
   claudeLogout(): Promise<ClaudeConnection>;
   snapshot(): Promise<SnapshotInfo>;
+  alerts(): Promise<PublicAlertFeed>;
   topics(filters: TopicFilters): Promise<TopicsResponse>;
   topic(topicId: string): Promise<TopicDetail>;
   query(req: QueryRequestBody, opts?: { signal?: AbortSignal }): Promise<QueryResponse>;
@@ -254,6 +256,7 @@ export class HttpApi implements UmbralApi {
   startClaudeLogin = () => this.request<ClaudeConnection>('POST', '/connections/claude/login');
   claudeLogout = () => this.request<ClaudeConnection>('POST', '/connections/claude/logout');
   snapshot = () => this.request<SnapshotInfo>('GET', '/snapshot');
+  alerts = () => this.request<PublicAlertFeed>('GET', '/public/alerts');
   topics = (f: TopicFilters) =>
     this.request<TopicsResponse>('GET', '/topics', {
       params: {

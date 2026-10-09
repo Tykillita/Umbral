@@ -8,6 +8,7 @@ export const qk = {
   rules: ['rules'] as const,
   snapshot: ['snapshot'] as const,
   topics: (f: TopicFilters) => ['topics', f] as const,
+  alerts: ['alerts'] as const,
   topic: (id: string) => ['topic', id] as const,
 };
 
@@ -41,6 +42,11 @@ export function useSnapshot() {
 export function useTopics(filters: TopicFilters) {
   const { api } = useApp();
   return useQuery({ queryKey: [...qk.topics(filters), api.kind], queryFn: () => api.topics(filters), placeholderData: (prev) => prev });
+}
+
+export function useAlerts() {
+  const { api } = useApp();
+  return useQuery({ queryKey: [...qk.alerts, api.kind], queryFn: () => api.alerts(), refetchInterval: 60_000, refetchIntervalInBackground: false, staleTime: 30_000, retry: 1 });
 }
 
 export function useTopic(topicId: string | null) {

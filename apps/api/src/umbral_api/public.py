@@ -132,7 +132,7 @@ class PublicApi:
         """Redacción con IA de una consulta pública. Reutiliza resultados verificados idénticos para no gastar la cuota diaria."""
         svc = self.context(body.context, user)
         svc.limiter.check(user, "compose", min(2, svc.settings.drafts_per_minute))
-        request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
+        request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, search_mode=body.search_mode, follow_up=body.follow_up)
         payload = body.model_dump(mode="json") | {"model": svc.settings.gemini_model, "fallbackModel": svc.settings.gemini_fallback_model}  # incluye `provider`
         key = hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
         with self._compose_lock:

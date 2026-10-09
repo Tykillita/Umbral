@@ -1,4 +1,4 @@
-"""USGS sismos 2024 en la caja regional lat 5-12, lon -86..-76, magnitud >= 3 (PDF 6C). Opcional."""
+"""USGS sismos desde 2024 hasta la extracción actual en la caja regional (PDF 6C). Opcional."""
 
 from __future__ import annotations
 
@@ -19,8 +19,9 @@ def _ms(v: int | None) -> str | None:
 def fetch_usgs(client: httpx.Client | None = None, log=print) -> tuple[dict[str, Any], dict[str, Any]]:
     own = client is None
     client = client or make_client(90.0)
+    now = now_utc()
     params = {
-        "format": "geojson", "starttime": "2024-01-01", "endtime": "2024-12-31T23:59:59",
+        "format": "geojson", "starttime": "2024-01-01", "endtime": iso_z(now),
         "minlatitude": 5, "maxlatitude": 12, "minlongitude": -86, "maxlongitude": -76,
         "minmagnitude": 3, "orderby": "time-asc",
     }
@@ -54,6 +55,6 @@ def fetch_usgs(client: httpx.Client | None = None, log=print) -> tuple[dict[str,
     }
     q = {
         "source": "usgs", "endpoint": USGS_ENDPOINT, "query": params,
-        "from": "2024-01-01", "to": "2024-12-31", "returned": len(feats),
+        "from": "2024-01-01", "to": iso_z(now), "returned": len(feats),
     }
     return out, q

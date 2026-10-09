@@ -49,6 +49,7 @@ from .models import (
     NotionExportResponse,
     NotionMarkdownRequest,
     NotionStatusResponse,
+    PublicAlertFeed,
     QueryRequest,
     QueryResponse,
     ReviewRequest,
@@ -339,6 +340,12 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
     def health(svc=Depends(get_services)) -> HealthResponse:
         return svc.health()
 
+    @api.get("/public/alerts", response_model=PublicAlertFeed, tags=["publico"], summary="Alertas y cobertura reciente de fuentes públicas")
+    def public_alerts(user: User, svc=Depends(get_services)) -> PublicAlertFeed:
+        svc.limiter.check(user, "queries", min(30, svc.settings.queries_per_minute))
+        result = svc.live_sources.alerts()
+        return PublicAlertFeed(checked_at=result.checked_at, items=[item.as_dict() for item in result.items], warnings=list(result.warnings))
+
     @api.post("/public/agenda", response_model=TopicsResponse, tags=["publico"], responses=_ERRORS)
     def public_agenda(body: PublicAgendaRequest, user: User, svc=Depends(get_services)) -> TopicsResponse:
         contextual = svc.public.context(body.context, user)
@@ -352,7 +359,7 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
     def public_query(body: PublicQueryRequest, user: User, svc=Depends(get_services)) -> QueryResponse:
         contextual = svc.public.context(body.context, user)
         return contextual.query(
-            user, QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
+            user, QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, search_mode=body.search_mode, follow_up=body.follow_up)
         )
 
     @api.post("/public/queries/compose", response_model=ComposeResponse, tags=["publico"], responses=_ERRORS)
@@ -472,7 +479,7 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         responses=_ERRORS,
     )
     def queries_compose(body: ComposeRequest, user: User, svc=Depends(get_services)) -> ComposeResponse:
-        request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, follow_up=body.follow_up)
+        request = QueryRequest(question=body.question, topic_id=body.topic_id, limit=body.limit, search_mode=body.search_mode, follow_up=body.follow_up)
         return svc.compose_query(user, request, provider=body.provider)
 
     @api.post(

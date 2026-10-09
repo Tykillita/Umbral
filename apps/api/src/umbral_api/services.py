@@ -42,6 +42,7 @@ from .errors import (
     VersionConflict,
 )
 from .export import export_markdown
+from .live_sources import LiveSources, is_current_question
 from .models import (
     CATEGORY_LABELS,
     EVIDENCE_LABELS,
@@ -67,6 +68,8 @@ from .models import (
     ImpactAssignment,
     ImpactRequest,
     ProviderStatus,
+    QueryCitation,
+    QueryHit,
     QueryIntent,
     QueryRequest,
     QueryResponse,
@@ -93,6 +96,7 @@ from .providers import (
 from .queries import QueryEngine
 from .retrieval import Doc, SearchIndex
 from .scoring import BANDS, CHANGELOG, RULE_TEXT, RULES_VERSION, WEIGHTS, ScoreInputs, score_topic, sort_key
+from .security import looks_like_instruction
 from .seismology import SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE
 from .snapshot import Corpus, load_corpus
 from .storage import CaseRecord, PublicGeminiCounter, Repository, build_repository
@@ -208,6 +212,7 @@ class Services:
 
         self.public = PublicApi(self)
         self.snapshot_feed = SnapshotFeed(self)
+        self.live_sources = LiveSources(offline=settings.offline)
 
     @property
     def corpus(self) -> Corpus:
@@ -646,6 +651,52 @@ class Services:
             user, limit=5, category=None, evidence=None, band=None, review_status=None, q=None, include_components=False
         ).items])
         response.rules_version = self.rules(user).rules_version
+        use_live = req.search_mode == "live" or (req.search_mode == "auto" and is_current_question(req.question))
+        if use_live and not self.settings.offline and not looks_like_instruction(req.question):
+            result = self.live_sources.search(req.question, mode=req.search_mode)
+            response.live_checked_at = result.checked_at
+            response.warnings.extend(result.warnings)
+            if result.items:
+                live_items: list = []
+                source_counts: dict[str, int] = defaultdict(int)
+                for item in result.items:
+                    if source_counts[item.source] >= 3:
+                        continue
+                    live_items.append(item)
+                    source_counts[item.source] += 1
+                    if len(live_items) == 5:
+                        break
+                live_citations = [QueryCitation(
+                    evidence_id=item.id, field="title", passage=item.title, title=item.title, url=item.url,
+                ) for item in live_items]
+                live_hits = [QueryHit(
+                    evidence_id=item.id, kind="noticia_en_vivo", title=item.title, url=item.url,
+                    outlet=item.source, published_at=item.published_at, snippet=item.title,
+                    bm25=0, fuzzy=0, relevance=1, retrieval_origin="live_news", literal_coverage=0,
+                ) for item in live_items]
+                citations = live_citations if req.search_mode == "live" else [*live_citations, *response.citations]
+                hits = live_hits if req.search_mode == "live" else [*live_hits, *response.hits]
+                answer_lines = ["Fuentes consultadas en vivo (solo titulares y metadatos; no verifican por sí solos la cifra ni las afectaciones):"]
+                for index, item in enumerate(live_items, 1):
+                    when = f" · publicado {item.published_at.astimezone(UTC).isoformat()}" if item.published_at else " · fecha de publicación no disponible"
+                    answer_lines.append(f"{index}. **{item.title}** · {item.source}{when} [{item.id}]")
+                if req.search_mode != "live" and response.citations:
+                    answer_lines.extend(["", "El snapshot también contiene estas fuentes de contexto:"])
+                    answer_lines.extend(f"- {cite.title or cite.passage or cite.evidence_id} [{cite.evidence_id}]" for cite in response.citations[:3])
+                response = response.model_copy(update={
+                    "answer_status": AnswerStatus.parcial,
+                    "answer": "\n".join(answer_lines),
+                    "abstention_reason": None,
+                    "citations": citations,
+                    "hits": hits,
+                    "search_mode": "live" if req.search_mode == "live" else "hybrid",
+                    "retrieval": response.retrieval.model_copy(update={"method": "live+snapshot" if req.search_mode != "live" else "live-news"}),
+                })
+            else:
+                response.warnings.append("No se obtuvieron titulares en vivo; se muestra el resultado disponible del snapshot.")
+                response.search_mode = "snapshot"
+        else:
+            response.search_mode = "snapshot"
         return response
 
     def compose_query(self, user: str, req: QueryRequest, *, consume_limit: bool = True, provider: str = "gemini") -> ComposeResponse:
@@ -668,6 +719,8 @@ class Services:
 
         if base.answer_status in (AnswerStatus.abstencion, AnswerStatus.contradiccion) or not base.citations:
             return fallback(FallbackReason.sin_evidencia, "Solo se redactan respuestas con fuentes y sin versiones en contradicción.")
+        if base.search_mode in {"live", "hybrid"}:
+            return fallback(FallbackReason.sin_evidencia, "La búsqueda en vivo conserva los titulares, enlaces y citas originales sin redactarlos con un modelo.")
         prov = self.providers.get(provider)
         try:
             if prov is None:

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowRight, ChevronDown, FileSearch, GitCompare, Newspaper, Radio, Repeat, Search, ShieldAlert, SlidersHorizontal, TriangleAlert, X } from 'lucide-react';
 import type { Category, EvidenceStatus, ReviewStatus, ScoreBand, TopicFilters, TopicSummary } from '../../lib/api/types';
-import { useRules, useTopics } from '../../lib/hooks';
+import { useAlerts, useRules, useTopics } from '../../lib/hooks';
 import { BAND_LABEL, CATEGORY_LABEL, EVIDENCE_LABEL, REVIEW_LABEL } from '../../lib/labels';
 import { fmtDateTime, fmtScore } from '../../lib/format';
 import { useDisclosureMotion, useEntrance, useRevealNew } from '../../lib/useMotion';
@@ -175,6 +175,7 @@ export function Agenda() {
   const [scope, setScope] = useState<'in_scope' | 'all'>('in_scope');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const rules = useRules();
+  const alerts = useAlerts();
   const rootRef = useRef<HTMLDivElement>(null);
   const filtersRef = useDisclosureMotion<HTMLDivElement>(filtersOpen);
 
@@ -208,6 +209,38 @@ export function Agenda() {
           es independiente y la decisión editorial es siempre de una persona.
         </p>
       </header>
+
+      <section className="comic-panel p-4" aria-labelledby={`${uid}-alerts-title`} data-testid="agenda-live-alerts" aria-busy={alerts.isFetching}>
+        <div className="mb-3 flex flex-wrap items-start justify-between gap-2 border-b-2 border-ink pb-3">
+          <div className="flex items-center gap-2">
+            <Radio size={19} className="text-amber-700" aria-hidden="true" />
+            <div><p className="kicker">Fuentes consultadas en vivo</p><h2 id={`${uid}-alerts-title`} className="font-display text-xl font-bold">Sismos y emergencias recientes</h2></div>
+          </div>
+          {alerts.data && <p className="text-xs text-ink-3">Consulta: {fmtDateTime(alerts.data.checkedAt)}</p>}
+        </div>
+        {alerts.isLoading && <p aria-live="polite" className="py-4 text-sm text-ink-3">Consultando alertas recientes…</p>}
+        {alerts.error && <ErrorBox error={alerts.error} onRetry={() => void alerts.refetch()} />}
+        {alerts.data?.warnings.map((warning) => <p key={warning} className="mb-2 text-xs text-amber-800" role="status">{warning}</p>)}
+        {alerts.data && alerts.data.items.length === 0 && !alerts.isLoading && (
+          <p className="text-sm text-ink-2">No hay sismos ni avisos recientes disponibles en las fuentes consultadas.</p>
+        )}
+        {alerts.data && alerts.data.items.length > 0 && (
+          <ul className="grid gap-2 md:grid-cols-2" aria-label="Alertas, sismos y noticias recientes">
+            {alerts.data.items.slice(0, 8).map((item) => (
+              <li key={item.id} className="min-w-0 border-2 border-ink bg-paper p-3 shadow-[3px_3px_0_var(--color-ink)]">
+                <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-ink-2">
+                  <span className="text-amber-800">{item.kind === 'sismo' ? 'Sismo' : item.kind === 'aviso' ? 'Aviso oficial' : 'Noticia reciente'}</span>
+                  <span aria-hidden="true">·</span><span>{item.source}</span>
+                  {item.magnitude !== null && item.magnitude !== undefined && <span className="font-mono">M {item.magnitude.toFixed(1)}</span>}
+                </div>
+                <a href={item.url} target="_blank" rel="noreferrer" className="font-semibold text-ink underline-offset-4 hover:underline" data-testid="agenda-live-alert-link">{item.title}</a>
+                {(item.place || item.occurredAt || item.publishedAt) && <p className="mt-1 text-xs text-ink-3">{[item.place, item.occurredAt ? `Sismo: ${fmtDateTime(item.occurredAt)}` : item.publishedAt ? `Publicado: ${fmtDateTime(item.publishedAt)}` : null].filter(Boolean).join(' · ')}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-3 text-xs text-ink-3">Los sismos son registros del USGS y no constituyen una alerta temprana ni confirman daños. Verifica las indicaciones de las autoridades.</p>
+      </section>
 
       <form noValidate role="search" aria-label="Filtros de la agenda" className="comic-filters space-y-3 p-3" onSubmit={(e) => e.preventDefault()}>
         <div className="grid grid-cols-1 items-end gap-2 min-[640px]:grid-cols-[minmax(0,1fr)_auto]">
