@@ -24,7 +24,14 @@ from .compose import (
     validate_composition,
 )
 from .config import Settings
-from .drafts import EvidencePack, build_pack, build_template_package, validate_package
+from .drafts import (
+    EvidencePack,
+    build_pack,
+    build_template_package,
+    format_script,
+    research_questions,
+    validate_package,
+)
 from .errors import (
     ApiError,
     Forbidden,
@@ -60,6 +67,7 @@ from .models import (
     ImpactAssignment,
     ImpactRequest,
     ProviderStatus,
+    QueryIntent,
     QueryRequest,
     QueryResponse,
     ReviewRequest,
@@ -85,6 +93,7 @@ from .providers import (
 from .queries import QueryEngine
 from .retrieval import Doc, SearchIndex
 from .scoring import BANDS, CHANGELOG, RULE_TEXT, RULES_VERSION, WEIGHTS, ScoreInputs, score_topic, sort_key
+from .seismology import SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE
 from .snapshot import Corpus, load_corpus
 from .storage import CaseRecord, PublicGeminiCounter, Repository, build_repository
 from .topics import (
@@ -93,6 +102,7 @@ from .topics import (
     assess_evidence,
     build_reporters,
     build_topic,
+    cross_contradictions,
     official_context,
 )
 from .util import fmt_date_pa, now_utc
@@ -123,8 +133,9 @@ class SnapshotState:
 
 def build_snapshot_state(corpus: Corpus) -> SnapshotState:
     bases = {}
+    cross_candidates = cross_contradictions(list(corpus.articles.values()))
     for cluster in corpus.clusters.values():
-        base = build_topic(corpus, cluster)
+        base = build_topic(corpus, cluster, cross_candidates=cross_candidates)
         if base:
             bases[base.id] = base
     return SnapshotState(corpus, bases, QueryEngine(corpus, bases),
@@ -446,6 +457,7 @@ class Services:
         q: str | None,
         include_components: bool,
         scope: str = "in_scope",
+        tvn_gap: bool = False,
     ) -> TopicsResponse:
         rows = self._ranked(user)
         applied: dict[str, object] = {"limit": limit}
@@ -455,6 +467,9 @@ class Services:
             rows = [r for r in rows if r[0].id in rel]
             rows.sort(key=lambda r: (-rel[r[0].id], sort_key(r[1].total, r[1].urgency_tiebreak, r[0].id)))
             applied["q"] = q
+        if tvn_gap:
+            rows = [r for r in rows if r[0].independent >= 2 and not any(article.is_tvn for article in r[0].articles)]
+            applied["tvnGap"] = True
         facets: dict[str, dict[str, int]] = {"category": {}, "evidence": {}, "band": {}, "reviewStatus": {}}
         for b, sc, rec in rows:
             st = rec.status.value if rec else "nuevo"
@@ -694,6 +709,8 @@ class Services:
             return fallback(exc.reason, exc.detail)
         shown = base.model_copy(deep=True)
         shown.answer = render_composition(composed, order)
+        if shown.intent == QueryIntent.eventos_sismicos:
+            shown.answer += f"\n\n{SEISMIC_BOX_NOTE} {SEISMIC_DAMAGE_NOTE}"
         shown.missing = list(dict.fromkeys([*shown.missing, *composition_pending(composed)]))
         shown.warnings = [*shown.warnings, COMPOSE_NOTICE]
         return ComposeResponse(
@@ -795,10 +812,11 @@ class Services:
 
     # ------------------------------------------------------------------ borradores
     def _validated_record(
-        self, *, number: int, pkg: EditorialPackage, pack: EvidencePack, mode: GenerationMode, provider: str,
+        self, *, number: int, pkg: EditorialPackage, pack: EvidencePack, base: TopicBase, mode: GenerationMode, provider: str,
         model: str | None, reason: FallbackReason | None, detail: str | None, recovered_from: str | None = None,
         proposed_claims: int | None = None,
     ) -> DraftRecord:
+        pkg = pkg.model_copy(update={"research_questions": research_questions(base), "script": format_script(pkg.script, pkg.pending_verifications)})
         cleaned, report = validate_package(pkg, pack, proposed_claims=proposed_claims)
         return DraftRecord(
             draft_id="d_" + uuid.uuid4().hex[:10],
@@ -827,9 +845,9 @@ class Services:
             proposed_title=out.proposed_title.strip(),
             brief=out.brief_body.strip(),
             public_interest_angle=out.public_interest_angle.strip(),
-            research_questions=out.research_questions,
+            research_questions=research_questions(base),
             pending_verifications=out.pending_verifications or base.pending[:5],
-            script=out.script.strip(),
+            script=format_script(out.script.strip(), out.pending_verifications or base.pending[:5]),
             social_copy=out.social_copy.strip(),
             claims=claims,
             headline_only=True,
@@ -926,7 +944,7 @@ class Services:
                         before_call=lambda: self._reserve_gemini_call(user)) if isinstance(prov, GeminiProvider) else prov.generate(SYSTEM_INSTRUCTIONS, user_content)
                     pkg = self._model_package(base, result.output)
                     cand = self._validated_record(
-                        number=number, pkg=pkg, pack=pack, mode=GenerationMode.modelo, provider=provider_name,
+                        number=number, pkg=pkg, pack=pack, base=base, mode=GenerationMode.modelo, provider=provider_name,
                         model=result.model, reason=None, detail=None, proposed_claims=len(pkg.claims),
                     )
                     cand.usage = result.usage
@@ -957,7 +975,7 @@ class Services:
             )
             if prev is not None:
                 cand = self._validated_record(
-                    number=number, pkg=prev.package, pack=pack, mode=GenerationMode.recuperado, provider="recuperado",
+                    number=number, pkg=prev.package, pack=pack, base=base, mode=GenerationMode.recuperado, provider="recuperado",
                     model=prev.model, reason=reason, detail=detail, recovered_from=prev.draft_id,
                     proposed_claims=len(prev.package.claims),
                 )
@@ -969,7 +987,7 @@ class Services:
         if draft is None:
             pkg = build_template_package(base, score=score.total, band=score.band.value, status=self._eff(base, rec).value)
             draft = self._validated_record(
-                number=number, pkg=pkg, pack=pack, mode=GenerationMode.plantilla, provider="plantilla", model=None,
+                number=number, pkg=pkg, pack=pack, base=base, mode=GenerationMode.plantilla, provider="plantilla", model=None,
                 reason=reason, detail=detail, proposed_claims=len(pkg.claims),
             )
             notices.append("Borrador construido mediante plantilla con citas.")
@@ -1011,6 +1029,7 @@ class Services:
                                 "La generación pública no está disponible o usa otro corte; se conserva la plantilla local.") from exc
         if result.draft.snapshot_id != self.corpus.snapshot_id or result.evidence.topic_id != base.id:
             raise ProviderError(FallbackReason.validacion_fallida, "La generación pública devolvió un contexto diferente.")
+        result.draft.package = result.draft.package.model_copy(update={"research_questions": research_questions(base)})
         result.draft.package, result.draft.validation = validate_package(result.draft.package, build_pack(base),
                                                                         proposed_claims=len(result.draft.package.claims))
         if not result.draft.validation.ok:

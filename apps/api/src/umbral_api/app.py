@@ -12,11 +12,11 @@ from urllib.parse import urlparse
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import API_PREFIX, __version__
-from .auth import is_loopback
+from .auth import Authenticator, is_desktop_oauth_callback, is_loopback
 from .config import Settings
 from .connections import (
     AuthorizationResponse,
@@ -33,6 +33,12 @@ from .models import (
     CaseView,
     ComposeRequest,
     ComposeResponse,
+    ConnectorDestinationRequest,
+    ConnectorDisconnectedResponse,
+    ConnectorOverviewResponse,
+    ConnectorPagesResponse,
+    ConnectorSavedResponse,
+    ConnectorStartResponse,
     DraftEditRequest,
     DraftRequest,
     DraftResponse,
@@ -40,11 +46,20 @@ from .models import (
     ExportResponse,
     HealthResponse,
     ImpactRequest,
+    NotionExportResponse,
+    NotionMarkdownRequest,
+    NotionStatusResponse,
     QueryRequest,
     QueryResponse,
     ReviewRequest,
     RulesRequest,
     RulesResponse,
+    SlackChannelChoice,
+    SlackChannelsResponse,
+    SlackNotificationPreferencesRequest,
+    SlackNotificationPreferencesResponse,
+    SlackNotificationResult,
+    SlackShareRequest,
     SnapshotInfoResponse,
     TopicDetail,
     TopicsResponse,
@@ -70,6 +85,10 @@ _ERRORS: dict[int | str, dict[str, Any]] = {
     422: {"model": ErrorResponse, "description": "No procesable / transición inválida"},
     429: {"model": ErrorResponse, "description": "Límite por usuario excedido"},
 }
+_NOTION_ERRORS = {
+    **_ERRORS,
+    503: {"model": ErrorResponse, "description": "Notion no está configurado o no pudo completar la exportación"},
+}
 
 
 def get_services(request: Request):  # noqa: ANN201
@@ -86,6 +105,35 @@ def get_user(request: Request) -> str:
 
 
 User = Annotated[str, Depends(get_user)]
+
+
+def get_connector_user(request: Request) -> str:
+    """Los conectores públicos requieren el ID token Firebase del navegador anónimo."""
+    settings: Settings = request.app.state.settings
+    if settings.auth_mode != "public":
+        return get_user(request)
+    if not settings.firestore_project:
+        from .errors import Unauthorized
+
+        raise Unauthorized("Firebase Auth no está configurado para aislar las conexiones.")
+    verifier = getattr(request.app.state, "connector_auth", None)
+    if verifier is None:
+        verifier = Authenticator("firebase", settings.firestore_project)
+        request.app.state.connector_auth = verifier
+    return verifier.user_for(request)
+
+
+ConnectorUser = Annotated[str, Depends(get_connector_user)]
+
+
+def get_connector_manager(request: Request):  # noqa: ANN201
+    manager = getattr(request.app.state, "connector_manager", None)
+    if manager is None:
+        from .connectors import ConnectorManager
+
+        manager = ConnectorManager(request.app.state.settings)
+        request.app.state.connector_manager = manager
+    return manager
 
 
 def _cors_origin_regex(settings: Settings) -> str | None:
@@ -159,17 +207,26 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
             if settings.desktop_token and (
                 not is_loopback(request) or request.url.hostname not in {"localhost", "127.0.0.1", "::1", "testserver"}
                 or (origin is not None and urlparse(origin).hostname not in {"localhost", "127.0.0.1", "::1"})
-                or not secrets.compare_digest(request.headers.get("x-umbral-desktop-token", ""), settings.desktop_token)
+                or (not is_desktop_oauth_callback(request)
+                    and not secrets.compare_digest(request.headers.get("x-umbral-desktop-token", ""), settings.desktop_token))
             ):
                 return JSONResponse(status_code=403, content={"code": "prohibido", "message": "Sesión de escritorio no válida.", "details": None})
             if settings.auth_mode == "public":
-                private_write = request.method not in {"GET", "HEAD", "OPTIONS"} and not path.startswith(API_PREFIX + "/public/")
+                connector_path = path == API_PREFIX + "/connectors" or path.startswith(API_PREFIX + "/connectors/")
+                private_write = request.method not in {"GET", "HEAD", "OPTIONS"} and not path.startswith(API_PREFIX + "/public/") and not connector_path
                 if private_write or "/connections/" in path or path.endswith("/auth/callback") or "/workspace/" in path:
                     return JSONResponse(status_code=403, content={"code": "prohibido", "message": "El trabajo editorial se guarda en tu dispositivo; usa la API pública sin estado.", "details": None})
             if path.startswith(API_PREFIX + "/public/") and request.method == "POST":
                 if len(await request.body()) > 2 * 1024 * 1024:
                     return JSONResponse(status_code=422, content={"code": "entrada_invalida", "message": "La solicitud excede 2 MiB.", "details": None})
-        return await call_next(request)
+            if path.startswith(API_PREFIX + "/connectors/") and request.method in {"POST", "PUT", "PATCH"}:
+                if len(await request.body()) > 120_000:
+                    return JSONResponse(status_code=422, content={"code": "entrada_invalida", "message": "La solicitud del conector excede el límite permitido.", "details": None})
+        response = await call_next(request)
+        if request.url.path == API_PREFIX + "/connectors" or request.url.path.startswith(API_PREFIX + "/connectors/"):
+            response.headers["Cache-Control"] = "no-store"
+            response.headers["Pragma"] = "no-cache"
+        return response
 
     @app.exception_handler(ApiError)
     async def _api_error(_: Request, exc: ApiError) -> JSONResponse:
@@ -231,10 +288,33 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         port = request.url.port or 8000
         return connection.start(body, f"http://127.0.0.1:{port}{API_PREFIX}/auth/callback")
 
-    @api.get("/auth/callback", response_model=ConnectionsResponse, tags=["conexiones"], responses=_ERRORS)
-    def connection_callback(request: Request, state: str, code: str | None = None, client_id: str | None = None, error: str | None = None) -> ConnectionsResponse:
+    @api.get("/auth/callback", response_class=HTMLResponse, tags=["conexiones"], responses=_ERRORS)
+    def connection_callback(
+        request: Request,
+        state: str,
+        code: str | None = None,
+        client_id: str | None = None,
+        error: str | None = None,
+    ) -> HTMLResponse:
         try:
-            return personal_connection(request).callback(state=state, code=code, client_id=client_id, error=error)
+            personal_connection(request).callback(state=state, code=code, client_id=client_id, error=error)
+            return HTMLResponse(
+                (
+                    "<!doctype html><html lang=\"es\"><head>"
+                    "<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+                    "<title>Cuenta conectada · Umbral</title></head><body><main>"
+                    "<h1>ChatGPT conectado</h1>"
+                    "<p>Ya puedes volver a Umbral. El selector de modelos se actualizará automáticamente.</p>"
+                    "</main></body></html>"
+                ),
+                headers={
+                    "Cache-Control": "no-store",
+                    "Content-Security-Policy": "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+                    "Referrer-Policy": "no-referrer",
+                    "X-Content-Type-Options": "nosniff",
+                    "X-Frame-Options": "DENY",
+                },
+            )
         finally:
             # El código OAuth es efímero pero sensible: evita que el access log conserve la query.
             request.scope["query_string"] = b""
@@ -329,6 +409,11 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         review_status: str | None = Query(None, alias="reviewStatus"),
         q: str | None = Query(None, description="Búsqueda libre (BM25 + RapidFuzz) sobre los temas"),
         include_components: bool = Query(True, alias="includeComponents"),
+        tvn_gap: bool = Query(
+            False,
+            alias="tvnGap",
+            description="Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual.",
+        ),
         scope: str = Query(
             "in_scope",
             pattern="^(in_scope|all)$",
@@ -346,6 +431,7 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
             q=q,
             include_components=include_components,
             scope=scope,
+            tvn_gap=tvn_gap,
         )
 
     @api.get(
@@ -446,6 +532,141 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
                 headers={"Content-Disposition": f'attachment; filename="{result.filename}"'},
             )
         return result
+
+    @api.get(
+        "/notion/status",
+        response_model=NotionStatusResponse,
+        tags=["exportación"],
+        summary="Indicar si Notion está configurado para exportar (solo localhost)",
+        responses=_ERRORS,
+    )
+    def notion_status(request: Request, user: User) -> NotionStatusResponse:
+        local_only_guard(request)
+        return NotionStatusResponse(configured=settings.notion_configured)
+
+    @api.post(
+        "/cases/{case_id}/export/notion",
+        response_model=NotionExportResponse,
+        tags=["exportación"],
+        summary="Crear una subpágina nueva en Notion con el Markdown vigente de la ficha",
+        description=(
+            "Solo localhost con auth local. La página padre no se modifica. La solicitud no acepta contenido: "
+            "el Markdown se genera en el backend a partir de la ficha actual y la llamada externa solo ocurre al invocar este POST."
+        ),
+        responses=_NOTION_ERRORS,
+    )
+    def export_case_to_notion(
+        case_id: str, request: Request, user: User, svc=Depends(get_services)
+    ) -> NotionExportResponse:
+        local_only_guard(request)
+        exported = svc.export(user, case_id)
+        from .notion import NotionExporter
+
+        page = NotionExporter(settings).create_page(exported.markdown)
+        return NotionExportResponse(page_id=page.page_id, url=page.url, title=page.title)
+
+    @api.get(
+        "/connectors",
+        response_model=ConnectorOverviewResponse,
+        tags=["conexiones"],
+        summary="Consultar el estado de Notion y Slack para la identidad anónima actual",
+        responses=_ERRORS,
+    )
+    def connector_overview(user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorOverviewResponse:
+        return manager.overview(user)
+
+    @api.post(
+        "/connectors/{provider}/start",
+        response_model=ConnectorStartResponse,
+        tags=["conexiones"],
+        summary="Iniciar la autorización OAuth de Notion o Slack",
+        responses={**_ERRORS, 503: {"model": ErrorResponse, "description": "Conector no configurado"}},
+    )
+    def connector_start(provider: str, user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorStartResponse:
+        return ConnectorStartResponse(authorization_url=manager.start(provider, user))
+
+    @api.get(
+        "/connectors/{provider}/callback",
+        response_class=HTMLResponse,
+        tags=["conexiones"],
+        summary="Completar el callback OAuth de Notion o Slack sin mostrar tokens",
+    )
+    def connector_callback(
+        provider: str,
+        request: Request,
+        state: str,
+        code: str | None = None,
+        error: str | None = None,
+        manager=Depends(get_connector_manager),
+    ) -> HTMLResponse:
+        connected = False
+        status_code = 200
+        try:
+            connected = manager.callback(provider, state, code, error)
+            if not connected:
+                status_code = 400
+        except ApiError:
+            # No repetir en HTML parámetros OAuth, códigos del proveedor ni mensajes remotos.
+            status_code = 400
+        finally:
+            request.scope["query_string"] = b""
+        title = "Conexión completada" if connected else "No se completó la conexión"
+        detail = "Puedes volver a Umbral; el estado se actualizará al enfocar la ventana." if connected else "Cierra esta pestaña y vuelve a iniciar la conexión desde Configuración."
+        return HTMLResponse(
+            f"<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{title} · Umbral</title></head><body><main><h1>{title}</h1><p>{detail}</p></main></body></html>",
+            status_code=status_code,
+            headers={"Cache-Control": "no-store", "Content-Security-Policy": "default-src 'none'; base-uri 'none'; frame-ancestors 'none'", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff", "X-Frame-Options": "DENY"},
+        )
+
+    @api.delete(
+        "/connectors/{provider}",
+        response_model=ConnectorDisconnectedResponse,
+        tags=["conexiones"],
+        summary="Revocar y borrar las credenciales del conector de la identidad actual",
+        responses=_ERRORS,
+    )
+    def connector_disconnect(provider: str, user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorDisconnectedResponse:
+        manager.disconnect(user, provider)
+        return ConnectorDisconnectedResponse(disconnected=True)
+
+    @api.get("/connectors/notion/pages", response_model=ConnectorPagesResponse, tags=["conexiones"], responses=_ERRORS)
+    def notion_pages(user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorPagesResponse:
+        return ConnectorPagesResponse(items=manager.notion_pages(user))
+
+    @api.put("/connectors/notion/destination", response_model=ConnectorSavedResponse, tags=["conexiones"], responses=_ERRORS)
+    def notion_destination(body: ConnectorDestinationRequest, user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorSavedResponse:
+        manager.choose_notion_destination(user, body.page_id)
+        return ConnectorSavedResponse(saved=True)
+
+    @api.post("/connectors/notion/export", response_model=NotionExportResponse, tags=["exportación"], responses=_NOTION_ERRORS)
+    def export_markdown_to_notion(body: NotionMarkdownRequest, user: ConnectorUser, manager=Depends(get_connector_manager)) -> NotionExportResponse:
+        return NotionExportResponse(**manager.export_notion(user, body.markdown))
+
+    @api.get("/connectors/slack/channels", response_model=SlackChannelsResponse, tags=["conexiones"], responses=_ERRORS)
+    def slack_channels(user: ConnectorUser, manager=Depends(get_connector_manager)) -> SlackChannelsResponse:
+        return SlackChannelsResponse(items=manager.slack_channels(user))
+
+    @api.put("/connectors/slack/channel", response_model=ConnectorSavedResponse, tags=["conexiones"], responses=_ERRORS)
+    def slack_channel(body: SlackChannelChoice, user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorSavedResponse:
+        manager.choose_slack_channel(user, body.channel_id)
+        return ConnectorSavedResponse(saved=True)
+
+    @api.get("/connectors/slack/notifications", response_model=SlackNotificationPreferencesResponse, tags=["conexiones"], responses=_ERRORS)
+    def slack_notification_preferences(user: ConnectorUser, manager=Depends(get_connector_manager)) -> SlackNotificationPreferencesResponse:
+        return SlackNotificationPreferencesResponse(**manager.slack_preferences(user))
+
+    @api.put("/connectors/slack/notifications", response_model=ConnectorSavedResponse, tags=["conexiones"], responses=_ERRORS)
+    def save_slack_notification_preferences(body: SlackNotificationPreferencesRequest, user: ConnectorUser, manager=Depends(get_connector_manager)) -> ConnectorSavedResponse:
+        manager.save_slack_preferences(user, enabled=body.enabled, statuses=[status.value for status in body.statuses], channel_id=body.channel_id)
+        return ConnectorSavedResponse(saved=True)
+
+    @api.post("/connectors/slack/share", response_model=SlackNotificationResult, tags=["exportación"], responses=_ERRORS)
+    def share_case_to_slack(body: SlackShareRequest, user: ConnectorUser, manager=Depends(get_connector_manager)) -> SlackNotificationResult:
+        return SlackNotificationResult(**manager.share_case_to_slack(user, body.model_dump()))
+
+    @api.post("/connectors/slack/review-event", response_model=SlackNotificationResult, tags=["conexiones"], responses=_ERRORS)
+    def notify_slack_review(body: SlackShareRequest, user: ConnectorUser, manager=Depends(get_connector_manager)) -> SlackNotificationResult:
+        return SlackNotificationResult(**manager.notify_slack_review(user, body.model_dump()))
 
     app.include_router(api)
 

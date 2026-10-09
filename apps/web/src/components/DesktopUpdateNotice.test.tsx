@@ -11,6 +11,7 @@ function setup(state: DesktopUpdateState) {
     getUpdateState: vi.fn(async () => state),
     checkForUpdates: vi.fn(async () => undefined),
     installUpdate: vi.fn(async () => true),
+    updateNow: vi.fn(async () => true),
     onUpdateState: vi.fn((callback: (next: DesktopUpdateState) => void) => {
       listener = callback;
       return () => { listener = undefined; };
@@ -56,5 +57,16 @@ describe('aviso de actualizaciones del escritorio', () => {
     expect(bridge.checkForUpdates).toHaveBeenCalledOnce();
     fireEvent.click(screen.getByRole('button', { name: 'Cerrar aviso de actualización' }));
     expect(screen.queryByTestId('desktop-update-notice')).toBeNull();
+  });
+
+  it('avisa de una versión disponible solo si las automatáticas están desactivadas', async () => {
+    const { bridge, emit } = setup({ status: 'idle' });
+    render(<DesktopUpdateNotice />);
+    act(() => emit({ status: 'available', version: '0.3.0', autoUpdateEnabled: true }));
+    expect(screen.queryByTestId('desktop-update-notice')).toBeNull();
+    act(() => emit({ status: 'available', version: '0.3.0', autoUpdateEnabled: false }));
+    expect(screen.getByText('Umbral 0.3.0 está disponible')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Actualizar ahora' }));
+    await waitFor(() => expect(bridge.updateNow).toHaveBeenCalledOnce());
   });
 });

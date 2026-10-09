@@ -25,6 +25,66 @@ SCRIPT_MIN_S, SCRIPT_MAX_S = 45.0, 60.0
 SCRIPT_MIN_WORDS = int(SCRIPT_MIN_S * SCRIPT_WPS)  # 112
 SCRIPT_MAX_WORDS = int(SCRIPT_MAX_S * SCRIPT_WPS)  # 150
 HEADLINE_PREFIX = "Basado únicamente en titular/metadatos."
+SCRIPT_NOTES_LABEL = "NOTAS DE PRODUCCIÓN:"
+_SCRIPT_NOTES_RE = re.compile(r"\n\s*NOTAS\s+DE\s+PRODUCCI[ÓO]N\s*:\s*", re.IGNORECASE)
+_SCRIPT_LABEL_RE = re.compile(r"^\s*GUION\s*:\s*", re.IGNORECASE)
+
+
+def tidy_punctuation(text: str) -> str:
+    """Corrige puntuación duplicada y espacios sin reescribir el contenido."""
+    text = re.sub(r"\s+([,;:.!?])", r"\1", text.strip())
+    text = re.sub(r"([,;:!?])\1+", r"\1", text)
+    return re.sub(r"\.{2,}", ".", text)
+
+
+def script_speech(script: str) -> str:
+    """Devuelve solo el texto hablado; tolera paquetes antiguos sin encabezados."""
+    body = _SCRIPT_LABEL_RE.sub("", script, count=1)
+    return _SCRIPT_NOTES_RE.split(body, maxsplit=1)[0].strip()
+
+
+def format_script(script: str, notes: list[str] | None = None) -> str:
+    speech = tidy_punctuation(script_speech(script))
+    existing = _SCRIPT_NOTES_RE.split(_SCRIPT_LABEL_RE.sub("", script, count=1), maxsplit=1)
+    note_text = existing[1].strip() if len(existing) > 1 else ""
+    if not note_text:
+        note_text = "\n".join(f"- {tidy_punctuation(item)}" for item in (notes or []) if item.strip())
+    return f"GUION:\n{speech}\n\n{SCRIPT_NOTES_LABEL}\n{note_text}".strip()
+
+
+def research_questions(base: TopicBase) -> list[str]:
+    """Preguntas editoriales basadas en la categoría y en brechas observadas en la ficha."""
+    category = base.category.value
+    authorities = {
+        "logistica_canal": "la Autoridad del Canal de Panamá (ACP)",
+        "turismo": "la Autoridad de Turismo de Panamá (ATP) o el INEC",
+        "economia": "el MEF, el INEC o la Contraloría, según el dato",
+        "servicios_publicos": "la ASEP o la entidad prestadora correspondiente",
+        "eventos_naturales": "SINAPROC o la entidad técnica competente",
+        "regulacion": "la Gaceta Oficial y la entidad que emitió la norma",
+        "indeterminado": "la entidad pública competente para el tema",
+    }
+    category_name = CATEGORY_LABELS.get(category, "tema")
+    primary = authorities.get(category, "la entidad pública competente")
+    pending = [tidy_punctuation(item) for item in base.pending if item.strip()]
+    gap = pending[0] if pending else f"la verificación del tema de {category_name.lower()}"
+    first = f"¿Qué comunicado, registro o documento de {primary} confirma el hecho y qué dice exactamente?"
+    if base.contradictions:
+        second = "¿Qué fuente primaria y qué fechas permiten explicar las versiones incompatibles sin escoger una arbitrariamente?"
+    elif base.is_recirculation:
+        second = "¿Cuál es la fecha original del hecho y qué evidencia confirma que no se trata de una noticia recirculada?"
+    elif base.independent < 2:
+        second = "¿Qué segunda procedencia independiente confirma el dato y cómo se descarta que sea una réplica de agencia?"
+    elif base.suspicious_ids:
+        second = "¿Qué fuente confiable confirma la información excluida y permite verificarla sin usar el contenido sospechoso?"
+    else:
+        second = f"La ficha marca como pendiente «{gap}». ¿Qué documento o comprobación resuelve esa brecha?"
+    third = (
+        "¿Qué indicador oficial pertinente, con unidad y año, permite dimensionar el impacto para la audiencia en Panamá?"
+        if base.indicators
+        else f"¿Qué dato oficial de {category_name.lower()}, con unidad y período, falta para dimensionar el impacto en Panamá?"
+    )
+    return [tidy_punctuation(q) for q in (first, second, third)]
 
 ARTICLE_FIELDS = ("title", "outlet", "publishedAt", "detectedAt", "url", "origin", "category")
 INDICATOR_FIELDS = ("value", "unit", "year", "countryIso3", "indicatorName")
@@ -157,9 +217,10 @@ def validate_package(pkg: EditorialPackage, pack: EvidencePack, *, proposed_clai
                 text = re.sub(rf"\s*\[{m}\]", "", text)
         return text
 
-    brief = fix_markers(pkg.brief, "brief")
-    script = fix_markers(pkg.script, "guion")
-    copy = fix_markers(pkg.social_copy, "copy")
+    title = tidy_punctuation(pkg.proposed_title)
+    brief = fix_markers(tidy_punctuation(pkg.brief), "brief")
+    script = fix_markers(format_script(tidy_punctuation(pkg.script), pkg.pending_verifications), "guion")
+    copy = fix_markers(tidy_punctuation(pkg.social_copy), "copy")
 
     if not claims:
         issues.append(ValidationIssue(code="sin_afirmaciones_validas", severity="error", message="Ninguna afirmación pasó la validación de citas."))
@@ -170,7 +231,7 @@ def validate_package(pkg: EditorialPackage, pack: EvidencePack, *, proposed_clai
     if headline_only and fold(HEADLINE_PREFIX.rstrip(".")) not in fold(brief):
         brief = f"{HEADLINE_PREFIX} {brief}".strip()
 
-    wc = {"brief": word_count(strip_markers(brief)), "script": word_count(strip_markers(script)), "socialCopy": word_count(strip_markers(copy))}
+    wc = {"brief": word_count(strip_markers(brief)), "script": word_count(strip_markers(script_speech(script))), "socialCopy": word_count(strip_markers(copy))}
     if wc["brief"] > BRIEF_MAX_WORDS:
         issues.append(ValidationIssue(code="brief_excede_limite", severity="error", message=f"El brief tiene {wc['brief']} palabras (máximo {BRIEF_MAX_WORDS})."))
     if wc["socialCopy"] > COPY_MAX_WORDS:
@@ -178,18 +239,18 @@ def validate_package(pkg: EditorialPackage, pack: EvidencePack, *, proposed_clai
     secs = wc["script"] / SCRIPT_WPS
     if not (SCRIPT_MIN_S <= secs <= SCRIPT_MAX_S):
         issues.append(ValidationIssue(code="guion_fuera_de_rango", severity="error", message=f"El guion dura ≈{secs:.0f} s ({wc['script']} palabras); debe estar entre 45 y 60 s (≈{SCRIPT_MIN_WORDS}–{SCRIPT_MAX_WORDS} palabras)."))
-    qs = [q.strip() for q in pkg.research_questions if q.strip()]
+    qs = [tidy_punctuation(q) for q in pkg.research_questions if q.strip()]
     if len(qs) != 3:
         issues.append(ValidationIssue(code="preguntas_invalidas", severity="error", message=f"Se requieren exactamente 3 preguntas de investigación (hay {len(qs)})."))
     if not [p for p in pkg.pending_verifications if p.strip()]:
         issues.append(ValidationIssue(code="sin_verificaciones", severity="error", message="Falta la lista de verificaciones pendientes."))
-    if not pkg.proposed_title.strip() or len(pkg.proposed_title) > 160:
+    if not title.strip() or len(title) > 160:
         issues.append(ValidationIssue(code="titulo_invalido", severity="error", message="El título propuesto está vacío o supera 160 caracteres."))
     if not pkg.public_interest_angle.strip():
         issues.append(ValidationIssue(code="sin_enfoque", severity="error", message="Falta el enfoque de interés público."))
     if not marker_ids(brief) and claims:
         issues.append(ValidationIssue(code="brief_sin_marcadores", severity="warning", message="El brief no referencia afirmaciones ([c1]…): las citas no son visibles en el texto."))
-    for name, txt in (("brief", brief), ("guion", script), ("copy", copy), ("título", pkg.proposed_title)):
+    for name, txt in (("brief", brief), ("guion", script), ("copy", copy), ("título", title)):
         if leaks_secret(txt):
             issues.append(ValidationIssue(code="posible_fuga_de_secreto", severity="error", message=f"El texto de {name} parece contener un secreto/credencial."))
     if claims and all(c.type == ClaimType.hipotesis for c in claims):
@@ -207,6 +268,9 @@ def validate_package(pkg: EditorialPackage, pack: EvidencePack, *, proposed_clai
             "brief": brief,
             "script": script,
             "social_copy": copy,
+            "proposed_title": title,
+            "public_interest_angle": tidy_punctuation(pkg.public_interest_angle),
+            "pending_verifications": [tidy_punctuation(item) for item in pkg.pending_verifications],
             "claims": claims,
             "research_questions": qs,
             "headline_only": headline_only,
@@ -326,6 +390,7 @@ def build_template_package(base: TopicBase, *, score: float, band: str, status: 
     if word_count(strip_markers(script)) > SCRIPT_MAX_WORDS - 2:  # titular muy largo
         words = strip_markers(script).split()
         script = " ".join(words[: SCRIPT_MAX_WORDS - 6]) + "."
+    script = format_script(script, pending[:4])
 
     copy_core = f"{title.strip()}"
     cwords = copy_core.split()
@@ -340,15 +405,7 @@ def build_template_package(base: TopicBase, *, score: float, band: str, status: 
         f"Posible interés público en {CATEGORY_LABELS[base.category.value].lower()} para Panamá; el alcance real "
         "depende de verificar la fuente primaria y la fecha original."
     )
-    qs = [
-        "¿Qué fuente primaria u oficial confirma el hecho y qué dice exactamente?",
-        "¿Cuál es la fecha original del hecho y cómo cambia la lectura si es una noticia recirculada?",
-        (
-            "¿Qué impacto concreto tiene para la audiencia en Panamá según datos oficiales y de qué año provienen?"
-            if base.indicators
-            else "¿Qué dato oficial pertinente existe para dimensionar el alcance y de qué período proviene?"
-        ),
-    ]
+    qs = research_questions(base)
     limitations = [
         "Basado únicamente en titular/metadatos.",
         "Las citas verifican estructura, no sustento: requieren revisión humana.",

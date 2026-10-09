@@ -64,16 +64,51 @@ jobs:
         run: |
           npm ci --prefix apps/desktop
           pnpm --dir apps/web install --frozen-lockfile
-      - name: Preparar runtime de escritorio y checkpoint Laya fijado
+      - name: Preparar runtime de escritorio y pipeline Laya calibrada
         shell: pwsh
+        env:
+          HF_HOME: ${{ github.workspace }}/.production/huggingface
         run: |
           uv sync --locked --project apps/desktop
-          uv run --locked --project apps/desktop python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='convaiinnovations/laya', revision='7b928d828b7b0e022f929d9bd2e44165aa270148', allow_patterns=['multilingual/**'])"
+          uv sync --frozen --project pipeline --extra laya
+      - uses: actions/cache@v4
+        with:
+          path: .production/laya-model
+          key: laya-calibrated-${{ hashFiles('eval/prepare_laya_production_model.py', 'eval/finetune_laya.py', 'eval/fit_calibration.py', 'eval/apply_laya_calibration_to_snapshot.py', 'eval/reclassify_laya_snapshot.py', 'eval/run_classification.py', 'eval/aggregate_metrics.py', 'eval/label_provenance.py', 'eval/labels/laya-agent-review-20261007-split.jsonl', 'eval/labels/laya-agent-review-20261007-split.manifest.json', 'data/snapshots/20261007-cfa338b6/manifest.json', 'pipeline/uv.lock', 'pipeline/umbral_pipeline/classify/calibration.py', 'pipeline/umbral_pipeline/classify/laya_clf.py', 'pipeline/umbral_pipeline/refresh.py') }}
+      - name: Preparar o comprobar el artefacto Laya calibrado
+        shell: pwsh
+        env:
+          HF_HOME: ${{ github.workspace }}/.production/huggingface
+        run: |
+          New-Item -ItemType Directory -Path .production -Force | Out-Null
+          uv run --frozen --project pipeline --extra laya python eval/prepare_laya_production_model.py `
+            --snapshot data/snapshots/20261007-cfa338b6 `
+            --labels eval/labels/laya-agent-review-20261007-split.jsonl `
+            --model-dir .production/laya-model `
+            --work-dir .production/laya-work
+      - name: Clasificar el seed de escritorio con el perfil exacto
+        id: desktop_snapshot
+        shell: pwsh
+        env:
+          HF_HOME: ${{ github.workspace }}/.production/huggingface
+          UMBRAL_LAYA_MODEL_DIR: .production/laya-model
+        run: |
+          New-Item -ItemType Directory -Path .production -Force | Out-Null
+          uv run --frozen --project pipeline --extra laya python eval/reclassify_laya_snapshot.py `
+            --snapshot data/snapshots/20261007-cfa338b6 `
+            --model-dir .production/laya-model `
+            --output-data-dir .production/desktop-data `
+            --out .production/desktop-snapshot-receipt.json
+          $receipt = Get-Content .production/desktop-snapshot-receipt.json -Raw | ConvertFrom-Json
+          if (!$receipt.checks.snapshotVerified -or !$receipt.checks.classifierCalibrated -or !$receipt.checks.allPredictionsCalibrated) {
+            throw 'El snapshot inicial de escritorio no quedó verificado con Laya calibrada.'
+          }
+          "snapshot=$($receipt.snapshotPath)" >> $env:GITHUB_OUTPUT
       - name: Compilar y publicar instalador NSIS con updater
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: .\apps\desktop\build.ps1 -Installer -Publish
+        run: .\apps\desktop\build.ps1 -Installer -Publish -Model .production/laya-model -Snapshot "${{ steps.desktop_snapshot.outputs.snapshot }}"
       - name: Adjuntar SHA-256 del instalador a la release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

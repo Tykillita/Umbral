@@ -1,5 +1,6 @@
 import type { WorkspaceCase, WorkspaceExport } from './workspace';
 import type {} from '../desktop';
+import { getConnectorAuthToken } from '../auth';
 import type {
   CaseView,
   DraftEditRequest,
@@ -24,6 +25,16 @@ import type {
   ClaudeConnection,
   SnapshotInfo,
   TopicDetail,
+  NotionExportResponse,
+  NotionStatusResponse,
+  ConnectorProvider,
+  ConnectorAuthorization,
+  ConnectorOverview,
+  ConnectorPage,
+  ConnectorChannel,
+  SlackNotificationPreferences,
+  SlackNotificationResult,
+  SlackShareRequest,
   TopicFilters,
   TopicsResponse,
 } from './types';
@@ -63,6 +74,20 @@ export interface UmbralApi {
   setImpact(topicId: string, body: ImpactRequest): Promise<CaseView>;
   getCase(caseId: string): Promise<CaseView>;
   exportCase(caseId: string): Promise<ExportResponse>;
+  notionStatus?(): Promise<NotionStatusResponse>;
+  exportCaseToNotion?(caseId: string): Promise<NotionExportResponse>;
+  connectorOverview?(): Promise<ConnectorOverview>;
+  startConnector?(provider: ConnectorProvider): Promise<ConnectorAuthorization>;
+  disconnectConnector?(provider: ConnectorProvider): Promise<void>;
+  notionPages?(): Promise<ConnectorPage[]>;
+  chooseNotionDestination?(pageId: string): Promise<void>;
+  exportMarkdownToNotion?(markdown: string): Promise<NotionExportResponse>;
+  slackChannels?(): Promise<ConnectorChannel[]>;
+  chooseSlackChannel?(channelId: string): Promise<void>;
+  slackNotificationPreferences?(): Promise<SlackNotificationPreferences>;
+  saveSlackNotificationPreferences?(value: SlackNotificationPreferences): Promise<void>;
+  shareCaseToSlack?(value: SlackShareRequest): Promise<SlackNotificationResult>;
+  notifySlackReview?(value: SlackShareRequest): Promise<SlackNotificationResult>;
 }
 
 export class ApiError extends Error {
@@ -122,13 +147,13 @@ export class HttpApi implements UmbralApi {
   private async request<T>(
     method: string,
     path: string,
-    opts: { params?: Record<string, string | number | boolean | undefined | null>; body?: unknown; timeoutMs?: number; signal?: AbortSignal } = {},
+    opts: { params?: Record<string, string | number | boolean | undefined | null>; body?: unknown; timeoutMs?: number; signal?: AbortSignal; connectorAuth?: boolean } = {},
   ): Promise<T> {
     const headers: Record<string, string> = { Accept: 'application/json' };
     const desktopToken = typeof window !== 'undefined' ? window.umbralDesktop?.apiToken : null;
     const destination = typeof window !== 'undefined' ? new URL(this.url(path, opts.params), window.location.origin) : null;
     if (desktopToken && destination?.origin === window.location.origin && ['localhost','127.0.0.1','[::1]','::1'].includes(destination.hostname)) headers['x-umbral-desktop-token'] = desktopToken;
-    const token = await this.getToken();
+    const token = opts.connectorAuth ? await getConnectorAuthToken() : await this.getToken();
     if (token) headers.Authorization = `Bearer ${token}`;
     if (opts.body !== undefined) headers['Content-Type'] = 'application/json';
     const ctrl = new AbortController();
@@ -139,14 +164,29 @@ export class HttpApi implements UmbralApi {
     try {
       let res: Response;
       try {
-        res = await fetch(this.url(path, opts.params), {
-          method,
-          redirect: 'error',
-          headers,
-          body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
-          signal: ctrl.signal,
-        });
-      } catch {
+        if (opts.connectorAuth && typeof window !== 'undefined' && window.umbralDesktop?.requestConnector) {
+          if (!token) throw new ApiError(401, { code: 'identidad_requerida', message: 'Se requiere una identidad anónima para conectar servicios.' });
+          const response = await window.umbralDesktop.requestConnector({
+            path,
+            method: method as 'GET' | 'POST' | 'PUT' | 'DELETE',
+            body: opts.body,
+            token,
+          });
+          res = new Response(JSON.stringify(response.body ?? null), {
+            status: response.status,
+            headers: { 'Content-Type': 'application/json', ...(response.retryAfter ? { 'Retry-After': response.retryAfter } : {}) },
+          });
+        } else {
+          res = await fetch(this.url(path, opts.params), {
+            method,
+            redirect: 'error',
+            headers,
+            body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
+            signal: ctrl.signal,
+          });
+        }
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
         throw new ApiError(0, null, 'No se pudo contactar con la API');
       }
       const contentType = res.headers.get('Content-Type') ?? '';
@@ -225,6 +265,7 @@ export class HttpApi implements UmbralApi {
         reviewStatus: f.reviewStatus,
         q: f.q?.trim(),
         includeComponents: true,
+        tvnGap: f.tvnGap || undefined,
       },
     });
   topic = (id: string) => this.request<TopicDetail>('GET', `/topics/${encodeURIComponent(id)}`);
@@ -248,4 +289,18 @@ export class HttpApi implements UmbralApi {
   importWorkspace = (value: unknown) => this.request<{ imported: number }>('POST', '/workspace/import', { body: value });
   savedCases = async () => (await this.exportWorkspace()).cases;
   exportCase = (caseId: string) => this.request<ExportResponse>('GET', `/cases/${encodeURIComponent(caseId)}/export`);
+  notionStatus = () => this.request<NotionStatusResponse>('GET', '/notion/status');
+  exportCaseToNotion = (caseId: string) => this.request<NotionExportResponse>('POST', `/cases/${encodeURIComponent(caseId)}/export/notion`);
+  connectorOverview = () => this.request<ConnectorOverview>('GET', '/connectors', { connectorAuth: true });
+  startConnector = (provider: ConnectorProvider) => this.request<ConnectorAuthorization>('POST', `/connectors/${provider}/start`, { connectorAuth: true });
+  disconnectConnector = async (provider: ConnectorProvider) => { await this.request<{ disconnected: boolean }>('DELETE', `/connectors/${provider}`, { connectorAuth: true }); };
+  notionPages = async () => (await this.request<{ items: ConnectorPage[] }>('GET', '/connectors/notion/pages', { connectorAuth: true })).items;
+  chooseNotionDestination = async (pageId: string) => { await this.request<{ saved: boolean }>('PUT', '/connectors/notion/destination', { body: { pageId }, connectorAuth: true }); };
+  exportMarkdownToNotion = (markdown: string) => this.request<NotionExportResponse>('POST', '/connectors/notion/export', { body: { markdown }, connectorAuth: true, timeoutMs: 30_000 });
+  slackChannels = async () => (await this.request<{ items: ConnectorChannel[] }>('GET', '/connectors/slack/channels', { connectorAuth: true })).items;
+  chooseSlackChannel = async (channelId: string) => { await this.request<{ saved: boolean }>('PUT', '/connectors/slack/channel', { body: { channelId }, connectorAuth: true }); };
+  slackNotificationPreferences = () => this.request<SlackNotificationPreferences>('GET', '/connectors/slack/notifications', { connectorAuth: true });
+  saveSlackNotificationPreferences = async (value: SlackNotificationPreferences) => { await this.request<{ saved: boolean }>('PUT', '/connectors/slack/notifications', { body: value, connectorAuth: true }); };
+  shareCaseToSlack = (value: SlackShareRequest) => this.request<SlackNotificationResult>('POST', '/connectors/slack/share', { body: value, connectorAuth: true, timeoutMs: 20_000 });
+  notifySlackReview = (value: SlackShareRequest) => this.request<SlackNotificationResult>('POST', '/connectors/slack/review-event', { body: value, connectorAuth: true, timeoutMs: 20_000 });
 }

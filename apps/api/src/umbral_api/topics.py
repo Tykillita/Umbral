@@ -26,9 +26,9 @@ from .models import (
     OfficialContext,
     Reporter,
 )
-from .retrieval import fold, stem
+from .retrieval import fold, stem, tokenize
 from .snapshot import Corpus
-from .util import fmt_value
+from .util import fmt_date_pa, fmt_value
 
 MASKED_TITLE = "[texto con instrucciones omitido]"
 HEADLINE_NOTICE = "Basado únicamente en titular/metadatos: no se leyó el artículo completo ni se le atribuyen detalles adicionales."
@@ -112,7 +112,7 @@ def _num(s: str) -> float | None:
     if not s:
         return None
     if "," in s and "." in s:
-        s = s.replace(".", "").replace(",", ".")
+        s = s.replace(",", "") if s.rfind(".") > s.rfind(",") else s.replace(".", "").replace(",", ".")
     elif "," in s:
         s = s.replace(",", ".") if len(s.split(",")[-1]) <= 2 else s.replace(",", "")
     elif s.count(".") > 1 or (s.count(".") == 1 and len(s.split(".")[-1]) == 3):
@@ -121,6 +121,77 @@ def _num(s: str) -> float | None:
         return float(s)
     except ValueError:
         return None
+
+
+_MAGNITUDE = {
+    "transito": "tránsitos diarios", "transit": "tránsitos diarios", "slot": "tránsitos diarios", "cupo": "tránsitos diarios",
+    "buque": "buques", "barco": "buques", "nave": "buques", "vessel": "buques", "ship": "buques",
+    "pie": "pies de calado", "pies": "pies de calado", "feet": "pies de calado", "foot": "pies de calado",
+    "draft": "pies de calado", "calado": "pies de calado",
+    "turista": "turistas", "visitante": "turistas", "tourist": "turistas", "visitor": "turistas",
+    "muerto": "fallecidos", "fallecido": "fallecidos", "dead": "fallecidos", "death": "fallecidos",
+    "herido": "heridos", "injured": "heridos",
+}
+_MAGNITUDE_SOURCE = {"tránsitos diarios": "ACP", "buques": "ACP", "pies de calado": "ACP", "turistas": "ATP / INEC",
+                     "fallecidos": "SINAPROC / MINSA", "heridos": "SINAPROC / MINSA"}
+_NOUN_TO_NUM = re.compile(r"\b([a-záéíóúñ]+)\s+(?:to|a|hasta|of|de)\s+(\d[\d.,]*)", re.IGNORECASE)
+
+
+def numeric_claims(title: str) -> list[tuple[str, float]]:
+    """Magnitudes comparables ES/EN. No interpreta años ni convierte unidades distintas."""
+    out = []
+    pairs = [(m.group(2), m.group(1)) for m in _NUM_NOUN.finditer(title)]
+    pairs += [(m.group(1), m.group(2)) for m in _NOUN_TO_NUM.finditer(title)]
+    for noun, raw in pairs:
+        canon, value = _MAGNITUDE.get(stem(fold(noun))), _num(raw)
+        if canon and value is not None and not re.fullmatch(r"(19|20)\d\d", raw) and (canon, value) not in out:
+            out.append((canon, value))
+    return out
+
+
+def _same_subject(first: EvidenceArticle, second: EvidenceArticle) -> bool:
+    if first.cluster_id and first.cluster_id == second.cluster_id:
+        return True
+    generic = set(_MAGNITUDE) | {"daily", "maximum", "increase", "aumenta", "nuevo", "nueva", "report", "reporte"}
+    def words(article: EvidenceArticle) -> set[str]:
+        return {t for t in tokenize(article.title) if not t[0].isdigit() and t not in generic}
+    return len(words(first) & words(second)) >= 2
+
+
+def cross_contradictions(arts: list[EvidenceArticle], *, window_days: int = 45) -> list[Contradiction]:
+    """Candidatos numéricos entre temas relacionados; conserva ambas fuentes y advierte posibles actualizaciones."""
+    by_magnitude: dict[str, list[tuple[EvidenceArticle, float]]] = {}
+    for article in {a.id: a for a in arts if not a.suspicious_instructions}.values():
+        for magnitude, value in numeric_claims(article.title):
+            by_magnitude.setdefault(magnitude, []).append((article, value))
+    out = []
+    for magnitude, claims in sorted(by_magnitude.items()):
+        pairs = set()
+        selected: dict[str, tuple[EvidenceArticle, float]] = {}
+        for index, (first, value) in enumerate(claims):
+            for second, other in claims[index + 1:]:
+                first_date, second_date = first.published_at or first.detected_at, second.published_at or second.detected_at
+                if (first.id == second.id or value == other or not _same_subject(first, second)
+                        or (first_date and second_date and abs((first_date - second_date).total_seconds()) > window_days * 86400)):
+                    continue
+                pairs.add(tuple(sorted((first.id, second.id))))
+                selected[first.id], selected[second.id] = (first, value), (second, other)
+        # Un candidato se emite por par: evita unir momentos diferentes a través de una tercera noticia.
+        for first_id, second_id in sorted(pairs):
+            versions = []
+            parts = []
+            for aid in (first_id, second_id):
+                article, value = selected[aid]
+                when = article.published_at or article.detected_at
+                basis = "publicado" if article.published_at else "detectado"
+                parts.append(f"{fmt_value(value)} ({article.outlet}, {basis} {fmt_date_pa(when)})")
+                versions.append(ContradictionVersion(evidence_id=aid, statement=article.title, scope="titular/metadatos",
+                                outlet=article.outlet, published_at=article.published_at, detected_at=article.detected_at, url=article.url))
+            source = _MAGNITUDE_SOURCE[magnitude]
+            out.append(Contradiction(id=f"cruce:{first_id}:{second_id}:{fold(magnitude).replace(' ', '_')}",
+                       description=f"Cifras distintas para «{magnitude}»: {' vs '.join(parts)}. No se elige una versión; puede ser una actualización.",
+                       versions=versions, pending_verification=f"Confirmar con {source} cuál cifra está vigente y desde qué fecha."))
+    return out
 
 
 def detect_contradictions(
@@ -132,6 +203,9 @@ def detect_contradictions(
         if a.suspicious_instructions:
             continue
         seen_here: set[tuple[str, float]] = set()
+        for magnitude, value in numeric_claims(a.title):
+            seen_here.add((magnitude, value))
+            by_noun.setdefault(magnitude, {}).setdefault(value, []).append(a)
         for m in _NUM_NOUN.finditer(a.title):
             val = _num(m.group(1))
             noun = fold(m.group(2))
@@ -139,7 +213,7 @@ def detect_contradictions(
                 continue
             if re.fullmatch(r"(19|20)\d\d", m.group(1)) and noun not in {"%"}:
                 continue  # años
-            noun = stem(noun)
+            noun = _MAGNITUDE.get(stem(noun), stem(noun))
             if (noun, val) in seen_here:
                 continue
             seen_here.add((noun, val))
@@ -158,6 +232,8 @@ def detect_contradictions(
                         scope="titular/metadatos",
                         outlet=a.outlet,
                         published_at=a.published_at,
+                        detected_at=a.detected_at,
+                        url=a.url,
                     )
                 )
         shown = ", ".join(f"{v:g}" for v in sorted(values))
@@ -175,10 +251,11 @@ def detect_contradictions(
     if not out and flagged:
         versions = [
             ContradictionVersion(
-                evidence_id=a.id, statement=a.title, scope="titular/metadatos", outlet=a.outlet, published_at=a.published_at
+                evidence_id=a.id, statement=a.title, scope="titular/metadatos", outlet=a.outlet, published_at=a.published_at,
+                detected_at=a.detected_at, url=a.url
             )
             for a in arts
-            if not a.suspicious_instructions and (not candidate_ids or a.id in candidate_ids)
+            if not a.suspicious_instructions
         ]
         out.append(
             Contradiction(
@@ -261,7 +338,7 @@ def _status(
     return EvidenceStatus.parcial, "Hay algo de respaldo, pero persisten vacíos (ver lista) antes de considerarla suficiente."
 
 
-def build_topic(corpus: Corpus, cluster: dict) -> TopicBase | None:
+def build_topic(corpus: Corpus, cluster: dict, *, cross_candidates: list[Contradiction] | None = None) -> TopicBase | None:
     arts = [corpus.articles[i] for i in cluster.get("memberArticleIds", []) if i in corpus.articles]
     if not arts:
         return None
@@ -315,9 +392,14 @@ def build_topic(corpus: Corpus, cluster: dict) -> TopicBase | None:
     primary_ids = [p.id for p in ind_points if not p.is_missing]  # contexto oficial vinculado por tema (NO fuente primaria)
     official_context = bool(primary_ids)
 
-    contradictions = detect_contradictions(
-        cluster["clusterId"], arts, bool(cluster.get("hasContradictionCandidate")), cluster.get("contradictionCandidateIds")
-    )
+    candidate_arts = [corpus.articles[aid] for aid in cluster.get("contradictionCandidateIds", []) if aid in corpus.articles]
+    contradictions = detect_contradictions(cluster["clusterId"], arts + candidate_arts,
+                         bool(cluster.get("hasContradictionCandidate")), cluster.get("contradictionCandidateIds"))
+    cross = cross_candidates if cross_candidates is not None else cross_contradictions(list(corpus.articles.values()))
+    own_ids = {a.id for a in arts}
+    cross = [candidate for candidate in cross if any(v.evidence_id in own_ids for v in candidate.versions)
+             and any(v.evidence_id not in own_ids for v in candidate.versions)]
+    contradictions.extend(cross)
     suspicious_ids = [a.id for a in arts if a.suspicious_instructions]
 
     is_recirc = bool(cluster.get("isRecirculation"))

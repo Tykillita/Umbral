@@ -72,6 +72,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/cases/{case_id}/export/notion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Crear una subpágina nueva en Notion con el Markdown vigente de la ficha
+         * @description Solo localhost con auth local. La página padre no se modifica. La solicitud no acepta contenido: el Markdown se genera en el backend a partir de la ficha actual y la llamada externa solo ocurre al invocar este POST.
+         */
+        post: operations["export_case_to_notion_api_v1_cases__case_id__export_notion_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/cases/{case_id}/review": {
         parameters: {
             query?: never;
@@ -242,6 +262,211 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/connectors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consultar el estado de Notion y Slack para la identidad anónima actual */
+        get: operations["connector_overview_api_v1_connectors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/notion/destination": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Notion Destination */
+        put: operations["notion_destination_api_v1_connectors_notion_destination_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/notion/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export Markdown To Notion */
+        post: operations["export_markdown_to_notion_api_v1_connectors_notion_export_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/notion/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Notion Pages */
+        get: operations["notion_pages_api_v1_connectors_notion_pages_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/slack/channel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Slack Channel */
+        put: operations["slack_channel_api_v1_connectors_slack_channel_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/slack/channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Slack Channels */
+        get: operations["slack_channels_api_v1_connectors_slack_channels_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/slack/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Slack Notification Preferences */
+        get: operations["slack_notification_preferences_api_v1_connectors_slack_notifications_get"];
+        /** Save Slack Notification Preferences */
+        put: operations["save_slack_notification_preferences_api_v1_connectors_slack_notifications_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/slack/review-event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Notify Slack Review */
+        post: operations["notify_slack_review_api_v1_connectors_slack_review_event_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/slack/share": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Share Case To Slack */
+        post: operations["share_case_to_slack_api_v1_connectors_slack_share_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/{provider}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revocar y borrar las credenciales del conector de la identidad actual */
+        delete: operations["connector_disconnect_api_v1_connectors__provider__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/{provider}/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Completar el callback OAuth de Notion o Slack sin mostrar tokens */
+        get: operations["connector_callback_api_v1_connectors__provider__callback_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/connectors/{provider}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Iniciar la autorización OAuth de Notion o Slack */
+        post: operations["connector_start_api_v1_connectors__provider__start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/health": {
         parameters: {
             query?: never;
@@ -251,6 +476,23 @@ export interface paths {
         };
         /** Estado y versión de datos */
         get: operations["health_api_v1_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/notion/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Indicar si Notion está configurado para exportar (solo localhost) */
+        get: operations["notion_status_api_v1_notion_status_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -571,6 +813,12 @@ export interface components {
              * @enum {string}
              */
             scope: "in_scope" | "all";
+            /**
+             * Tvngap
+             * @description Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual.
+             * @default false
+             */
+            tvnGap: boolean;
         };
         /**
          * AnswerStatus
@@ -945,6 +1193,69 @@ export interface components {
             /** Reason */
             reason: string | null;
         };
+        /** ConnectorDestinationRequest */
+        ConnectorDestinationRequest: {
+            /** Pageid */
+            pageId: string;
+        };
+        /** ConnectorDisconnectedResponse */
+        ConnectorDisconnectedResponse: {
+            /** Disconnected */
+            disconnected: boolean;
+        };
+        /** ConnectorOverviewResponse */
+        ConnectorOverviewResponse: {
+            /** Configured */
+            configured: boolean;
+            providers: components["schemas"]["ConnectorProviderStates"];
+            slackNotifications: components["schemas"]["SlackNotificationState"];
+        };
+        /** ConnectorPage */
+        ConnectorPage: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /** ConnectorPagesResponse */
+        ConnectorPagesResponse: {
+            /** Items */
+            items: components["schemas"]["ConnectorPage"][];
+        };
+        /** ConnectorProviderState */
+        ConnectorProviderState: {
+            /** Available */
+            available: boolean;
+            /** Channelid */
+            channelId: string | null;
+            /** Channelname */
+            channelName: string | null;
+            /** Connected */
+            connected: boolean;
+            /** Destinationid */
+            destinationId: string | null;
+            /** Destinationtitle */
+            destinationTitle: string | null;
+            /** Workspacename */
+            workspaceName: string | null;
+        };
+        /** ConnectorProviderStates */
+        ConnectorProviderStates: {
+            notion: components["schemas"]["ConnectorProviderState"];
+            slack: components["schemas"]["ConnectorProviderState"];
+        };
+        /** ConnectorSavedResponse */
+        ConnectorSavedResponse: {
+            /** Saved */
+            saved: boolean;
+        };
+        /** ConnectorStartResponse */
+        ConnectorStartResponse: {
+            /** Authorizationurl */
+            authorizationUrl: string;
+        };
         /** Contradiction */
         "Contradiction-Input": {
             /** Description */
@@ -979,6 +1290,8 @@ export interface components {
         };
         /** ContradictionVersion */
         "ContradictionVersion-Input": {
+            /** Detectedat */
+            detectedAt?: string | null;
             /** Evidenceid */
             evidenceId: string;
             /** Outlet */
@@ -989,9 +1302,13 @@ export interface components {
             scope: string;
             /** Statement */
             statement: string;
+            /** Url */
+            url?: string | null;
         };
         /** ContradictionVersion */
         "ContradictionVersion-Output": {
+            /** Detectedat */
+            detectedAt: string | null;
             /** Evidenceid */
             evidenceId: string;
             /** Outlet */
@@ -1002,6 +1319,8 @@ export interface components {
             scope: string;
             /** Statement */
             statement: string;
+            /** Url */
+            url: string | null;
         };
         /**
          * DataMode
@@ -1160,7 +1479,7 @@ export interface components {
             researchQuestions: string[];
             /**
              * Script
-             * @description Guion estimado 45-60 s (≈112-150 palabras)
+             * @description Texto separado bajo GUION y NOTAS DE PRODUCCIÓN; solo GUION se estima a 45-60 s (≈112-150 palabras)
              */
             script: string;
             /**
@@ -1200,7 +1519,7 @@ export interface components {
             researchQuestions: string[];
             /**
              * Script
-             * @description Guion estimado 45-60 s (≈112-150 palabras)
+             * @description Texto separado bajo GUION y NOTAS DE PRODUCCIÓN; solo GUION se estima a 45-60 s (≈112-150 palabras)
              */
             script: string;
             /**
@@ -1598,6 +1917,11 @@ export interface components {
          * @enum {string}
          */
         GeoRelevance: "panama" | "regional" | "none" | "indeterminate";
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthResponse */
         HealthResponse: {
             /** Apiversion */
@@ -1848,6 +2172,28 @@ export interface components {
             /** Selectedmodel */
             selectedModel: string | null;
         };
+        /** NotionExportResponse */
+        NotionExportResponse: {
+            /** Pageid */
+            pageId: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /** NotionMarkdownRequest */
+        NotionMarkdownRequest: {
+            /** Markdown */
+            markdown: string;
+        };
+        /**
+         * NotionStatusResponse
+         * @description Estado booleano de configuración; nunca expone valores de configuración.
+         */
+        NotionStatusResponse: {
+            /** Configured */
+            configured: boolean;
+        };
         /** OfficialContext */
         "OfficialContext-Input": {
             /** Indicators */
@@ -2074,12 +2420,30 @@ export interface components {
             fuzzy: number;
             /** Kind */
             kind: string;
+            /**
+             * Literalcoverage
+             * @description Cobertura literal del propio documento; no se hereda del ancla semántica
+             * @default 0
+             */
+            literalCoverage: number;
             /** Outlet */
             outlet: string | null;
             /** Publishedat */
             publishedAt: string | null;
             /** Relevance */
             relevance: number;
+            /**
+             * Retrievalorigin
+             * @description lexical, semantic_neighbor, lexical+semantic_neighbor o usgs_catalog
+             * @default lexical
+             */
+            retrievalOrigin: string;
+            /** Rrfscore */
+            rrfScore: number | null;
+            /** Semanticanchorid */
+            semanticAnchorId: string | null;
+            /** Semanticsimilarity */
+            semanticSimilarity: number | null;
             /** Snippet */
             snippet: string;
             /**
@@ -2096,7 +2460,7 @@ export interface components {
          * QueryIntent
          * @enum {string}
          */
-        QueryIntent: "agenda" | "contexto_economico" | "verificaciones" | "busqueda";
+        QueryIntent: "agenda" | "contexto_economico" | "verificaciones" | "busqueda" | "eventos_sismicos" | "resumen_periodo";
         /** QueryRequest */
         QueryRequest: {
             /** @description `followUpContext` de la respuesta anterior; sin él cada pregunta es independiente */
@@ -2185,6 +2549,15 @@ export interface components {
              * @default bm25+rapidfuzz
              */
             method: string;
+            /** Rrfk */
+            rrfK: number | null;
+            /**
+             * Semanticexpansion
+             * @default false
+             */
+            semanticExpansion: boolean;
+            /** Semanticmodel */
+            semanticModel: string | null;
             /** Tookms */
             tookMs: number;
         };
@@ -2421,6 +2794,83 @@ export interface components {
             total: number;
             /** Urgencytiebreak */
             urgencyTiebreak: number;
+        };
+        /** SlackChannel */
+        SlackChannel: {
+            /** Id */
+            id: string;
+            /** Isprivate */
+            isPrivate: boolean;
+            /** Name */
+            name: string;
+        };
+        /** SlackChannelChoice */
+        SlackChannelChoice: {
+            /** Channelid */
+            channelId: string;
+        };
+        /** SlackChannelsResponse */
+        SlackChannelsResponse: {
+            /** Items */
+            items: components["schemas"]["SlackChannel"][];
+        };
+        /** SlackNotificationPreferencesRequest */
+        SlackNotificationPreferencesRequest: {
+            /** Channelid */
+            channelId?: string | null;
+            /**
+             * Enabled
+             * @default false
+             */
+            enabled: boolean;
+            /** Statuses */
+            statuses?: components["schemas"]["ReviewStatus"][];
+        };
+        /** SlackNotificationPreferencesResponse */
+        SlackNotificationPreferencesResponse: {
+            /** Channelid */
+            channelId: string | null;
+            /**
+             * Enabled
+             * @default false
+             */
+            enabled: boolean;
+            /** Statuses */
+            statuses: components["schemas"]["ReviewStatus"][];
+        };
+        /** SlackNotificationResult */
+        SlackNotificationResult: {
+            /** Duplicate */
+            duplicate: boolean;
+            /** Sent */
+            sent: boolean;
+            /** Skippedreason */
+            skippedReason: string | null;
+        };
+        /** SlackNotificationState */
+        SlackNotificationState: {
+            /**
+             * Enabled
+             * @default false
+             */
+            enabled: boolean;
+            /** Statuses */
+            statuses: components["schemas"]["ReviewStatus"][];
+        };
+        /** SlackShareRequest */
+        SlackShareRequest: {
+            /** Caseid */
+            caseId: string;
+            /** Caseversion */
+            caseVersion: number;
+            /** Eventid */
+            eventId: string;
+            fromStatus?: components["schemas"]["ReviewStatus"] | null;
+            /** Snapshotid */
+            snapshotId: string;
+            status: components["schemas"]["ReviewStatus"];
+            /** Title */
+            title: string;
         };
         /** SnapshotInfoResponse */
         SnapshotInfoResponse: {
@@ -2743,6 +3193,19 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** ValidationError */
+        ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+        };
         /** ValidationIssue */
         "ValidationIssue-Input": {
             /** Claimid */
@@ -2929,7 +3392,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ConnectionsResponse"];
+                    "text/html": string;
                 };
             };
             /** @description No autenticado */
@@ -2938,7 +3401,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "text/html": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Prohibido (p. ej. adaptador solo localhost) */
@@ -2947,7 +3410,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "text/html": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description No encontrado */
@@ -2956,7 +3419,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "text/html": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Conflicto de versión (control optimista) */
@@ -2965,7 +3428,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "text/html": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description No procesable / transición inválida */
@@ -2974,7 +3437,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "text/html": components["schemas"]["ErrorResponse"];
                 };
             };
             /** @description Límite por usuario excedido */
@@ -2983,7 +3446,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
+                    "text/html": components["schemas"]["ErrorResponse"];
                 };
             };
         };
@@ -3214,6 +3677,91 @@ export interface operations {
             };
             /** @description Límite por usuario excedido */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_case_to_notion_api_v1_cases__case_id__export_notion_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                case_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotionExportResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Notion no está configurado o no pudo completar la exportación */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3983,6 +4531,975 @@ export interface operations {
             };
         };
     };
+    connector_overview_api_v1_connectors_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorOverviewResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    notion_destination_api_v1_connectors_notion_destination_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConnectorDestinationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorSavedResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_markdown_to_notion_api_v1_connectors_notion_export_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotionMarkdownRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotionExportResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Notion no está configurado o no pudo completar la exportación */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    notion_pages_api_v1_connectors_notion_pages_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorPagesResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    slack_channel_api_v1_connectors_slack_channel_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SlackChannelChoice"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorSavedResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    slack_channels_api_v1_connectors_slack_channels_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SlackChannelsResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    slack_notification_preferences_api_v1_connectors_slack_notifications_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SlackNotificationPreferencesResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    save_slack_notification_preferences_api_v1_connectors_slack_notifications_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SlackNotificationPreferencesRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorSavedResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    notify_slack_review_api_v1_connectors_slack_review_event_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SlackShareRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SlackNotificationResult"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    share_case_to_slack_api_v1_connectors_slack_share_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SlackShareRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SlackNotificationResult"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    connector_disconnect_api_v1_connectors__provider__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorDisconnectedResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    connector_callback_api_v1_connectors__provider__callback_get: {
+        parameters: {
+            query: {
+                state: string;
+                code?: string | null;
+                error?: string | null;
+            };
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    connector_start_api_v1_connectors__provider__start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectorStartResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conector no configurado */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     health_api_v1_health_get: {
         parameters: {
             query?: never;
@@ -3999,6 +5516,80 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    notion_status_api_v1_notion_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotionStatusResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };
@@ -4762,6 +6353,8 @@ export interface operations {
                 /** @description Búsqueda libre (BM25 + RapidFuzz) sobre los temas */
                 q?: string | null;
                 includeComponents?: boolean;
+                /** @description Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual. */
+                tvnGap?: boolean;
                 /** @description in_scope (defecto): excluye temas de categoría indeterminada (fuera del alcance temático); all: los incluye. La respuesta trae outOfScopeCount. */
                 scope?: string;
             };

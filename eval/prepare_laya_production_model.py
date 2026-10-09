@@ -95,6 +95,15 @@ def _load_inputs(snapshot: Path, labels: Path) -> tuple[dict, dict[str, list[str
     return base_manifest, split_lines, split_hashes, labels_sha
 
 
+def _require_runtime_layout(model_dir: Path) -> None:
+    required = (model_dir / "rl_agent_config.json", model_dir / "tokenizer" / "tokenizer.json",
+                model_dir / "encoder" / "config.json")
+    missing = [path.relative_to(model_dir).as_posix()
+               for path in required if not path.is_file() or path.is_symlink()]
+    if missing:
+        raise ValueError("El artefacto Laya está incompleto; faltan archivos de runtime: " + ", ".join(missing))
+
+
 def _artifact_state(model_dir: Path, base_manifest: dict, split_hashes: dict[str, str],
                     labels_sha: str) -> dict:
     metadata_path = model_dir / "umbral-model.json"
@@ -103,6 +112,7 @@ def _artifact_state(model_dir: Path, base_manifest: dict, split_hashes: dict[str
     if model_dir.is_symlink() or not all(p.is_file() and not p.is_symlink() for p in
                                          (metadata_path, weights, profile_path)):
         raise ValueError("El artefacto Laya debe incluir metadatos, pesos y perfil de calibración locales.")
+    _require_runtime_layout(model_dir)
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     model_version = resolve_model_version(model_dir, "")
     weights_sha = sha256_file(weights)

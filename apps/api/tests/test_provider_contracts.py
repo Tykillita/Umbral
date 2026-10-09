@@ -23,6 +23,13 @@ from umbral_api.providers import (
 PROMPT = '<evidencia>{"evidence":[{"evidence_id":"art_1","fields":{"title":"Titular de prueba","outlet":"Medio"}}]}</evidencia>'
 
 
+@pytest.fixture(autouse=True)
+def isolate_connection_store(tmp_path, monkeypatch):
+    import umbral_api.connections as connections
+
+    monkeypatch.setattr(connections, "repo_root", lambda: tmp_path / "workspace")
+
+
 def sse(*events):
     return "".join("data: " + json.dumps(e) + "\n\n" for e in events)
 
@@ -63,7 +70,8 @@ def test_chatgpt_oauth_transport_uses_required_stream_contract(tmp_path, monkeyp
 
     original_stream = httpx.stream
     monkeypatch.setattr(httpx, "stream", lambda *a, **kw: httpx.Client(transport=httpx.MockTransport(respond)).stream(*a, **kw))
-    result = ChatGPTProvider(Settings(chatgpt_token_file=token_path, chatgpt_model="account-model")).generate("sistema", PROMPT)
+    result = ChatGPTProvider(Settings(chatgpt_token_file=token_path, chatgpt_model="account-model",
+                                    chatgpt_credentials_file=tmp_path / "credentials.dat")).generate("sistema", PROMPT)
     assert result.output == output
     body = captured[0]
     assert body["store"] is False and body["stream"] is True
@@ -79,7 +87,8 @@ def test_chatgpt_rejects_missing_permission_or_expired_tokens(tmp_path, monkeypa
     monkeypatch.setattr(providers, "repo_root", lambda: tmp_path / "workspace")
     path = tmp_path / "tokens.json"
     path.write_text(json.dumps(saved))
-    assert not ChatGPTProvider(Settings(chatgpt_token_file=path, chatgpt_model="model")).status().available
+    assert not ChatGPTProvider(Settings(chatgpt_token_file=path, chatgpt_model="model",
+                                        chatgpt_credentials_file=tmp_path / "credentials.dat")).status().available
 
 
 def test_chatgpt_rejects_token_file_inside_workspace(tmp_path, monkeypatch):
@@ -88,7 +97,8 @@ def test_chatgpt_rejects_token_file_inside_workspace(tmp_path, monkeypatch):
     monkeypatch.setattr(providers, "repo_root", lambda: tmp_path)
     path = tmp_path / "tokens.json"
     path.write_text(json.dumps({"access_token": "synthetic", "scope": "chatgpt.tokens.use.direct"}))
-    assert not ChatGPTProvider(Settings(chatgpt_token_file=path)).status().available
+    assert not ChatGPTProvider(Settings(chatgpt_token_file=path,
+                                        chatgpt_credentials_file=tmp_path / "credentials.dat")).status().available
 
 
 def test_claude_uses_schema_and_disables_tools_without_invoking_cli(monkeypatch):

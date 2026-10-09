@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, type ComponentType, type ReactNode, type SVGProps } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, type ComponentType, type ReactNode, type SVGProps } from 'react';
 import {
   Ban,
   BadgeCheck,
@@ -20,6 +20,7 @@ import { BAND_SHORT, EVIDENCE_LABEL, GENERATION_LABEL, REVIEW_LABEL } from '../.
 import { ApiError, describeError } from '../../lib/api/client';
 import { Tooltip } from './controls';
 import { cancelMotion, scheduleNotice } from '../../lib/motion';
+import { useWarningRegistry } from './warnings';
 
 type Icon = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>;
 export type Tone = 'neutral' | 'ok' | 'warn' | 'bad' | 'info' | 'amber';
@@ -27,10 +28,10 @@ export type Tone = 'neutral' | 'ok' | 'warn' | 'bad' | 'info' | 'amber';
 const TONE: Record<Tone, string> = {
   neutral: 'bg-sunk text-ink-2 border-rule-strong',
   ok: 'bg-ok-bg text-ok border-ok/40',
-  warn: 'bg-warn-bg text-warn border-amber-500/50',
+  warn: 'bg-warn-bg text-warn border-warn/50',
   bad: 'bg-bad-bg text-bad border-bad/40',
   info: 'bg-info-bg text-info border-info/40',
-  amber: 'bg-amber-100 text-amber-700 border-amber-500/60',
+  amber: 'bg-warn-bg text-warn border-warn/60',
 };
 
 export function Pill({
@@ -163,6 +164,20 @@ export function Notice({
 } & Record<`data-${string}`, string | undefined>) {
   const Ico: Icon = icon ?? (tone === 'bad' ? CircleX : tone === 'warn' || tone === 'amber' ? TriangleAlert : tone === 'ok' ? CircleCheck : Info);
   const ref = useNoticeMotion<HTMLDivElement>(tone, animate, stamp);
+  const warningRegistry = useWarningRegistry();
+  const warningId = useId();
+  const isWarning = tone === 'warn' || tone === 'amber';
+
+  useEffect(() => {
+    if (!warningRegistry || !isWarning) return;
+    return () => warningRegistry.unregister(warningId);
+  }, [warningRegistry, warningId, isWarning]);
+  useEffect(() => {
+    if (!warningRegistry || !isWarning) return;
+    warningRegistry.register({ id: warningId, tone, title, children, icon: Ico, role, testId });
+  }, [warningRegistry, warningId, isWarning, tone, title, children, Ico, role, testId]);
+
+  if (warningRegistry && isWarning) return null;
   return (
     <div
       ref={ref}

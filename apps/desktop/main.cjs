@@ -7,7 +7,7 @@ const path = require('node:path');
 const readline = require('node:readline');
 const { pathToFileURL } = require('node:url');
 const { autoUpdater } = require('electron-updater');
-const { sameOrigin, canOpenExternal, assertSender, assertChromeSender } = require('./security.cjs');
+const { sameOrigin, canOpenExternal, isChatGPTAuthUrl, publicConnectorApiOrigin, isConnectorRequestPath, assertSender, assertChromeSender } = require('./security.cjs');
 const { readMotionPreference, saveMotionPreference } = require('./motion-preference.cjs');
 const { createUpdateManager } = require('./update-manager.cjs');
 
@@ -68,7 +68,26 @@ const windowActions = {
   state: () => {},
 };
 const motionPreferenceFile = path.join(dataDir, 'motion-preference.json');
-const updateManager = createUpdateManager({ app, autoUpdater,
+async function resolvePublicConnectorApiOrigin() {
+  const configured = process.env.UMBRAL_DESKTOP_PUBLIC_API_URL || bundle.publicApiUrl;
+  if (configured) {
+    const configuredOrigin = publicConnectorApiOrigin(configured);
+    if (configuredOrigin) return configuredOrigin;
+    throw new Error('La dirección de la API pública no es válida.');
+  }
+  let configUrl;
+  try { configUrl = new URL(bundle.publicConfigUrl); } catch { throw new Error('Falta la dirección de configuración pública.'); }
+  if (configUrl.href !== 'https://site-umbral.web.app/public-config.json') throw new Error('La configuración pública no procede del origen esperado.');
+  const response = await fetch(configUrl, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(8000) });
+  if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('No se pudo leer la configuración pública de Umbral.');
+  let value;
+  try { value = await response.json(); } catch { throw new Error('La configuración pública de Umbral no es válida.'); }
+  if (!value || value.schemaVersion !== 1 || typeof value.apiUrl !== 'string') throw new Error('La configuración pública de Umbral no declara una API válida.');
+  const configuredOrigin = publicConnectorApiOrigin(value.apiUrl);
+  if (!configuredOrigin) throw new Error('La API pública debe usar HTTPS en un servicio Render configurado.');
+  return configuredOrigin;
+}
+const updateManager = createUpdateManager({ app, autoUpdater, preferenceFile: path.join(dataDir, 'update-preference.json'),
   publishState: (state) => { if (window && !window.isDestroyed()) window.webContents.send('umbral:update:state', state); } });
 function setupIpc() {
   // The comic title bar replaces the native frame; only the main frame of the app or startup page may drive the window.
@@ -88,6 +107,31 @@ function setupIpc() {
     assertSender(event, window, origin);
     return saveMotionPreference(motionPreferenceFile, preference);
   });
+  ipcMain.handle('umbral:open-chatgpt-auth', (event, url) => {
+    assertSender(event, window, origin);
+    if (!isChatGPTAuthUrl(url)) throw new Error('Dirección de inicio de sesión no válida.');
+    return shell.openExternal(url);
+  });
+  ipcMain.handle('umbral:connector-request', async (event, request) => {
+    assertSender(event, window, origin);
+    if (!request || !isConnectorRequestPath(request.path) || !['GET', 'POST', 'PUT', 'DELETE'].includes(request.method) ||
+        typeof request.token !== 'string' || request.token.length < 40 || request.token.length > 8192) {
+      throw new Error('Solicitud de conector no válida.');
+    }
+    const body = request.body === undefined ? undefined : JSON.stringify(request.body);
+    if (body && Buffer.byteLength(body, 'utf8') > 120_000) throw new Error('La solicitud del conector supera el límite permitido.');
+    const apiOrigin = await resolvePublicConnectorApiOrigin();
+    const response = await fetch(`${apiOrigin}/api/v1${request.path}`, {
+      method: request.method,
+      redirect: 'error',
+      headers: { Accept: 'application/json', Authorization: `Bearer ${request.token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      body,
+      signal: AbortSignal.timeout(30_000),
+    });
+    let responseBody = null;
+    try { responseBody = await response.json(); } catch { throw new Error('La API del conector devolvió una respuesta no válida.'); }
+    return { status: response.status, body: responseBody, retryAfter: response.headers.get('retry-after') };
+  });
   ipcMain.handle('umbral:update:state', (event) => {
     assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
     return updateManager.getState();
@@ -100,9 +144,23 @@ function setupIpc() {
     assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
     return updateManager.install();
   });
+  ipcMain.handle('umbral:update:now', (event) => {
+    assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+    return updateManager.updateNow();
+  });
+  ipcMain.on('umbral:update:preference:get', (event) => {
+    try {
+      assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+      event.returnValue = updateManager.isEnabled();
+    } catch { event.returnValue = true; }
+  });
+  ipcMain.handle('umbral:update:preference:set', (event, enabled) => {
+    assertChromeSender(event, window, origin, pathToFileURL(startupFile).href);
+    return updateManager.setEnabled(enabled === true);
+  });
   ipcMain.on('umbral:configuration', (event) => {
-    try { assertSender(event, window, origin); event.returnValue = { version: app.getVersion(), apiToken: token }; }
-    catch { event.returnValue = { version: app.getVersion(), apiToken: '' }; }
+    try { assertSender(event, window, origin); event.returnValue = { version: app.getVersion(), apiToken: token, firebaseConfig: bundle.firebaseConfig || null }; }
+    catch { event.returnValue = { version: app.getVersion(), apiToken: '', firebaseConfig: null }; }
   });
   for (const [channel, endpoint, method] of [['status', 'status', 'GET'], ['reclassify', 'reclassify', 'POST'], ['update', 'update', 'POST']]) {
     ipcMain.handle(`umbral:${channel}`, (event) => { assertSender(event, window, origin); return request(endpoint, method); });
@@ -143,16 +201,42 @@ app.whenReady().then(async () => {
     origin = await startSidecar();
     session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
     session.defaultSession.setPermissionCheckHandler(() => false);
-    session.defaultSession.on('will-download', (_event, item) => {
+    session.defaultSession.on('will-download', (_event, item, downloadContents) => {
       const directory = process.env.UMBRAL_DESKTOP_SMOKE === '1' ? path.join(dataDir, 'exports') : app.getPath('downloads');
       mkdirSync(directory, { recursive: true });
       const safeName = path.basename(item.getFilename()).replace(/[^\p{L}\p{N}._-]/gu, '_');
-      item.setSavePath(path.join(directory, `${Date.now()}-${safeName}`));
+      const downloadName = `${Date.now()}-${safeName}`;
+      item.setSavePath(path.join(directory, downloadName));
+      if (downloadContents !== window.webContents || !safeName.toLowerCase().endsWith('.md')) return;
+      const report = (status, percent) => {
+        if (!window || window.isDestroyed()) return;
+        window.webContents.send('umbral:download-status', { filename: downloadName, status, percent });
+      };
+      const percent = () => {
+        const total = item.getTotalBytes();
+        return total > 0 ? Math.max(0, Math.min(100, Math.round(item.getReceivedBytes() * 100 / total))) : null;
+      };
+      let lastPercent = 0;
+      let lastProgressAt = Date.now();
+      report('started', 0);
+      item.on('updated', (_downloadEvent, state) => {
+        if (state !== 'progressing') return;
+        const current = percent();
+        const now = Date.now();
+        if (current == null ? now - lastProgressAt >= 700 : current - lastPercent >= 5 || now - lastProgressAt >= 1_000) {
+          if (current != null) lastPercent = current;
+          lastProgressAt = now;
+          report('progress', current);
+        }
+      });
+      item.once('done', (_downloadEvent, state) => {
+        report(state === 'completed' ? 'completed' : 'error', state === 'completed' ? 100 : percent());
+      });
     });
     window.webContents.on('will-navigate', (event, url) => { if (!sameOrigin(url, origin)) event.preventDefault(); });
     window.webContents.setWindowOpenHandler(({ url }) => { if (canOpenExternal(url)) void shell.openExternal(url); return { action: 'deny' }; });
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => callback({ responseHeaders: {
-      ...details.responseHeaders, 'Content-Security-Policy': [`default-src 'self'; script-src 'self' ${(bundle.inlineScriptHashes || []).join(' ')}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'`] } }));
+      ...details.responseHeaders, 'Content-Security-Policy': [`default-src 'self'; script-src 'self' ${(bundle.inlineScriptHashes || []).join(' ')}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebaseinstallations.googleapis.com; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'`] } }));
     // The app redirects / to /app; Chromium reports the superseded first navigation as ERR_ABORTED, which is not a failure.
     await window.loadURL(origin).catch((error) => { if (!String(error && error.message).includes('ERR_ABORTED')) throw error; });
     let previousStatus = '';

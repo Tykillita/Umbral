@@ -164,6 +164,8 @@ class QueryIntent(StrEnum):
     contexto_economico = "contexto_economico"
     verificaciones = "verificaciones"
     busqueda = "busqueda"
+    eventos_sismicos = "eventos_sismicos"
+    resumen_periodo = "resumen_periodo"
 
 
 # --------------------------------------------------------------------------- evidencia
@@ -305,6 +307,8 @@ class ContradictionVersion(ApiModel):
     scope: str
     outlet: str
     published_at: datetime | None = None
+    detected_at: datetime | None = None
+    url: str | None = None
 
 
 class Contradiction(ApiModel):
@@ -482,6 +486,11 @@ class QueryHit(ApiModel):
     relevance: float
     cluster_id: str | None = None
     suspicious_instructions: bool = False
+    retrieval_origin: str = Field("lexical", description="lexical, semantic_neighbor, lexical+semantic_neighbor o usgs_catalog")
+    semantic_similarity: float | None = None
+    semantic_anchor_id: str | None = None
+    rrf_score: float | None = None
+    literal_coverage: float = Field(0.0, description="Cobertura literal del propio documento; no se hereda del ancla semántica")
 
 
 class QueryCitation(Citation):
@@ -495,6 +504,9 @@ class RetrievalInfo(ApiModel):
     took_ms: float
     matched_terms: list[str] = Field(default_factory=list)
     coverage: float = 0.0
+    semantic_model: str | None = None
+    semantic_expansion: bool = False
+    rrf_k: int | None = None
 
 
 class QueryResponse(ApiModel):
@@ -528,7 +540,7 @@ class EditorialPackage(ApiModel):
     public_interest_angle: str
     research_questions: list[str] = Field(description="Exactamente 3")
     pending_verifications: list[str]
-    script: str = Field(description="Guion estimado 45-60 s (≈112-150 palabras)")
+    script: str = Field(description="Texto separado bajo GUION y NOTAS DE PRODUCCIÓN; solo GUION se estima a 45-60 s (≈112-150 palabras)")
     social_copy: str = Field(description="≤80 palabras")
     claims: list[Claim]
     headline_only: bool = True
@@ -698,6 +710,114 @@ class ExportResponse(ApiModel):
     snapshot_id: str
     rules_version: str
     generated_at: datetime
+
+
+class NotionStatusResponse(ApiModel):
+    """Estado booleano de configuración; nunca expone valores de configuración."""
+
+    configured: bool
+
+
+class NotionExportResponse(ApiModel):
+    page_id: str
+    url: str
+    title: str
+
+
+class ConnectorProviderState(ApiModel):
+    available: bool
+    connected: bool
+    workspace_name: str | None = None
+    destination_id: str | None = None
+    destination_title: str | None = None
+    channel_id: str | None = None
+    channel_name: str | None = None
+
+
+class ConnectorProviderStates(ApiModel):
+    notion: ConnectorProviderState
+    slack: ConnectorProviderState
+
+
+class SlackNotificationState(ApiModel):
+    enabled: bool = False
+    statuses: list[ReviewStatus] = Field(default_factory=list)
+
+
+class ConnectorOverviewResponse(ApiModel):
+    configured: bool
+    providers: ConnectorProviderStates
+    slack_notifications: SlackNotificationState
+
+
+class ConnectorStartResponse(ApiModel):
+    authorization_url: str
+
+
+class ConnectorDisconnectedResponse(ApiModel):
+    disconnected: bool
+
+
+class ConnectorPage(ApiModel):
+    id: str
+    title: str
+    url: str
+
+
+class ConnectorPagesResponse(ApiModel):
+    items: list[ConnectorPage]
+
+
+class ConnectorDestinationRequest(ApiModel):
+    page_id: str = Field(min_length=1, max_length=128)
+
+
+class ConnectorSavedResponse(ApiModel):
+    saved: bool
+
+
+class NotionMarkdownRequest(ApiModel):
+    markdown: str = Field(min_length=1, max_length=100_000)
+
+
+class SlackChannel(ApiModel):
+    id: str
+    name: str
+    is_private: bool
+
+
+class SlackChannelsResponse(ApiModel):
+    items: list[SlackChannel]
+
+
+class SlackChannelChoice(ApiModel):
+    channel_id: str = Field(min_length=1, max_length=128)
+
+
+class SlackNotificationPreferencesRequest(ApiModel):
+    enabled: bool = False
+    channel_id: str | None = Field(default=None, max_length=128)
+    statuses: list[ReviewStatus] = Field(default_factory=list, max_length=5)
+
+
+class SlackNotificationPreferencesResponse(SlackNotificationPreferencesRequest):
+    pass
+
+
+class SlackShareRequest(ApiModel):
+    event_id: str = Field(min_length=1, max_length=180)
+    case_id: str = Field(min_length=1, max_length=100)
+    case_version: int = Field(ge=1)
+    title: str = Field(min_length=1, max_length=240)
+    status: ReviewStatus
+    from_status: ReviewStatus | None = None
+    snapshot_id: str = Field(min_length=1, max_length=80)
+
+
+class SlackNotificationResult(ApiModel):
+    sent: bool
+    duplicate: bool
+    skipped_reason: str | None = None
 
 
 # --------------------------------------------------------------------------- estado / fuentes

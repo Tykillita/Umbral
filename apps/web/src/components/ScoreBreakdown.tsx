@@ -83,7 +83,7 @@ export function ScoreBreakdown({
               {c.justification}
             </p>
             {c.limits.length > 0 ? (
-              <ul className="mt-1 space-y-0.5 rounded border border-amber-500/50 bg-warn-bg px-2.5 py-1.5 text-warn" data-testid={`${testIdPrefix}-${c.key}-limits`}>
+              <ul className="mt-1 space-y-0.5 rounded border border-warn/50 bg-warn-bg px-2.5 py-1.5 text-warn" data-testid={`${testIdPrefix}-${c.key}-limits`}>
                 {c.limits.map((l) => (
                   <li key={l} className="flex gap-1.5">
                     <Info size={14} className="mt-1 shrink-0" aria-hidden="true" />

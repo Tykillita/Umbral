@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "20261007-e704e952",
+  "sourceSnapshotId": "20261007-cfa338b6",
+  "articlesSha256": "4c719044cb745234d370d5263ed96e2a5b67f110f776c6db462b9577e578c070",
+  "generatedAt": "2026-10-09T00:38:24Z",
+  "method": "identical_evidence_rebind",
+  "seed": "preservada de las muestras de origen",
+  "indicatorsSha256": "79f5f36cd2702b4bbc3b359db79fbf6a94335b9844d8f0398813b97e1b57cde3",
+  "sourceFilesSha256": {
+    "cls_sample.20261007-cfa338b6.jsonl": "f7d78d07f08b698577afa55c246c15cdf291eb90899bf918709e63c1434f8269",
+    "pairs_sample.20261007-cfa338b6.jsonl": "738c92c227b54b8a6398381e56242f9fafef1e87683f41f7d4d888b636fa88b8",
+    "claims_sample.20261007-cfa338b6.jsonl": "298f4d4cc58bc83975a8c51d7fc4d73f26f271920d997ea114b876f5af4d510a",
+    "claims_review.20261007-cfa338b6.jsonl": "acb697f9d29685bddf2335723b7957c9d50b19f95f11148b40efaa50f48eb4a0",
+    "clasificacion.20261007-cfa338b6.csv": "d36b1ab47b39610eca621583d118c90f906ccc1918bb876a858b37c85f6f494c",
+    "pares.20261007-cfa338b6.csv": "4cc46c713b77093bf8cd63ea860704ee225b068c65ce15ed8424dbd12cfec6df",
+    "afirmaciones.20261007-cfa338b6.csv": "5822e07cd9a54e89be716918b8808f66549cc2d97823c2e369282b3eda26ae49"
+  },
+  "counts": {
+    "cls_sample": 120,
+    "pairs_sample": 50,
+    "claims_sample": 37,
+    "claims_review": 32
+  },
+  "judgments": "Juicios y comentarios originales preservados; predicciones ocultas del destino actualizadas.",
+  "outputFilesSha256": {
+    "cls_sample.20261007-e704e952.jsonl": "01f2e5a9640466c4202ded74370768bc6724be21684c3e89bd6818aecf79dee7",
+    "pairs_sample.20261007-e704e952.jsonl": "88b6162739273279a67d7f8a34f4cf2fe2fe2c9654e15c3ca86b0312fa24fe6d",
+    "claims_sample.20261007-e704e952.jsonl": "ba5406a14893472fc6e28b8886be69eace250f38ef2b8d7b4c36be15b5c88a05",
+    "claims_review.20261007-e704e952.jsonl": "953fc7eafb71a39bf5bc8c3067499d8edcd2793806c4aa011a675954a882adec",
+    "clasificacion.20261007-e704e952.csv": "9fe62f6edd18b462c3fde838471fa56f3313552c725df0849d1ab16b343c5038",
+    "pares.20261007-e704e952.csv": "4cc46c713b77093bf8cd63ea860704ee225b068c65ce15ed8424dbd12cfec6df",
+    "afirmaciones.20261007-e704e952.csv": "5822e07cd9a54e89be716918b8808f66549cc2d97823c2e369282b3eda26ae49"
+  }
+}

@@ -17,7 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # Persistencia/auth web (Render + Firebase Spark). No se necesita en local.
-firebase = ["firebase-admin>=6.5", "google-cloud-firestore>=2.19"]
+firebase = ["firebase-admin>=6.5", "google-cloud-firestore>=2.19", "cryptography>=43"]
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pytest-cov>=5"]

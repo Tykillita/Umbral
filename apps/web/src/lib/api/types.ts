@@ -51,6 +51,23 @@ export type ComposeRequestBody = QueryRequestBody & { provider?: ComposeProvider
 export type QueryCitation = S['QueryCitation'];
 export type QueryHit = S['QueryHit'];
 export type ExportResponse = S['ExportResponse'];
+export type NotionStatusResponse = S['NotionStatusResponse'];
+export type NotionExportResponse = S['NotionExportResponse'];
+export type ConnectorProvider = 'notion' | 'slack';
+export type ConnectorAuthorization = { authorizationUrl: string };
+export type ConnectorOverview = {
+  configured: boolean;
+  providers: {
+    notion: { available: boolean; connected: boolean; workspaceName: string | null; destinationId: string | null; destinationTitle: string | null };
+    slack: { available: boolean; connected: boolean; workspaceName: string | null; channelId: string | null; channelName: string | null };
+  };
+  slackNotifications: { enabled: boolean; statuses: ReviewStatus[] };
+};
+export type ConnectorPage = { id: string; title: string; url: string };
+export type ConnectorChannel = { id: string; name: string; isPrivate: boolean };
+export type SlackNotificationPreferences = { enabled: boolean; channelId: string | null; statuses: ReviewStatus[] };
+export type SlackShareRequest = { eventId: string; caseId: string; caseVersion: number; title: string; status: ReviewStatus; snapshotId: string };
+export type SlackNotificationResult = { sent: boolean; duplicate: boolean; skippedReason: string | null };
 export type ErrorBody = S['ErrorResponse'];
 export type ProviderStatus = S['ProviderStatus'];
 export type ImpactRequest = S['ImpactRequest'];
@@ -65,6 +82,7 @@ export interface TopicFilters {
   reviewStatus?: ReviewStatus | '';
   q?: string;
   limit?: number;
+  tvnGap?: boolean;
 }
 
 export type PublicContext = S['PublicContext'];

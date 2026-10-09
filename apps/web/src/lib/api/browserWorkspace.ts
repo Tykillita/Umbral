@@ -1,6 +1,6 @@
 import { ApiError, HttpApi, type UmbralApi } from './client';
 import { BrowserWorkspace, canonicalJson, conflict, parseWorkspace, type WorkspaceCase, type WorkspaceExport } from './workspace';
-import type { ArchivedEvidence, ClaudeConnection, ComposeRequestBody, ComposeResponse, PublicContext, QueryRequestBody, PublicDraftResponse, PublicValidationResponse, Authorization, CaseView, Connections, ConnectionStart, Disconnect, DraftEditRequest, DraftProviderChoice, DraftRecord, DraftResponse, ExportResponse, Health, ImpactRequest, Models, QueryResponse, ReviewRequest, Rules, RulesRequest, TopicDetail, TopicFilters, TopicsResponse } from './types';
+import type { ArchivedEvidence, ClaudeConnection, ComposeRequestBody, ComposeResponse, PublicContext, QueryRequestBody, PublicDraftResponse, PublicValidationResponse, Authorization, CaseView, Connections, ConnectionStart, Disconnect, DraftEditRequest, DraftProviderChoice, DraftRecord, DraftResponse, ExportResponse, Health, ImpactRequest, Models, QueryResponse, ReviewRequest, Rules, RulesRequest, TopicDetail, TopicFilters, TopicsResponse, ConnectorProvider, ConnectorAuthorization, ConnectorOverview, ConnectorPage, ConnectorChannel, SlackNotificationPreferences, SlackNotificationResult, SlackShareRequest, NotionExportResponse } from './types';
 
 type Evidence = ArchivedEvidence;
 type Validated = PublicValidationResponse;
@@ -213,4 +213,16 @@ export class BrowserWorkspaceApi implements UmbralApi {
   disconnect = async (_profileId: string): Promise<Disconnect> => this.unavailable();
   startClaudeLogin = async (): Promise<ClaudeConnection> => this.unavailable();
   claudeLogout = async (): Promise<ClaudeConnection> => this.unavailable();
+  connectorOverview = (): Promise<ConnectorOverview> => this.remote.connectorOverview();
+  startConnector = (provider: ConnectorProvider): Promise<ConnectorAuthorization> => this.remote.startConnector(provider);
+  disconnectConnector = (provider: ConnectorProvider): Promise<void> => this.remote.disconnectConnector(provider);
+  notionPages = (): Promise<ConnectorPage[]> => this.remote.notionPages();
+  chooseNotionDestination = (pageId: string): Promise<void> => this.remote.chooseNotionDestination(pageId);
+  exportMarkdownToNotion = (markdown: string): Promise<NotionExportResponse> => this.remote.exportMarkdownToNotion(markdown);
+  slackChannels = (): Promise<ConnectorChannel[]> => this.remote.slackChannels();
+  chooseSlackChannel = (channelId: string): Promise<void> => this.remote.chooseSlackChannel(channelId);
+  slackNotificationPreferences = (): Promise<SlackNotificationPreferences> => this.remote.slackNotificationPreferences();
+  saveSlackNotificationPreferences = (value: SlackNotificationPreferences): Promise<void> => this.remote.saveSlackNotificationPreferences(value);
+  shareCaseToSlack = (value: SlackShareRequest): Promise<SlackNotificationResult> => this.remote.shareCaseToSlack(value);
+  notifySlackReview = (value: SlackShareRequest): Promise<SlackNotificationResult> => this.remote.notifySlackReview(value);
 }

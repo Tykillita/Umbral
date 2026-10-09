@@ -23,6 +23,9 @@ import { BandPill, Button, Card, ErrorBox, EvidencePill, Field, KV, Loading, Not
 import { Checkbox, Disclosure, Select, Tooltip } from '../ui/controls';
 import { ScoreBreakdown } from '../ScoreBreakdown';
 import { TopicFlags } from './Agenda';
+import { canPerform, canView } from '../../lib/session';
+import { ReviewPanel } from './Drafts';
+import { SavedCases } from '../Workspace';
 
 const GEO_LABEL: Record<string, string> = {
   panama: 'Panamá',
@@ -204,8 +207,9 @@ function ContradictionItem({ k }: { k: Contradiction }) {
           <li key={v.evidenceId} data-testid="contradiction-version" data-evidence-id={v.evidenceId} className="rounded border border-rule bg-card p-2 text-sm">
             <p className="italic">«{v.statement}»</p>
             <p className="mt-1 text-xs text-ink-3">
-              {v.outlet} · {fmtDateTime(v.publishedAt)} · alcance: {v.scope}
+              {v.outlet} · {v.publishedAt ? fmtDateTime(v.publishedAt) : `detectada: ${fmtDateTime(v.detectedAt)}`} · alcance: {v.scope}
             </p>
+            {v.url && /^https?:\/\//.test(v.url) && <a className="comic-link text-xs underline" href={v.url} target="_blank" rel="noopener noreferrer">Abrir fuente de esta versión</a>}
           </li>
         ))}
       </ul>
@@ -307,7 +311,8 @@ function ImpactForm({ d }: { d: TopicDetail }) {
 }
 
 function FichaBody({ d }: { d: TopicDetail }) {
-  const { go, openAssistant } = useApp();
+  const { go, openAssistant, session } = useApp();
+  const role = session?.role ?? 'juror';
   const s = d.summary;
   const ref = useRef<HTMLElement>(null);
   // Se repite al cambiar de tema sin remontar la ficha, así que el formulario de impacto conserva sus ediciones.
@@ -315,13 +320,13 @@ function FichaBody({ d }: { d: TopicDetail }) {
   return (
     <article ref={ref} data-testid="ficha" data-topic-id={s.id} className="space-y-6">
       <header data-motion="heading" className="comic-page-heading space-y-3">
-        <button
+        {canView(role,'agenda') && <button
           type="button"
           onClick={() => go({ view: 'agenda' })}
           className="comic-link -ml-1 gap-1 px-1 text-sm font-medium text-ink-2 underline-offset-2 hover:underline"
         >
           <ArrowLeft size={14} aria-hidden="true" /> Volver a la agenda
-        </button>
+        </button>}
         <p className="kicker">{CATEGORY_LABEL[s.category]} · ficha de evidencia</p>
         <h1 className="font-display text-3xl font-bold leading-tight sm:text-4xl">{s.title}</h1>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -331,9 +336,9 @@ function FichaBody({ d }: { d: TopicDetail }) {
           <TopicFlags t={s} />
         </div>
         <div className="comic-action-pair">
-          <Button variant="primary" icon={FilePlus2} onClick={() => go({ view: 'borradores', topicId: s.id })} data-testid="go-drafts">
+          {canView(role,'borradores') && <Button variant="primary" icon={FilePlus2} onClick={() => go({ view: 'borradores', topicId: s.id })} data-testid="go-drafts">
             Borradores y revisión
-          </Button>
+          </Button>}
           <Button icon={Bot} onClick={() => openAssistant(`¿Qué falta verificar de «${s.title}»?`, s.id, s.title)}>
             Preguntar al asistente sobre este tema
           </Button>
@@ -367,8 +372,8 @@ function FichaBody({ d }: { d: TopicDetail }) {
         <p data-testid="ficha-reported" className="max-w-3xl text-base">
           {d.whatIsReported}
         </p>
-        <p className="mt-3 flex gap-2 rounded-md bg-amber-50 px-3 py-2 text-sm" data-testid="ficha-recommended">
-          <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
+        <p className="mt-3 flex gap-2 rounded-md bg-warn-bg px-3 py-2 text-sm" data-testid="ficha-recommended">
+          <TriangleAlert size={16} className="mt-0.5 shrink-0 text-warn" aria-hidden="true" />
           <span>
             <strong>Acción recomendada:</strong> {d.recommendedAction}
           </span>
@@ -434,7 +439,7 @@ function FichaBody({ d }: { d: TopicDetail }) {
               <span className="text-warn">propuesta automática pendiente de confirmación editorial. {d.impact.justification}</span>
             )}
           </p>
-          <ImpactForm d={d} />
+          {canPerform(role,'impact') && <ImpactForm d={d} />}
         </div>
       </Card>
 
@@ -534,8 +539,8 @@ function FichaBody({ d }: { d: TopicDetail }) {
         {d.pendingVerifications.length ? (
           <ul data-testid="pending-verifications" className="list-none space-y-1.5">
             {d.pendingVerifications.map((v) => (
-              <li key={v} data-testid="pending-verification" className="flex gap-2 text-sm">
-                <TriangleAlert size={16} className="mt-0.5 shrink-0 text-amber-600" aria-hidden="true" />
+              <li key={v} data-testid="pending-verification" className="flex gap-2 text-sm text-warn">
+                <TriangleAlert size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
                 {v}
               </li>
             ))}
@@ -547,6 +552,7 @@ function FichaBody({ d }: { d: TopicDetail }) {
       <p className="text-xs text-ink-3">
         Snapshot {d.snapshotId} · reglas {d.rulesVersion} · modo de datos: {d.dataMode}.
       </p>
+      {session?.role === 'editor' && <ReviewPanel detail={d} caseView={d.case}/>}
     </article>
   );
 }
@@ -560,6 +566,7 @@ function Picker(): ReactNode {
     <div ref={ref} className="space-y-3" data-testid="ficha-picker">
       <h1 data-motion="heading" className="font-display text-3xl font-bold">Ficha de evidencia</h1>
       <p className="text-ink-2">Elige un tema de la agenda para abrir su ficha.</p>
+      <SavedCases />
       {isLoading && <Loading />}
       {error && <ErrorBox error={error} onRetry={() => refetch()} />}
       <ul className="space-y-2">

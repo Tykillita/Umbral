@@ -27,10 +27,15 @@ def open_app(page: Page, base: str) -> None:
     try:
         page.get_by_test_id("app-root").wait_for(timeout=8000)
     except Exception:  # noqa: BLE001
-        msg = "el frontend no expone data-testid='app-root' en /app (ver tests/e2e/TESTIDS.md)"
-        if os.environ.get("UMBRAL_TESTS_STRICT"):
-            pytest.fail(msg, pytrace=False)
-        pytest.skip(msg)
+        role_editor = page.get_by_test_id("role-editor")
+        if role_editor.is_visible():
+            role_editor.click()
+            page.get_by_test_id("app-root").wait_for(timeout=8000)
+        else:
+            msg = "el frontend no expone data-testid='app-root' ni la entrada de Editor en /app (ver tests/e2e/TESTIDS.md)"
+            if os.environ.get("UMBRAL_TESTS_STRICT"):
+                pytest.fail(msg, pytrace=False)
+            pytest.skip(msg)
     expect(tid(page, "topic-card").first).to_be_visible(timeout=30_000)
     settle_motion(page)
 

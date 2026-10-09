@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { sameOrigin, canOpenExternal, assertSender, assertChromeSender } = require('../security.cjs');
+const { sameOrigin, canOpenExternal, isChatGPTAuthUrl, publicConnectorApiOrigin, isConnectorRequestPath, assertSender, assertChromeSender } = require('../security.cjs');
 test('IPC sólo admite el frame principal y mismo origen exacto', () => {
   const frame = { url: 'http://127.0.0.1:28121/app' };
   const contents = { mainFrame: frame };
@@ -15,6 +15,20 @@ test('enlaces externos sólo HTTPS sin credenciales ni esquemas ejecutables', ()
   for (const value of ['file:///C:/Windows', 'javascript:alert(1)', 'http://example.com', 'https://secret@example.com', 'mailto:a@b.com']) {
     assert.equal(canOpenExternal(value), false);
   }
+});
+test('el inicio de sesión ChatGPT acepta únicamente el host HTTPS oficial', () => {
+  assert.equal(isChatGPTAuthUrl('https://auth.openai.com/oauth/authorize?client_id=example'), true);
+  for (const value of ['http://auth.openai.com/login', 'https://auth.openai.com:444/login', 'https://auth.openai.com.evil.test/login', 'https://user@auth.openai.com/login', 'javascript:alert(1)']) {
+    assert.equal(isChatGPTAuthUrl(value), false);
+  }
+});
+test('el puente OAuth sólo admite la API pública de Render y rutas de conectores', () => {
+  assert.equal(publicConnectorApiOrigin('https://umbral-api.onrender.com'), 'https://umbral-api.onrender.com');
+  for (const value of ['http://umbral-api.onrender.com', 'https://evil.example', 'https://u:p@umbral-api.onrender.com', 'https://umbral-api.onrender.com/api']) {
+    assert.equal(publicConnectorApiOrigin(value), null);
+  }
+  for (const value of ['/connectors', '/connectors/notion/start', '/connectors/slack/review-event']) assert.equal(isConnectorRequestPath(value), true);
+  for (const value of ['/health', '/connectors/notion/callback', '/connectors/../../admin', '/connectors/slack/share?to=evil']) assert.equal(isConnectorRequestPath(value), false);
 });
 test('controles de ventana: app en su origen o pantalla de arranque, nada más', () => {
   const origin = 'http://127.0.0.1:28121';

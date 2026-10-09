@@ -199,8 +199,8 @@ const SPECS: Spec[] = [
         status: 'pendiente_de_revision',
         pendingVerification: 'Contrastar con estadística oficial del período.',
         versions: [
-          { evidenceId: 'mock-c1', outlet: 'Medio de ejemplo E', publishedAt: '2026-10-05T14:00:00Z', scope: 'titular', statement: 'La llegada subió.' },
-          { evidenceId: 'mock-c2', outlet: 'Medio de ejemplo F', publishedAt: '2026-10-06T09:00:00Z', scope: 'titular', statement: 'La llegada bajó.' },
+          { evidenceId: 'mock-c1', outlet: 'Medio de ejemplo E', publishedAt: '2026-10-05T14:00:00Z', detectedAt:null,url:null,scope: 'titular', statement: 'La llegada subió.' },
+          { evidenceId: 'mock-c2', outlet: 'Medio de ejemplo F', publishedAt: '2026-10-06T09:00:00Z', detectedAt:null,url:null,scope: 'titular', statement: 'La llegada bajó.' },
         ],
       },
     ],

@@ -29,6 +29,9 @@ function mount(route: Route, reviewer = 'Marta Pérez') {
     mockReason: null,
     route,
     go: () => {},
+    toast: null,
+    showToast: () => {},
+    dismissToast: () => {},
     get reviewer() {
       return name;
     },

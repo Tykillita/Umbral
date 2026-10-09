@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { ArrowRight, ChevronDown, FileSearch, GitCompare, Newspaper, Repeat, Search, ShieldAlert, SlidersHorizontal, TriangleAlert, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, FileSearch, GitCompare, Newspaper, Radio, Repeat, Search, ShieldAlert, SlidersHorizontal, TriangleAlert, X } from 'lucide-react';
 import type { Category, EvidenceStatus, ReviewStatus, ScoreBand, TopicFilters, TopicSummary } from '../../lib/api/types';
 import { useRules, useTopics } from '../../lib/hooks';
 import { BAND_LABEL, CATEGORY_LABEL, EVIDENCE_LABEL, REVIEW_LABEL } from '../../lib/labels';
@@ -170,6 +170,7 @@ export function Agenda() {
   const [evidence, setEvidence] = useState<EvidenceStatus | ''>('');
   const [band, setBand] = useState<ScoreBand | ''>('');
   const [reviewStatus, setReviewStatus] = useState<ReviewStatus | ''>('');
+  const [tvnGap, setTvnGap] = useState(false);
   const [limit, setLimit] = useState(5);
   const [scope, setScope] = useState<'in_scope' | 'all'>('in_scope');
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -182,11 +183,11 @@ export function Agenda() {
     return () => clearTimeout(t);
   }, [q]);
 
-  const filters: TopicFilters = { q: debounced, category, evidence, band, reviewStatus, limit, scope };
+  const filters: TopicFilters = { q: debounced, category, evidence, band, reviewStatus, limit, scope, tvnGap };
   const { data, error, isLoading, isFetching, refetch } = useTopics(filters);
-  const hasFilters = Boolean(category || evidence || band || reviewStatus || debounced || scope === 'all');
+  const hasFilters = Boolean(category || evidence || band || reviewStatus || debounced || scope === 'all' || tvnGap);
   const facets = data?.facets ?? {};
-  const activeFilters = [category, evidence, band, reviewStatus].filter(Boolean).length + (scope === 'all' ? 1 : 0);
+  const activeFilters = [category, evidence, band, reviewStatus].filter(Boolean).length + (scope === 'all' ? 1 : 0) + (tvnGap ? 1 : 0);
 
   // El encabezado entra al abrir la vista y las tarjetas cuando llegan los datos. Buscar, filtrar o refrescar
   // no repiten nada; «Ver más» anima solo las tarjetas nuevas.
@@ -194,7 +195,7 @@ export function Agenda() {
   const revealMore = useRevealNew(
     rootRef,
     data?.items.map((t) => t.id) ?? [],
-    [debounced, category, evidence, band, reviewStatus, scope].join('|'),
+    [debounced, category, evidence, band, reviewStatus, scope, tvnGap].join('|'),
   );
 
   return (
@@ -209,31 +210,43 @@ export function Agenda() {
       </header>
 
       <form noValidate role="search" aria-label="Filtros de la agenda" className="comic-filters space-y-3 p-3" onSubmit={(e) => e.preventDefault()}>
-        <div>
-          <label htmlFor={`${uid}-q`} className="mb-1 block text-xs font-semibold text-ink-2">
-            Buscar en los temas
-          </label>
-          <div className="relative">
-            <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" aria-hidden="true" />
-            <input
-              id={`${uid}-q`}
-              data-testid="agenda-search"
-              type="text"
-              role="searchbox"
-              autoComplete="off"
-              enterKeyHint="search"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Canal, turismo, tarifas…"
-              className={`${inputCls} pl-9 pr-11`}
-            />
-            {q && (
-              <button type="button" className="search-clear" aria-label="Borrar búsqueda" data-testid="agenda-search-clear" onClick={() => setQ('')}>
-                <X size={16} aria-hidden="true" />
-              </button>
-            )}
+        <div className="grid grid-cols-1 items-end gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="min-w-0">
+            <label htmlFor={`${uid}-q`} className="mb-1 block text-xs font-semibold text-ink-2">
+              Buscar en los temas
+            </label>
+            <div className="relative">
+              <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" aria-hidden="true" />
+              <input
+                id={`${uid}-q`}
+                data-testid="agenda-search"
+                type="text"
+                role="searchbox"
+                autoComplete="off"
+                enterKeyHint="search"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Canal, turismo, tarifas…"
+                className={`${inputCls} pl-9 pr-11`}
+              />
+              {q && (
+                <button type="button" className="search-clear" aria-label="Borrar búsqueda" data-testid="agenda-search-clear" onClick={() => setQ('')}>
+                  <X size={16} aria-hidden="true" />
+                </button>
+              )}
+            </div>
           </div>
+          <Button
+            variant={tvnGap ? 'primary' : 'secondary'}
+            icon={Radio}
+            aria-pressed={tvnGap}
+            data-testid="agenda-tvn-gap"
+            onClick={() => setTvnGap((current) => !current)}
+          >
+            TVN aún no lo cubre
+          </Button>
         </div>
+        <p className="text-xs text-ink-3">El filtro se calcula sobre el snapshot actual y exige dos procedencias independientes sin artículos detectados de TVN.</p>
 
         <Button
           className="w-full justify-between min-[480px]:hidden"
@@ -315,6 +328,7 @@ export function Agenda() {
                 setBand('');
                 setReviewStatus('');
                 setScope('in_scope');
+                setTvnGap(false);
               }}
               data-testid="filters-clear"
             >

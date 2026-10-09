@@ -66,6 +66,8 @@ class Settings:
     snapshots_root: Path = field(default_factory=lambda: repo_root() / "data" / "snapshots")
     allow_fixture: bool = True  # si no hay snapshot real, servir fixture etiquetado
     strict_integrity: bool = False  # si True, un manifest/hash inválido impide arrancar
+    semantic_enabled: bool = True  # artefactos íntegros opcionales; nunca carga modelos en la API
+    semantic_root: Path = field(default_factory=lambda: repo_root() / "data" / "agrupacion")
     # --- modos
     offline: bool = False  # bloquea llamadas externas (Gemini, ChatGPT, red)
     local_mode: bool = True  # permite adaptadores ChatGPT/Claude solo desde loopback
@@ -89,6 +91,15 @@ class Settings:
     chatgpt_model: str = ""  # selección explícita del catálogo de la cuenta OAuth
     claude_cli: str = "claude"
     claude_model: str | None = None
+    notion_api_key: str | None = None  # solo proceso local; nunca se devuelve a la UI
+    notion_parent_page_id: str | None = None
+    notion_oauth_client_id: str | None = None
+    notion_oauth_client_secret: str | None = None
+    notion_oauth_redirect_uri: str | None = None
+    slack_oauth_client_id: str | None = None
+    slack_oauth_client_secret: str | None = None
+    slack_oauth_redirect_uri: str | None = None
+    connector_encryption_key: str | None = None
     gemini_stub: str | None = None  # SOLO PRUEBAS: ok | quota | down | no_key (prohibido con auth firebase)
     # --- límites
     queries_per_minute: int = 30
@@ -150,11 +161,22 @@ class Settings:
             if not self.local_mode:
                 raise RuntimeError("El puente a la API pública solo está disponible en ejecución local.")
 
+    @property
+    def notion_configured(self) -> bool:
+        """La exportación requiere ambas variables y no está disponible en modo sin conexión."""
+        return bool(self.notion_api_key and self.notion_api_key.strip()
+                    and self.notion_parent_page_id and self.notion_parent_page_id.strip() and not self.offline)
+
+    @property
+    def connector_storage_configured(self) -> bool:
+        return bool(self.firestore_project and self.connector_encryption_key and not self.offline)
+
     @staticmethod
     def from_env() -> Settings:
         load_dotenv_files()
         snap = os.environ.get("UMBRAL_SNAPSHOT_DIR")
         root = os.environ.get("UMBRAL_SNAPSHOTS_ROOT")
+        semantic_root = os.environ.get("UMBRAL_SEMANTIC_ROOT")
         sqlite = os.environ.get("UMBRAL_SQLITE_PATH")
         token = os.environ.get("CHATGPT_TOKEN_FILE")
         credentials = os.environ.get("CHATGPT_CREDENTIALS_FILE")
@@ -166,6 +188,8 @@ class Settings:
             snapshots_root=Path(root) if root else d.snapshots_root,
             allow_fixture=_bool("UMBRAL_ALLOW_FIXTURE", True),
             strict_integrity=_bool("UMBRAL_STRICT_INTEGRITY", False),
+            semantic_enabled=_bool("UMBRAL_SEMANTIC_ENABLED", True),
+            semantic_root=Path(semantic_root) if semantic_root else d.semantic_root,
             offline=_bool("UMBRAL_OFFLINE", False),
             local_mode=_bool("UMBRAL_LOCAL_MODE", True),
             auth_mode=os.environ.get("UMBRAL_AUTH_MODE", "local"),
@@ -186,6 +210,15 @@ class Settings:
             chatgpt_model=os.environ.get("CHATGPT_MODEL", d.chatgpt_model),
             claude_cli=os.environ.get("CLAUDE_CLI", d.claude_cli),
             claude_model=os.environ.get("CLAUDE_MODEL") or None,
+            notion_api_key=os.environ.get("NOTION_API_KEY") or None,
+            notion_parent_page_id=os.environ.get("NOTION_PARENT_PAGE_ID") or None,
+            notion_oauth_client_id=os.environ.get("NOTION_OAUTH_CLIENT_ID") or None,
+            notion_oauth_client_secret=os.environ.get("NOTION_OAUTH_CLIENT_SECRET") or None,
+            notion_oauth_redirect_uri=os.environ.get("NOTION_OAUTH_REDIRECT_URI") or None,
+            slack_oauth_client_id=os.environ.get("SLACK_OAUTH_CLIENT_ID") or None,
+            slack_oauth_client_secret=os.environ.get("SLACK_OAUTH_CLIENT_SECRET") or None,
+            slack_oauth_redirect_uri=os.environ.get("SLACK_OAUTH_REDIRECT_URI") or None,
+            connector_encryption_key=os.environ.get("CONNECTOR_ENCRYPTION_KEY") or None,
             gemini_stub=os.environ.get("UMBRAL_GEMINI_STUB") or None,
             queries_per_minute=_int("UMBRAL_QUERIES_PER_MINUTE", d.queries_per_minute),
             drafts_per_minute=_int("UMBRAL_DRAFTS_PER_MINUTE", 2 if os.environ.get("UMBRAL_AUTH_MODE") == "public" else d.drafts_per_minute),

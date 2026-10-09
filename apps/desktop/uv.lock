@@ -1052,6 +1052,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", marker = "extra == 'firebase'", specifier = ">=43" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "firebase-admin", marker = "extra == 'firebase'", specifier = ">=6.5" },
     { name = "google-cloud-firestore", marker = "extra == 'firebase'", specifier = ">=2.19" },
@@ -1135,10 +1136,12 @@ requires-dist = [
     { name = "rank-bm25", specifier = ">=0.2.2" },
     { name = "rapidfuzz", specifier = ">=3.9" },
     { name = "safetensors", marker = "extra == 'laya'", specifier = ">=0.4" },
+    { name = "sentence-transformers", marker = "extra == 'semantic'", specifier = ">=3.4,<6" },
     { name = "torch", marker = "extra == 'laya'", specifier = "==2.14.1+cpu", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "torch", marker = "extra == 'semantic'", specifier = "==2.14.1+cpu", index = "https://download.pytorch.org/whl/cpu" },
     { name = "transformers", marker = "extra == 'laya'", specifier = ">=4.48" },
 ]
-provides-extras = ["laya"]
+provides-extras = ["semantic", "laya"]
 
 [package.metadata.requires-dev]
 dev = [

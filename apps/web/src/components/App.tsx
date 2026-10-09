@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { Bot, ChevronDown, Database, FileSearch, FlaskConical, ListOrdered, PenLine, TriangleAlert, WifiOff } from 'lucide-react';
+import { Bot, ChevronDown, CircleAlert, CircleCheck, CircleX, Database, ExternalLink, FileSearch, FlaskConical, ListOrdered, LoaderCircle, PenLine, Tags, Users, WifiOff, X } from 'lucide-react';
 import type { BootProgress, UmbralApi } from '../lib/api/client';
 import { resolveApi } from '../lib/api';
 import { initAuth, type AuthState } from '../lib/auth';
 import { useRoute, type Route } from '../lib/router';
+import { canView, chooseRole, defaultRoute, readSession, type DemoRole } from '../lib/session';
+import { roleApi } from '../lib/roleApi';
 import { readLocal, writeLocal } from '../lib/storage';
 import { useHealth, useRules } from '../lib/hooks';
 import { DATA_MODE_LABEL } from '../lib/labels';
@@ -12,21 +14,40 @@ import { installInteractions } from '../lib/interactions';
 import { reducedMotion } from '../lib/motion';
 import { useDisclosureMotion } from '../lib/useMotion';
 import { fmtDateTime } from '../lib/format';
-import { AppContext, useApp } from './context';
+import { AppContext, useApp, type AppToast } from './context';
 import { Agenda } from './views/Agenda';
 import { Ficha } from './views/Ficha';
 import { Drafts } from './views/Drafts';
 import { Sources } from './views/Sources';
+import { Mesa } from './views/Mesa';
+import { Etiquetar } from './views/Etiquetar';
+import { SessionGate } from './SessionGate';
 import { AssistantPanel } from './AssistantPanel';
 import { Button, ErrorBox, Loading, Notice, Pill } from './ui';
-import { Modal, MotionPreferenceSwitch, Tooltip } from './ui/controls';
+import { SettingsPanel } from './SettingsPanel';
+import { WarningCenter, WarningCenterProvider } from './ui/warnings';
 
 const NAV: { view: Route['view']; label: string; icon: typeof ListOrdered; testId: string }[] = [
   { view: 'agenda', label: 'Agenda', icon: ListOrdered, testId: 'nav-agenda' },
   { view: 'ficha', label: 'Ficha', icon: FileSearch, testId: 'nav-ficha' },
   { view: 'borradores', label: 'Borradores', icon: PenLine, testId: 'nav-borradores' },
   { view: 'fuentes', label: 'Fuentes y evaluación', icon: Database, testId: 'nav-fuentes' },
+  { view: 'mesa', label: 'Mesa', icon: Users, testId: 'nav-mesa' },
+  { view: 'etiquetar', label: 'Etiquetar', icon: Tags, testId: 'nav-etiquetar' },
 ];
+
+export function SnapshotDataRefresh({ snapshotId }: { snapshotId?: string }) {
+  const queryClient = useQueryClient();
+  const previousSnapshotId = useRef<string | null>(null);
+  useEffect(() => {
+    if (!snapshotId) return;
+    const previous = previousSnapshotId.current;
+    previousSnapshotId.current = snapshotId;
+    if (!previous || previous === snapshotId) return;
+    void Promise.all(['snapshot', 'topics', 'topic'].map((key) => queryClient.invalidateQueries({ queryKey: [key] })));
+  }, [queryClient, snapshotId]);
+  return null;
+}
 
 function StatusItem({ label, children, testId }: { label: string; children: ReactNode; testId?: string }) {
   return (
@@ -120,10 +141,69 @@ function StatusBar() {
 
 type AssistantVisibility = 'closed' | 'minimized' | 'open';
 
+export function ExportToast({ toast, anchor, onDismiss }: { toast: AppToast | null; anchor: 'dock' | 'toggle'; onDismiss: () => void }) {
+  const [paused, setPaused] = useState(false);
+  const duration = toast?.durationMs ?? (toast?.tone === 'error' ? 9_000 : 6_500);
+
+  useEffect(() => {
+    setPaused(false);
+  }, [toast?.id]);
+
+  useEffect(() => {
+    if (!toast || toast.tone === 'pending' || paused) return;
+    const timer = window.setTimeout(onDismiss, duration);
+    return () => window.clearTimeout(timer);
+  }, [duration, onDismiss, paused, toast?.id, toast?.tone]);
+
+  if (!toast) return null;
+  const Icon = toast.tone === 'pending' ? LoaderCircle : toast.tone === 'success' ? CircleCheck : toast.tone === 'error' ? CircleX : CircleAlert;
+  const style = {
+    '--toast-lifetime': `${duration}ms`,
+    '--toast-progress': toast.progress == null ? undefined : String(Math.max(0, Math.min(100, toast.progress)) / 100),
+  } as CSSProperties & { '--toast-lifetime': string; '--toast-progress': string | undefined };
+  return (
+    <section
+      className="export-toast"
+      data-testid="export-toast"
+      data-tone={toast.tone}
+      data-anchor={anchor}
+      data-download-progress={toast.progress != null || undefined}
+      data-autohide={toast.tone !== 'pending' && !paused || undefined}
+      role={toast.tone === 'error' ? 'alert' : 'status'}
+      aria-live={toast.tone === 'error' ? 'assertive' : 'polite'}
+      aria-atomic="true"
+      aria-busy={toast.tone === 'pending' || undefined}
+      style={style}
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false);
+      }}
+    >
+      <Icon className="export-toast-icon" size={20} aria-hidden="true" />
+      <div className="export-toast-copy">
+        <strong>{toast.title}</strong>
+        {toast.description && <span>{toast.description}</span>}
+      </div>
+      {toast.actionHref && toast.actionLabel && (
+        <a className="export-toast-action" href={toast.actionHref} target="_blank" rel="noopener noreferrer">
+          {toast.actionLabel}<ExternalLink size={14} aria-hidden="true" />
+        </a>
+      )}
+      <button type="button" className="export-toast-close" aria-label="Cerrar aviso" onClick={onDismiss}>
+        <X size={18} aria-hidden="true" />
+      </button>
+      <span className="export-toast-progress" aria-hidden="true" />
+    </section>
+  );
+}
+
 function Shell({ assistantState, setAssistantState, assistantClosing, openAssistantPanel, closeAssistantPanel, seed, assistantUnread, onAssistantUnread }: { assistantUnread: number; onAssistantUnread: (count: number) => void; assistantState: AssistantVisibility; setAssistantState: (v: AssistantVisibility) => void; assistantClosing: boolean; openAssistantPanel: () => void; closeAssistantPanel: () => void; seed: { text: string; topicId: string | null; topicTitle: string; n: number } }) {
-  const { route, go } = useApp();
+  const { route, go, toast, showToast, dismissToast, session, changeRole } = useApp();
+  const navigation = NAV.filter(({view}) => !session || canView(session.role,view));
   const [mobile, setMobile] = useState(false);
-  const [classificationOpen, setClassificationOpen] = useState(false);
+  const [warningCenterOpen, setWarningCenterOpen] = useState(false);
   const { data: health } = useHealth();
   const mainRef = useRef<HTMLElement>(null);
   const mastheadRef = useRef<HTMLElement>(null);
@@ -132,6 +212,27 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
 
   // Respuesta táctil global (pulsación, trazos y detalles); se retira al desmontar la aplicación.
   useEffect(() => installInteractions(), []);
+
+  useEffect(() => {
+    const subscribe = window.umbralDesktop?.onDownloadStatus;
+    if (!subscribe) return;
+    return subscribe((download) => {
+      const filename = download.filename;
+      if (download.status === 'completed') {
+        showToast({ tone: 'success', title: 'Descarga completada', description: `${filename} se guardó correctamente.`, progress: 100 });
+      } else if (download.status === 'error') {
+        showToast({ tone: 'error', title: 'Error en la descarga', description: `No se pudo guardar ${filename}. Revisa la carpeta Descargas y el espacio disponible.` });
+      } else {
+        const progress = download.status === 'started' ? 0 : download.percent;
+        showToast({
+          tone: 'pending',
+          title: download.status === 'started' ? 'Iniciando descarga' : 'Descargando Markdown',
+          description: `${filename}${progress == null ? '' : ` · ${progress}%`}`,
+          progress,
+        });
+      }
+    });
+  }, [showToast]);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 1023px)');
@@ -173,18 +274,19 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   }, [route.view]);
 
   return (
-    <div data-testid="app-root" inert={classificationOpen || undefined}>
-      <MotionPreferenceSwitch />
+    <div data-testid="app-root" inert={warningCenterOpen || undefined}>
+      <SnapshotDataRefresh snapshotId={health?.snapshotId} />
+      <SettingsPanel />
       <a href="#contenido" inert={assistantOpen && mobile} className="skip-link">
         Saltar al contenido
       </a>
       <header ref={mastheadRef} inert={assistantOpen && mobile} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
-        <div className="mx-auto flex max-w-6xl items-center gap-x-6 px-4 py-2 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-x-4">
+        <div className="comic-app-header w-full px-4 py-2">
           <a href="/" className="comic-brand md:justify-self-start" aria-label="Umbral, inicio">
             Umbral<span className="text-amber-600">.</span>
           </a>
-          <nav aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center">
-            {NAV.map(({ view, label, icon: Ico, testId }) => {
+          <nav aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center" style={{'--nav-count':navigation.length} as CSSProperties}>
+            {navigation.map(({ view, label, icon: Ico, testId }) => {
               const active = route.view === view;
               return (
                 <a
@@ -194,7 +296,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
                   aria-current={active ? 'page' : undefined}
                   onClick={(e) => {
                     e.preventDefault();
-                    go(view === 'agenda' || view === 'fuentes' ? { view } : { view, topicId: lastTopic.current });
+                    go(view === 'ficha' || view === 'borradores' ? { view, topicId:lastTopic.current } : {view});
                   }}
                   className={`comic-nav inline-flex min-h-11 shrink-0 items-center gap-1.5 px-3 py-1.5 text-sm font-semibold ${
                     active ? 'border-amber-600 bg-amber-100 text-ink' : 'border-transparent text-ink-2 hover:bg-sunk'
@@ -213,22 +315,9 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
               );
             })}
           </nav>
-          <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:justify-self-end">
-            {health?.classifier === 'laya' && (
-              <Tooltip content="Limitaciones de la clasificación automática de Laya">
-                <Button
-                  variant="secondary"
-                  icon={TriangleAlert}
-                  iconOnly
-                  aria-label="Advertencia sobre la clasificación automática"
-                  aria-haspopup="dialog"
-                  aria-expanded={classificationOpen}
-                  aria-controls="classification-warning"
-                  onClick={() => setClassificationOpen(true)}
-                  data-testid="classification-warning-toggle"
-                />
-              </Tooltip>
-            )}
+          <div className="comic-header-actions ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:justify-self-end">
+            {session && <div className="comic-active-role"><span data-testid="active-role">{session.labeler}</span><Button variant="ghost" onClick={changeRole} data-testid="role-change">Cambiar</Button></div>}
+            <WarningCenter open={warningCenterOpen} onOpenChange={setWarningCenterOpen} layaActive={health?.classifier === 'laya'} />
             <Button
               variant={assistantOpen ? 'primary' : 'secondary'}
               icon={Bot}
@@ -257,19 +346,15 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
           {route.view === 'ficha' && <Ficha />}
           {route.view === 'borradores' && <Drafts />}
           {route.view === 'fuentes' && <Sources />}
+          {route.view === 'mesa' && <Mesa />}
+          {route.view === 'etiquetar' && <Etiquetar />}
         </div>
         <footer className="mt-8 border-t border-rule pt-3 text-xs text-ink-3">
           Umbral prioriza la atención editorial y prepara borradores para revisión humana. No publica, no etiqueta noticias como verdaderas o falsas y no sustituye el criterio del equipo.
         </footer>
       </main>
       <AssistantPanel state={assistantState} modal={mobile} closing={assistantClosing} onStateChange={setAssistantState} onClose={closeAssistantPanel} seed={seed} onUnreadChange={onAssistantUnread} />
-      <Modal
-        open={classificationOpen}
-        title="Clasificación automática sin calibración validada"
-        description="Laya puede asignar categorías erróneas y sus porcentajes no son confianza editorial: revisa categoría e impacto antes de usar el ranking."
-        onClose={() => setClassificationOpen(false)}
-        testId="classification-warning"
-      />
+      <ExportToast toast={toast} anchor={assistantState === 'minimized' ? 'dock' : 'toggle'} onDismiss={dismissToast} />
     </div>
   );
 }
@@ -282,8 +367,15 @@ function Inner() {
   const [progress, setProgress] = useState<BootProgress | null>(null);
   const [boot, setBoot] = useState<Boot | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
-  const [route, go] = useRoute();
-  const [reviewer, setReviewerState] = useState(() => readLocal('umbral.reviewer', ''));
+  const [requestedRoute, navigate] = useRoute();
+  const [session,setSession] = useState(readSession);
+  const [choosingRole,setChoosingRole] = useState(false);
+  const route = session && canView(session.role,requestedRoute.view) ? requestedRoute : defaultRoute(session?.role ?? 'editor');
+  const go = useCallback((next:Route) => { if(session) navigate(canView(session.role,next.view)?next:defaultRoute(session.role)); },[navigate,session]);
+  useEffect(() => { if(session&&!canView(session.role,requestedRoute.view))navigate(defaultRoute(session.role)); },[navigate,requestedRoute.view,session]);
+  const [reviewer, setReviewerState] = useState(() => readLocal('umbral.reviewer', readSession()?.labeler ?? ''));
+  const [toast, setToast] = useState<AppToast | null>(null);
+  const toastSequence = useRef(0);
   const [assistantState, setAssistantState] = useState<AssistantVisibility>('closed');
   const [assistantUnread, setAssistantUnread] = useState(0);
   const [assistantClosing, setAssistantClosing] = useState(false);
@@ -336,6 +428,17 @@ function Inner() {
     setReviewerState(name);
     writeLocal('umbral.reviewer', name);
   }, []);
+  const showToast = useCallback((message: Omit<AppToast, 'id'>) => {
+    toastSequence.current += 1;
+    setToast({ ...message, id: toastSequence.current });
+  }, []);
+  const dismissToast = useCallback(() => setToast(null), []);
+  const changeRole = useCallback(() => setChoosingRole(true),[]);
+  const selectRole = (role:DemoRole) => {
+    const next=chooseRole(role,session);setSession(next);setChoosingRole(false);setReviewer(next.labeler);
+    navigate(canView(role,requestedRoute.view)?requestedRoute:defaultRoute(role));
+  };
+  const scopedApi = useMemo(() => boot ? roleApi(boot.api,session,(message,shared) => showToast({tone:shared?'success':'info',title:shared?'Decisión compartida':'Estado de la decisión',description:message})) : null,[boot,session,showToast]);
   const openAssistant = useCallback((prompt?: string, topicId?: string, topicTitle?: string) => {
     openAssistantPanel();
     if (prompt) setSeed((s) => ({ text: prompt, topicId: topicId ?? null, topicTitle: topicTitle ?? '', n: s.n + 1 }));
@@ -345,24 +448,32 @@ function Inner() {
     () =>
       boot
         ? {
-            api: boot.api,
+            api: scopedApi!,
             mockReason: boot.reason,
             route,
             go,
+            toast,
+            showToast,
+            dismissToast,
             reviewer,
             setReviewer,
             openAssistant,
             authMode: boot.auth.mode,
+            session: session ?? undefined,
+            changeRole,
           }
         : null,
-    [boot, route, go, reviewer, setReviewer, openAssistant],
+    [boot, scopedApi, route, go, toast, showToast, dismissToast, reviewer, setReviewer, openAssistant,session,changeRole],
   );
 
   if (bootError) return <div className="mx-auto max-w-xl p-6" data-testid="app-boot-error"><ErrorBox error={new Error(bootError)} onRetry={() => setBootAttempt((value) => value + 1)} /></div>;
+  if(!session||choosingRole)return <SessionGate onChoose={selectRole} onCancel={session?()=>setChoosingRole(false):undefined} status={!boot?<Loading label={progress?.message ?? 'Conectando con la API…'}/>:undefined}/>;
   if (!ctx) return <div className="mx-auto max-w-xl p-6" data-testid="app-loading"><Loading label={progress?.message ?? "Iniciando Umbral…"} />{progress && <p className="text-sm text-ink-3" aria-live="polite">Intento {progress.attempt} · {Math.floor(progress.elapsedMs / 1000)} s. El primer inicio puede tardar hasta 90 segundos.</p>}</div>;
   return (
     <AppContext.Provider value={ctx}>
-      <Shell assistantState={assistantState} setAssistantState={setAssistantState} assistantClosing={assistantClosing} openAssistantPanel={openAssistantPanel} closeAssistantPanel={closeAssistantPanel} seed={seed} assistantUnread={assistantUnread} onAssistantUnread={setAssistantUnread} />
+      <WarningCenterProvider>
+        <Shell assistantState={assistantState} setAssistantState={setAssistantState} assistantClosing={assistantClosing} openAssistantPanel={openAssistantPanel} closeAssistantPanel={closeAssistantPanel} seed={seed} assistantUnread={assistantUnread} onAssistantUnread={setAssistantUnread} />
+      </WarningCenterProvider>
     </AppContext.Provider>
   );
 }

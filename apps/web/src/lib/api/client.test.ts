@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { HttpApi } from './client';
 import { MOCK_HEALTH } from '../mock/data';
+vi.mock('../auth', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../auth')>();
+  return { ...actual, getConnectorAuthToken: vi.fn().mockResolvedValue('firebase-anonymous-test-token') };
+});
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json' } });
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); delete window.umbralDesktop; });
@@ -44,10 +48,19 @@ describe('inicio del servicio público', () => {
   });
 });
 
-it('el secreto de escritorio no se envía a API remota ni viaja por redirecciones', async () => {
+  it('el secreto de escritorio no se envía a API remota ni viaja por redirecciones', async () => {
   window.umbralDesktop = { apiToken: 'ephemeral-test' } as typeof window.umbralDesktop;
   const fetch = vi.fn().mockResolvedValue(json(MOCK_HEALTH)); vi.stubGlobal('fetch', fetch);
   await new HttpApi('https://umbral-api.onrender.com', async () => null).health();
   expect(fetch.mock.calls[0]?.[1].headers['x-umbral-desktop-token']).toBeUndefined();
   expect(fetch.mock.calls[0]?.[1].redirect).toBe('error');
+});
+
+it('el escritorio enruta los conectores por IPC sin exponer el token de Firebase en fetch', async () => {
+  const requestConnector = vi.fn().mockResolvedValue({ status: 200, body: { providers: {}, slackNotifications: {} }, retryAfter: null });
+  window.umbralDesktop = { apiToken: 'ephemeral-test', requestConnector } as unknown as typeof window.umbralDesktop;
+  const fetch = vi.fn(); vi.stubGlobal('fetch', fetch);
+  await expect(new HttpApi('', async () => null).connectorOverview()).resolves.toMatchObject({ providers: {}, slackNotifications: {} });
+  expect(requestConnector).toHaveBeenCalledWith({ path: '/connectors', method: 'GET', body: undefined, token: 'firebase-anonymous-test-token' });
+  expect(fetch).not.toHaveBeenCalled();
 });

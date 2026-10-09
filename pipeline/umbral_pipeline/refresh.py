@@ -25,6 +25,7 @@ from .classify.geo import METHOD as GEO_METHOD
 from .classify.geo import geo_content_v2
 from .classify.laya_clf import CATEGORY_QUESTION, PAIR_QUESTION, PINNED_REVISION, LayaClassifier
 from .cluster import build_clusters
+from .config import MIN_TVN, MIN_UNIQUE
 from .fetch import run_fetch
 from .snapshot import activate_snapshot, export_snapshot, verify_snapshot
 from .util import iso_z, now_utc, parse_dt, read_jsonl, sha256_hex
@@ -99,6 +100,7 @@ def build_normalized(data_dir: Path, previous: dict[str, Any], *, articles: list
                      cutoff: datetime, window_start: datetime, indicators: list[dict] | None = None,
                      queries: list[dict] | None = None, errors: list[dict] | None = None,
                      events=None, invalid: list[dict] | None = None, force: bool = False,
+                     newly_discovered_count: int | None = None,
                      set_current: bool = True, classifier_factory=LayaClassifier, progress=None, log=print) -> Path:
     if not articles:
         raise ValueError("La actualización no contiene noticias válidas; se conserva el corte anterior.")
@@ -120,14 +122,16 @@ def build_normalized(data_dir: Path, previous: dict[str, Any], *, articles: list
     dates = sorted(a["effectiveDate"] for a in articles)
     window_days = max(1, math.ceil((cutoff - window_start).total_seconds() / 86400))
     news.update(fetched=len(articles), valid=len(articles), uniqueCanonicalUrls=len(articles), tvnValid=real_tvn,
-                gdeltValid=sum(a["origin"]["source"] == "gdelt_doc" for a in articles), fixtureValid=0,
+                gdeltValid=sum(a["origin"]["source"] == "gdelt_doc" for a in articles),
+                bingNewsValid=sum(a["origin"]["source"] == "bing_news_rss" for a in articles),
+                newlyDiscovered=newly_discovered_count, fixtureValid=0,
                 invalid=len(invalid or []), invalidByCode=dict(Counter(c for r in invalid or [] for c in r["reasonCodes"])),
                 nullPublishedAt=sum(a["publishedAt"] is None for a in articles), targetMet=len(articles) >= 200,
                 minimumMet=len(articles) >= 100, tvnMinimumMet=real_tvn >= 20,
                 coverageWindow={"start": dates[0], "end": dates[-1], "days": window_days},
                 widenedTo90Days=window_days > 31)
     tvn_dates = [a["publishedAt"] for a in articles if a["isTvn"] and a["publishedAt"]]
-    news["tvnCoverage"] = {"validTvn": real_tvn, "source": "tvn_rss+tvn_news_sitemap+gdelt_doc",
+    news["tvnCoverage"] = {"validTvn": real_tvn, "source": "tvn_rss+tvn_news_sitemap+gdelt_doc+bing_news_rss",
                            "publishedFrom": min(tvn_dates, default=None), "publishedTo": max(tvn_dates, default=None),
                            "note": "Cobertura observada, sin presuponer días cubiertos por los feeds."}
     missing = [r for r in indicators if r["value"] is None]
@@ -150,7 +154,8 @@ def build_normalized(data_dir: Path, previous: dict[str, Any], *, articles: list
     quality["warnings"] = ([f"{len(errors)} consultas de fuentes fallaron; se conserva cobertura previa disponible."]
                            if errors else [])
     quality["refresh"] = {"previousSnapshotId": previous["manifest"]["snapshotId"], "errors": errors or [],
-                           "cachedPredictions": info["cachedPredictions"], "newPredictions": info["newPredictions"]}
+                           "cachedPredictions": info["cachedPredictions"], "newPredictions": info["newPredictions"],
+                           "newlyDiscovered": newly_discovered_count}
     reasons = ["no_official_frozen_package"]
     if len(articles) < 100:
         reasons.append("below_minimum_100")
@@ -166,7 +171,7 @@ def build_normalized(data_dir: Path, previous: dict[str, Any], *, articles: list
         indicators=indicators, predictions=predictions, clusters=clusters, invalid=invalid or [], quality=quality,
         classifier_info=info, events_geojson=events if events is not None else previous["events"],
         contains_fixtures=False, provisional_reasons=reasons,
-        sources_extracted={s["id"]: s.get("extractedAt") for s in previous["manifest"]["sources"]},
+        sources_extracted=_updated_source_extraction_times(previous, articles, queries or []),
         transformations=[*TRANSFORMATIONS, "incremental_normalized_merge", "prediction_cache_hash_revision_rules"],
         set_current=False)
     ok, problems = verify_snapshot(out)
@@ -179,6 +184,22 @@ def build_normalized(data_dir: Path, previous: dict[str, Any], *, articles: list
     return out
 
 
+def _updated_source_extraction_times(previous: dict[str, Any], articles: list[dict],
+                                    queries: list[dict]) -> dict[str, str | None]:
+    extracted = {source["id"]: source.get("extractedAt") for source in previous["manifest"]["sources"]}
+    for query in queries:
+        source = query.get("source")
+        at = query.get("extractedAt")
+        if source and at and (not extracted.get(source) or at > extracted[source]):
+            extracted[source] = at
+    for article in articles:
+        source = (article.get("origin") or {}).get("source")
+        at = article.get("extractedAt")
+        if source and at and (not extracted.get(source) or at > extracted[source]):
+            extracted[source] = at
+    return extracted
+
+
 def run_reclassify(data_dir: Path, snapshot_dir: Path, *, set_current: bool = False,
                    classifier_factory=LayaClassifier, progress=None, log=print) -> Path:
     previous = load_verified(snapshot_dir)
@@ -189,16 +210,19 @@ def run_reclassify(data_dir: Path, snapshot_dir: Path, *, set_current: bool = Fa
 
 
 def run_daily(data_dir: Path, *, previous_dir: Path | None = None, raw_dir: Path | None = None,
-              set_current: bool = True, classifier_factory=LayaClassifier, progress=None, log=print) -> Path:
+              set_current: bool = True,
+              sources: tuple[str, ...] = ("tvn", "tvn-sitemap", "gdelt", "bing-news", "worldbank", "usgs"),
+              classifier_factory=LayaClassifier, progress=None, log=print) -> Path:
     previous_dir = previous_dir or data_dir / "snapshots" / (data_dir / "snapshots" / "CURRENT").read_text().strip()
     previous = load_verified(previous_dir)
     prev_cutoff = parse_dt(previous["manifest"]["cutoffUtc"])
     now = now_utc()
     fetch_days = min(30, max(2, math.ceil((now - prev_cutoff).total_seconds() / 86400) + 2))
-    raw_dir = raw_dir or run_fetch(data_dir, window_days=fetch_days,
-                                  sources=("tvn", "tvn-sitemap", "gdelt", "worldbank", "usgs"), log=log)
+    raw_dir = raw_dir or run_fetch(data_dir, window_days=fetch_days, sources=sources, log=log)
     raw = _load_raw(raw_dir)
-    news_queries = [q for q in raw["meta"]["queries"] if q.get("source") in {"tvn_rss", "tvn_news_sitemap", "gdelt_doc"}]
+    news_queries = [q for q in raw["meta"]["queries"] if q.get("source") in {
+        "tvn_rss", "tvn_news_sitemap", "gdelt_doc", "bing_news_rss",
+    }]
     if not news_queries or not raw["news"]:
         raise ValueError("Ninguna fuente de noticias entregó una ingesta válida; se conserva el corte anterior.")
     cutoff = parse_dt(raw["meta"]["cutoffUtc"])
@@ -216,6 +240,8 @@ def run_daily(data_dir: Path, *, previous_dir: Path | None = None, raw_dir: Path
         raise ValueError("La ingesta no entregó noticias válidas en la ventana; se conserva el corte anterior.")
     # Failed/missing sources never remove previously observed records still in the window.
     old = [a for a in previous["articles"] if start <= parse_dt(a["effectiveDate"]) <= cutoff + timedelta(days=1)]
+    previous_urls = {article["canonicalUrl"] for article in previous["articles"]}
+    newly_discovered_count = len({article["canonicalUrl"] for article in fresh} - previous_urls)
     articles, _ = merge_url_duplicates([*fresh, *old])
     indicators = raw["indicators"]
     if indicators is not None:
@@ -224,7 +250,64 @@ def run_daily(data_dir: Path, *, previous_dir: Path | None = None, raw_dir: Path
     return build_normalized(data_dir, previous, articles=articles, indicators=indicators,
                             cutoff=cutoff, window_start=start, queries=raw["meta"]["queries"],
                             errors=raw["meta"].get("errors", []), events=raw["events"], invalid=invalid,
+                            newly_discovered_count=newly_discovered_count,
                             set_current=set_current, classifier_factory=classifier_factory, progress=progress, log=log)
+
+
+def run_news_candidate(data_dir: Path, *, previous_dir: Path | None = None,
+                       progress=None, log=print) -> Path:
+    """Descubre titulares con fuentes gratuitas, conserva indicadores previos y no promueve el snapshot."""
+    _require_calibrated_news_model()
+    return run_daily(data_dir, previous_dir=previous_dir, set_current=False,
+                     sources=("tvn", "tvn-sitemap", "gdelt", "bing-news", "usgs"),
+                     progress=progress, log=log)
+
+
+def _require_calibrated_news_model() -> None:
+    model_dir = Path(os.environ["UMBRAL_LAYA_MODEL_DIR"]) if os.environ.get("UMBRAL_LAYA_MODEL_DIR") else None
+    model_version = resolve_model_version(model_dir, PINNED_REVISION)
+    if load_profile(model_version, model_dir) is None:
+        raise ValueError("news-candidate requiere un perfil de calibración Laya que haya superado su testGate")
+    if model_dir is None or not (model_dir / "rl_agent_config.json").is_file():
+        raise ValueError("UMBRAL_LAYA_MODEL_DIR debe señalar el artefacto calibrado completo de Laya, incluida su configuración")
+
+
+def promote_news_candidate(data_dir: Path, snapshot_id: str) -> Path:
+    """Promueve localmente un candidato Laya íntegro y más reciente que CURRENT."""
+    if not re.fullmatch(r"\d{8}-[a-f0-9]{8}", snapshot_id):
+        raise ValueError("snapshotId inválido")
+    snapshots_root = (data_dir / "snapshots").resolve()
+    candidate = (snapshots_root / snapshot_id).resolve()
+    if candidate.parent != snapshots_root:
+        raise ValueError("El snapshot debe estar dentro de data/snapshots")
+    verified = load_verified(candidate)
+    manifest = verified["manifest"]
+    if manifest["classifier"].get("classifier") != "laya":
+        raise ValueError("Solo se promueven candidatos clasificados con Laya")
+    news_quality = verified["quality"].get("news", {})
+    unique_count = int(news_quality.get("uniqueCanonicalUrls", news_quality.get("valid", 0)) or 0)
+    tvn_count = int(news_quality.get("tvnValid", 0) or 0)
+    new_count = int(news_quality.get("newlyDiscovered", 0) or 0)
+    if unique_count < MIN_UNIQUE or tvn_count < MIN_TVN:
+        raise ValueError(f"Cobertura insuficiente para publicar: {unique_count} titulares únicos, {tvn_count} de TVN")
+    if new_count < 1:
+        raise ValueError("El candidato no contiene titulares nuevos frente al snapshot anterior")
+    news_sources = {"tvn_rss", "tvn_news_sitemap", "gdelt_doc", "bing_news_rss"}
+    if not any(query.get("source") in news_sources and not query.get("error") and int(query.get("returned", 0) or 0) > 0
+               for query in manifest.get("queries", [])):
+        raise ValueError("El candidato no contiene resultados de fuentes de noticias exitosas")
+    current_file = snapshots_root / "CURRENT"
+    if current_file.exists():
+        current_id = current_file.read_text(encoding="utf-8").strip()
+        if not re.fullmatch(r"\d{8}-[a-f0-9]{8}", current_id):
+            raise ValueError("CURRENT no contiene un snapshotId válido")
+        if current_id == snapshot_id:
+            raise ValueError("El candidato ya es CURRENT")
+        current = load_verified(snapshots_root / current_id)
+        if parse_dt(manifest["cutoffUtc"]) <= parse_dt(current["manifest"]["cutoffUtc"]):
+            raise ValueError("El corte candidato no es más reciente que CURRENT")
+    activate_snapshot(candidate)
+    return candidate
 
 
 def retain_snapshots(snapshots_root: Path, *, keep: int = 7, referenced: set[str] | None = None) -> list[str]:

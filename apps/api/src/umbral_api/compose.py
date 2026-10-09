@@ -17,6 +17,7 @@ from .drafts import EvidencePack, validate_claims
 from .models import Citation, Claim, ClaimType, QueryIntent, QueryResponse, ValidationIssue
 from .retrieval import fold
 from .security import leaks_secret, looks_like_instruction, sanitize_for_prompt
+from .seismology import SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE
 from .snapshot import Corpus
 from .topics import HEADLINE_NOTICE
 from .util import fmt_value
@@ -39,6 +40,7 @@ ANSWER_TYPE = {
     QueryIntent.busqueda.value: (
         "Lo que reportan las fuentes: atribuye cada titular a su medio y fecha; si hay versiones incompatibles, preséntalas ambas."
     ),
+    QueryIntent.eventos_sismicos.value: "Eventos USGS ordenados por magnitud: conserva magnitud, ubicación y hora de Panamá citando los campos exactos. No infieras daños, víctimas, pérdidas ni intensidad sentida.",
 }
 
 
@@ -101,6 +103,9 @@ def rules_notes(response: QueryResponse) -> dict[str, str]:
             current = None
     for index, item in enumerate(response.missing[:8], 1):
         notes[f"pendiente_{index}"] = item
+    if response.intent == QueryIntent.eventos_sismicos:
+        notes["caja_regional"] = SEISMIC_BOX_NOTE
+        notes["limite_danos"] = SEISMIC_DAMAGE_NOTE
     return notes
 
 
@@ -114,6 +119,7 @@ def pack_from_response(corpus: Corpus, response: QueryResponse) -> tuple[Evidenc
             continue
         article = corpus.articles.get(eid)
         point = corpus.indicators.get(eid)
+        event = corpus.events.get(eid)
         if article is not None:
             if article.suspicious_instructions:
                 pack.excluded.add(eid)
@@ -133,6 +139,10 @@ def pack_from_response(corpus: Corpus, response: QueryResponse) -> tuple[Evidenc
                 "indicatorName": point.indicator_name,
             }
             pack.kinds[eid] = "indicador"
+        elif event is not None:
+            pack.items[eid] = event.citation_fields()
+            pack.kinds[eid] = "evento_sismico"
+            pack.headline_only = False
         else:
             continue
         order.append(eid)
@@ -243,6 +253,25 @@ def validate_composition(out: ModelCompose, pack: EvidencePack, order: list[str]
     if intent_value == QueryIntent.verificaciones.value and any(k.startswith("pendiente_") for k in pack.items.get(RULES_ID, {})):
         if not any(c.evidence_id == RULES_ID and c.field.startswith("pendiente_") for st in out.statements for c in st.citations):
             errors.append("La pregunta es qué falta verificar: lista los pendientes citando reglas.pendiente_N en lugar de repetir el titular.")
+    if intent_value == QueryIntent.eventos_sismicos.value:
+        events = [eid for eid in order if pack.kinds.get(eid) == "evento_sismico"]
+        covered = {c.evidence_id for statement in out.statements for c in statement.citations}
+        if any(eid not in covered for eid in events):
+            errors.append("La redacción debe conservar todos los eventos USGS recuperados, en su orden por magnitud.")
+        for statement in out.statements:
+            cited_event_ids = {c.evidence_id for c in statement.citations if c.evidence_id in events}
+            for eid in cited_event_ids:
+                fields = {c.field for c in statement.citations if c.evidence_id == eid}
+                if not {"magnitude", "place", "timePanama"} <= fields:
+                    errors.append("Cada evento requiere citas de magnitud, ubicación y hora de Panamá.")
+                item = pack.items[eid]
+                if not all(fold(item[key]) in fold(statement.text) for key in ("magnitude", "place", "timePanama")):
+                    errors.append("La redacción debe mantener literalmente magnitud, ubicación y hora de Panamá de cada evento.")
+            if cited_event_ids and re.search(r"\bdan\w*|\bvictim\w*|\bmuert\w*|\bfallecid\w*|\bherid\w*|\bperdid\w*|\bafectad\w*|\bsinti\w*|\bintensidad\b", fold(statement.text)):
+                errors.append("Un evento USGS no respalda daños, víctimas, pérdidas ni intensidad sentida.")
+        first_order = list(dict.fromkeys(c.evidence_id for statement in out.statements for c in statement.citations if c.evidence_id in events))
+        if first_order != events:
+            errors.append("La redacción alteró el orden por magnitud de los eventos USGS.")
     return out.statements, errors
 
 

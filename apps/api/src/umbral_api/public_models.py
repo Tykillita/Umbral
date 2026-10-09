@@ -64,6 +64,7 @@ class AgendaFilters(ApiModel):
     q: str | None = Field(None, max_length=500)
     include_components: bool = True
     scope: Literal["in_scope", "all"] = "in_scope"
+    tvn_gap: bool = Field(False, description="Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual.")
 
 
 class PublicTopicRequest(ApiModel):

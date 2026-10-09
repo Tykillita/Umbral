@@ -49,7 +49,7 @@ def _latest_raw(data_dir: Path) -> Path:
 def _load_raw(raw: Path) -> dict[str, Any]:
     meta = json.loads((raw / "fetch_meta.json").read_text(encoding="utf-8"))
     out: dict[str, Any] = {"meta": meta, "news": [], "indicators": None, "events": None}
-    for name in ("tvn_records.json", "tvn_sitemap_records.json", "gdelt_records.json"):
+    for name in ("tvn_records.json", "tvn_sitemap_records.json", "gdelt_records.json", "bing_news_records.json"):
         p = raw / name
         if p.exists():
             out["news"].extend(json.loads(p.read_text(encoding="utf-8")))
@@ -160,6 +160,7 @@ def run_build(
     # --- reporte de calidad ---
     n_tvn = sum(1 for a in valid if a["isTvn"])
     n_gdelt = sum(1 for a in valid if a["origin"]["source"] == "gdelt_doc")
+    n_bing = sum(1 for a in valid if a["origin"]["source"] == "bing_news_rss")
     real_valid = [a for a in valid if a["dataOrigin"] == "real"]
     eff = sorted(a["effectiveDate"] for a in real_valid)
     ind_missing = sum(1 for r in indicators if r["value"] is None)
@@ -195,7 +196,8 @@ def run_build(
             "invalidByCode": dict(Counter(c for r in invalid for c in r["reasonCodes"])),
             "uniqueCanonicalUrls": len({a["canonicalUrl"] for a in valid}),
             "duplicateUrlsCollapsed": dup_dropped,
-            "tvnValid": n_tvn, "gdeltValid": n_gdelt, "fixtureValid": sum(1 for a in valid if a["dataOrigin"] == "fixture"),
+            "tvnValid": n_tvn, "gdeltValid": n_gdelt, "bingNewsValid": n_bing,
+            "fixtureValid": sum(1 for a in valid if a["dataOrigin"] == "fixture"),
             "nullPublishedAt": n_pub_null,
             "targetMet": len(real_valid) >= TARGET_UNIQUE, "minimumMet": len(real_valid) >= MIN_UNIQUE,
             "tvnMinimumMet": sum(1 for a in real_valid if a["isTvn"]) >= MIN_TVN,

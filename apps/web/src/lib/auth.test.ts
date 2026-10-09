@@ -2,11 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const sdk = vi.hoisted(() => ({
   initializeApp: vi.fn(() => ({})),
+  getApps: vi.fn(() => []),
   getAuth: vi.fn(),
   signInAnonymously: vi.fn(),
   connectAuthEmulator: vi.fn(),
 }));
-vi.mock('firebase/app', () => ({ initializeApp: sdk.initializeApp }));
+vi.mock('firebase/app', () => ({ initializeApp: sdk.initializeApp, getApps: sdk.getApps }));
 vi.mock('firebase/auth', () => ({ getAuth: sdk.getAuth, signInAnonymously: sdk.signInAnonymously, connectAuthEmulator: sdk.connectAuthEmulator }));
 
 beforeEach(() => {
@@ -24,7 +25,7 @@ describe('selección y fallos de autenticación', () => {
   it('conecta el emulador local antes de iniciar la sesión', async () => {
     vi.stubEnv('PUBLIC_FIREBASE_AUTH_EMULATOR_URL', 'http://127.0.0.1:9099');
     const user = { uid: 'emulator-user', getIdToken: vi.fn().mockResolvedValue('emulator-token') };
-    sdk.getAuth.mockReturnValue({ currentUser: null });
+    sdk.getAuth.mockReturnValue({ currentUser: null, authStateReady: vi.fn().mockResolvedValue(undefined), emulatorConfig: null });
     sdk.signInAnonymously.mockResolvedValue({ user });
     const auth = await import('./auth');
     expect(await auth.initAuth()).toMatchObject({ mode: 'firebase-anonymous', uid: user.uid, error: null });
@@ -65,7 +66,7 @@ describe('selección y fallos de autenticación', () => {
   });
 
   it('el error de login queda visible y no permite solicitudes sin Bearer', async () => {
-    sdk.getAuth.mockReturnValue({ currentUser: null });
+    sdk.getAuth.mockReturnValue({ currentUser: null, authStateReady: vi.fn().mockResolvedValue(undefined), emulatorConfig: null });
     sdk.signInAnonymously.mockRejectedValue(new Error('auth/network-request-failed'));
     const auth = await import('./auth');
     const fetch = vi.fn();
@@ -78,7 +79,7 @@ describe('selección y fallos de autenticación', () => {
 
   it('renueva el token de la sesión y rechaza una sesión terminada', async () => {
     const user = { uid: 'anonymous-test', getIdToken: vi.fn().mockResolvedValue('test-token') };
-    const session = { currentUser: user as typeof user | null };
+    const session = { currentUser: user as typeof user | null, authStateReady: vi.fn().mockResolvedValue(undefined) };
     sdk.getAuth.mockReturnValue(session);
     const auth = await import('./auth');
     expect(await auth.getAuthToken()).toBe('test-token');
@@ -102,4 +103,17 @@ it('public entra sin Firebase ni token aunque existan variables Firebase', async
   expect(await auth.getAuthToken()).toBeNull();
   expect(sdk.initializeApp).not.toHaveBeenCalled();
   expect(sdk.signInAnonymously).not.toHaveBeenCalled();
+});
+
+it('public inicia Firebase anónimo solo al usar un conector y reutiliza la sesión', async () => {
+  vi.stubEnv('PUBLIC_AUTH_MODE', 'public');
+  const user = { uid: 'connector-anonymous', getIdToken: vi.fn().mockResolvedValue('connector-id-token') };
+  const authSession = { currentUser: null as typeof user | null, authStateReady: vi.fn().mockResolvedValue(undefined), emulatorConfig: null };
+  sdk.getAuth.mockReturnValue(authSession);
+  sdk.signInAnonymously.mockImplementation(async () => { authSession.currentUser = user; return { user }; });
+  const auth = await import('./auth');
+  expect(await auth.initAuth()).toMatchObject({ mode: 'public', uid: null });
+  expect(await auth.getConnectorAuthToken()).toBe('connector-id-token');
+  expect(await auth.getConnectorAuthToken()).toBe('connector-id-token');
+  expect(sdk.signInAnonymously).toHaveBeenCalledTimes(1);
 });

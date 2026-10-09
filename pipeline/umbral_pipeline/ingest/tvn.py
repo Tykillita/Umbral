@@ -64,6 +64,6 @@ def fetch_tvn(
         r["topicHint"] = None
     q = {
         "source": "tvn_rss", "endpoint": feed_url, "query": None,
-        "from": None, "to": None, "returned": len(recs),
+        "from": None, "to": None, "returned": len(recs), "extractedAt": extracted,
     }
     return recs, q, xml_text

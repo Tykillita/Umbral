@@ -71,14 +71,17 @@ def digest(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("executable", nargs="?", type=Path, default=DESKTOP / "release/win-unpacked/Umbral.exe")
-    parser.add_argument("--full-seed", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--full-seed", action="store_true")
+    mode.add_argument("--oauth-callback-only", action="store_true")
     args = parser.parse_args()
     executable = args.executable
     port = free_port()
     qa = DESKTOP / ".qa"
     qa.mkdir(exist_ok=True)
     env = {key: value for key, value in os.environ.items() if key != "ELECTRON_RUN_AS_NODE"}
-    state_root = qa / ("full-seed-" if args.full_seed else "mini-seed-") / datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
+    seed_name = "full-seed-" if args.full_seed else "oauth-callback-" if args.oauth_callback_only else "mini-seed-"
+    state_root = qa / seed_name / datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
     if not args.full_seed:
         subprocess.run([str(DESKTOP / ".venv/Scripts/python.exe"), str(DESKTOP / "probe_snapshot.py"),
                         "--data-dir", str(state_root / "Umbral")], check=True, capture_output=True)
@@ -118,13 +121,44 @@ def main():
             page.wait_for_url("http://127.0.0.1:*/", timeout=90_000)
             base = urlparse(page.url)._replace(path="", query="", fragment="").geturl()
             open_app(page, base)
+            if not args.oauth_callback_only:
+                # El rol editor no tiene acceso a Borradores; esta prueba recorre la mesa completa.
+                page.get_by_test_id("role-change").click()
+                page.get_by_test_id("role-juror").click()
             info = page.evaluate("""async () => (await fetch('/api/v1/snapshot', {headers:{'x-umbral-desktop-token':window.umbralDesktop.apiToken}})).json()""")
             actual_count = info["manifest"]["counts"]["articlesValid"]
             assert actual_count == (991 if args.full_seed else 2)
+            if args.full_seed:
+                classifier = info["manifest"]["classifier"]
+                assert classifier.get("calibrated") is True
+                assert classifier.get("modelVersion")
+                assert classifier.get("calibrationProfileId")
+                assert classifier.get("calibrationProfileSha256")
+                checks.append("full_seed_uses_calibrated_laya_profile")
             assert page.evaluate("typeof require") == "undefined"
             assert page.evaluate("typeof process") == "undefined"
             assert page.evaluate("window.umbralDesktop.platform") == "win32"
             checks.append("renderer_isolated_no_node")
+            callback = httpx.get(base + "/api/v1/auth/callback", params={
+                "state": "synthetic-invalid-state", "code": "synthetic-code", "client_id": "test-client",
+            })
+            cross_origin_callback = httpx.get(base + "/api/v1/auth/callback", params={"state": "synthetic-state"},
+                                              headers={"Origin": "https://auth.openai.com"})
+            missing_state_callback = httpx.get(base + "/api/v1/auth/callback")
+            post_callback = httpx.post(base + "/api/v1/auth/callback", params={"state": "synthetic-state"})
+            assert callback.status_code != 403 and cross_origin_callback.status_code == 403
+            assert missing_state_callback.status_code == 403 and post_callback.status_code == 403
+            checks.append("oauth_callback_exempts_only_local_browser_get")
+            if args.oauth_callback_only:
+                assert callback.status_code == 503
+                assert not blocked and not failures
+                page.evaluate("window.close()")
+                process.wait(timeout=30)
+                checks.append("electron_quit_completed")
+                time.sleep(.5)
+                assert_port_closed(base)
+                checks.append("local_backend_terminated_on_quit")
+                return
             open_first_ficha(page)
             draft_and_review(page, "Revisora escritorio offline")
             expect(page.get_by_test_id("draft-origin-label")).to_have_attribute("data-mode", "plantilla")
@@ -208,13 +242,19 @@ def main():
     finally:
         if process.poll() is None:
             subprocess.run(["taskkill.exe", "/PID", str(process.pid), "/T", "/F"], capture_output=True)
+        expected_checks = 4 if args.oauth_callback_only else 9 if args.full_seed else 13
         receipt = {"startedAt": started, "finishedAt": datetime.now(UTC).isoformat(),
                    "command": "tests/.venv/Scripts/python.exe apps/desktop/smoke_electron.py " + str(executable),
                    "executableSha256": digest(executable), "checks": checks, "pageErrors": failures,
                    "blockedRequests": len(blocked), "stateDirectory": str(state_root),
-                   "scope": "Seed completo: 991 noticias reales." if args.full_seed else "Corte reducido: dos titulares reales y 540 indicadores.",
-                   "cleanWindowsInstall": "pendiente", "result": "passed" if len(checks) == (7 if args.full_seed else 12) else "incomplete"}
-        name = "electron-full-seed-smoke.json" if args.full_seed else "electron-smoke.json"
+                   "scope": "Seed completo: 991 noticias reales." if args.full_seed else
+                           "Callback OAuth local sin token de renderer." if args.oauth_callback_only else
+                           "Corte reducido: dos titulares reales y 540 indicadores.",
+                   "cleanWindowsInstall": "pendiente",
+                   "result": "passed" if len(checks) == expected_checks else "incomplete"}
+        name = "electron-oauth-callback-smoke.json" if args.oauth_callback_only else (
+            "electron-full-seed-smoke.json" if args.full_seed else "electron-smoke.json"
+        )
         content = json.dumps(receipt, ensure_ascii=False, indent=2)
         (qa / name).write_text(content, encoding="utf-8")
         (qa / (datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ-") + name)).write_text(content, encoding="utf-8")

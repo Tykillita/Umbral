@@ -12,6 +12,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# MiniLM se ejecuta únicamente al precalcular artefactos, nunca en la API.
+semantic = [
+  "sentence-transformers>=3.4,<6",
+  "torch==2.14.1+cpu",
+]
 # Laya (PyTorch + transformers). Pesado (~200 MB torch CPU + ~650 MB pesos HF). NO se instala en CI.
 laya = [
   "laya==0.3.28",

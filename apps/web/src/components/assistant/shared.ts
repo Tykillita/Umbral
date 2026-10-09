@@ -9,6 +9,7 @@ export const AGENDA_SUGGESTIONS = [
   '¿Qué cinco temas merecen revisión para la agenda y por qué?',
   '¿Qué falta verificar en los temas de prioridad alta?',
   '¿Qué fuentes independientes respaldan los temas principales?',
+  '¿Cuáles son los sismos de mayor magnitud del catálogo USGS disponible?',
 ];
 
 export function apiNamespace(): string {

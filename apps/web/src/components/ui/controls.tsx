@@ -526,18 +526,24 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
   const id = useId();
   const hostRef = useRef<HTMLSpanElement>(null);
   const timer = useRef<number | undefined>(undefined);
+  const dismissTimer = useRef<number | undefined>(undefined);
   const [show, setShow] = useState(false);
   const [pos, setPos] = useState<TipPos | null>(null);
 
   const open = (delay: number) => {
     window.clearTimeout(timer.current);
+    window.clearTimeout(dismissTimer.current);
     timer.current = window.setTimeout(() => setShow(true), delay);
   };
-  const hide = () => {
+  const hide = useCallback(() => {
     window.clearTimeout(timer.current);
+    window.clearTimeout(dismissTimer.current);
     setShow(false);
-  };
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  }, []);
+  useEffect(() => () => {
+    window.clearTimeout(timer.current);
+    window.clearTimeout(dismissTimer.current);
+  }, []);
 
   useLayoutEffect(() => {
     if (!show) return;
@@ -547,14 +553,36 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
     const half = Math.min(160, window.innerWidth / 2 - 8);
     const left = Math.min(Math.max(r.left + r.width / 2, half + 8), window.innerWidth - half - 8);
     setPos(r.top > 90 ? { left, bottom: window.innerHeight - r.top + 8 } : { left, top: r.bottom + 8 });
-    const dismiss = () => setShow(false);
+    const dismiss = () => hide();
     window.addEventListener('scroll', dismiss, true);
     window.addEventListener('resize', dismiss);
     return () => {
       window.removeEventListener('scroll', dismiss, true);
       window.removeEventListener('resize', dismiss);
     };
-  }, [show]);
+  }, [show, hide]);
+
+  useEffect(() => {
+    if (!show) return;
+    const dismiss = () => hide();
+    const dismissWhenHidden = () => {
+      if (document.visibilityState !== 'visible') dismiss();
+    };
+    const dismissAfterLostPointerLeave = (event: PointerEvent) => {
+      const host = hostRef.current;
+      if (event.pointerType !== 'mouse' || !host) return;
+      const target = event.target;
+      if (target instanceof Node && !host.contains(target)) dismiss();
+    };
+    window.addEventListener('blur', dismiss);
+    document.addEventListener('visibilitychange', dismissWhenHidden);
+    document.addEventListener('pointermove', dismissAfterLostPointerLeave, true);
+    return () => {
+      window.removeEventListener('blur', dismiss);
+      document.removeEventListener('visibilitychange', dismissWhenHidden);
+      document.removeEventListener('pointermove', dismissAfterLostPointerLeave, true);
+    };
+  }, [show, hide]);
 
   return (
     <span
@@ -572,7 +600,7 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
           if (show) hide();
           else {
             open(0);
-            window.setTimeout(() => setShow(false), 3500);
+            dismissTimer.current = window.setTimeout(hide, 3500);
           }
         }
       }}
@@ -665,16 +693,24 @@ export function Modal({
   open,
   title,
   description,
+  headerContent,
   children,
   onClose,
   testId,
+  dialogId,
+  placement = 'center',
+  returnFocus,
 }: {
   open: boolean;
   title: ReactNode;
   description?: string;
+  headerContent?: ReactNode;
   children?: ReactNode;
   onClose: () => void;
   testId?: string;
+  dialogId?: string;
+  placement?: 'center' | 'settings';
+  returnFocus?: () => HTMLElement | null;
 }) {
   const id = useId();
   const dialogRef = useRef<HTMLElement>(null);
@@ -695,15 +731,17 @@ export function Modal({
     return () => {
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousDocumentOverflow;
-      if (openerRef.current?.isConnected) openerRef.current.focus({ preventScroll: true });
+      const target = returnFocus?.() ?? openerRef.current;
+      if (target?.isConnected) target.focus({ preventScroll: true });
     };
-  }, [open]);
+  }, [open, returnFocus]);
 
   if (!open || typeof document === 'undefined') return null;
 
   return createPortal(
     <div
       className="comic-modal-layer"
+      data-placement={placement}
       data-testid={testId ? `${testId}-layer` : undefined}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
@@ -714,13 +752,14 @@ export function Modal({
     >
       <section
         ref={dialogRef}
+        id={dialogId}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={description ? `${id}-description` : undefined}
         tabIndex={-1}
         data-testid={testId}
-        className="comic-panel comic-modal-panel"
+        className={`comic-panel comic-modal-panel ${placement === 'settings' ? 'settings-panel' : ''}`}
         onKeyDown={(event) => {
           if (event.key === 'Escape') {
             event.preventDefault();
@@ -747,16 +786,19 @@ export function Modal({
         }}
       >
         <header className="comic-dialogue-header flex items-center justify-between gap-3 px-4 py-3">
-          <h2 id={titleId} className="font-display text-xl font-bold leading-tight">{title}</h2>
-          <button
-            type="button"
-            className="comic-button comic-icon-button inline-flex items-center justify-center border-2 border-transparent bg-transparent text-ink-2 hover:bg-sunk"
-            aria-label="Cerrar ventana"
-            onClick={onClose}
-            data-modal-autofocus=""
-          >
-            <X size={16} aria-hidden="true" />
-          </button>
+          <div className="comic-dialogue-header-main">
+            <h2 id={titleId} className="font-display text-xl font-bold leading-tight">{title}</h2>
+            {headerContent}
+            <button
+              type="button"
+              className="comic-button comic-icon-button inline-flex items-center justify-center border-2 border-transparent bg-transparent text-ink-2 hover:bg-sunk"
+              aria-label="Cerrar ventana"
+              onClick={onClose}
+              data-modal-autofocus=""
+            >
+              <X size={16} aria-hidden="true" />
+            </button>
+          </div>
         </header>
         <div className="comic-modal-content p-4">
           {description && <p id={`${id}-description`} className="mb-3 text-ink-2">{description}</p>}

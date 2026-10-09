@@ -95,18 +95,18 @@ jobs:
           PY
       - name: Recuperar únicamente los snapshots públicos verificados
         run: uv run --frozen --project pipeline python scripts/stage_hosting_data.py download --base-url https://site-umbral.web.app/data/ --snapshots-root .production/data/snapshots
-      - name: Preparar candidato diario sin activar el anterior
+      - name: Preparar candidato de noticias con Laya sin activar el anterior
         shell: bash
         run: |
           set -euo pipefail
           previous="$(cat .production/data/snapshots/CURRENT)"
-          uv run --frozen --project pipeline --extra laya python -m umbral_pipeline --data-dir .production/data daily --previous ".production/data/snapshots/$previous" --classifier laya --overlap-hours 48 --window-days 30 --no-set-current --json-progress > .production/daily-progress.jsonl
-      - name: Identificar y verificar el candidato
+          uv run --frozen --project pipeline --extra laya python -m umbral_pipeline --data-dir .production/data news-candidate --previous ".production/data/snapshots/$previous" --json-progress > .production/news-progress.jsonl
+      - name: Verificar y promover el candidato exacto
         id: candidate
         shell: bash
         run: |
           set -euo pipefail
-          snapshot="$(python -c 'import json,pathlib; rows=[json.loads(x) for x in pathlib.Path(".production/daily-progress.jsonl").read_text().splitlines() if x.strip()]; print(next(r["snapshotId"] for r in reversed(rows) if "snapshotId" in r and "path" in r))')"
+          snapshot="$(python -c 'import json,pathlib; rows=[json.loads(x) for x in pathlib.Path(".production/news-progress.jsonl").read_text().splitlines() if x.strip()]; print(next(r["snapshotId"] for r in reversed(rows) if "snapshotId" in r and "path" in r))')"
           [[ "$snapshot" =~ ^[0-9]{8}-[a-f0-9]{8}$ ]]
           uv run --frozen --project pipeline python -m umbral_pipeline verify ".production/data/snapshots/$snapshot"
           python3 - "$snapshot" <<'PY'
@@ -128,6 +128,7 @@ jobs:
               json.dump(expected, output, ensure_ascii=False)
               output.write('\n')
           PY
+          uv run --frozen --project pipeline python -m umbral_pipeline --data-dir .production/data promote-news "$snapshot"
           model_version="$(python3 -c 'import json; print(json.load(open(".production/candidate-model.json", encoding="utf-8"))["modelVersion"])')"
           profile_id="$(python3 -c 'import json; print(json.load(open(".production/candidate-model.json", encoding="utf-8"))["calibrationProfileId"])')"
           profile_sha="$(python3 -c 'import json; print(json.load(open(".production/candidate-model.json", encoding="utf-8"))["calibrationProfileSha256"])')"
@@ -154,7 +155,7 @@ jobs:
         with:
           name: datos-diarios-recibos
           path: |
-            .production/daily-progress.jsonl
+            .production/news-progress.jsonl
             .production/laya-model-prepare.log
             .production/laya-model-receipt.json
             .production/candidate-model.json

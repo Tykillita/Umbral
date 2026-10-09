@@ -5,6 +5,8 @@ export type AuthState = { mode: 'public' | 'local' | 'firebase-anonymous'; uid: 
 let state: AuthState = { mode: config.authMode === 'public' ? 'public' : firebaseRequested ? 'firebase-anonymous' : 'local', uid: null, error: null };
 let tokenGetter: (() => Promise<string | null>) | null = null;
 let initPromise: Promise<AuthState> | null = null;
+let connectorTokenGetter: (() => Promise<string>) | null = null;
+let connectorInitPromise: Promise<() => Promise<string>> | null = null;
 
 /**
  * local omite Firebase incluso si hay configuración guardada. firebase requiere configuración completa.
@@ -33,6 +35,7 @@ export function initAuth(): Promise<AuthState> {
       const app = initializeApp(config.firebase);
       const auth = getAuth(app);
       if (emulatorUrl) connectAuthEmulator(auth, emulatorUrl, { disableWarnings: true });
+      await auth.authStateReady();
       const cred = auth.currentUser ? { user: auth.currentUser } : await signInAnonymously(auth);
       tokenGetter = async () => {
         if (!auth.currentUser) throw new AuthError('La sesión de Firebase terminó. Recarga para iniciar otra sesión.');
@@ -54,6 +57,47 @@ export async function getAuthToken(): Promise<string | null> {
     return tokenGetter ? await tokenGetter() : null;
   } catch (e) {
     throw new AuthError(e instanceof Error ? e.message : 'No se pudo renovar la sesión de Firebase.');
+  }
+}
+
+/**
+ * La web pública no inicia una sesión para el trabajo editorial. Esta identidad anónima solo
+ * acompaña las rutas de conectores, para que el servidor pueda aislar las credenciales OAuth.
+ * Firebase conserva su propia sesión; Umbral nunca escribe tokens en localStorage.
+ */
+export async function getConnectorAuthToken(): Promise<string> {
+  if (connectorTokenGetter) return connectorTokenGetter();
+  if (!connectorInitPromise) {
+    connectorInitPromise = (async () => {
+      if (!firebaseConfigured) {
+        throw new AuthError('Las conexiones requieren Firebase Auth anónima. La configuración aún no está disponible.');
+      }
+      const emulatorUrl = config.authEmulatorUrl
+        ? validateAuthEmulatorUrl(config.authEmulatorUrl, window.location.hostname)
+        : null;
+      const [{ getApps, initializeApp }, { getAuth, signInAnonymously, connectAuthEmulator }] = await Promise.all([
+        import('firebase/app'),
+        import('firebase/auth'),
+      ]);
+      const app = getApps().find((candidate) => candidate.name === '[DEFAULT]') ?? initializeApp(config.firebase);
+      const auth = getAuth(app);
+      if (emulatorUrl && !auth.emulatorConfig) connectAuthEmulator(auth, emulatorUrl, { disableWarnings: true });
+      await auth.authStateReady();
+      if (!auth.currentUser) await signInAnonymously(auth);
+      return async () => {
+        const user = auth.currentUser;
+        if (!user) throw new AuthError('La identidad anónima de Firebase terminó. Recarga Umbral para volver a conectarla.');
+        return user.getIdToken();
+      };
+    })();
+  }
+  try {
+    connectorTokenGetter = await connectorInitPromise;
+    return await connectorTokenGetter();
+  } catch (error) {
+    connectorInitPromise = null;
+    if (error instanceof AuthError) throw error;
+    throw new AuthError(`No se pudo iniciar la identidad anónima para conectores: ${error instanceof Error ? error.message : 'Fallo de Firebase Auth'}`);
   }
 }
 

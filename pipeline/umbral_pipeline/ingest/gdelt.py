@@ -73,7 +73,7 @@ def fetch_gdelt(
                 }
                 entry = {
                     "source": "gdelt_doc", "endpoint": GDELT_ENDPOINT, "query": qtext, "topic": topic,
-                    "from": iso_z(cur), "to": iso_z(nxt), "returned": 0,
+                    "from": iso_z(cur), "to": iso_z(nxt), "returned": 0, "extractedAt": extracted,
                 }
                 try:
                     resp = get_with_retry(

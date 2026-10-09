@@ -20,6 +20,15 @@ def generate(page):
     expect(tid(page, "draft-brief")).not_to_be_empty()
 
 
+def test_centro_de_advertencias_en_build_publico(page, public_stack):
+    open_app(page, public_stack.url)
+    expect(tid(page, "fixture-notice")).to_have_count(0)
+    trigger = tid(page, "warning-center-toggle")
+    trigger.click()
+    expect(tid(page, "warning-center")).to_be_visible()
+    expect(tid(page, "warning-fixture-notice")).to_contain_text("Este snapshot contiene datos de fixture")
+
+
 def test_entrada_publica_y_revision_persisten_sin_autenticacion(page, public_stack):
     calls = []
     page.on("request", lambda request: calls.append((request.url, request.method, request.headers)))

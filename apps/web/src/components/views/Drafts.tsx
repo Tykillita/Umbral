@@ -14,6 +14,7 @@ import {
   Newspaper,
   RefreshCw,
   Save,
+  Send,
   ShieldAlert,
   Sparkles,
 } from 'lucide-react';
@@ -48,6 +49,9 @@ import {
 } from '../ui';
 import { Modal, Select, Tooltip } from '../ui/controls';
 import { ConnectionsCard } from '../EditorialSettings';
+import { canPerform } from '../../lib/session';
+import { desktopConnectorEnabled } from '../../lib/desktop';
+import { socialVariants } from '../../lib/social';
 
 // Límites del plan (PLAN §3): brief ≤250, copy ≤80, guion 45–60 s a ~2,5 palabras/s, 3 preguntas.
 const BRIEF_MAX = 250;
@@ -60,6 +64,11 @@ const WORD_RE = /[0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ%]+(?:[.,'’-][0-9A-Za-z
 const stripMarkers = (t: string) => t.replace(/\s*\[c\d+\]/g, '');
 export function wordCount(t: string): number {
   return (stripMarkers(t).match(WORD_RE) ?? []).length;
+}
+
+function spokenScript(t: string): string {
+  const body = t.replace(/^\s*GUION\s*:\s*/i, '');
+  return (body.split(/\n\s*NOTAS\s+DE\s+PRODUCCI[ÓO]N\s*:\s*/i, 1)[0] ?? '').trim();
 }
 
 const TRANSITION_LABEL: Record<ReviewStatus, string> = {
@@ -238,16 +247,11 @@ function ValidationPanel({ d, live }: { d: DraftRecord; live: { brief: number; s
         </ul>
       )}
       {warnings.length > 0 && (
-        <ul className="mt-2 space-y-1" data-testid="draft-validation-warnings">
-          {warnings.map((i, k) => (
-            <li key={k} className="flex gap-2 text-sm text-warn">
-              <CircleAlert size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
-              <span>
-                <span className="font-mono text-xs">{i.code}</span> · {i.message}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <Notice tone="warn" title="Advertencias de validación" testId="draft-validation-warnings">
+          <ul className="list-disc pl-5">
+            {warnings.map((i, k) => <li key={k}><span className="font-mono text-xs">{i.code}</span> · {i.message}</li>)}
+          </ul>
+        </Notice>
       )}
       {v.rejectedClaimIds.length > 0 && (
         <p className="mt-2 text-sm text-bad">Afirmaciones rechazadas (no se muestran como respaldadas): {v.rejectedClaimIds.join(', ')}.</p>
@@ -313,7 +317,7 @@ function DraftEditor({ detail, draft, caseView, reviewer }: { detail: TopicDetai
   const idC = useId();
   const idP = useId();
   const set = <K extends keyof Form>(k: K, v: Form[K]) => setForm((f) => ({ ...f, [k]: v }));
-  const live = { brief: wordCount(form.brief), script: wordCount(form.script), copy: wordCount(form.copy), questions: form.questions.filter((q) => q.trim()).length };
+  const live = { brief: wordCount(form.brief), script: wordCount(spokenScript(form.script)), copy: wordCount(form.copy), questions: form.questions.filter((q) => q.trim()).length };
   const conflict = save.error instanceof ApiError && save.error.isConflict ? save.error : null;
   const rejected = new Set(baseDraft.validation.rejectedClaimIds);
 
@@ -396,13 +400,26 @@ function DraftEditor({ detail, draft, caseView, reviewer }: { detail: TopicDetai
           <Field label="Verificaciones pendientes (una por línea)" htmlFor={idP}>
             <textarea id={idP} data-testid="draft-pending" rows={4} className={inputCls} value={form.pending} onChange={(e) => set('pending', e.target.value)} />
           </Field>
-          <Field label="Guion estimado (45–60 s)" htmlFor={idS}>
-            <textarea id={idS} data-testid="draft-script" rows={7} className={inputCls} value={form.script} onChange={(e) => set('script', e.target.value)} />
-            <Counter n={Math.round(live.script / WPS)} min={SCRIPT_MIN_S} max={SCRIPT_MAX_S} unit={`s estimados (${live.script} palabras)`} testId="draft-script-count" />
+          <Field label="Guion y notas de producción" htmlFor={idS} hint="Separa el texto hablado bajo GUION: y las indicaciones bajo NOTAS DE PRODUCCIÓN:. Solo se cuenta el guion hablado.">
+            <textarea id={idS} data-testid="draft-script" rows={9} className={inputCls} value={form.script} onChange={(e) => set('script', e.target.value)} />
+            <Counter n={Math.round(live.script / WPS)} min={SCRIPT_MIN_S} max={SCRIPT_MAX_S} unit={`s estimados (${live.script} palabras habladas)`} testId="draft-script-count" />
           </Field>
           <Field label="Copy digital (máximo 80 palabras)" htmlFor={idC}>
             <textarea id={idC} data-testid="draft-copy" rows={3} className={inputCls} value={form.copy} onChange={(e) => set('copy', e.target.value)} />
             <Counter n={live.copy} max={COPY_MAX} testId="draft-copy-count" />
+            <p className="mt-3 text-xs text-ink-2">Variantes derivadas de este copy; son borradores y no agregan hechos. Se actualizan mientras editas.</p>
+            <div className="mt-2 grid gap-2 sm:grid-cols-3" data-testid="draft-social-variants" aria-live="polite">
+              {socialVariants(form.copy).map((variant) => (
+                <article key={variant.platform} className="min-w-0 rounded-lg border border-rule-strong bg-card p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <strong className="text-sm text-ink">{variant.platform}</strong>
+                    <span className="text-xs text-ink-3">{variant.characters}/{variant.limit}</span>
+                  </div>
+                  <p className="mb-2 min-h-10 whitespace-pre-wrap break-words text-sm text-ink-2">{variant.text || 'Escribe el copy para ver la variante.'}</p>
+                  <span className="text-[0.68rem] font-semibold uppercase tracking-wide text-warn">Borrador · requiere revisión</span>
+                </article>
+              ))}
+            </div>
           </Field>
         </div>
       </Card>
@@ -462,7 +479,7 @@ function DraftEditor({ detail, draft, caseView, reviewer }: { detail: TopicDetai
 
 // --------------------------------------------------------------------------- revisión
 
-function ReviewPanel({ detail, caseView }: { detail: TopicDetail; caseView: CaseView }) {
+export function ReviewPanel({ detail, caseView }: { detail: TopicDetail; caseView: CaseView }) {
   const { reviewer, setReviewer } = useApp();
   const review = useReview(detail.summary.id, caseView.caseId);
   const [baseVersion, setBaseVersion] = useState(caseView.version);
@@ -623,36 +640,129 @@ function ReviewPanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
 
 // --------------------------------------------------------------------------- exportación
 
-function ExportPanel({ caseId }: { caseId: string }) {
-  const { api } = useApp();
-  const exp = useMutation({ mutationFn: () => api.exportCase(caseId) });
+function ExportPanel({ caseId, title, status, version, snapshotId }: { caseId: string; title: string; status: ReviewStatus; version: number; snapshotId: string }) {
+  const { api, showToast, authMode } = useApp();
+  const exp = useMutation({
+    mutationFn: () => api.exportCase(caseId),
+    onError: (error) => showToast({ tone: 'error', title: 'No se pudo generar el Markdown', description: describeError(error) }),
+  });
+  const notionExport = useMutation({
+    mutationFn: async () => {
+      if ((authMode === 'public' || desktopConnectorEnabled()) && api.connectorOverview && api.exportMarkdownToNotion) {
+        const overview = await api.connectorOverview();
+        const notion = overview.providers.notion;
+        if (!notion.connected) return { configured: false as const };
+        if (!notion.destinationId) return { configured: false as const, missingDestination: true as const };
+        const exported = await api.exportCase(caseId);
+        return { configured: true as const, page: await api.exportMarkdownToNotion(exported.markdown) };
+      }
+      if (!api.notionStatus || !api.exportCaseToNotion) return { configured: false as const };
+      const status = await api.notionStatus();
+      if (!status.configured) return { configured: false as const };
+      return { configured: true as const, page: await api.exportCaseToNotion(caseId) };
+    },
+    onSuccess: (result) => {
+      if (!result.configured) {
+        showToast({ tone: 'info', title: 'Notion requiere configuración', description: 'Conecta Notion y elige una página de destino desde Configuración.' });
+        return;
+      }
+      showToast({
+        tone: 'success',
+        title: 'Ficha exportada a Notion',
+        description: `${result.page.title} se guardó como una página nueva.`,
+        actionLabel: 'Abrir Notion',
+        actionHref: result.page.url,
+      });
+    },
+    onError: (error) => showToast({ tone: 'error', title: 'No se pudo exportar a Notion', description: describeError(error) }),
+  });
+  const slackShare = useMutation({
+    mutationFn: async () => {
+      if (!api.connectorOverview || !api.shareCaseToSlack) return { configured: false as const };
+      const overview = await api.connectorOverview();
+      if (!overview.providers.slack.connected || !overview.providers.slack.channelId) return { configured: false as const };
+      return { configured: true as const, result: await api.shareCaseToSlack({
+        eventId: `share:${caseId}:${version}`,
+        caseId,
+        caseVersion: version,
+        title,
+        status,
+        snapshotId,
+      }) };
+    },
+    onSuccess: (result) => {
+      if (!result.configured) {
+        showToast({ tone: 'info', title: 'Slack aún no está listo', description: 'Conecta Slack y elige un canal desde Configuración.' });
+      } else if (result.result.duplicate) {
+        showToast({ tone: 'info', title: 'Ficha ya compartida', description: 'Esta versión ya se envió a Slack.' });
+      } else {
+        showToast({ tone: 'success', title: 'Ficha compartida en Slack', description: `Se envió “${title}” al canal configurado.` });
+      }
+    },
+    onError: (error) => showToast({ tone: 'error', title: 'No se pudo compartir en Slack', description: describeError(error) }),
+  });
   const [copied, setCopied] = useState(false);
   useEffect(() => setCopied(false), [exp.data]);
   const download = () => {
     if (!exp.data) return;
-    const url = URL.createObjectURL(new Blob([exp.data.markdown], { type: 'text/markdown;charset=utf-8' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = exp.data.filename;
-    a.click();
-    URL.revokeObjectURL(url);
+    const exported = exp.data;
+    showToast({ tone: 'pending', title: 'Preparando la descarga', description: 'Creando el archivo Markdown…' });
+    window.requestAnimationFrame(() => {
+      let url: string | null = null;
+      try {
+        url = URL.createObjectURL(new Blob([exported.markdown], { type: 'text/markdown;charset=utf-8' }));
+        const a = document.createElement('a');
+        a.href = url;
+          a.download = exported.filename;
+          a.click();
+          window.setTimeout(() => { if (url) URL.revokeObjectURL(url); }, 1_500);
+          if (!window.umbralDesktop?.onDownloadStatus) {
+            showToast({ tone: 'success', title: 'Descarga iniciada', description: `${exported.filename} se envió al navegador. Revisa sus descargas.` });
+          }
+      } catch (error) {
+        if (url) URL.revokeObjectURL(url);
+        showToast({ tone: 'error', title: 'No se pudo iniciar la descarga', description: error instanceof Error ? error.message : 'Ocurrió un error al preparar el archivo.' });
+      }
+    });
+  };
+  const exportToNotion = () => {
+    const publicOAuth = (authMode === 'public' || desktopConnectorEnabled()) && !!api.connectorOverview && !!api.exportMarkdownToNotion;
+    const localConnection = authMode === 'local' && api.kind === 'live' && api.workspaceMode !== 'browser' && !!api.notionStatus && !!api.exportCaseToNotion;
+    if (!publicOAuth && !localConnection) {
+      showToast({ tone: 'info', title: 'Notion no está disponible', description: 'Configura el conector en la web pública o abre Umbral en modo local.' });
+      return;
+    }
+    showToast({ tone: 'pending', title: 'Exportando a Notion', description: 'Comprobando la conexión y creando una página…' });
+    notionExport.mutate();
   };
   return (
     <Card aria-labelledby="export-title">
-      <SectionTitle id="export-title" kicker="Notion">
+      <SectionTitle id="export-title" kicker="Exportación">
         Exportar ficha
       </SectionTitle>
-      <p className="mb-2 text-sm text-ink-2">Genera Markdown listo para pegar en Notion con puntaje, evidencia, borrador, citas e historial.</p>
+      <p className="mb-2 text-sm text-ink-2">Genera o exporta directamente a Notion el Markdown con puntaje, evidencia, borrador, citas e historial.</p>
       <div className="flex flex-wrap gap-2">
         <Button icon={FileDown} data-testid="export-markdown" busy={exp.isPending} onClick={() => exp.mutate()}>
           Generar Markdown
         </Button>
+        <Button icon={Send} data-testid="export-notion" busy={notionExport.isPending} onClick={exportToNotion}>
+          Exportar a Notion
+        </Button>
+        {(authMode === 'public' || desktopConnectorEnabled()) && <Button icon={Send} data-testid="share-slack" busy={slackShare.isPending} onClick={() => slackShare.mutate()}>
+          Compartir en Slack
+        </Button>}
         {exp.data && (
           <>
             <Button
               icon={ClipboardCopy}
               data-testid="export-copy"
-              onClick={() => navigator.clipboard.writeText(exp.data.markdown).then(() => setCopied(true)).catch(() => setCopied(false))}
+              onClick={() => navigator.clipboard.writeText(exp.data.markdown).then(() => {
+                setCopied(true);
+                showToast({ tone: 'success', title: 'Markdown copiado', description: 'Ya puedes pegarlo donde lo necesites.' });
+              }).catch(() => {
+                setCopied(false);
+                showToast({ tone: 'error', title: 'No se pudo copiar el Markdown', description: 'El navegador bloqueó el acceso al portapapeles.' });
+              })}
             >
               {copied ? 'Copiado' : 'Copiar'}
             </Button>
@@ -725,13 +835,14 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
   const create = useCreateDraft(detail.summary.id);
   const [provider, setProvider] = useState<DraftProviderChoice>('auto');
   const [accountsOpen, setAccountsOpen] = useState(false);
+  const [pendingProvider, setPendingProvider] = useState<'chatgpt' | 'claude' | null>(null);
   const [providerNotice, setProviderNotice] = useState('');
   const id = useId();
   const localConnectionsAllowed = authMode === 'local' && health.data?.localMode === true && health.data.authMode === 'local';
   const choices = useMemo(() => PROVIDER_CHOICES.filter((choice) => {
     if (choice.value === 'chatgpt' || choice.value === 'claude') {
       if (!localConnectionsAllowed) return false;
-      return health.data?.providers.find((item) => item.name === choice.value)?.available === true;
+      return true;
     }
     if (choice.value === 'gemini') {
       const status = health.data?.providers.find((item) => item.name === 'gemini');
@@ -740,10 +851,22 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
     return true;
   }), [health.data, localConnectionsAllowed]);
   useEffect(() => {
+    if (pendingProvider && health.data?.providers.find((item) => item.name === pendingProvider)?.available) {
+      setProvider(pendingProvider);
+      setPendingProvider(null);
+      setAccountsOpen(false);
+      setProviderNotice('Sesión iniciada. El proveedor quedó seleccionado.');
+      return;
+    }
+    if ((provider === 'chatgpt' || provider === 'claude') && health.data?.providers.find((item) => item.name === provider)?.available !== true) {
+      setProvider('auto');
+      setProviderNotice('La sesión del proveedor ya no está disponible; se eligió Automático.');
+      return;
+    }
     if (choices.some((choice) => choice.value === provider)) return;
     setProvider('auto');
     setProviderNotice('El proveedor dejó de estar disponible; se eligió Automático. No se cambiará a otro proveedor personal.');
-  }, [choices, provider]);
+  }, [choices, health.data, pendingProvider, provider]);
   const selectedChoice = choices.find((item) => item.value === provider);
   const choice = selectedChoice ?? PROVIDER_CHOICES.find((item) => item.value === 'auto');
   const unavailableConnections = localConnectionsAllowed && ['chatgpt', 'claude'].some((name) =>
@@ -758,14 +881,24 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
         <div className="draft-create-row">
           <div className="min-w-0">
             <Field label="Proveedor de redacción" htmlFor={id}>
-              <Select id={id} testId="draft-provider" value={provider} onChange={(value) => { setProvider(value); setProviderNotice(''); }} options={choices.map((item) => {
+              <Select id={id} testId="draft-provider" value={provider} options={choices.map((item) => {
                 const status = health.data?.providers.find((entry) => entry.name === item.value);
                 const label = status?.model && ['gemini', 'chatgpt', 'claude'].includes(item.value) ? `${item.label} · ${status.model}` : item.label;
-                const hint = item.value === 'chatgpt' || item.value === 'claude'
-                  ? `${item.help} Solo en este equipo; usa tu plan o suscripción.`
+                const personal = item.value === 'chatgpt' || item.value === 'claude';
+                const ready = status?.available === true;
+                const hint = personal && !ready
+                  ? `Inicia sesión con tu cuenta de ${item.label} para usarlo.`
                   : item.help;
                 return { value: item.value, label, hint };
-              })} />
+              })} onChange={(value) => {
+                setProviderNotice('');
+                if ((value === 'chatgpt' || value === 'claude') && health.data?.providers.find((item) => item.name === value)?.available !== true) {
+                  setPendingProvider(value);
+                  setAccountsOpen(true);
+                  return;
+                }
+                setProvider(value);
+              }} />
             </Field>
           </div>
           <Button variant="primary" icon={Sparkles} data-testid="draft-generate" busy={create.isPending} onClick={() => create.mutate(provider)}>
@@ -775,7 +908,7 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
         {choice?.help && <p className="mt-2 text-xs text-ink-3" data-testid="draft-provider-help">{choice.help}</p>}
         {providerNotice && <Notice tone="warn" role="status" testId="draft-provider-changed">{providerNotice}</Notice>}
         {unavailableConnections && <div className="mt-2 flex flex-wrap items-center gap-2">
-          <p className="text-xs text-ink-3">ChatGPT y Claude aparecen en este selector cuando Umbral reconoce una sesión local.</p>
+          <p className="text-xs text-ink-3">Elige ChatGPT o Claude para iniciar sesión con tu cuenta.</p>
           <Button variant="ghost" data-testid="draft-provider-accounts" onClick={() => setAccountsOpen(true)}>Cuentas y modelos…</Button>
         </div>}
         {localConnectionsAllowed && !unavailableConnections && <div className="mt-2"><Button variant="ghost" data-testid="draft-provider-accounts" onClick={() => setAccountsOpen(true)}>Cuentas y modelos…</Button></div>}
@@ -798,15 +931,21 @@ function CreatePanel({ detail, caseView }: { detail: TopicDetail; caseView: Case
           </div>
         )}
       </Card>
-      <Modal open={accountsOpen} title="Cuentas y modelos" description="Umbral reconoce las conexiones locales de ChatGPT y Claude; no importa sesiones de otros clientes." onClose={() => setAccountsOpen(false)} testId="draft-provider-accounts-modal">
-        <ConnectionsCard />
+      <Modal open={accountsOpen} title="Cuentas y modelos" description="Conecta tu cuenta personal para usar ChatGPT o Claude en este equipo." onClose={() => setAccountsOpen(false)} testId="draft-provider-accounts-modal">
+        <ConnectionsCard startProvider={pendingProvider} onConnected={(connected) => {
+          setProvider(connected);
+          setPendingProvider(null);
+          setAccountsOpen(false);
+          setProviderNotice('Sesión iniciada. El proveedor quedó seleccionado.');
+        }} />
       </Modal>
     </>
   );
 }
 
 function DraftBody({ detail }: { detail: TopicDetail }) {
-  const { reviewer, go } = useApp();
+  const { reviewer, go, session } = useApp();
+  const role=session?.role ?? 'juror';
   const caseView = detail.case;
   const drafts = caseView.drafts;
   const [pickedId, setPickedId] = useState<string | null>(null);
@@ -870,7 +1009,7 @@ function DraftBody({ detail }: { detail: TopicDetail }) {
         </Notice>
       )}
 
-      <CreatePanel detail={detail} caseView={caseView} />
+      {canPerform(role,'createDraft') && <CreatePanel detail={detail} caseView={caseView} />}
 
       {!shown ? (
         <Notice tone="info" title="Aún no hay borrador para este tema" testId="draft-empty">
@@ -935,17 +1074,17 @@ function DraftBody({ detail }: { detail: TopicDetail }) {
             )}
           </Card>
 
-          {isLatest ? (
+          {isLatest && canPerform(role,'editDraft') ? (
             <DraftEditor key={caseView.caseId} detail={detail} draft={shown} caseView={caseView} reviewer={reviewer} />
           ) : (
             <Notice tone="info" title="Versión anterior (solo lectura)" testId="draft-readonly">
               Selecciona la versión vigente para editar. Brief: {shown.package.brief}
             </Notice>
           )}
-          <ReviewPanel detail={detail} caseView={caseView} />
-          <ExportPanel caseId={caseView.caseId} />
+          <ExportPanel caseId={caseView.caseId} title={s.title} status={caseView.status} version={caseView.version} snapshotId={detail.snapshotId} />
         </>
       )}
+      {canPerform(role,'review') && <ReviewPanel detail={detail} caseView={caseView} />}
     </div>
   );
 }

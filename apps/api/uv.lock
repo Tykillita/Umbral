@@ -1042,6 +1042,7 @@ dependencies = [
 
 [package.optional-dependencies]
 firebase = [
+    { name = "cryptography" },
     { name = "firebase-admin" },
     { name = "google-cloud-firestore" },
 ]
@@ -1056,6 +1057,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", marker = "extra == 'firebase'", specifier = ">=43" },
     { name = "fastapi", specifier = ">=0.115" },
     { name = "firebase-admin", marker = "extra == 'firebase'", specifier = ">=6.5" },
     { name = "google-cloud-firestore", marker = "extra == 'firebase'", specifier = ">=2.19" },

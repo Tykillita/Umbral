@@ -151,12 +151,14 @@ export class MockApi implements UmbralApi {
     await delay();
     const q = f.q?.trim().toLowerCase();
     const all = MOCK_SPECS.map((s) => buildDetail(s, this.getCaseSync(`case-${s.id}`)).summary);
+    const articlesByTopic = new Map(MOCK_SPECS.map((spec) => [spec.id, spec.articles]));
     let items = all
       .filter((t) => f.scope === 'all' || t.category !== 'indeterminado')
       .filter((t) => !f.category || t.category === f.category)
       .filter((t) => !f.evidence || t.evidenceStatus === f.evidence)
       .filter((t) => !f.band || t.band === f.band)
       .filter((t) => !f.reviewStatus || t.reviewStatus === f.reviewStatus)
+      .filter((t) => !f.tvnGap || (t.independentProvenances >= 2 && !articlesByTopic.get(t.id)?.some((article) => article.isTvn)))
       .filter((t) => !q || t.title.toLowerCase().includes(q) || t.categoryLabel.toLowerCase().includes(q));
     items = items.sort((a, b) => b.score - a.score || b.urgency - a.urgency || a.id.localeCompare(b.id));
     const total = items.length;
@@ -218,7 +220,7 @@ export class MockApi implements UmbralApi {
         .filter((x) => x.matched.length > 0 && (!req.topicId || x.t.summary.id === req.topicId)),
     );
     const asksNumber = /cifra|porcentaje|cu[aá]nto|exacto|n[uú]mero/.test(req.question.toLowerCase());
-    const retrieval = { corpusSize: topics.reduce((a, t) => a + t.articles.length, 0), coverage: terms.length ? Math.min(1, hits.length / terms.length) : 0, matchedTerms: [...new Set(hits.flatMap((h) => h.matched))], method: 'mock: coincidencia de palabras', tookMs: 5 };
+    const retrieval = { corpusSize: topics.reduce((a, t) => a + t.articles.length, 0), coverage: terms.length ? Math.min(1, hits.length / terms.length) : 0, matchedTerms: [...new Set(hits.flatMap((h) => h.matched))], method: 'mock: coincidencia de palabras', tookMs: 5, semanticModel:null,semanticExpansion:false,rrfK:null };
     if (!hits.length || (asksNumber && !hits.some((h) => h.t.contradictions.length))) {
       return {
         ...base,
@@ -258,6 +260,8 @@ export class MockApi implements UmbralApi {
         bm25: 1,
         fuzzy: 0.8,
         relevance: 0.9,
+        literalCoverage:terms.length?h.matched.length/terms.length:0,
+        retrievalOrigin:'lexical',semanticSimilarity:null,semanticAnchorId:null,rrfScore:null,
         snippet: h.a.title,
         suspiciousInstructions: h.a.suspiciousInstructions,
       })),
