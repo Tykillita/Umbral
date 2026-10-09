@@ -7,6 +7,18 @@ inputs:
   api-url:
     description: Origen HTTPS de la API en Render (https://<servicio>.onrender.com)
     required: true
+  firebase-api-key:
+    description: Clave pública de la app web Firebase
+    required: true
+  firebase-auth-domain:
+    description: Dominio de autenticación de Firebase
+    required: true
+  firebase-project-id:
+    description: ID del proyecto Firebase
+    required: true
+  firebase-app-id:
+    description: ID de la app web Firebase
+    required: true
   feed-url:
     description: >-
       Feed de datos ya publicado (https://<sitio>/data/). Si responde, se parte de él para que un despliegue
@@ -51,12 +63,31 @@ runs:
       run: |
         uv sync --frozen --project pipeline
         pnpm --dir apps/web install --frozen-lockfile
+    - name: Validar configuración Firebase de la web
+      shell: bash
+      env:
+        PUBLIC_FIREBASE_API_KEY: ${{ inputs.firebase-api-key }}
+        PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ inputs.firebase-auth-domain }}
+        PUBLIC_FIREBASE_PROJECT_ID: ${{ inputs.firebase-project-id }}
+        PUBLIC_FIREBASE_APP_ID: ${{ inputs.firebase-app-id }}
+      run: |
+        set -euo pipefail
+        for name in PUBLIC_FIREBASE_API_KEY PUBLIC_FIREBASE_AUTH_DOMAIN PUBLIC_FIREBASE_PROJECT_ID PUBLIC_FIREBASE_APP_ID; do
+          if [[ -z "${!name}" ]]; then
+            echo "Falta la configuración pública de Firebase: $name."
+            exit 1
+          fi
+        done
     - name: Compilar la web (acceso público, API real)
       shell: bash
       env:
         PUBLIC_API_MODE: live
         PUBLIC_AUTH_MODE: public
         PUBLIC_API_URL: ${{ inputs.api-url }}
+        PUBLIC_FIREBASE_API_KEY: ${{ inputs.firebase-api-key }}
+        PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ inputs.firebase-auth-domain }}
+        PUBLIC_FIREBASE_PROJECT_ID: ${{ inputs.firebase-project-id }}
+        PUBLIC_FIREBASE_APP_ID: ${{ inputs.firebase-app-id }}
         ASTRO_TELEMETRY_DISABLED: '1'
       run: pnpm --dir apps/web exec astro build
     - name: Preparar los datos de Hosting
