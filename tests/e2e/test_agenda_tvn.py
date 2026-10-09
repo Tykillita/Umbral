@@ -9,8 +9,8 @@ from playwright.sync_api import Browser, Page, expect
 pytestmark = pytest.mark.e2e
 
 
-@pytest.mark.parametrize("width", [1440, 1024, 768, 390, 320])
-def test_filtro_tvn_debajo_de_busqueda_y_accesible_por_teclado(page: Page, stack, width: int):
+@pytest.mark.parametrize("width", [1440, 1024, 768, 640, 390, 320])
+def test_filtro_tvn_se_alinea_con_busqueda_y_accesible_por_teclado(page: Page, stack, width: int):
     page.set_viewport_size({"width": width, "height": 900 if width >= 768 else 844})
     open_app(page, stack.url)
     search = tid(page, "agenda-search")
@@ -33,8 +33,13 @@ def test_filtro_tvn_debajo_de_busqueda_y_accesible_por_teclado(page: Page, stack
     search_box = search.bounding_box()
     toggle_box = toggle.bounding_box()
     assert search_box and toggle_box
-    assert abs(toggle_box["x"] - search_box["x"]) <= 2
-    assert toggle_box["y"] >= search_box["y"] + search_box["height"] - 2
+    if width >= 640:
+        assert toggle_box["x"] >= search_box["x"] + search_box["width"], "el filtro debe quedar a la derecha del buscador"
+        assert toggle_box["y"] < search_box["y"] + search_box["height"] and toggle_box["y"] + toggle_box["height"] > search_box["y"], \
+            "el filtro debe compartir la fila del campo"
+    else:
+        assert abs(toggle_box["x"] - search_box["x"]) <= 2
+        assert toggle_box["y"] >= search_box["y"] + search_box["height"] - 2
 
 
 def test_filtro_tvn_acepta_toque(browser: Browser, stack):

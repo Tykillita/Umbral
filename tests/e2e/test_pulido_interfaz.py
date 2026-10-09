@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 from e2e.helpers import open_app, open_first_ficha, settle_motion, tid
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Browser, Page, expect
 
 pytestmark = pytest.mark.e2e
 
@@ -235,22 +235,101 @@ def test_respuesta_del_asistente_viene_organizada(page: Page, stack, w, h):
     assert page.evaluate("document.documentElement.scrollWidth") <= w
 
 
-@pytest.mark.parametrize("w", [1440, 1024, 768])
+@pytest.mark.parametrize("w", [1440, 1200, 1080, 1024, 947, 768])
 def test_pestanas_de_la_cabecera_estan_centradas(page: Page, stack, w):
-    """En escritorio y tableta las pestañas quedan centradas en la cabecera (marca a la izquierda, asistente a la derecha)."""
+    """Marca, navegación y acciones comparten una fila sin solaparse ni partir los rótulos."""
     page.set_viewport_size({"width": w, "height": 900})
     open_app(page, stack.url, role="juror")
-    navigation = page.locator('nav[aria-label="Vistas principales"] .comic-nav:visible')
-    first, last = navigation.first.bounding_box(), navigation.last.bounding_box()
-    assert first and last, "la navegación principal debe tener pestañas visibles"
+    navigation = page.locator('nav[aria-label="Vistas principales"]')
+    visible_links = navigation.locator(".comic-nav:visible")
+    items = [link.bounding_box() for link in visible_links.all()]
+    more = tid(page, "nav-more")
+    if more.is_visible():
+        items.append(more.bounding_box())
+    assert items and all(items), "la navegación principal debe tener pestañas visibles"
     brand = page.locator("header .comic-brand").bounding_box()
     asistente = box(page, "assistant-toggle")
-    nav_center = (first["x"] + last["x"] + last["width"]) / 2
-    assert abs(nav_center - w / 2) <= 2, f"las pestañas no están centradas: centro {nav_center} vs {w / 2}"
     assert brand
-    if w >= 1024:
-        assert brand["x"] + brand["width"] < first["x"], "la marca debe quedar a la izquierda de las pestañas"
-        assert asistente["x"] > last["x"] + last["width"], "el asistente debe quedar a la derecha de las pestañas"
-    else:
-        assert brand["y"] + brand["height"] <= first["y"] and asistente["y"] + asistente["height"] <= first["y"], \
-            "a 768 px, la marca y el asistente deben quedar en la fila superior"
+    actions = page.locator(".comic-header-actions").bounding_box()
+    assert actions
+    nav_left = min(item["x"] for item in items if item)
+    nav_right = max(item["x"] + item["width"] for item in items if item)
+    assert brand["x"] + brand["width"] <= nav_left + 1, "la marca debe quedar a la izquierda de las pestañas"
+    assert nav_right <= actions["x"] + 1, "las pestañas no deben quedar bajo los controles de rol"
+    group_center = (nav_left + nav_right) / 2
+    available_center = (brand["x"] + brand["width"] + actions["x"]) / 2
+    assert abs(group_center - available_center) <= 4, "las pestañas deben centrarse en el espacio libre de la fila"
+    centers = [
+        brand["y"] + brand["height"] / 2,
+        *(item["y"] + item["height"] / 2 for item in items if item),
+        actions["y"] + actions["height"] / 2,
+        asistente["y"] + asistente["height"] / 2,
+    ]
+    assert max(centers) - min(centers) <= 4, f"marca, pestañas y controles deben compartir una fila: {centers}"
+    assert all(link.evaluate("element => getComputedStyle(element).whiteSpace") == "nowrap" for link in visible_links.all()), \
+        "los botones de navegación deben mantener cada rótulo en una sola línea"
+
+
+@pytest.mark.parametrize("w,h", [(320, 640), (390, 844), (640, 900), (689, 900), (767, 900)])
+def test_mas_tiene_icono_y_se_intercala_en_la_navegacion_movil(page: Page, stack, w, h):
+    page.set_viewport_size({"width": w, "height": h})
+    open_app(page, stack.url, role="editor")
+    navigation = page.locator('nav[aria-label="Vistas principales"]')
+    more = tid(page, "nav-more")
+    expect(more).to_be_visible()
+    assert more.get_attribute("aria-label") == "Más vistas"
+    assert more.locator(".select-trigger-icon svg").count() == 1, "Más debe mostrar un icono propio"
+    more_box = more.bounding_box()
+    links = [item.bounding_box() for item in navigation.locator(".comic-nav:visible").all()]
+    assert more_box and all(links), "los botones móviles deben quedar visibles"
+    before = sum(1 for item in links if item and item["x"] < more_box["x"])
+    after = len(links) - before
+    assert abs(before - after) <= 1, f"Más debe quedar intercalado cerca del centro: {before} vistas antes y {after} después"
+    more_font = more.evaluate("element => getComputedStyle(element).fontFamily")
+    nav_font = navigation.locator(".comic-nav:visible").first.evaluate("element => getComputedStyle(element).fontFamily")
+    assert more_font == nav_font, "Más debe compartir la tipografía de la navegación"
+    more.click()
+    expect(tid(page, "select-sheet")).to_have_count(0)
+    listbox = page.get_by_role("listbox")
+    expect(listbox).to_be_visible()
+    list_box = listbox.bounding_box()
+    assert list_box and list_box["x"] >= 0 and list_box["x"] + list_box["width"] <= w + 1, \
+        f"el menú Más debe quedar dentro del viewport: {list_box}"
+    assert list_box["y"] + list_box["height"] <= more_box["y"] + 1, "el menú Más debe flotar encima de su botón"
+
+
+def test_mas_permita_elegir_con_raton_y_teclado(page: Page, stack):
+    page.set_viewport_size({"width": 390, "height": 844})
+    open_app(page, stack.url, role="editor")
+    more = tid(page, "nav-more")
+    more.click()
+    page.get_by_role("option", name="Mesa").click()
+    assert "#/mesa" in page.url
+    expect(more).to_have_attribute("data-value", "mesa")
+
+    more.focus()
+    page.keyboard.press("ArrowDown")
+    expect(page.get_by_role("listbox")).to_be_visible()
+    page.keyboard.press("ArrowDown")
+    page.keyboard.press("Enter")
+    assert "#/etiquetar" in page.url
+    expect(more).to_have_attribute("data-value", "etiquetar")
+
+
+def test_mas_permita_elegir_con_toque(browser: Browser, stack):
+    context = browser.new_context(viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True)
+    page = context.new_page()
+    try:
+        open_app(page, stack.url, role="editor")
+        more = tid(page, "nav-more")
+        bounds = more.bounding_box()
+        assert bounds
+        page.touchscreen.tap(bounds["x"] + bounds["width"] / 2, bounds["y"] + bounds["height"] / 2)
+        option = page.get_by_role("option", name="Etiquetar")
+        expect(option).to_be_visible()
+        option_bounds = option.bounding_box()
+        assert option_bounds and option_bounds["height"] >= MIN_TOUCH
+        page.touchscreen.tap(option_bounds["x"] + option_bounds["width"] / 2, option_bounds["y"] + option_bounds["height"] / 2)
+        assert "#/etiquetar" in page.url
+    finally:
+        context.close()

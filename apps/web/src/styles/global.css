@@ -804,10 +804,11 @@ html.desktop-shell .desktop-hidden { display: none; }
 .comic-label-mode.is-active { background: var(--color-amber-200); box-shadow: 2px 2px 0 var(--color-ink); }
 .comic-label-progress { display: block; height: .5rem; margin-top: .35rem; border: 1px solid var(--color-ink); background: var(--color-card); }
 .comic-label-progress > span { display: block; height: 100%; background: var(--color-amber-500); }
-@media (min-width: 1024px) {
-  .comic-masthead > .comic-app-header { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; }
-  .comic-app-header .comic-tabbar { grid-column: 2; grid-row: 1; justify-self: center; flex-wrap: nowrap; }
-  .comic-app-header .comic-header-actions { grid-column: 3; grid-row: 1; justify-self: end; }
+@media (min-width: 768px) {
+  .comic-masthead > .comic-app-header { display: flex; align-items: center; gap: .5rem; }
+  .comic-app-header > .comic-brand { flex: 0 0 auto; }
+  .comic-app-header .comic-tabbar { flex: 1 1 auto; min-width: 0; justify-content: center; flex-wrap: nowrap; }
+  .comic-app-header .comic-header-actions { flex: 0 0 auto; justify-self: auto; }
   html.desktop-shell .comic-app-header { padding-right: 9.5rem; }
 }
 @media (max-width: 767px) {
@@ -816,11 +817,51 @@ html.desktop-shell .desktop-hidden { display: none; }
   .comic-active-role { flex: 0 1 auto; max-width: min(14rem, 42vw); justify-content: space-between; }
   .settings-trigger { bottom: calc(var(--mobile-nav-height) + .75rem); }
 }
-@media (min-width: 1024px) and (max-width: 1400px) {
+@media (min-width: 768px) and (max-width: 1400px) {
   .comic-app-header .comic-tabbar { gap: .2rem; }
   .comic-app-header .comic-tabbar .comic-nav-overflow { display: none; }
   .comic-app-header .comic-tabbar-more { display: block; flex: 0 0 auto; }
   .comic-app-header .comic-mobile-more-trigger { min-height: 2.75rem; padding-inline: .65rem; white-space: nowrap; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .comic-app-header .comic-tabbar { gap: .1rem; }
+  .comic-app-header .comic-nav { gap: .25rem; padding-inline: .4rem; }
+  .comic-app-header .comic-nav-label,
+  .comic-app-header .comic-assistant-toggle-label {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .comic-app-header .comic-active-role { max-width: 8.5rem; gap: .2rem; padding-left: .4rem; font-size: .7rem; }
+  .comic-app-header .comic-active-role .comic-button { padding-inline: .35rem; font-size: .7rem; }
+  .comic-app-header .comic-header-actions { gap: .25rem; }
+}
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .comic-app-header .comic-nav-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  .comic-app-header .comic-tabbar { gap: .2rem; }
+  .comic-app-header .comic-nav { gap: .3rem; padding-inline: .55rem; }
+  .comic-app-header .comic-assistant-toggle-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  .comic-app-header .comic-active-role { max-width: 9rem; gap: .2rem; padding-left: .4rem; font-size: .7rem; }
+  .comic-app-header .comic-active-role .comic-button { padding-inline: .35rem; font-size: .7rem; }
+  .comic-app-header .comic-header-actions { gap: .35rem; }
+}
+.comic-mobile-more-trigger {
+  width: auto; min-height: 2.75rem; flex: 0 0 auto; justify-content: center; gap: .4rem;
+  border: 1.5px solid transparent; border-radius: 2px; padding: .35rem .65rem;
+  background: var(--color-card); color: var(--color-ink-2); font-family: inherit;
+  font-size: .875rem; font-weight: 600; line-height: 1.15; box-shadow: none;
+}
+.comic-mobile-more-trigger:hover { background: var(--color-sunk); }
+.comic-mobile-more-trigger[data-value]:not([data-value=""]) { border-color: var(--color-ink); background: #f7c744; color: var(--color-ink); box-shadow: 2px 2px 0 var(--color-ink); }
+.comic-mobile-more-trigger[data-open="true"] { border-color: var(--color-ink); box-shadow: 2px 2px 0 var(--color-ink); }
+.comic-mobile-more-trigger .select-value { flex: 0 1 auto; color: inherit; font-size: inherit; font-weight: inherit; }
+@media (max-width: 767px) {
+  .comic-app-header .comic-tabbar-more { width: 100%; height: 100%; }
+  .comic-app-header .comic-mobile-more-trigger {
+    width: 100%; height: 100%; min-height: 3.5rem; flex-direction: column; justify-content: center;
+    gap: .15rem; padding: .35rem .15rem; font-size: .72rem; font-weight: 700; line-height: 1.1; text-align: center;
+  }
+  .comic-app-header .comic-mobile-more-trigger .select-value { flex: 0 0 auto; overflow: visible; text-align: center; }
+  .comic-app-header .comic-mobile-more-trigger .select-chevron { display: none; }
 }
 /* En la web, el scroll pertenece al contenido; header y navegación quedan fuera del área desplazable. */
 html:not(.desktop-shell) { height: 100%; overflow: hidden; scrollbar-gutter: auto; }
