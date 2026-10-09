@@ -29,6 +29,24 @@ def test_portada_muestra_estructura_y_snapshot_actual(page: Page, stack, width: 
     assert page.locator(".landing-stat strong").nth(0).inner_text() != "Cargando…"
     assert page.locator(".landing-stat strong").nth(1).inner_text() != "Cargando…"
 
+    layout_geometry = page.evaluate(
+        """() => {
+          const header = document.querySelector('.landing-header').getBoundingClientRect();
+          const footer = document.querySelector('.landing-footer').getBoundingClientRect();
+          return {
+            viewportWidth: window.innerWidth,
+            documentWidth: document.documentElement.clientWidth,
+            scrollbarWidth: getComputedStyle(document.documentElement).scrollbarWidth,
+            header: {left: header.left, right: header.right},
+            footer: {left: footer.left, right: footer.right}
+          };
+        }"""
+    )
+    assert layout_geometry["documentWidth"] == layout_geometry["viewportWidth"], layout_geometry
+    assert layout_geometry["scrollbarWidth"] == "none", layout_geometry
+    assert layout_geometry["header"] == {"left": 0, "right": layout_geometry["viewportWidth"]}, layout_geometry
+    assert layout_geometry["footer"] == {"left": 0, "right": layout_geometry["viewportWidth"]}, layout_geometry
+
     page.evaluate("window.scrollTo(0, 0)")
     page.mouse.wheel(0, 600)
     page.wait_for_function("window.scrollY > 0", timeout=2_000)
