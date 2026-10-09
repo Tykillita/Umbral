@@ -1,5 +1,6 @@
 // Configuración de build/entorno (solo valores PUBLIC_*, no secretos).
 const env = import.meta.env;
+const desktopFirebase = typeof window === 'undefined' ? undefined : window.umbralDesktop?.firebaseConfig;
 
 export type ApiMode = 'live' | 'mock' | 'auto';
 export type AuthMode = 'public' | 'local' | 'firebase' | 'auto';
@@ -15,11 +16,15 @@ export const config = {
   apiMode: resolveMode(),
   authMode: String(env.PUBLIC_AUTH_MODE ?? 'auto').trim().toLowerCase() as AuthMode,
   authEmulatorUrl: String(env.PUBLIC_FIREBASE_AUTH_EMULATOR_URL ?? '').trim(),
+  supabase: {
+    url: String(env.PUBLIC_SUPABASE_URL ?? '').trim(),
+    anonKey: String(env.PUBLIC_SUPABASE_ANON_KEY ?? '').trim(),
+  },
   firebase: {
-    apiKey: String(env.PUBLIC_FIREBASE_API_KEY ?? '').trim(),
-    authDomain: String(env.PUBLIC_FIREBASE_AUTH_DOMAIN ?? '').trim(),
-    projectId: String(env.PUBLIC_FIREBASE_PROJECT_ID ?? '').trim(),
-    appId: String(env.PUBLIC_FIREBASE_APP_ID ?? '').trim(),
+    apiKey: String(desktopFirebase?.apiKey ?? env.PUBLIC_FIREBASE_API_KEY ?? '').trim(),
+    authDomain: String(desktopFirebase?.authDomain ?? env.PUBLIC_FIREBASE_AUTH_DOMAIN ?? '').trim(),
+    projectId: String(desktopFirebase?.projectId ?? env.PUBLIC_FIREBASE_PROJECT_ID ?? '').trim(),
+    appId: String(desktopFirebase?.appId ?? env.PUBLIC_FIREBASE_APP_ID ?? '').trim(),
   },
 };
 

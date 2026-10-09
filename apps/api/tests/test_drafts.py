@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from umbral_api.drafts import build_pack, validate_claims
+from umbral_api.drafts import build_pack, script_speech, tidy_punctuation, validate_claims
 from umbral_api.models import Citation, Claim, ClaimType
+from umbral_api.util import strip_markers, word_count
 
 from .conftest import find_topic
 
@@ -29,6 +30,8 @@ def test_template_draft_is_valid_cited_and_typed(make_app):
     assert "titular/metadatos" in p["brief"] and p["headlineOnly"] and p["headlineOnlyNotice"]
     assert v["wordCounts"]["brief"] <= 250 and v["wordCounts"]["socialCopy"] <= 80
     assert 45 <= v["scriptSecondsEstimate"] <= 60
+    assert p["script"].startswith("GUION:") and "NOTAS DE PRODUCCIÓN:" in p["script"]
+    assert v["wordCounts"]["script"] == word_count(strip_markers(script_speech(p["script"])))
     assert len(p["researchQuestions"]) == 3 and p["pendingVerifications"]
     types = {cl["type"] for cl in p["claims"]}
     assert {"declaracion", "hecho", "hipotesis"} <= types  # distingue hechos/declaraciones/hipótesis
@@ -37,6 +40,24 @@ def test_template_draft_is_valid_cited_and_typed(make_app):
         if cl["type"] != "hipotesis":
             assert cl["citations"], cl
     assert v["citationCoverage"] >= 0.75  # la hipótesis no cita por definición
+
+
+def test_template_questions_are_category_specific_and_punctuation_is_clean(make_app):
+    c = make_app(offline=True)
+    package = draft(c, find_topic(c, "calado"))["draft"]["package"]
+    assert any("ACP" in question for question in package["researchQuestions"])
+    assert all(".." not in value and "!!" not in value for value in [*package["researchQuestions"], package["brief"], package["socialCopy"]])
+    assert tidy_punctuation("Nota..  ") == "Nota."
+
+
+def test_production_notes_do_not_change_spoken_duration(make_app):
+    from umbral_api.drafts import format_script
+
+    c = make_app(offline=True)
+    package = draft(c, find_topic(c, "calado"))["draft"]["package"]
+    original = script_speech(package["script"])
+    extended = format_script(original, ["Nota de producción larga " * 100])
+    assert len(script_speech(extended).split()) == len(original.split())
 
 
 def test_template_is_valid_for_every_topic(make_app):
@@ -209,8 +230,13 @@ def test_personal_adapters_rejected_in_web_settings(fixture_dir):
             svc.create_draft("ana", tid, DraftRequest(provider=p), client_is_local=True)
 
 
-def test_personal_adapter_not_connected_falls_back_locally(make_app):
-    c = make_app(local_mode=True, chatgpt_token_file=None)
+def test_personal_adapter_not_connected_falls_back_locally(make_app, tmp_path):
+    # El test debe aislarse de las credenciales locales de quien ejecuta pytest.
+    c = make_app(
+        local_mode=True,
+        chatgpt_token_file=None,
+        chatgpt_credentials_file=tmp_path / "no-chatgpt-session.dat",
+    )
     d = draft(c, find_topic(c, "calado"), provider="chatgpt")["draft"]
     assert d["generationMode"] == "plantilla" and d["fallbackReason"] == "proveedor_no_conectado"
 

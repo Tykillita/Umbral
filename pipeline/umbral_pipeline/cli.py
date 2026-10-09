@@ -16,7 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     f = sub.add_parser("fetch", help="descarga fuentes y guarda crudo en data/raw/<runId>/")
     f.add_argument("--window-days", type=int, default=30)
-    f.add_argument("--sources", default="tvn,gdelt,worldbank,usgs")
+    f.add_argument("--sources", default="tvn,tvn-sitemap,gdelt,bing-news,worldbank,usgs")
     f.add_argument("--gdelt-step-days", type=int, default=10)
 
     b = sub.add_parser("build", help="valida, clasifica, agrupa y exporta un snapshot desde un raw")
@@ -36,6 +36,21 @@ def build_parser() -> argparse.ArgumentParser:
     v = sub.add_parser("verify", help="verifica SHA-256, snapshotId y claves foraneas de un snapshot")
     v.add_argument("snapshot_dir", type=Path)
 
+    semantic = sub.add_parser("semantic", help="precalcula agrupación MiniLM y vecinos multilingües sin modificar el snapshot")
+    semantic.add_argument("--snapshot", default=None, help="snapshotId verificado (por defecto CURRENT)")
+    semantic.add_argument("--model-revision", default=None, help="revisión oficial del modelo; queda registrada en metadata")
+    semantic.add_argument("--offline", action="store_true", help="usa exclusivamente el modelo ya descargado")
+    semantic.add_argument("--threshold", type=float, default=0.74)
+    semantic.add_argument("--high-threshold", type=float, default=0.84)
+    semantic.add_argument("--lexical-anchors", type=int, default=2)
+    semantic.add_argument("--window-hours", type=float, default=72)
+    semantic.add_argument("--neighbor-k", type=int, default=8)
+    semantic.add_argument("--neighbor-threshold", type=float, default=0.6)
+    semantic.add_argument("--batch-size", type=int, default=64)
+
+    semantic_verify = sub.add_parser("verify-semantic", help="verifica hashes y referencias de los artefactos semánticos")
+    semantic_verify.add_argument("--snapshot", default=None, help="snapshotId (por defecto CURRENT)")
+
     for name, help_text in (("daily", "actualiza 30 días con ingesta incremental y Laya"),
                             ("reclassify", "reclasifica un snapshot normalizado con Laya, sin crudo")):
         refresh = sub.add_parser(name, help=help_text)
@@ -48,7 +63,17 @@ def build_parser() -> argparse.ArgumentParser:
             refresh.add_argument("--overlap-hours", type=int, choices=[48], default=48)
             refresh.add_argument("--raw", type=Path, default=None, help="ingesta ya descargada (pruebas/recuperación)")
 
-    sub.add_parser("fixture-snapshot", help="snapshot 100% fixture (sin red) marcado provisional/fixture, para CI")
+    candidate = sub.add_parser(
+        "news-candidate",
+        help="obtiene titulares web, los clasifica con Laya y valida un snapshot candidato sin promoverlo",
+    )
+    candidate.add_argument("--previous", type=Path, default=None, help="snapshot válido de partida (por defecto CURRENT)")
+    candidate.add_argument("--json-progress", action="store_true")
+
+    promote = sub.add_parser("promote-news", help="promueve localmente un candidato Laya verificado y más reciente")
+    promote.add_argument("snapshot_id", help="snapshotId exacto que se revisó")
+
+    sub.add_parser("fixture-snapshot", help="snapshot 100%% fixture (sin red) marcado provisional/fixture, para CI")
     return p
 
 
@@ -97,10 +122,40 @@ def main(argv: list[str] | None = None) -> int:
             print("ERROR:", pr)
         print("OK" if ok else "FALLO")
         return 0 if ok else 1
-    if args.cmd in {"daily", "reclassify"}:
+    if args.cmd in {"semantic", "verify-semantic"}:
+        from .semantic import SemanticParameters, resolve_snapshot, run_semantic, verify_semantic_artifacts
+
+        try:
+            if args.cmd == "semantic":
+                parameters = SemanticParameters(args.threshold, args.high_threshold, args.lexical_anchors,
+                                                args.window_hours, args.neighbor_k, args.neighbor_threshold)
+                out = run_semantic(data_dir, snapshot_id=args.snapshot, revision=args.model_revision,
+                                   offline=args.offline, parameters=parameters, batch_size=args.batch_size)
+                print(f"artefactos semánticos: {out}")
+                return 0
+            snapshot = resolve_snapshot(data_dir, args.snapshot)
+            ok, problems = verify_semantic_artifacts(snapshot, data_dir / "agrupacion" / snapshot.name)
+        except (ValueError, OSError, RuntimeError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
+        for problem in problems:
+            print("ERROR:", problem)
+        print("OK" if ok else "FALLO")
+        return 0 if ok else 1
+    if args.cmd == "promote-news":
+        from .refresh import promote_news_candidate
+
+        try:
+            out = promote_news_candidate(data_dir, args.snapshot_id)
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
+        print(f"snapshot promovido localmente: {out.name}")
+        return 0
+    if args.cmd in {"daily", "reclassify", "news-candidate"}:
         import json
 
-        from .refresh import run_daily, run_reclassify
+        from .refresh import run_daily, run_news_candidate, run_reclassify
 
         progress = (lambda stage, done, total: print(json.dumps({"stage": stage, "completed": done,
                                                                   "total": total}), flush=True)) if args.json_progress else None
@@ -109,6 +164,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "reclassify":
             previous = previous or data_dir / "snapshots" / (data_dir / "snapshots" / "CURRENT").read_text().strip()
             out = run_reclassify(data_dir, previous, set_current=not args.no_set_current, progress=progress, log=log)
+        elif args.cmd == "news-candidate":
+            out = run_news_candidate(data_dir, previous_dir=previous, progress=progress, log=log)
         else:
             out = run_daily(data_dir, previous_dir=previous, raw_dir=args.raw, set_current=not args.no_set_current,
                             progress=progress, log=log)

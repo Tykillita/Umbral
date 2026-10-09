@@ -34,6 +34,14 @@ const { title, description = 'Umbral: agenda editorial priorizada, evidencia tra
         try { motionPreference = window.localStorage.getItem(preferenceKey); } catch { /* storage may be unavailable */ }
       }
       document.documentElement.dataset.motionPreference = validPreference(motionPreference) ? motionPreference : 'system';
+
+      const themePreferenceKey = 'umbral.theme.v1';
+      let themePreference;
+      try { themePreference = window.localStorage.getItem(themePreferenceKey); } catch { /* el tema original sigue disponible */ }
+      const activeTheme = themePreference === 'tvn' ? 'tvn' : 'original';
+      document.documentElement.dataset.theme = activeTheme;
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      if (themeColor) themeColor.content = activeTheme === 'tvn' ? '#F3F8FC' : '#FFF7DF';
     </script>
   </head>
   <body>

@@ -27,6 +27,7 @@ _PATTERNS = [
     r"asigna\w*\s+(prioridad|puntaje|impacto)\s+(alta|m[aá]xim\w+|100)",
     r"<\s*/?\s*(system|assistant|instruction)\s*>",
     r"\[\s*(system|inst)\s*\]",
+    r"\b(system|developer|assistant)\s*:",
     r"nuevas?\s+instrucciones\s*:",
     r"(api[_\s-]?key|gemini_api_key|firebase|bearer\s+[a-z0-9._-]{12,})",
 ]
@@ -52,6 +53,37 @@ def looks_like_instruction(text: str | None) -> bool:
     if not text:
         return False
     return bool(_RE.search(_fold(text)))
+
+
+def split_instruction(text: str) -> tuple[str, bool]:
+    """Retira desde el primer fragmento de inyección; nunca devuelve ese fragmento para buscarlo."""
+    folded = _fold(text)
+    match = _RE.search(folded)
+    if match is None:
+        return text.strip(), False
+    # NFKC y los homoglifos conservan el largo en los casos corrientes; ante texto alterado se falla cerrado.
+    prefix = text[: match.start()].strip(" \t\r\n,;:-")
+    return prefix, True
+
+
+_PROFILE_RE = re.compile(
+    r"\b(quien(?:es)?|qu[eé]\s+(?:diputad\w*|funcionari\w*|personas?|politic\w*)|lista|identifica|perfila|describe|clasifica|rankea)\b.{0,100}\b"
+    r"(sospechos[oa]s?|culpables?|criminales?|delincuentes?|corrupt[oa]s?|peligros[oa]s?)\b",
+    re.IGNORECASE,
+)
+_GUILT_RE = re.compile(
+    r"\b(es verdad que|es cierto que|crees que|consideras que|es|son)\b.{0,120}\b"
+    r"(culpable|culpables|criminal|criminales|corrupto|corrupta|responsable penalmente)\b",
+    re.IGNORECASE,
+)
+
+
+def looks_like_profiling(text: str | None) -> bool:
+    return bool(text and _PROFILE_RE.search(_fold(text)))
+
+
+def looks_like_guilt_question(text: str | None) -> bool:
+    return bool(text and _GUILT_RE.search(_fold(text)))
 
 
 _SECRET_RE = re.compile(r"(AIza[0-9A-Za-z_-]{20,}|sk-[A-Za-z0-9]{20,}|GEMINI_API_KEY|-----BEGIN [A-Z ]*PRIVATE KEY-----)")

@@ -85,6 +85,20 @@ class SnapshotFeed:
                     if hashlib.sha256(manifest_bytes).hexdigest() != manifest_meta["sha256"]:
                         raise ValueError("Hash del manifest inválido.")
                     manifest = json.loads(manifest_bytes)
+                    cutoff_text = manifest.get("cutoffUtc")
+                    if not isinstance(cutoff_text, str):
+                        raise ValueError("El manifest debe declarar un corte UTC.")
+                    try:
+                        incoming_cutoff = datetime.fromisoformat(cutoff_text.replace("Z", "+00:00"))
+                    except ValueError as exc:
+                        raise ValueError("El corte del manifest no es una fecha válida.") from exc
+                    if incoming_cutoff.tzinfo is None:
+                        raise ValueError("El corte del manifest debe incluir zona UTC.")
+                    if incoming_cutoff.astimezone(UTC) < self.services.corpus.cutoff.astimezone(UTC):
+                        # An older hosted snapshot must not undo newer data discovered
+                        # locally by the packaged app.
+                        self.last_error = None
+                        return False
                     manifest_files = manifest.get("files") or {}
                     if manifest.get("snapshotId") != sid or manifest.get("containsFixtures") is not False:
                         raise ValueError("Manifest ajeno al descriptor o con fixtures.")

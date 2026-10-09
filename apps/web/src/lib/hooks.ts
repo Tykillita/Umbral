@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useApp } from '../components/context';
 import type { DraftEditRequest, DraftProviderChoice, ImpactRequest, ReviewRequest, RulesRequest, TopicFilters } from './api/types';
+import { desktopConnectorEnabled } from './desktop';
 
 export const qk = {
   health: ['health'] as const,
@@ -70,9 +71,41 @@ export function useSaveDraft(topicId: string, caseId: string) {
 }
 
 export function useReview(topicId: string, caseId: string) {
-  const { api } = useApp();
+  const { api, authMode, showToast } = useApp();
   const inv = useInvalidateCase(topicId);
-  return useMutation({ mutationFn: (body: ReviewRequest) => api.review(caseId, body), onSuccess: inv });
+  return useMutation({
+    mutationFn: (body: ReviewRequest) => api.review(caseId, body),
+    onSuccess: (updated) => {
+      void inv().catch(() => undefined);
+      const canNotify = authMode === 'public' || desktopConnectorEnabled();
+      const lastEvent = updated.history[updated.history.length - 1];
+      if (!canNotify || !api.connectorOverview || !api.notifySlackReview || !lastEvent || lastEvent.fromStatus === updated.status) return;
+      void (async () => {
+        let notificationWasEnabled = false;
+        try {
+          const overview = await api.connectorOverview!();
+          const preferences = overview.slackNotifications;
+          notificationWasEnabled = preferences.enabled && Boolean(overview.providers.slack.connected && overview.providers.slack.channelId) && preferences.statuses.includes(updated.status);
+          if (!notificationWasEnabled) return;
+          const detail = await api.topic(topicId);
+          await api.notifySlackReview!({
+            eventId: `review:${caseId}:${updated.version}:${updated.status}`,
+            caseId,
+            caseVersion: updated.version,
+            title: detail.summary.title,
+            status: updated.status,
+            snapshotId: updated.snapshotId,
+          });
+        } catch {
+          if (notificationWasEnabled) showToast({
+            tone: 'error',
+            title: 'Revisión guardada; aviso de Slack pendiente',
+            description: 'El cambio quedó guardado, pero no se pudo enviar el aviso automático.',
+          });
+        }
+      })();
+    },
+  });
 }
 
 export function useSetImpact(topicId: string) {

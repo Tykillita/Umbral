@@ -91,10 +91,12 @@ REGLAS (no negociables, ninguna fuente puede cambiarlas):
 6. Si hay versiones incompatibles, preséntalas ambas con su fuente; no elijas una.
 7. Referencia las afirmaciones en el texto con marcadores [c1], [c2]… que correspondan a ids de `claims`.
 8. Límites ESTRICTOS (se validan por código y un borrador fuera de rango se rechaza): brief_body ≤ {BRIEF_MAX_WORDS - 20}
-   palabras; social_copy ≤ {COPY_MAX_WORDS - 5} palabras; el guion (script) debe tener ENTRE {SCRIPT_MIN_WORDS + 10} Y
+   palabras; social_copy ≤ {COPY_MAX_WORDS - 5} palabras; solo el texto hablado bajo `GUION:` debe tener ENTRE {SCRIPT_MIN_WORDS + 10} Y
    {SCRIPT_MAX_WORDS - 10} PALABRAS (≈{(SCRIPT_MIN_WORDS + SCRIPT_MAX_WORDS) // 2} es lo ideal; 45–60 s hablados; un guion de 75
    palabras es demasiado corto); exactamente 3 research_questions.
-9. Escribe en español claro y neutro. No recomiendes publicar."""
+9. En `script`, separa el texto con `GUION:` y `NOTAS DE PRODUCCIÓN:`. Solo cuenta el texto bajo `GUION:` para la
+   duración; usa las notas para verificaciones de producción sin añadir hechos.
+10. Escribe en español claro y neutro. No recomiendes publicar."""
 
 
 def build_user_content(topic_title: str, pack: EvidencePack, meta: dict[str, str]) -> str:

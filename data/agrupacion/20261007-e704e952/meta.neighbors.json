@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "20261007-e704e952",
+  "generatedAt": "2026-10-09T00:46:45Z",
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "modelRevision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "modelSizeBytes": 484794173,
+  "modelFiles": [
+    {
+      "path": "1_Pooling/config.json",
+      "bytes": 190,
+      "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23"
+    },
+    {
+      "path": "config.json",
+      "bytes": 645,
+      "sha256": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e"
+    },
+    {
+      "path": "config_sentence_transformers.json",
+      "bytes": 122,
+      "sha256": "b8c64b5cece00d8424b4896ea75b512b6008576088497609dfeb6bd63e6d36b8"
+    },
+    {
+      "path": "model.safetensors",
+      "bytes": 470641600,
+      "sha256": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b"
+    },
+    {
+      "path": "modules.json",
+      "bytes": 229,
+      "sha256": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460"
+    },
+    {
+      "path": "sentence_bert_config.json",
+      "bytes": 53,
+      "sha256": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f"
+    },
+    {
+      "path": "sentencepiece.bpe.model",
+      "bytes": 5069051,
+      "sha256": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+    },
+    {
+      "path": "special_tokens_map.json",
+      "bytes": 239,
+      "sha256": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 9081518,
+      "sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 526,
+      "sha256": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b"
+    }
+  ],
+  "embeddingDimensions": 384,
+  "device": "cpu",
+  "sourceArticlesSha256": "4c719044cb745234d370d5263ed96e2a5b67f110f776c6db462b9577e578c070",
+  "sourceClustersSha256": "fff0b6254b741c11b7d7c164d6770242a31fcacd86196f7d1c5ee735a85ee705",
+  "text": "titular sin la entidad Panamá; el original permanece en articles.jsonl",
+  "k": 8,
+  "threshold": 0.6,
+  "neighborsSha256": "bcf19749d2e54361531660b0cbe6af3d7e6cf7334fd4aec152f421be855a29b2",
+  "articles": 991,
+  "withNeighbors": 608,
+  "fusion": "reciprocal rank fusion (k=60); el consumidor conserva citas y abstenciones"
+}

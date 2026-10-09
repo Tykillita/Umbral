@@ -77,24 +77,24 @@ def test_asistente_no_redimensiona_el_contenido(page: Page, stack, width: int):
 
 
 @pytest.mark.parametrize("width", [1440, 390, 320])
-def test_advertencia_de_laya_es_modal_accesible(page: Page, stack, width: int):
+def test_centro_de_advertencias_incluye_laya_y_es_modal_accesible(page: Page, stack, width: int):
     page.set_viewport_size({"width": width, "height": 900 if width == 1440 else 844})
     use_laya_classifier(page)
     open_app(page, stack.url)
-    trigger = tid(page, "classification-warning-toggle")
+    trigger = tid(page, "warning-center-toggle")
     expect(trigger).to_be_visible()
     expect(page.get_by_test_id("classification-limit")).to_have_count(0)
 
     trigger.click()
-    dialog = tid(page, "classification-warning")
+    dialog = tid(page, "warning-center")
     expect(dialog).to_be_visible()
     expect(dialog).to_have_attribute("aria-modal", "true")
-    expect(dialog).to_contain_text("Clasificación automática sin calibración validada")
-    expect(dialog).to_contain_text(
+    expect(tid(page, "classification-warning")).to_contain_text("Clasificación automática de Laya")
+    expect(tid(page, "classification-warning")).to_contain_text(
         "Laya puede asignar categorías erróneas y sus porcentajes no son confianza editorial: revisa categoría e impacto antes de usar el ranking."
     )
     RESULTS.mkdir(parents=True, exist_ok=True)
-    page.screenshot(path=str(RESULTS / f"classification-warning-{width}.png"), full_page=True)
+    page.screenshot(path=str(RESULTS / f"warning-center-{width}.png"), full_page=True)
     assert page.evaluate("document.body.style.overflow") == "hidden"
     assert page.evaluate("document.documentElement.style.overflow") == "hidden"
     close = dialog.get_by_role("button", name="Cerrar ventana")
@@ -122,6 +122,22 @@ def test_advertencia_de_laya_es_modal_accesible(page: Page, stack, width: int):
     expect(trigger).to_be_focused()
 
 
+def test_aviso_activo_se_mueve_al_centro_de_advertencias(page: Page, stack):
+    page.set_viewport_size({"width": 1440, "height": 900})
+    open_app(page, stack.url)
+    expect(tid(page, "fixture-notice")).to_have_count(0)
+
+    trigger = tid(page, "warning-center-toggle")
+    badge = trigger.locator('span[aria-hidden="true"]')
+    expect(badge).to_have_count(1)
+    assert int((badge.inner_text() or "0").strip()) >= 1
+    trigger.click()
+    center = tid(page, "warning-center")
+    expect(center).to_be_visible()
+    expect(tid(page, "warning-fixture-notice")).to_contain_text("Este snapshot contiene datos de fixture")
+    expect(tid(page, "fixture-notice")).to_have_count(0)
+
+
 def test_advertencia_abierta_sobre_asistente_conserva_la_conversacion(page: Page, stack):
     page.set_viewport_size({"width": 1440, "height": 900})
     use_laya_classifier(page)
@@ -132,13 +148,13 @@ def test_advertencia_abierta_sobre_asistente_conserva_la_conversacion(page: Page
     expect(field).to_be_visible()
     field.fill("Consulta pendiente conservada mientras reviso la advertencia")
 
-    trigger = tid(page, "classification-warning-toggle")
+    trigger = tid(page, "warning-center-toggle")
     trigger.click()
-    expect(tid(page, "classification-warning")).to_be_visible()
+    expect(tid(page, "warning-center")).to_be_visible()
     expect(tid(page, "assistant-input")).to_have_value("Consulta pendiente conservada mientras reviso la advertencia")
     page.keyboard.press("Escape")
     expect(trigger).to_be_focused()
-    expect(tid(page, "classification-warning")).to_have_count(0)
+    expect(tid(page, "warning-center")).to_have_count(0)
     expect(tid(page, "assistant-panel")).to_be_visible()
     expect(tid(page, "assistant-input")).to_have_value("Consulta pendiente conservada mientras reviso la advertencia")
 

@@ -1,4 +1,6 @@
-# Contrato del snapshot de datos (`snapshot-schema` v1.1.0)
+# Contrato del snapshot de datos (`snapshot-schema` v1.1.1)
+
+Adición documental v1.1.1: artefactos semánticos opcionales fuera del snapshot, con contrato propio `schemaVersion: 1` (§13). No modifica los bytes, el ID ni la versión de snapshots existentes.
 
 Adición v1.1.0: `calibrationLogits`, `calibratedProbabilities` y `calibrationProfileId` para conservar logits precisos, probabilidades ajustadas y la identidad del perfil Laya. `probabilities` sigue siendo la salida cruda del checkpoint. La aplicación web consume el snapshot generado por el pipeline; la app empaquetada usa el mismo perfil al reclasificar sin conexión. Adición v1.0.3: `origin.source=tvn_news_sitemap` y `publishedAtBasis=news_sitemap_publication`, para metadatos del sitemap Google News oficial declarado en robots.txt/índice TVN. `news:publication_date` es publicación; nunca se usa `lastmod` como publicación. No se guardan imágenes/cuerpos. Al fusionar raws, la ventana se limita a 90 días reales respecto al nuevo corte. `build --no-set-current` deja candidatos sin activar.
 
@@ -208,4 +210,28 @@ Recalcula SHA-256 de cada archivo, `snapshotId`, `predictionsInputSha256` y comp
 ## 12. Cosas que NO prometen estos datos
 
 Sin cuerpos de artículos; sin fecha de publicación para la mayoría de GDELT (solo `detectedAt`); sin etiquetas de verdad/falsedad; `contradiction` solo candidatos. Indicadores del Banco Mundial son anuales históricos con su `year`; el último año disponible puede tener más faltantes.
+
+## 13. Artefactos semánticos opcionales (CU-03 y recuperación multilingüe)
+
+Viven en `data/agrupacion/<snapshotId>/`, fuera del snapshot inmutable. Se generan localmente con el modelo oficial gratuito [paraphrase-multilingual-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2), CPU, sin ejecutar código remoto. Solo este paso requiere PyTorch; la API lee los JSONL y verifica su integridad.
+
+```powershell
+uv sync --project pipeline --extra semantic
+uv run --project pipeline --extra semantic python -m umbral_pipeline semantic
+uv run --project pipeline python -m umbral_pipeline verify-semantic
+# Con el modelo ya descargado: semantic --offline --model-revision <commit-modelo>
+```
+
+El comando usa CURRENT salvo `--snapshot <id>` y nunca modifica ni activa snapshots. Las otras dependencias opcionales necesarias en el entorno se conservan pasando sus extras a `uv sync` (por ejemplo `--extra laya --extra semantic`).
+
+| Archivo | Contenido |
+|---|---|
+| `clusters.semantic.jsonl` | Mismo esquema que `clusters.jsonl`. Los grupos unidos añaden `mergedFromClusterIds`; conservan miembros, procedencias, fechas, origen y estado provisional. Enlaces nuevos: `{a,b,method:"semantic_embedding",score}` con coseno entre 0 y 1. |
+| `meta.json` | Metadata común y `clustersSha256`, `threshold:0.74`, `highThreshold:0.84`, `lexicalAnchor:2`, `windowHours:72`, guardias y conteos técnicos de uniones/rechazos. No son métricas de precisión o recall humano. |
+| `neighbors.semantic.jsonl` | Una fila por artículo: `{articleId,neighbors:[[articleId,cosine],...]}`. Sin autoreferencias ni duplicados, orden descendente, máximo `k:8`, coseno mínimo `threshold:0.6`. Recuperan artículos relacionados, aunque tengan cifras discrepantes o fechas distintas; no certifican mismo hecho. |
+| `meta.neighbors.json` | Metadata común y `neighborsSha256`, `k`, `threshold`, `articles`, `withNeighbors`. El consumidor fusiona los vecinos con BM25/coincidencia difusa mediante RRF, conservando citas y abstenciones. |
+
+Ambas metadata contienen `schemaVersion:1`, `snapshotId`, `generatedAt` UTC `Z`, `model`, `modelRevision` (commit resuelto), `sourceArticlesSha256` y `sourceClustersSha256` del snapshot. Incluyen además `device:"cpu"`, `embeddingDimensions`, `modelSizeBytes` y `modelFiles:[{path,bytes,sha256}]`, con rutas relativas del modelo descargado. El hash propio corresponde a los bytes UTF-8/LF exactos del JSONL. Un lector valida también partición completa de artículos, tamaños, representantes, claves foráneas y vecinos finitos en el rango declarado. Ante ausencia o fallo usa el snapshot y la recuperación léxica originales.
+
+Los titulares conservan su texto íntegro en `articles.jsonl`; únicamente la entrada a embeddings retira la entidad omnipresente «Panamá». Bajo 0.84 se exigen dos anclas léxicas de contenido y una acción del evento compartida. Se rechazan nombres de actores distintos en un mismo idioma, acciones opuestas y titulares latinos con menos de cuatro tokens de contenido (por ejemplo portadas «Inicio»). Estas guardias son conservadoras: las variantes rechazadas siguen disponibles en recuperación mediante vecinos. Las uniones requieren fechas conocidas dentro de 72 horas; cada pareja de clusters base en un grupo nuevo necesita un testigo elegible, evitando encadenar similitud temática. Las cifras conflictivas impiden nuevas uniones, se mantienen como `contradictionCandidateIds` bilaterales y siguen disponibles en vecinos. Los candidatos numéricos y contradicciones internas ya existentes se preservan. Estos umbrales son heurísticos y requieren evaluación con pares etiquetados por personas.
 

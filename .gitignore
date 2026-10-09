@@ -48,6 +48,8 @@ Thumbs.db
 
 # pruebas (calidad)
 tests/.pytest-tmp/
+.pytest-tmp-*/
+tests/.pytest-tmp-*/
 .pytest-tmp/
 tests/.results/
 

@@ -97,6 +97,12 @@
             ],
             "title": "Scope",
             "type": "string"
+          },
+          "tvnGap": {
+            "default": false,
+            "description": "Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual.",
+            "title": "Tvngap",
+            "type": "boolean"
           }
         },
         "title": "AgendaFilters",
@@ -1327,6 +1333,214 @@
         "title": "ConnectionsResponse",
         "type": "object"
       },
+      "ConnectorDestinationRequest": {
+        "properties": {
+          "pageId": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Pageid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pageId"
+        ],
+        "title": "ConnectorDestinationRequest",
+        "type": "object"
+      },
+      "ConnectorDisconnectedResponse": {
+        "properties": {
+          "disconnected": {
+            "title": "Disconnected",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "disconnected"
+        ],
+        "title": "ConnectorDisconnectedResponse",
+        "type": "object"
+      },
+      "ConnectorOverviewResponse": {
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "providers": {
+            "$ref": "#/components/schemas/ConnectorProviderStates"
+          },
+          "slackNotifications": {
+            "$ref": "#/components/schemas/SlackNotificationState"
+          }
+        },
+        "required": [
+          "configured",
+          "providers",
+          "slackNotifications"
+        ],
+        "title": "ConnectorOverviewResponse",
+        "type": "object"
+      },
+      "ConnectorPage": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "url"
+        ],
+        "title": "ConnectorPage",
+        "type": "object"
+      },
+      "ConnectorPagesResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConnectorPage"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ConnectorPagesResponse",
+        "type": "object"
+      },
+      "ConnectorProviderState": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "channelId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channelid"
+          },
+          "channelName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channelname"
+          },
+          "connected": {
+            "title": "Connected",
+            "type": "boolean"
+          },
+          "destinationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destinationid"
+          },
+          "destinationTitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destinationtitle"
+          },
+          "workspaceName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspacename"
+          }
+        },
+        "required": [
+          "available",
+          "connected",
+          "workspaceName",
+          "destinationId",
+          "destinationTitle",
+          "channelId",
+          "channelName"
+        ],
+        "title": "ConnectorProviderState",
+        "type": "object"
+      },
+      "ConnectorProviderStates": {
+        "properties": {
+          "notion": {
+            "$ref": "#/components/schemas/ConnectorProviderState"
+          },
+          "slack": {
+            "$ref": "#/components/schemas/ConnectorProviderState"
+          }
+        },
+        "required": [
+          "notion",
+          "slack"
+        ],
+        "title": "ConnectorProviderStates",
+        "type": "object"
+      },
+      "ConnectorSavedResponse": {
+        "properties": {
+          "saved": {
+            "title": "Saved",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "saved"
+        ],
+        "title": "ConnectorSavedResponse",
+        "type": "object"
+      },
+      "ConnectorStartResponse": {
+        "properties": {
+          "authorizationUrl": {
+            "title": "Authorizationurl",
+            "type": "string"
+          }
+        },
+        "required": [
+          "authorizationUrl"
+        ],
+        "title": "ConnectorStartResponse",
+        "type": "object"
+      },
       "Contradiction-Input": {
         "properties": {
           "description": {
@@ -1402,6 +1616,18 @@
       },
       "ContradictionVersion-Input": {
         "properties": {
+          "detectedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detectedat"
+          },
           "evidenceId": {
             "title": "Evidenceid",
             "type": "string"
@@ -1429,6 +1655,17 @@
           "statement": {
             "title": "Statement",
             "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
           }
         },
         "required": [
@@ -1442,6 +1679,18 @@
       },
       "ContradictionVersion-Output": {
         "properties": {
+          "detectedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detectedat"
+          },
           "evidenceId": {
             "title": "Evidenceid",
             "type": "string"
@@ -1469,6 +1718,17 @@
           "statement": {
             "title": "Statement",
             "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
           }
         },
         "required": [
@@ -1476,7 +1736,9 @@
           "statement",
           "scope",
           "outlet",
-          "publishedAt"
+          "publishedAt",
+          "detectedAt",
+          "url"
         ],
         "title": "ContradictionVersion",
         "type": "object"
@@ -2027,7 +2289,7 @@
             "type": "array"
           },
           "script": {
-            "description": "Guion estimado 45-60 s (≈112-150 palabras)",
+            "description": "Texto separado bajo GUION y NOTAS DE PRODUCCIÓN; solo GUION se estima a 45-60 s (≈112-150 palabras)",
             "title": "Script",
             "type": "string"
           },
@@ -2111,7 +2373,7 @@
             "type": "array"
           },
           "script": {
-            "description": "Guion estimado 45-60 s (≈112-150 palabras)",
+            "description": "Texto separado bajo GUION y NOTAS DE PRODUCCIÓN; solo GUION se estima a 45-60 s (≈112-150 palabras)",
             "title": "Script",
             "type": "string"
           },
@@ -3047,6 +3309,19 @@
         "title": "GeoRelevance",
         "type": "string"
       },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
       "HealthResponse": {
         "properties": {
           "apiVersion": {
@@ -3759,6 +4034,58 @@
           "selectedModel"
         ],
         "title": "ModelsResponse",
+        "type": "object"
+      },
+      "NotionExportResponse": {
+        "properties": {
+          "pageId": {
+            "title": "Pageid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pageId",
+          "url",
+          "title"
+        ],
+        "title": "NotionExportResponse",
+        "type": "object"
+      },
+      "NotionMarkdownRequest": {
+        "properties": {
+          "markdown": {
+            "maxLength": 100000,
+            "minLength": 1,
+            "title": "Markdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "markdown"
+        ],
+        "title": "NotionMarkdownRequest",
+        "type": "object"
+      },
+      "NotionStatusResponse": {
+        "description": "Estado booleano de configuración; nunca expone valores de configuración.",
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "configured"
+        ],
+        "title": "NotionStatusResponse",
         "type": "object"
       },
       "OfficialContext-Input": {
@@ -4507,6 +4834,12 @@
             "title": "Kind",
             "type": "string"
           },
+          "literalCoverage": {
+            "default": 0.0,
+            "description": "Cobertura literal del propio documento; no se hereda del ancla semántica",
+            "title": "Literalcoverage",
+            "type": "number"
+          },
           "outlet": {
             "anyOf": [
               {
@@ -4533,6 +4866,45 @@
           "relevance": {
             "title": "Relevance",
             "type": "number"
+          },
+          "retrievalOrigin": {
+            "default": "lexical",
+            "description": "lexical, semantic_neighbor, lexical+semantic_neighbor o usgs_catalog",
+            "title": "Retrievalorigin",
+            "type": "string"
+          },
+          "rrfScore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rrfscore"
+          },
+          "semanticAnchorId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semanticanchorid"
+          },
+          "semanticSimilarity": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semanticsimilarity"
           },
           "snippet": {
             "title": "Snippet",
@@ -4571,7 +4943,12 @@
           "fuzzy",
           "relevance",
           "clusterId",
-          "suspiciousInstructions"
+          "suspiciousInstructions",
+          "retrievalOrigin",
+          "semanticSimilarity",
+          "semanticAnchorId",
+          "rrfScore",
+          "literalCoverage"
         ],
         "title": "QueryHit",
         "type": "object"
@@ -4581,7 +4958,9 @@
           "agenda",
           "contexto_economico",
           "verificaciones",
-          "busqueda"
+          "busqueda",
+          "eventos_sismicos",
+          "resumen_periodo"
         ],
         "title": "QueryIntent",
         "type": "string"
@@ -4833,6 +5212,33 @@
             "title": "Method",
             "type": "string"
           },
+          "rrfK": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rrfk"
+          },
+          "semanticExpansion": {
+            "default": false,
+            "title": "Semanticexpansion",
+            "type": "boolean"
+          },
+          "semanticModel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semanticmodel"
+          },
           "tookMs": {
             "title": "Tookms",
             "type": "number"
@@ -4843,7 +5249,10 @@
           "corpusSize",
           "tookMs",
           "matchedTerms",
-          "coverage"
+          "coverage",
+          "semanticModel",
+          "semanticExpansion",
+          "rrfK"
         ],
         "title": "RetrievalInfo",
         "type": "object"
@@ -5362,6 +5771,235 @@
           "disclaimer"
         ],
         "title": "ScoreDetail",
+        "type": "object"
+      },
+      "SlackChannel": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "isPrivate": {
+            "title": "Isprivate",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "isPrivate"
+        ],
+        "title": "SlackChannel",
+        "type": "object"
+      },
+      "SlackChannelChoice": {
+        "properties": {
+          "channelId": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Channelid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "channelId"
+        ],
+        "title": "SlackChannelChoice",
+        "type": "object"
+      },
+      "SlackChannelsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SlackChannel"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "SlackChannelsResponse",
+        "type": "object"
+      },
+      "SlackNotificationPreferencesRequest": {
+        "properties": {
+          "channelId": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channelid"
+          },
+          "enabled": {
+            "default": false,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "statuses": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewStatus"
+            },
+            "maxItems": 5,
+            "title": "Statuses",
+            "type": "array"
+          }
+        },
+        "title": "SlackNotificationPreferencesRequest",
+        "type": "object"
+      },
+      "SlackNotificationPreferencesResponse": {
+        "properties": {
+          "channelId": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channelid"
+          },
+          "enabled": {
+            "default": false,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "statuses": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewStatus"
+            },
+            "maxItems": 5,
+            "title": "Statuses",
+            "type": "array"
+          }
+        },
+        "required": [
+          "enabled",
+          "channelId",
+          "statuses"
+        ],
+        "title": "SlackNotificationPreferencesResponse",
+        "type": "object"
+      },
+      "SlackNotificationResult": {
+        "properties": {
+          "duplicate": {
+            "title": "Duplicate",
+            "type": "boolean"
+          },
+          "sent": {
+            "title": "Sent",
+            "type": "boolean"
+          },
+          "skippedReason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skippedreason"
+          }
+        },
+        "required": [
+          "sent",
+          "duplicate",
+          "skippedReason"
+        ],
+        "title": "SlackNotificationResult",
+        "type": "object"
+      },
+      "SlackNotificationState": {
+        "properties": {
+          "enabled": {
+            "default": false,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "statuses": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewStatus"
+            },
+            "title": "Statuses",
+            "type": "array"
+          }
+        },
+        "required": [
+          "enabled",
+          "statuses"
+        ],
+        "title": "SlackNotificationState",
+        "type": "object"
+      },
+      "SlackShareRequest": {
+        "properties": {
+          "caseId": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Caseid",
+            "type": "string"
+          },
+          "caseVersion": {
+            "minimum": 1.0,
+            "title": "Caseversion",
+            "type": "integer"
+          },
+          "eventId": {
+            "maxLength": 180,
+            "minLength": 1,
+            "title": "Eventid",
+            "type": "string"
+          },
+          "fromStatus": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReviewStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "snapshotId": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Snapshotid",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReviewStatus"
+          },
+          "title": {
+            "maxLength": 240,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "eventId",
+          "caseId",
+          "caseVersion",
+          "title",
+          "status",
+          "snapshotId"
+        ],
+        "title": "SlackShareRequest",
         "type": "object"
       },
       "SnapshotInfoResponse": {
@@ -6161,6 +6799,46 @@
         "title": "TopicsResponse",
         "type": "object"
       },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
       "ValidationIssue-Input": {
         "properties": {
           "claimId": {
@@ -6581,9 +7259,9 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConnectionsResponse"
+                  "type": "string"
                 }
               }
             },
@@ -6591,7 +7269,7 @@
           },
           "401": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -6601,7 +7279,7 @@
           },
           "403": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -6611,7 +7289,7 @@
           },
           "404": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -6621,7 +7299,7 @@
           },
           "409": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -6631,7 +7309,7 @@
           },
           "422": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -6641,7 +7319,7 @@
           },
           "429": {
             "content": {
-              "application/json": {
+              "text/html": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
@@ -6951,6 +7629,109 @@
         "summary": "Exportar ficha a Markdown listo para Notion",
         "tags": [
           "revision"
+        ]
+      }
+    },
+    "/api/v1/cases/{case_id}/export/notion": {
+      "post": {
+        "description": "Solo localhost con auth local. La página padre no se modifica. La solicitud no acepta contenido: el Markdown se genera en el backend a partir de la ficha actual y la llamada externa solo ocurre al invocar este POST.",
+        "operationId": "export_case_to_notion_api_v1_cases__case_id__export_notion_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "case_id",
+            "required": true,
+            "schema": {
+              "title": "Case Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotionExportResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Notion no está configurado o no pudo completar la exportación"
+          }
+        },
+        "summary": "Crear una subpágina nueva en Notion con el Markdown vigente de la ficha",
+        "tags": [
+          "exportación"
         ]
       }
     },
@@ -7826,6 +8607,1161 @@
         ]
       }
     },
+    "/api/v1/connectors": {
+      "get": {
+        "operationId": "connector_overview_api_v1_connectors_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorOverviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Consultar el estado de Notion y Slack para la identidad anónima actual",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/notion/destination": {
+      "put": {
+        "operationId": "notion_destination_api_v1_connectors_notion_destination_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectorDestinationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorSavedResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Notion Destination",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/notion/export": {
+      "post": {
+        "operationId": "export_markdown_to_notion_api_v1_connectors_notion_export_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotionMarkdownRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotionExportResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Notion no está configurado o no pudo completar la exportación"
+          }
+        },
+        "summary": "Export Markdown To Notion",
+        "tags": [
+          "exportación"
+        ]
+      }
+    },
+    "/api/v1/connectors/notion/pages": {
+      "get": {
+        "operationId": "notion_pages_api_v1_connectors_notion_pages_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorPagesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Notion Pages",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/slack/channel": {
+      "put": {
+        "operationId": "slack_channel_api_v1_connectors_slack_channel_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlackChannelChoice"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorSavedResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Slack Channel",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/slack/channels": {
+      "get": {
+        "operationId": "slack_channels_api_v1_connectors_slack_channels_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlackChannelsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Slack Channels",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/slack/notifications": {
+      "get": {
+        "operationId": "slack_notification_preferences_api_v1_connectors_slack_notifications_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlackNotificationPreferencesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Slack Notification Preferences",
+        "tags": [
+          "conexiones"
+        ]
+      },
+      "put": {
+        "operationId": "save_slack_notification_preferences_api_v1_connectors_slack_notifications_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlackNotificationPreferencesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorSavedResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Save Slack Notification Preferences",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/slack/review-event": {
+      "post": {
+        "operationId": "notify_slack_review_api_v1_connectors_slack_review_event_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlackShareRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlackNotificationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Notify Slack Review",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/slack/share": {
+      "post": {
+        "operationId": "share_case_to_slack_api_v1_connectors_slack_share_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlackShareRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlackNotificationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Share Case To Slack",
+        "tags": [
+          "exportación"
+        ]
+      }
+    },
+    "/api/v1/connectors/{provider}": {
+      "delete": {
+        "operationId": "connector_disconnect_api_v1_connectors__provider__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorDisconnectedResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Revocar y borrar las credenciales del conector de la identidad actual",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/{provider}/callback": {
+      "get": {
+        "operationId": "connector_callback_api_v1_connectors__provider__callback_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "required": true,
+            "schema": {
+              "title": "State",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Code"
+            }
+          },
+          {
+            "in": "query",
+            "name": "error",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Error"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Completar el callback OAuth de Notion o Slack sin mostrar tokens",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
+    "/api/v1/connectors/{provider}/start": {
+      "post": {
+        "operationId": "connector_start_api_v1_connectors__provider__start_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "title": "Provider",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorStartResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conector no configurado"
+          }
+        },
+        "summary": "Iniciar la autorización OAuth de Notion o Slack",
+        "tags": [
+          "conexiones"
+        ]
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "health_api_v1_health_get",
@@ -7844,6 +9780,87 @@
         "summary": "Estado y versión de datos",
         "tags": [
           "estado"
+        ]
+      }
+    },
+    "/api/v1/notion/status": {
+      "get": {
+        "operationId": "notion_status_api_v1_notion_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotionStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Indicar si Notion está configurado para exportar (solo localhost)",
+        "tags": [
+          "exportación"
         ]
       }
     },
@@ -8830,6 +10847,18 @@
             "schema": {
               "default": true,
               "title": "Includecomponents",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual.",
+            "in": "query",
+            "name": "tvnGap",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "Solo grupos con al menos dos procedencias independientes y sin artículos de TVN en el snapshot actual.",
+              "title": "Tvngap",
               "type": "boolean"
             }
           },

@@ -7,10 +7,11 @@ import { MockApi } from '../lib/mock/mockApi';
 import { MOCK_HEALTH, MOCK_RULES } from '../lib/mock/data';
 import { AppContext } from './context';
 import { ConnectionsCard, RulesEditor } from './EditorialSettings';
+import { Modal } from './ui/controls';
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 function mount(ui: React.ReactNode, api: MockApi) {
-  return render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><AppContext.Provider value={{ api, route: { view: 'fuentes' }, go: vi.fn(), reviewer: 'Revisor de prueba', setReviewer: vi.fn(), mockReason: null, openAssistant: vi.fn(), authMode: 'local' }}>{ui}</AppContext.Provider></QueryClientProvider>);
+  return render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><AppContext.Provider value={{ api, route: { view: 'fuentes' }, go: vi.fn(), toast: null, showToast: vi.fn(), dismissToast: vi.fn(), reviewer: 'Revisor de prueba', setReviewer: vi.fn(), mockReason: null, openAssistant: vi.fn(), authMode: 'local' }}>{ui}</AppContext.Provider></QueryClientProvider>);
 }
 function controlledLive() { const api = new MockApi(); Object.defineProperty(api, 'kind', { value: 'live' }); return api; }
 
@@ -56,6 +57,53 @@ describe('política editorial y conexiones personales', () => {
     mount(<ConnectionsCard />, api); await screen.findByText('Perfil de prueba');
     expect((screen.getByRole('button', { name: 'Iniciar sesión con ChatGPT' }) as HTMLButtonElement).disabled).toBe(true);
     expect(start).not.toHaveBeenCalled(); expect(models).not.toHaveBeenCalled();
+  });
+  it('detecta la cuenta cuando el callback OAuth vuelve desde el navegador', async () => {
+    const api = controlledLive();
+    vi.spyOn(api, 'health').mockResolvedValue({ ...MOCK_HEALTH, localMode: true, authMode: 'local', offline: false });
+    const disconnected = { available: true, reason: null, activeProfileId: null, profiles: [] };
+    const connected = { available: true, reason: null, activeProfileId: 'profile-1', profiles: [{
+      profileId: 'profile-1', label: 'Cuenta ChatGPT', email: null, connected: true, active: true,
+      planUsageEnabled: true, model: null,
+    }] };
+    let statusCalls = 0;
+    vi.spyOn(api, 'connections').mockImplementation(async () => ++statusCalls === 1 ? disconnected : connected);
+    vi.spyOn(api, 'startConnection').mockResolvedValue({
+      authorizationUrl: 'https://auth.openai.com/oauth/authorize?state=fixture', expiresIn: 600,
+    });
+    vi.spyOn(api, 'connectionModels').mockResolvedValue({ profileId: 'profile-1', models: [], selectedModel: null });
+    const onConnected = vi.fn();
+
+    mount(<ConnectionsCard onConnected={onConnected} />, api);
+    fireEvent.click(await screen.findByRole('button', { name: 'Iniciar sesión con ChatGPT' }));
+    await screen.findByTestId('chatgpt-login-link');
+
+    await waitFor(() => expect(onConnected).toHaveBeenCalledWith('chatgpt'), { timeout: 5000 });
+    expect(await screen.findByText('Sesión de ChatGPT reconocida en este equipo.')).toBeTruthy();
+  });
+  it('permite elegir y guardar un modelo desde el modal de cuentas', async () => {
+    const api = controlledLive();
+    vi.spyOn(api, 'health').mockResolvedValue({ ...MOCK_HEALTH, localMode: true, authMode: 'local', offline: false });
+    vi.spyOn(api, 'connections').mockResolvedValue({ available: true, reason: null, activeProfileId: 'profile-1', profiles: [{
+      profileId: 'profile-1', label: 'Cuenta ChatGPT', email: null, connected: true, active: true,
+      planUsageEnabled: true, model: null,
+    }] });
+    const catalog = [{ slug: 'gpt-test', displayName: 'GPT de prueba' }];
+    let selectedModel: string | null = null;
+    vi.spyOn(api, 'connectionModels').mockImplementation(async () => ({ profileId: 'profile-1', models: catalog, selectedModel }));
+    const selectModel = vi.spyOn(api, 'selectConnectionModel').mockImplementation(async (model) => {
+      selectedModel = model;
+      return { profileId: 'profile-1', models: catalog, selectedModel };
+    });
+
+    mount(<Modal open title="Cuentas y modelos" onClose={vi.fn()}><ConnectionsCard /></Modal>, api);
+    const trigger = await screen.findByRole('combobox', { name: 'Modelo de la cuenta activa' });
+    fireEvent.click(trigger);
+    fireEvent.click(await screen.findByRole('option', { name: 'GPT de prueba' }));
+
+    await waitFor(() => expect(selectModel).toHaveBeenCalledWith('gpt-test'));
+    await waitFor(() => expect(trigger.textContent).toContain('GPT de prueba'));
+    expect(screen.queryByTestId('chatgpt-model-required')).toBeNull();
   });
   it('cliente HTTP envía alcance y bearer; guarda pesos con el contrato', async () => {
     const transport = vi.fn().mockImplementation(async () => new Response(JSON.stringify(MOCK_RULES), { status: 200, headers: { 'Content-Type': 'application/json' } })); vi.stubGlobal('fetch', transport);

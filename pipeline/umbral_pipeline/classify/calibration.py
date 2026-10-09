@@ -34,6 +34,23 @@ class CalibrationProfile:
         total = sum(weights.values())
         return {key: value / total for key, value in weights.items()}
 
+
+def require_calibrated_classifier_binding(
+    classifier: dict[str, Any], model_version: str, profile: CalibrationProfile,
+) -> None:
+    """Reject a snapshot unless its classifier names this exact calibrated model and profile."""
+    expected = {
+        "classifier": "laya",
+        "calibrated": True,
+        "modelVersion": model_version,
+        "calibrationProfileId": profile.profile_id,
+        "calibrationProfileSha256": profile.sha256,
+    }
+    mismatches = [key for key, value in expected.items() if classifier.get(key) != value]
+    if mismatches:
+        raise ValueError("El snapshot no está ligado al artefacto Laya calibrado exacto: "
+                         + ", ".join(mismatches))
+
 def profile_path(model_dir: Path | None = None, *, use_environment: bool = True) -> Path | None:
     candidates = []
     if use_environment:

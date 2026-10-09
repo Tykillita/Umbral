@@ -1,6 +1,6 @@
 {
   "name": "umbral-desktop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Umbral para Windows con agenda editorial, API y Laya incluidos",
   "private": true,
   "main": "main.cjs",
@@ -32,6 +32,7 @@
       "security.cjs",
       "motion-preference.cjs",
       "update-manager.cjs",
+      "update-preference.cjs",
       "startup.html",
       "startup.css",
       "package.json"

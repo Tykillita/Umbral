@@ -10,9 +10,11 @@ sobreconfiados): se miden contra etiquetas propias en eval/ antes de usarlas com
 from __future__ import annotations
 
 import importlib
+import inspect
 import math
 import os
 import re
+import threading
 import time
 from datetime import datetime
 from pathlib import Path
@@ -32,6 +34,89 @@ REPO = "convaiinnovations/laya"
 SUBFOLDER = "multilingual"
 MODEL_ID = f"{REPO}/{SUBFOLDER}"
 PINNED_REVISION = "7b928d828b7b0e022f929d9bd2e44165aa270148"
+_LAYA_LOAD_LOCK = threading.RLock()
+
+
+def _restore_meta_rope_buffers(model, torch_module) -> None:
+    """Recreate ModernBERT's non-checkpoint rotary buffers after meta-device construction."""
+    for module in model.modules():
+        meta_buffers = [name for name, buffer in module._buffers.items()
+                        if buffer is not None and getattr(buffer, "is_meta", False)]
+        if not meta_buffers:
+            continue
+        layer_types = getattr(module, "layer_types", None)
+        compute_default = getattr(module, "compute_default_rope_parameters", None)
+        rope_types = getattr(module, "rope_type", None)
+        if not layer_types or not callable(compute_default) or not isinstance(rope_types, dict):
+            raise RuntimeError(f"Laya dejó buffers sin checkpoint en meta: {type(module).__name__}.{meta_buffers}")
+
+        for layer_type in layer_types:
+            rope_type = rope_types.get(layer_type, "default")
+            if rope_type == "default":
+                init = compute_default
+            else:
+                from transformers.modeling_rope_utils import ROPE_INIT_FUNCTIONS
+
+                init = ROPE_INIT_FUNCTIONS[rope_type]
+            inv_freq, attention_scaling = init(module.config, device=torch_module.device("cpu"),
+                                                layer_type=layer_type)
+            for name, value in ((f"{layer_type}_inv_freq", inv_freq),
+                                (f"{layer_type}_original_inv_freq", inv_freq.clone())):
+                if name in module._buffers and getattr(module._buffers[name], "is_meta", False):
+                    module._buffers[name] = value
+                    meta_buffers.remove(name)
+            setattr(module, f"{layer_type}_attention_scaling", attention_scaling)
+        if meta_buffers:
+            raise RuntimeError(f"Laya dejó buffers sin inicializar en meta: {type(module).__name__}.{meta_buffers}")
+
+
+def _load_laya_agent(laya_module, torch_module, loader):
+    """Load checkpoint tensors directly into meta-built parameters to avoid a second weight copy."""
+    agent_module = importlib.import_module(laya_module.Agent.__module__)
+    original_build_model = agent_module.build_model
+    original_load_state_dict = torch_module.nn.Module.load_state_dict
+    try:
+        supports_assignment = "assign" in inspect.signature(original_load_state_dict).parameters
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("No se pudo comprobar la carga de pesos de bajo consumo de Laya") from exc
+    if not supports_assignment:
+        raise RuntimeError("La versión de PyTorch no admite asignar los pesos Laya sin duplicarlos")
+
+    def build_on_meta(*args, **kwargs):
+        with torch_module.device("meta"):
+            return original_build_model(*args, **kwargs)
+
+    def load_by_assignment(module, *args, **kwargs):
+        kwargs["assign"] = True
+        result = original_load_state_dict(module, *args, **kwargs)
+        _restore_meta_rope_buffers(module, torch_module)
+        return result
+
+    with _LAYA_LOAD_LOCK:
+        agent_module.build_model = build_on_meta
+        torch_module.nn.Module.load_state_dict = load_by_assignment
+        try:
+            return loader()
+        finally:
+            agent_module.build_model = original_build_model
+            torch_module.nn.Module.load_state_dict = original_load_state_dict
+
+
+def _configure_cpu_threads(torch_module) -> int:
+    """Cap CPU inference threads before Laya builds its model and worker pools."""
+    raw_threads = os.environ.get("UMBRAL_LAYA_CPU_THREADS", os.environ.get("OMP_NUM_THREADS", "4"))
+    try:
+        threads = int(raw_threads)
+    except ValueError as exc:
+        raise RuntimeError("UMBRAL_LAYA_CPU_THREADS debe ser un entero entre 1 y 32") from exc
+    if not 1 <= threads <= 32:
+        raise RuntimeError("UMBRAL_LAYA_CPU_THREADS debe ser un entero entre 1 y 32")
+    torch_module.set_num_threads(threads)
+    try:
+        torch_module.set_num_interop_threads(1)
+    except RuntimeError as exc:
+        raise RuntimeError("No se pudo limitar el paralelismo de Laya antes de cargar el modelo") from exc
+    return threads
 
 # Variante original (snapshot 20261007-37263360). Se conserva solo para reproducir/comparar.
 CATEGORY_QUESTION_V0 = {
@@ -161,8 +246,10 @@ class LayaClassifier:
     threshold = 0.5
 
     def __init__(self, *, log=print, model_dir: Path | None = None, revision: str = PINNED_REVISION) -> None:
-        import laya  # type: ignore[import-not-found]
         import torch
+
+        self.cpu_threads = _configure_cpu_threads(torch)
+        import laya  # type: ignore[import-not-found]
 
         t0 = time.time()
         self._torch = torch
@@ -170,9 +257,10 @@ class LayaClassifier:
         if local is not None:
             if not (local / "model.safetensors").is_file():
                 raise RuntimeError("Faltan los pesos de Laya incluidos; no se sustituye por baseline.")
-            self.agent = laya.load(str(local), device="cpu")
+            self.agent = _load_laya_agent(laya, torch, lambda: laya.load(str(local), device="cpu"))
         else:
-            self.agent = laya.load(REPO, subfolder=SUBFOLDER, revision=revision, device="cpu")
+            self.agent = _load_laya_agent(
+                laya, torch, lambda: laya.load(REPO, subfolder=SUBFOLDER, revision=revision, device="cpu"))
         self.load_seconds = round(time.time() - t0, 1)
         self.model_version = resolve_model_version(local, revision)
         self.calibration_profile = load_profile(self.model_version, local)

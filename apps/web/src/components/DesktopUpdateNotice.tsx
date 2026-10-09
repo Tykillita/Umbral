@@ -28,15 +28,20 @@ export default function DesktopUpdateNotice() {
     return () => { active = false; unsubscribe(); };
   }, [bridge]);
 
-  if (!bridge || dismissed || (state.status !== 'downloading' && state.status !== 'downloaded' && state.status !== 'error')) return null;
-  const title = state.status === 'downloaded'
-    ? `Umbral ${state.version} está lista para instalar`
-    : state.status === 'error' ? 'No se pudo buscar una actualización'
-      : state.version ? `Descargando Umbral ${state.version}` : 'Descargando una actualización de Umbral';
-  const message = state.status === 'downloaded'
-    ? 'Reinicia la aplicación cuando quieras para completar la instalación.'
-    : state.status === 'error' ? 'Puedes seguir trabajando. Comprueba de nuevo cuando tengas conexión.'
-      : 'La descarga continúa en segundo plano.';
+  const showAvailable = state.status === 'available' && state.autoUpdateEnabled === false;
+  if (!bridge || dismissed || (state.status !== 'downloading' && state.status !== 'downloaded' && state.status !== 'error' && !showAvailable)) return null;
+  const title = state.status === 'available'
+    ? `Umbral ${state.version} está disponible`
+    : state.status === 'downloaded'
+      ? `Umbral ${state.version} está lista para instalar`
+      : state.status === 'error' ? 'No se pudo buscar una actualización'
+        : state.version ? `Descargando Umbral ${state.version}` : 'Descargando una actualización de Umbral';
+  const message = state.status === 'available'
+    ? 'Las actualizaciones automáticas están desactivadas. Pulsa «Actualizar ahora» para descargarla e instalarla.'
+    : state.status === 'downloaded'
+      ? 'Reinicia la aplicación cuando quieras para completar la instalación.'
+      : state.status === 'error' ? 'Puedes seguir trabajando. Comprueba de nuevo cuando tengas conexión.'
+        : 'La descarga continúa en segundo plano.';
 
   return createPortal(
     <section className="desktop-update-notice" aria-label="Actualización de Umbral" data-testid="desktop-update-notice">
@@ -49,6 +54,7 @@ export default function DesktopUpdateNotice() {
         {state.status === 'downloading' && <div className="desktop-update-track" role="progressbar" aria-label="Descarga de actualización" aria-valuemin={0} aria-valuemax={100} aria-valuenow={state.percent ?? 0}><span aria-hidden="true" style={{ width: `${state.percent ?? 0}%` }} /></div>}
         {state.status === 'downloading' && <span className="desktop-update-percent" aria-hidden="true">{state.percent ?? 0}%</span>}
         <div className="desktop-update-actions">
+          {showAvailable && bridge.updateNow && <button className="desktop-update-primary" type="button" onClick={() => void bridge.updateNow?.()}>Actualizar ahora</button>}
           {state.status === 'downloaded' && <button className="desktop-update-primary" type="button" onClick={() => void bridge.installUpdate()}>Reiniciar e instalar</button>}
           {state.status === 'error' && <button className="desktop-update-primary" type="button" onClick={() => { setDismissed(false); void bridge.checkForUpdates(); }}>Volver a comprobar</button>}
           <button className="desktop-update-close" type="button" aria-label="Cerrar aviso de actualización" onClick={() => setDismissed(true)}><X size={18} aria-hidden="true" /></button>

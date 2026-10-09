@@ -6,6 +6,7 @@ import hashlib
 import json
 import shutil
 from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import httpx
@@ -34,6 +35,12 @@ def snapshot_for_transport_test(fixture_dir: Path, target: Path, *, change="") -
     for prediction in predictions:
         prediction["inputHash"] = prediction_input_hash(titles[prediction["articleId"]])
     (target / "predictions.jsonl").write_text("".join(json.dumps(row) + "\n" for row in predictions), encoding="utf-8")
+    manifest_path = target / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    cutoff = (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
+    manifest["cutoffUtc"] = cutoff
+    manifest["window"]["endUtc"] = cutoff
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
     _rehash(target)
     return target
 
@@ -97,6 +104,20 @@ def test_feed_installs_verified_snapshot_and_inflight_request_keeps_old_state(fi
     assert (svc.settings.snapshots_root / "CURRENT").read_text(encoding="utf-8").strip() == svc.corpus.snapshot_id
     assert all(url.startswith("https://feed.example/data/") for url in paths)
     assert svc.snapshot_feed.refresh() is False and svc.snapshot_feed.last_error is None
+
+
+def test_older_hosted_snapshot_cannot_replace_newer_local_news(fixture_dir, tmp_path, monkeypatch):
+    remote = snapshot_for_transport_test(fixture_dir, tmp_path / "remote", change="snapshot hospedado anterior")
+    _, paths = install_mock_feed(monkeypatch, remote)
+    svc = service(fixture_dir, tmp_path)
+    svc.corpus.cutoff = datetime(2099, 1, 1, tzinfo=UTC)
+    old_state = svc._state
+
+    assert svc.snapshot_feed.refresh() is False
+    assert svc._state is old_state
+    assert svc.snapshot_feed.last_error is None
+    assert (svc.settings.snapshots_root / "CURRENT").exists() is False
+    assert not any(url.endswith("/articles.jsonl") for url in paths)
 
 
 @pytest.mark.parametrize("failure", ["hash", "traversal", "other_origin", "redirect", "duplicate", "fixtures", "baseline"])

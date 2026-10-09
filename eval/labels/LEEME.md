@@ -58,3 +58,9 @@ Recuerde: un titular solo respalda que **un medio reportó** algo; no confirma e
 - Un solo revisor no permite medir acuerdo entre personas; si hay un segundo revisor, que etiquete una copia de las hojas por separado.
 - Los archivos `*.jsonl` de muestras (`cls_sample.<id>.jsonl`, `pairs_sample.<id>.jsonl`, `claims_review.<id>.jsonl`) son la misma muestra en formato máquina; no los edite.
 - Las hojas antiguas (`cls_sample.jsonl`, `pairs_sample.jsonl`, `claims_sample.jsonl`) pertenecen al snapshot `20261007-37263360` y se conservan sin tocar.
+
+## Mismas muestras en otro corte de clasificación
+
+Si los bytes de artículos e indicadores son idénticos entre dos snapshots verificados, `eval/rebind_label_sheets.py --source data/snapshots/<origen> --target data/snapshots/<destino>` conserva los IDs, textos, citas, comentarios y juicios de las muestras. Verifica además cada pasaje y pertenencia de las citas a sus temas; falla si cambió la evidencia o ya existe una hoja destino. Las predicciones ocultas se actualizan al destino y cada muestra registra el snapshot y hash de origen. `sheets.<destino>.meta.json` deja el recibo de integridad; no acredita una revisión humana adicional ni genera métricas.
+
+Las hojas de `20261007-e704e952` reutilizan las 120 noticias, 50 pares y 32 afirmaciones revisables de `20261007-cfa338b6` mediante este procedimiento. Los juicios permanecen pendientes. Los 37 registros de `claims_sample` son el conjunto original de afirmaciones de plantilla del que se tomaron las 32 de `claims_review`.

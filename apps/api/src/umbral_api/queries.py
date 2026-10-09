@@ -7,8 +7,10 @@ import time
 import uuid
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 
 from .models import (
+    CATEGORY_LABELS,
     AnswerStatus,
     Contradiction,
     DataMode,
@@ -24,10 +26,11 @@ from .models import (
 )
 from .retrieval import Doc, SearchIndex, fold, tokenize
 from .scoring import RULES_VERSION
-from .security import looks_like_instruction
+from .security import looks_like_guilt_question, looks_like_profiling, split_instruction
+from .seismology import SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE, SeismicEvent
 from .snapshot import Corpus
 from .topics import COUNTRY_KEYWORDS, INDICATOR_KEYWORDS, MASKED_TITLE, TopicBase
-from .util import fmt_date_pa, fmt_value
+from .util import PANAMA_TZ, fmt_date_pa, fmt_pa, fmt_value
 
 INDICATOR_ES = {
     "NY.GDP.MKTP.KD.ZG": "crecimiento del PIB producto interno bruto crecimiento económico",
@@ -83,6 +86,42 @@ def _drop_unit_only(f: str, inds: list[str]) -> list[str]:
     return inds
 
 
+def _requested_number_kind(question: str) -> str | None:
+    f = fold(question)
+    if re.search(r"\b(murieron|muert\w*|fallecid\w*|decesos?|muertes?)\b", f):
+        return "muertes"
+    if re.search(r"\b(herid\w*|lesionad\w*)\b", f):
+        return "heridos"
+    if re.search(r"\b(magnitud|magnitude|escala richter)\b", f):
+        return "magnitud"
+    if re.search(r"\b(porcentaje|por ciento|%|proporcion)\b", f):
+        return "porcentaje"
+    if re.search(r"\b(costo|cuesta|inversion|presupuesto|millones de dolares|balboas|dolares|usd)\b|\$", f):
+        return "dinero"
+    if re.search(r"\b(danos?|perdidas?|destruid\w*|viviendas afectadas|damage|losses)\b", f):
+        return "danos"
+    if re.search(r"\b(personas|habitantes|poblacion|victimas|damnificad\w*)\b", f):
+        return "personas"
+    return None
+
+
+def _number_has_kind(title: str, kind: str) -> bool:
+    f = fold(title)
+    patterns = {
+        "muertes": r"\b(muert\w*|fallecid\w*|falleci\w*|decesos?)\b",
+        "heridos": r"\b(herid\w*|lesionad\w*)\b",
+        "magnitud": r"\b(magnitud|magnitude|richter|mb|ml|mw)\b",
+        "porcentaje": r"%|\bpor ciento\b|\bporcentaje\b",
+        "dinero": r"\$|\b(dolares?|balboas?|usd|millones? de|millones? en)\b",
+        "danos": r"\b(danos?|perdidas?|destruid\w*|viviendas afectadas|damage|losses)\b",
+        "personas": r"\b(personas?|habitantes|poblacion|victimas?|damnificad\w*)\b",
+    }
+    if not re.search(r"\d", f):
+        return False
+    cue = re.compile(patterns[kind])
+    return any(cue.search(f[max(0, match.start() - 32):match.end() + 72]) for match in re.finditer(r"\d[\d.,]*", f))
+
+
 # Palabras de forma, tiempo y unidad que pueden seguir a una preposición sin ser una entidad («en total», «de enero», «en dólares»).
 _FORM_WORDS = {
     "total", "promedio", "general", "particular", "resumen", "breve", "detalle", "cifras", "cifra", "numeros", "terminos",
@@ -131,7 +170,14 @@ class _Resolved:
 _RE_YEAR_RANGE = re.compile(r"\b(?:entre|de|desde)\s+((?:19|20)\d{2})\s+(?:y|a|hasta)\s+((?:19|20)\d{2})\b|\b((?:19|20)\d{2})\s*[-–]\s*((?:19|20)\d{2})\b")
 _RE_NUMERIC = re.compile(r"\bcuant[oa]s?\b|\bcifra\b|\bmonto\b|\bporcentaje\b|\bnumero de\b|\btotal de\b|\bcuanto cuesta\b")
 _RE_YEAR = re.compile(r"\b((?:19|20)\d{2})\b")
+_RE_SUMMARY = re.compile(r"\b(resumen|resum\w*|repaso|balance)\b")
+_RE_RELATIVE_PERIOD = re.compile(r"\b(esta semana|ultim[oa]s?\s+7\s+d[ií]as?|ultim[oa]s?\s+30\s+d[ií]as?|este mes|ultim[oa]s?\s+mes)\b")
+_RE_ARBITRARY_DAYS = re.compile(r"\bultim[oa]s?\s+(\d{1,3})\s+d[ií]as?\b")
+_RE_DATE_ISO_RANGE = re.compile(r"\b(?:desde|del)\s+(\d{4}-\d{2}-\d{2})\s+(?:hasta|al|a)\s+(\d{4}-\d{2}-\d{2})\b")
+_RE_DATE_DMY_RANGE = re.compile(r"\b(?:desde|del)\s+(\d{1,2}/\d{1,2}/\d{4})\s+(?:hasta|al|a)\s+(\d{1,2}/\d{1,2}/\d{4})\b")
 _RE_MARKER = re.compile(r"\[([A-Za-z0-9_.:-]+)\]")
+_RE_SEISMIC = re.compile(r"\bsism\w*|\bterremot\w*|\btemblor\w*|\busgs\b|\bearthquakes?\b")
+_RE_DAMAGE = re.compile(r"\bdan\w*|\bmur\w*|\bmuert\w*|\bfallecid\w*|\bherid\w*|\bperdid\w*|\bvictim\w*|\bafectad\w*|\bdestrui\w*|\bdamages?\b|\bdeaths?\b|\binjured\b")
 
 
 def _number_markers(answer: str, citations: list[QueryCitation]) -> str:
@@ -146,13 +192,96 @@ def _number_markers(answer: str, citations: list[QueryCitation]) -> str:
 
 def _detect_intent(q: str) -> QueryIntent:
     f = fold(q)
+    if _RE_SUMMARY.search(f):
+        return QueryIntent.resumen_periodo
     if _RE_VERIF.search(f):
         return QueryIntent.verificaciones
     if _RE_AGENDA.search(f):
         return QueryIntent.agenda
+    if _RE_SEISMIC.search(f) and ("usgs" in f or not _RE_DAMAGE.search(f)):
+        return QueryIntent.eventos_sismicos
     if _RE_ECON.search(f):
         return QueryIntent.contexto_economico
     return QueryIntent.busqueda
+
+
+_SUMMARY_CATEGORY_TERMS: dict[str, tuple[str, ...]] = {
+    "economia": ("economia", "economico", "pib", "inflacion", "desempleo"),
+    "logistica_canal": ("canal", "logistica", "transito", "buques"),
+    "turismo": ("turismo", "turistas", "visitantes"),
+    "servicios_publicos": ("servicios publicos", "electricidad", "agua", "tarifas"),
+    "eventos_naturales": ("eventos naturales", "sismos", "terremotos", "lluvias", "inundaciones"),
+    "regulacion": ("regulacion", "ley", "reforma", "decreto", "norma"),
+}
+
+
+def _summary_period(question: str, cutoff: datetime) -> tuple[datetime, datetime, str] | None:
+    f = fold(question)
+    if re.search(r"\bhoy\b", f):
+        return cutoff - timedelta(days=1), cutoff + timedelta(microseconds=1), "últimas 24 horas hasta el corte del snapshot"
+    if re.search(r"\bayer\b", f):
+        end = cutoff - timedelta(days=1)
+        return end - timedelta(days=1), end + timedelta(microseconds=1), "las 24 horas anteriores al día del corte"
+    match = _RE_DATE_ISO_RANGE.search(f)
+    try:
+        if match:
+            first, last = (datetime.fromisoformat(value).replace(tzinfo=cutoff.tzinfo) for value in match.groups())
+            if first <= last:
+                return first, last + timedelta(days=1), f"del {first:%Y-%m-%d} al {last:%Y-%m-%d}"
+        match = _RE_DATE_DMY_RANGE.search(f)
+        if match:
+            first, last = (datetime.strptime(value, "%d/%m/%Y").replace(tzinfo=cutoff.tzinfo) for value in match.groups())
+            if first <= last:
+                return first, last + timedelta(days=1), f"del {first:%d/%m/%Y} al {last:%d/%m/%Y}"
+    except ValueError:
+        return None
+
+    match = re.search(r"\b(\d{4}-\d{2}-\d{2})\b", f)
+    try:
+        if match:
+            first = datetime.fromisoformat(match.group(1)).replace(tzinfo=cutoff.tzinfo)
+            return first, first + timedelta(days=1), f"el {first:%Y-%m-%d}"
+        match = re.search(r"\b(\d{1,2}/\d{1,2}/\d{4})\b", f)
+        if match:
+            first = datetime.strptime(match.group(1), "%d/%m/%Y").replace(tzinfo=cutoff.tzinfo)
+            return first, first + timedelta(days=1), f"el {first:%d/%m/%Y}"
+    except ValueError:
+        return None
+
+    months = {
+        "enero": 1, "febrero": 2, "marzo": 3, "abril": 4, "mayo": 5, "junio": 6,
+        "julio": 7, "agosto": 8, "septiembre": 9, "setiembre": 9, "octubre": 10,
+        "noviembre": 11, "diciembre": 12,
+    }
+    for name, month in months.items():
+        match = re.search(rf"\b{name}\s+(?:de\s+)?((?:19|20)\d{{2}})\b", f)
+        if match:
+            year = int(match.group(1))
+            start = datetime(year, month, 1, tzinfo=cutoff.tzinfo)
+            end = datetime(year + (month == 12), (month % 12) + 1, 1, tzinfo=cutoff.tzinfo)
+            return start, end, f"{name} de {year}"
+
+    years = [int(year) for year in _RE_YEAR.findall(f)]
+    ranges = list(_RE_YEAR_RANGE.finditer(f))
+    if ranges:
+        match = ranges[0]
+        start_year, end_year = (int(value) for value in match.groups() if value)
+        if start_year <= end_year and end_year - start_year <= 20:
+            return (
+                datetime(start_year, 1, 1, tzinfo=cutoff.tzinfo),
+                datetime(end_year + 1, 1, 1, tzinfo=cutoff.tzinfo),
+                f"{start_year}–{end_year}",
+            )
+    if years:
+        year = years[0]
+        return datetime(year, 1, 1, tzinfo=cutoff.tzinfo), datetime(year + 1, 1, 1, tzinfo=cutoff.tzinfo), str(year)
+
+    relative = _RE_RELATIVE_PERIOD.search(f)
+    arbitrary = _RE_ARBITRARY_DAYS.search(f)
+    days = min(int(arbitrary.group(1)), 365) if arbitrary else 7 if relative and ("semana" in relative.group(0) or "7" in relative.group(0)) else 30 if relative else None
+    if days:
+        return cutoff - timedelta(days=days), cutoff + timedelta(microseconds=1), f"últimos {days} días hasta el corte del snapshot"
+    return None
 
 
 class QueryEngine:
@@ -161,7 +290,7 @@ class QueryEngine:
         self.bases = bases
         docs: list[Doc] = []
         for a in corpus.articles.values():
-            docs.append(Doc(a.id, "articulo", f"{a.title} {a.outlet}", a.cluster_id))
+            docs.append(Doc(a.id, "articulo", f"{a.title} {a.outlet}", a.cluster_id, semantic_eligible=not a.suspicious_instructions))
         for p in corpus.indicators.values():
             docs.append(
                 Doc(
@@ -170,7 +299,7 @@ class QueryEngine:
                     f"{INDICATOR_ES.get(p.indicator_id, p.indicator_name)} {p.country_name or ''} {p.country_iso3} {p.year} indicador oficial",
                 )
             )
-        self.index = SearchIndex(docs)
+        self.index = SearchIndex(docs, neighbors=corpus.neighbors)
         self.article_ids = set(corpus.articles)
 
     # ------------------------------------------------------------------ API
@@ -179,10 +308,25 @@ class QueryEngine:
         original = req.question.strip()
         q = original
         warnings: list[str] = []
-        if looks_like_instruction(q):
-            warnings.append(
-                "La consulta contiene texto con forma de instrucción; se trata solo como texto de búsqueda y no cambia el comportamiento del sistema."
+        q, injection_detected = split_instruction(q)
+        if injection_detected:
+            warnings.append("inyeccion_detectada: se rechazó el fragmento con instrucciones y no se envió a búsqueda.")
+            if len(tokenize(q)) < 2:
+                rejected = self._abstain(
+                    req, QueryIntent.busqueda, t0,
+                    "se rechazó una instrucción dirigida al sistema; no quedó una pregunta legítima con evidencia que consultar.",
+                    warnings=warnings,
+                )
+                return self._finish(rejected, original, None, [], None)
+            req = req.model_copy(update={"question": q, "follow_up": None})
+        if looks_like_profiling(q):
+            rejected = self._abstain(
+                req, QueryIntent.busqueda, t0,
+                "no se perfila ni se clasifica a personas como sospechosas, culpables o peligrosas.",
+                warnings=warnings + ["perfilamiento_rechazado"],
             )
+            return self._finish(rejected, original, None, warnings, None)
+        guilt_question = looks_like_guilt_question(q)
         ctx = req.follow_up
         resolved: _Resolved | None = None
         if ctx is not None:
@@ -217,8 +361,16 @@ class QueryEngine:
             resp = self._verificaciones(req, scope, t0)
         elif intent == QueryIntent.contexto_economico:
             resp = self._economico(req, scope, t0)
+        elif intent == QueryIntent.eventos_sismicos:
+            resp = self._sismos(req, t0)
+        elif intent == QueryIntent.resumen_periodo:
+            resp = self._resumen_periodo(req, t0)
         else:
             resp = self._busqueda(req, scope, t0)
+        if guilt_question:
+            notice = "Umbral no determina culpabilidad ni verdad; solo puede describir lo que atribuyen las fuentes citadas. "
+            resp.answer = notice + resp.answer
+            resp.warnings.append("La respuesta mantiene atribución a las fuentes y no concluye responsabilidad penal.")
         return self._finish(resp, original, q if q != original else None, warnings, ctx)
 
     # ------------------------------------------------------------------ seguimiento
@@ -273,9 +425,11 @@ class QueryEngine:
                 out.append("¿Cuáles son las fuentes del segundo?")
         elif resp.intent == QueryIntent.busqueda and len(ctx.topic_ids) == 1:
             out.append("¿Qué falta verificar de ese tema?")
+        elif resp.intent == QueryIntent.eventos_sismicos:
+            out.append("¿Cuáles son las fuentes?")
         if ctx.evidence_ids:
             out.append("¿Cuáles son las fuentes?")
-        return out[:4]
+        return list(dict.fromkeys(out))[:4]
 
     def _is_followup(self, f: str) -> bool:
         if _RE_FOLLOW_START.search(f):
@@ -320,10 +474,14 @@ class QueryEngine:
                                  intent=QueryIntent.verificaciones)
             return _Resolved(question=topic.display_title, topic_id=topic.id, intent=QueryIntent.busqueda)
         if wants_sources:
-            ids = [e for e in ctx.evidence_ids if e in self.corpus.articles or e in self.corpus.indicators]
+            ids = [e for e in ctx.evidence_ids if e in self.corpus.articles or e in self.corpus.indicators or e in self.corpus.events]
             if ids:
                 return _Resolved(sources=ids)
             return _Resolved(clarify="no hay fuentes registradas en el contexto de la conversación.")
+        if ctx.intent == QueryIntent.eventos_sismicos:
+            years = _RE_YEAR.findall(f)
+            if years:
+                return _Resolved(question="Sismos USGS en " + " y ".join(years), intent=QueryIntent.eventos_sismicos)
         if ctx.intent == QueryIntent.contexto_economico or ctx.indicators:
             filled = self._fill_econ(f, ctx)
             if filled is not None:
@@ -379,12 +537,16 @@ class QueryEngine:
             elif point is not None and not point.is_missing:
                 lines.append(f"- Banco Mundial: {_ind_text(point)} [{point.id}]")
                 cites.extend(_ind_cites(point))
+            elif event := self.corpus.events.get(evidence_id):
+                lines.append(f"- USGS: M {fmt_value(event.magnitude)} · {event.place} · {fmt_pa(event.time)} [{event.id}]")
+                cites.extend(_event_cites(event))
         if not cites:
             return self._abstain(req, ctx.intent, t0, "no hay fuentes utilizables registradas para esa respuesta.")
         topics = [resolved.topic_id] if resolved.topic_id else ctx.topic_ids
         return self._base_resp(
             req, ctx.intent, t0, answer_status=AnswerStatus.respondida, citations=cites, related_topic_ids=list(topics),
-            answer="Fuentes de la respuesta anterior (basado únicamente en titular/metadatos):\n" + "\n".join(lines),
+            answer=("Fuentes de la respuesta anterior:\n" if ctx.intent == QueryIntent.eventos_sismicos
+                    else "Fuentes de la respuesta anterior (basado únicamente en titular/metadatos):\n") + "\n".join(lines),
         )
 
     # ------------------------------------------------------------------ helpers
@@ -399,10 +561,14 @@ class QueryEngine:
             rules_version=RULES_VERSION,
             data_mode=self.corpus.data_mode,
             retrieval=RetrievalInfo(
+                method=kw.pop("method", "usgs-catalog" if intent == QueryIntent.eventos_sismicos else "bm25+rapidfuzz"),
                 corpus_size=len(self.index.docs),
                 took_ms=round((time.perf_counter() - t0) * 1000, 2),
                 matched_terms=kw.pop("matched_terms", []),
                 coverage=kw.pop("coverage", 0.0),
+                semantic_model=self.corpus.semantic_model if kw.get("semantic_expansion", False) else None,
+                semantic_expansion=kw.pop("semantic_expansion", False),
+                rrf_k=kw.pop("rrf_k", None),
             ),
             **kw,
         )
@@ -436,12 +602,16 @@ class QueryEngine:
                 evidence_id=a.id, kind="articulo", title=shown, url=a.url, outlet=a.outlet, published_at=a.published_at,
                 snippet=shown, bm25=round(h.bm25, 4), fuzzy=round(h.fuzzy, 4), relevance=h.relevance,
                 cluster_id=a.cluster_id, suspicious_instructions=a.suspicious_instructions,
+                retrieval_origin=("lexical+semantic_neighbor" if h.matched else "semantic_neighbor") if h.semantic_similarity is not None else "lexical",
+                semantic_similarity=h.semantic_similarity, semantic_anchor_id=h.semantic_anchor_id,
+                rrf_score=h.rrf_score, literal_coverage=round(h.coverage, 4),
             )
         p = self.corpus.indicators[d.doc_id]
         return QueryHit(
             evidence_id=p.id, kind="indicador", title=f"{p.indicator_name} · {p.country_iso3} · {p.year}", url=p.source_url,
             outlet="Banco Mundial", snippet=_ind_text(p), bm25=round(h.bm25, 4), fuzzy=round(h.fuzzy, 4),
-            relevance=h.relevance,
+            relevance=h.relevance, retrieval_origin="lexical",
+            literal_coverage=round(h.coverage, 4), rrf_score=h.rrf_score,
         )
 
     def _unknown_entities(self, question: str, scope: TopicBase | None) -> list[str]:
@@ -513,8 +683,9 @@ class QueryEngine:
         if base is None:
             hits, _, _ = self.index.search(req.question, limit=5, restrict=self.article_ids)
             hits_models = [self._hit_model(h) for h in hits]
-            if hits and hits[0].coverage >= 0.5 and hits[0].doc.cluster_id in self.bases:
-                base = self.bases[hits[0].doc.cluster_id or ""]
+            supported = next((hit for hit in hits if hit.supported and hit.doc.cluster_id in self.bases), None)
+            if supported:
+                base = self.bases[supported.doc.cluster_id or ""]
         if base is None:
             return self._abstain(
                 req, QueryIntent.verificaciones, t0,
@@ -531,6 +702,148 @@ class QueryEngine:
         return self._base_resp(
             req, QueryIntent.verificaciones, t0, answer_status=AnswerStatus.respondida, answer=ans, citations=cites,
             missing=pend, related_topic_ids=[base.id], hits=hits_models, contradictions=base.contradictions,
+            method="bm25+rapidfuzz+semantic-rrf" if any(hit.semantic_similarity is not None for hit in hits_models) else "bm25+rapidfuzz",
+            semantic_expansion=any(hit.semantic_similarity is not None for hit in hits_models),
+            rrf_k=60 if any(hit.semantic_similarity is not None for hit in hits_models) else None,
+        )
+
+    def _sismos(self, req: QueryRequest, t0: float) -> QueryResponse:
+        """Consulta exclusiva del catálogo íntegro USGS; el texto de ubicación no acredita territorio ni daños."""
+        question = fold(req.question)
+        if _RE_DAMAGE.search(question):
+            return self._abstain(req, QueryIntent.eventos_sismicos, t0, SEISMIC_DAMAGE_NOTE,
+                                 missing=["Un reporte oficial de SINAPROC o la autoridad competente sobre las afectaciones solicitadas."])
+        events = list(self.corpus.events.values())
+        if not events:
+            return self._abstain(req, QueryIntent.eventos_sismicos, t0,
+                                 "el snapshot no dispone de un catálogo USGS íntegro utilizable.", missing=["Catálogo USGS verificado del periodo solicitado."])
+        years = sorted({int(year) for year in _RE_YEAR.findall(question)})
+        available_years = sorted({event.time.astimezone(PANAMA_TZ).year for event in events})
+        absent = [year for year in years if year not in available_years]
+        if absent:
+            return self._abstain(req, QueryIntent.eventos_sismicos, t0,
+                    f"el paquete USGS no contiene eventos de {', '.join(map(str, absent))}; sus años disponibles son {', '.join(map(str, available_years))}.",
+                    missing=["Catálogo USGS verificado del año solicitado."], warnings=[SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE])
+        selected = [event for event in events if not years or event.time.astimezone(PANAMA_TZ).year in years]
+        local_cutoff = self.corpus.cutoff.astimezone(PANAMA_TZ)
+        start = None
+        end = local_cutoff
+        if re.search(r"\bhoy\b|\btoday\b", question):
+            start = local_cutoff.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif re.search(r"\bayer\b|\byesterday\b", question):
+            end = local_cutoff.replace(hour=0, minute=0, second=0, microsecond=0)
+            start = end - timedelta(days=1)
+        elif "esta semana" in question:
+            start = (local_cutoff - timedelta(days=local_cutoff.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
+        elif "este mes" in question:
+            start = local_cutoff.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        if start:
+            selected = [event for event in selected if start <= event.time < end]
+        # Solo se aplica un nombre geográfico explícito que exista en los metadatos del catálogo.
+        places = " ".join(fold(event.place) for event in selected)
+        geographic = []
+        for match in _RE_PREP_WORD.finditer(req.question):
+            word = fold(match.group(1))
+            if word in _FORM_WORDS or word in {"usgs", "sismo", "sismos", "temblor", "terremoto", "magnitud", "mayor", "caja", "region"}:
+                continue
+            if word not in places and word not in {"panama", "regional"}:
+                return self._abstain(req, QueryIntent.eventos_sismicos, t0,
+                                     "la ubicación solicitada no aparece en el catálogo regional del snapshot.")
+            if word in places:
+                geographic.append(word)
+        if "panama" in question:
+            geographic = ["panama"]
+        if geographic:
+            selected = [event for event in selected if all(word in fold(event.place) for word in geographic)]
+        if not selected:
+            return self._abstain(req, QueryIntent.eventos_sismicos, t0,
+                                 "no hay eventos USGS para la fecha y ubicación solicitadas en el snapshot servido.",
+                                 warnings=[SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE], missing=["Catálogo USGS del periodo y ubicación solicitados."])
+        ranked = sorted(selected, key=lambda event: (-event.magnitude, event.time, event.id))[:req.limit]
+        lines = []
+        citations = []
+        hits = []
+        for index, event in enumerate(ranked, 1):
+            depth = f" · profundidad {fmt_value(event.depth)} km" if event.depth is not None else " · profundidad desconocida"
+            lines.append(f"{index}. **M {fmt_value(event.magnitude)}** · {event.place} · {fmt_pa(event.time)}{depth} [{event.id}]")
+            citations.extend(_event_cites(event))
+            hits.append(QueryHit(evidence_id=event.id, kind="evento_sismico", title=f"USGS: M {fmt_value(event.magnitude)} · {event.place}",
+                        url=event.url, outlet="USGS", published_at=event.time, snippet=lines[-1], bm25=0, fuzzy=0, relevance=1,
+                        retrieval_origin="usgs_catalog", literal_coverage=0))
+        period = ", ".join(map(str, years or available_years))
+        location_note = " con ese nombre en el campo de ubicación" if geographic else " en la caja regional"
+        answer = (f"Sismos registrados en el paquete USGS ({period}): {len(selected)}{location_note}. Ordenados por magnitud.\n"
+                  + "\n".join(lines) + f"\n\n{SEISMIC_BOX_NOTE} {SEISMIC_DAMAGE_NOTE}")
+        return self._base_resp(req, QueryIntent.eventos_sismicos, t0, answer_status=AnswerStatus.respondida,
+                              answer=answer, citations=citations, hits=hits, method="usgs-catalog",
+                              warnings=[SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE],
+                              missing=["Daños o afectaciones requieren un reporte oficial de SINAPROC o la autoridad competente."])
+
+    def _resumen_periodo(self, req: QueryRequest, t0: float) -> QueryResponse:
+        period = _summary_period(req.question, self.corpus.cutoff)
+        if period is None:
+            return self._abstain(
+                req, QueryIntent.resumen_periodo, t0,
+                "indica un periodo de 7 días, 30 días o un rango/año explícito; los periodos se calculan respecto al corte del snapshot.",
+                missing=["Un periodo consultado y titulares con fechas dentro del corte del snapshot."],
+            )
+        start, end, period_label = period
+        end = min(end, self.corpus.cutoff + timedelta(microseconds=1))
+        question = fold(req.question)
+        categories = [
+            category for category, terms in _SUMMARY_CATEGORY_TERMS.items()
+            if any(term in question for term in terms)
+        ]
+        groups: list[tuple[TopicBase, list]] = []
+        for base in self.bases.values():
+            if categories and base.category.value not in categories:
+                continue
+            matched = []
+            for article in base.articles:
+                if article.suspicious_instructions:
+                    continue
+                published = article.published_at or article.detected_at
+                if published is not None and start <= published < end:
+                    matched.append(article)
+            if matched:
+                groups.append((base, matched))
+        if not groups:
+            return self._abstain(
+                req, QueryIntent.resumen_periodo, t0,
+                f"no hay titulares utilizables con fecha dentro del periodo {period_label}"
+                + (f" para {', '.join(CATEGORY_LABELS[c].lower() for c in categories)}" if categories else "")
+                + ".",
+                missing=["Titulares y fechas verificables dentro del periodo elegido."],
+            )
+
+        groups.sort(key=lambda pair: (max(a.published_at or a.detected_at for a in pair[1]), len(pair[1]), pair[0].id), reverse=True)
+        chosen = groups[: max(1, min(req.limit, 5))]
+        citation_by_id: dict[str, QueryCitation] = {}
+        lines = []
+        related: list[str] = []
+        total_articles = sum(len(articles) for _, articles in groups)
+        for index, (base, articles) in enumerate(chosen, 1):
+            article = max(articles, key=lambda item: item.published_at or item.detected_at)
+            when = article.published_at or article.detected_at
+            date_basis = "publicación" if article.published_at else "detección"
+            lines.append(f"{index}. **{base.display_title}** · {len(articles)} titular(es) fechado(s) en el periodo; último registro por {date_basis}: {fmt_date_pa(when)} [{article.id}]")
+            citation_by_id[article.id] = QueryCitation(
+                evidence_id=article.id, field="title", passage=article.title, title=article.title, url=article.url,
+            )
+            related.append(base.id)
+        category_label = ", ".join(CATEGORY_LABELS[c] for c in categories) if categories else "todas las categorías"
+        answer = (
+            f"**Resumen de {category_label} · {period_label}** (snapshot {self.corpus.snapshot_id}, "
+            f"corte {fmt_date_pa(self.corpus.cutoff)}).\n\n"
+            f"El corpus registra {total_articles} titular(es) fechado(s) en {len(groups)} grupo(s) temático(s) durante el periodo. "
+            "Es un recuento del snapshot disponible, basado únicamente en titulares y metadatos; no equivale a una revisión exhaustiva de todos los hechos.\n\n"
+            + "\n".join(lines)
+        )
+        return self._base_resp(
+            req, QueryIntent.resumen_periodo, t0, answer_status=AnswerStatus.respondida, answer=answer,
+            citations=list(citation_by_id.values()), related_topic_ids=related,
+            missing=["El snapshot no incluye el texto completo de los artículos ni una cobertura necesariamente exhaustiva."],
+            matched_terms=tokenize(req.question), coverage=1.0,
         )
 
     def _economico(self, req: QueryRequest, scope: TopicBase | None, t0: float) -> QueryResponse:
@@ -651,7 +964,7 @@ class QueryEngine:
                 req, QueryIntent.busqueda, t0, "ningún documento del corpus coincide con los términos de la consulta.",
                 missing=[f"Cobertura para: {', '.join(unmatched or qtoks) or req.question}."],
             )
-        best = hits[0]
+        best = max(hits, key=lambda hit: hit.coverage) if any(hit.semantic_similarity is not None for hit in hits) else hits[0]
         coverage = round(best.coverage, 3)
         if coverage < 0.5:
             return self._abstain(
@@ -664,14 +977,56 @@ class QueryEngine:
         # ¿pide una cifra? solo se responde si algún titular relevante la contiene
         wants_number = bool(_RE_NUMERIC.search(fold(req.question)))
         arts = [h for h in hits if h.doc.kind == "articulo"]
-        usable = [h for h in arts if not self.corpus.articles[h.doc.doc_id].suspicious_instructions and h.coverage >= 0.5]
+        usable = [h for h in arts if not self.corpus.articles[h.doc.doc_id].suspicious_instructions and h.supported]
         warnings: list[str] = []
+        semantic_expansion = any(hit.semantic_similarity is not None for hit in hits)
+        if semantic_expansion:
+            warnings.append("Los vecinos semánticos son paráfrasis o versiones multilingües candidatas; su similitud no demuestra respaldo literal ni corroboración independiente.")
         for h in arts:
             if self.corpus.articles[h.doc.doc_id].suspicious_instructions:
                 warnings.append(
                     f"La fuente {h.doc.doc_id} contiene instrucciones dirigidas a un agente: se trató como contenido no confiable y no se usó."
                 )
         ind_hits = [h for h in hits if h.doc.kind == "indicador" and h.coverage >= 0.5]
+        requested_kind = _requested_number_kind(req.question)
+        if requested_kind:
+            usable = [
+                h for h in usable
+                if _number_has_kind(self.corpus.articles[h.doc.doc_id].title, requested_kind)
+            ]
+            if requested_kind in {"muertes", "heridos", "personas", "magnitud", "danos"}:
+                ind_hits = []
+            elif requested_kind == "porcentaje":
+                ind_hits = [h for h in ind_hits if "%" in (self.corpus.indicators[h.doc.doc_id].unit or "")]
+            elif requested_kind == "dinero":
+                ind_hits = [h for h in ind_hits if re.search(r"\$|dolar|balboa|usd", fold(self.corpus.indicators[h.doc.doc_id].unit or ""))]
+        if re.search(r"\b(hoy|esta manana|esta tarde|esta noche)\b", fold(req.question)):
+            cutoff = self.corpus.cutoff
+            start = cutoff - timedelta(hours=48)
+            usable = [
+                h for h in usable
+                if (article_time := (self.corpus.articles[h.doc.doc_id].published_at or self.corpus.articles[h.doc.doc_id].detected_at))
+                is not None and start <= article_time <= cutoff
+            ]
+            ind_hits = []
+            warnings.append("La referencia a «hoy» se interpreta como las 48 horas anteriores al corte del snapshot.")
+        if (requested_kind or re.search(r"\b(hoy|esta manana|esta tarde|esta noche)\b", fold(req.question))) and not usable and not ind_hits:
+            kind_text = {
+                "muertes": "personas fallecidas",
+                "heridos": "personas heridas",
+                "personas": "personas o población",
+                "magnitud": "magnitud sísmica",
+                "danos": "daños o pérdidas",
+                "porcentaje": "porcentaje",
+                "dinero": "dinero o costo",
+            }.get(requested_kind, "fecha solicitada")
+            return self._abstain(
+                req, QueryIntent.busqueda, t0,
+                f"las coincidencias no contienen una cifra del tipo solicitado ({kind_text})"
+                + (" dentro de las 48 horas anteriores al corte del snapshot." if re.search(r"\b(hoy|esta manana|esta tarde|esta noche)\b", fold(req.question)) else "."),
+                hits=hit_models, coverage=coverage, matched=best.matched, warnings=warnings,
+                missing=[f"Una fuente fechada que respalde una cifra de {kind_text}."],
+            )
         if not usable and not ind_hits:
             return self._abstain(
                 req, QueryIntent.busqueda, t0, "las únicas coincidencias son fuentes no confiables o de baja cobertura.",
@@ -693,11 +1048,11 @@ class QueryEngine:
         status = AnswerStatus.respondida if coverage >= 0.75 else AnswerStatus.parcial
         missing: list[str] = []
         used_clusters: list[str] = []
-        for h in usable[:3]:
+        for h in usable:
             a = self.corpus.articles[h.doc.doc_id]
             if a.cluster_id and a.cluster_id not in used_clusters:
                 used_clusters.append(a.cluster_id)
-        for cid in used_clusters[:2]:
+        for cid in used_clusters[:req.limit]:
             base = self.bases.get(cid)
             if base is None:
                 continue
@@ -732,13 +1087,17 @@ class QueryEngine:
                 continue
             lines.append(f"- Banco Mundial: {_ind_text(p)} [{p.id}]")
             cites.extend(_ind_cites(p))
+        contradictions = list({candidate.id: candidate for candidate in contradictions}.values())
         if contradictions:
             status = AnswerStatus.contradiccion
             lines.append("Versiones incompatibles (no se elige una; revisión pendiente):")
             for c in contradictions:
                 lines.append(f"  · {c.description}")
                 for v in c.versions:
-                    lines.append(f"    - {v.outlet}: «{v.statement}» [{v.evidence_id}]")
+                    when = f"publicado {fmt_date_pa(v.published_at)}" if v.published_at else f"detectado {fmt_date_pa(v.detected_at)}; publicación desconocida"
+                    lines.append(f"    - {v.outlet} ({when}): «{v.statement}» [{v.evidence_id}]")
+                    if not any(cite.evidence_id == v.evidence_id for cite in cites):
+                        cites.append(QueryCitation(evidence_id=v.evidence_id, field="title", passage=v.statement, title=v.statement, url=v.url))
         uncovered = sorted(set(qtoks) - set(best.matched))
         if status == AnswerStatus.parcial and uncovered:
             lines.append(f"Cubierto: {', '.join(best.matched)}. Sin respaldo en las fuentes recuperadas: {', '.join(uncovered)}.")
@@ -751,6 +1110,8 @@ class QueryEngine:
             req, QueryIntent.busqueda, t0, answer_status=status, answer=ans, citations=cites, hits=hit_models,
             contradictions=contradictions, missing=list(dict.fromkeys(missing)), related_topic_ids=related,
             warnings=warnings, coverage=coverage, matched_terms=best.matched,
+            method="bm25+rapidfuzz+semantic-rrf" if semantic_expansion else "bm25+rapidfuzz",
+            semantic_expansion=semantic_expansion, rrf_k=60 if semantic_expansion else None,
         )
 
 
@@ -765,6 +1126,12 @@ def _ind_cites(p: IndicatorPoint) -> list[QueryCitation]:
         QueryCitation(evidence_id=p.id, field="value", passage=fmt_value(p.value), title=_ind_text(p), url=p.source_url),
         QueryCitation(evidence_id=p.id, field="year", passage=str(p.year), title=_ind_text(p), url=p.source_url),
     ]
+
+
+def _event_cites(event: SeismicEvent) -> list[QueryCitation]:
+    title = f"USGS {event.id}: M {fmt_value(event.magnitude)} · {event.place}"
+    return [QueryCitation(evidence_id=event.id, field=key, passage=value, title=title, url=event.url)
+            for key, value in event.citation_fields().items() if key in {"magnitude", "timePanama", "place", "depth"} and value]
 
 
 __all__ = ["QueryEngine", "tokenize", "DataMode"]

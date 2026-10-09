@@ -109,6 +109,25 @@ def test_topics_filters_and_search(make_app):
     assert nocomp["scoreComponents"] == []
 
 
+def test_tvn_gap_filter_requires_independent_sources_and_composes(make_app):
+    c = make_app()
+    expected = {
+        base.id for base in c.svc.bases.values()
+        if base.independent >= 2 and not any(article.is_tvn for article in base.articles)
+    }
+    response = c.get(f"{API}/topics", params={"limit": 100, "scope": "all", "tvnGap": "true"})
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert {item["id"] for item in data["items"]} == expected
+    assert data["applied"]["tvnGap"] is True
+    if expected:
+        category = c.svc.bases[next(iter(expected))].category.value
+        combined = c.get(f"{API}/topics", params={
+            "limit": 100, "scope": "all", "tvnGap": "true", "category": category,
+        }).json()
+        assert all(item["id"] in expected and item["category"] == category for item in combined["items"])
+
+
 def test_t03_recirculated_old_news_shows_original_date_and_zero_novelty(make_app):
     c = make_app()
     d = c.get(f"{API}/topics/{find_topic(c, 'puente')}").json()

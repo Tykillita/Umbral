@@ -108,3 +108,21 @@ class Authenticator:
 def is_loopback(request: Request) -> bool:
     host = request.client.host if request.client else ""
     return host in {"127.0.0.1", "::1", "localhost", "testclient"}
+
+
+def is_desktop_oauth_callback(request: Request) -> bool:
+    """El navegador OAuth externo no posee el token IPC efímero de Electron.
+
+    Solo se exime el GET exacto del callback local, sin Origin y con state; la
+    conexión valida ese state aleatorio, su expiración y el código recibido.
+    """
+    return (
+        request.method == "GET"
+        and request.url.path in {
+            "/api/v1/auth/callback",
+            "/api/v1/connectors/notion/callback",
+            "/api/v1/connectors/slack/callback",
+        }
+        and request.headers.get("origin") is None
+        and bool(request.query_params.get("state"))
+    )

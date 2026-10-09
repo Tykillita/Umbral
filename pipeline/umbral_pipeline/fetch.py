@@ -7,6 +7,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from .config import DEFAULT_WINDOW_DAYS
+from .ingest.bing_news import fetch_bing_news
 from .ingest.gdelt import fetch_gdelt
 from .ingest.tvn import fetch_tvn
 from .ingest.tvn_sitemap import fetch_news_sitemap
@@ -19,7 +20,7 @@ def run_fetch(
     data_dir: Path,
     *,
     window_days: int = DEFAULT_WINDOW_DAYS,
-    sources: tuple[str, ...] = ("tvn", "gdelt", "worldbank", "usgs"),
+    sources: tuple[str, ...] = ("tvn", "tvn-sitemap", "gdelt", "bing-news", "worldbank", "usgs"),
     gdelt_window_days: int = 10,
     tvn_feeds: tuple[str, ...] = (
         "https://www.tvn-2.com/rss/", "https://www.tvn-2.com/rss/nacionales/",
@@ -93,6 +94,15 @@ def run_fetch(
         meta["queries"].extend(qlog)
         meta["errors"].extend({"source": "gdelt_doc", **e} for e in errs)
         log(f"[fetch] GDELT: {len(recs)} registros, {len(errs)} consultas con error")
+        write_json(raw_dir / "fetch_meta.json", meta)
+
+    if "bing-news" in sources:
+        log("[fetch] Bing News RSS (respaldo de búsqueda por temas)")
+        recs, qlog, errs = fetch_bing_news(log=log)
+        write_json(raw_dir / "bing_news_records.json", recs)
+        meta["queries"].extend(qlog)
+        meta["errors"].extend(errs)
+        log(f"[fetch] Bing News: {len(recs)} registros, {len(errs)} consultas con error")
         write_json(raw_dir / "fetch_meta.json", meta)
 
     if "usgs" in sources:

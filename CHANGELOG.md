@@ -6,6 +6,38 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ## [Unreleased]
 
+### Added
+
+- Aviso flotante y preferencia de actualizaciones de escritorio: un interruptor en Configuración permite desactivar la descarga e instalación automáticas; con las automáticas apagadas Umbral solo avisa de la versión disponible y ofrece «Actualizar ahora» para descargarla e instalarla.
+- Panel flotante de Configuración desde la tuerca fija, con Preferencias y Conexiones; los avisos globales se compactan a 56 px con texto elíptico accesible y controles táctiles de 44 px.
+- Temas «Original» y «TVN Noticias» en Configuración, con preferencia local para toda Umbral; Preferencias y Conexiones ahora forman parte del encabezado de la tarjeta.
+- Conectores públicos OAuth de Notion y Slack aislados por identidad anónima Firebase, con credenciales cifradas en Firestore, destino/página elegible, compartir en Slack y avisos de revisión opcionales con deduplicación. Su uso real requiere configurar las aplicaciones OAuth, Firebase y la clave de cifrado en el API.
+- Recorridos de demostración por rol y mesa editorial compartida de solo inserción; etiquetado humano ciego con exportación e importación verificable de etiquetas.
+- Agrupación semántica multilingüe precalculada, recuperación del asistente BM25/RapidFuzz con expansión de vecinos y fusión RRF, detección explicable de cifras contradictorias ES/EN y consultas al catálogo sísmico USGS.
+- Exportación local directa de fichas Markdown a páginas nuevas de Notion y aviso accesible del estado de descarga, junto al asistente de evidencia.
+- Centro de advertencias accesible junto al asistente; los `Notice` de tono `warn` y `amber` activos se agrupan ahí y muestran su contador.
+- La búsqueda automática de noticias complementa TVN con consultas RSS de Bing News y conserva enlaces directos al editor original; los fallos de GDELT quedan registrados y pueden tolerarse si las fuentes restantes cumplen cobertura y aportan titulares nuevos.
+- Comandos `news-candidate` y `promote-news` para preparar, verificar y promover una ingesta clasificada con Laya solo después de cumplir cobertura, titulares nuevos e integridad exacta.
+- La app de escritorio busca y clasifica noticias automáticamente cada 24 horas mientras está abierta y conectada; solo activa snapshots que superan las verificaciones.
+- El empaquetado de escritorio prepara Laya calibrada y su snapshot de 991 titulares juntos; el runtime rechaza paquetes cuyo modelo, perfil y manifest no coinciden exactamente.
+- El productor web valida el ID exacto, el perfil Laya calibrado, cobertura mínima y titulares nuevos antes de publicar; conserva en el snapshot los fallos de fuentes opcionales como advertencias.
+- La Agenda filtra oportunidades «TVN aún no lo cubre» con dos o más procedencias independientes y ningún artículo TVN del snapshot actual; el criterio funciona en API directa, API pública y mock.
+- Borradores ajusta preguntas a la categoría y las brechas de evidencia, separa `GUION` de `NOTAS DE PRODUCCIÓN` y genera variantes derivadas para X, Instagram y TikTok.
+- El asistente valida tipo de evidencia y periodos contra el corte del snapshot, limita correcciones difusas a errores de tipeo, rechaza inyecciones/perfilamiento y atribuye consultas de culpabilidad; Jurado conserva sus sugerencias y suma cuatro demos.
+
+### Changed
+
+- En pantallas anchas, marca, navegación y acciones comparten una fila en el ancho disponible; el escritorio reserva espacio para los controles de ventana.
+- Los avisos aparecen en la esquina inferior derecha y, con el asistente minimizado, se ubican encima de su botón flotante.
+- El aviso de Mesa sin sincronización se integra al centro de advertencias en web y se oculta en Desktop, donde la copia local es el comportamiento esperado.
+- Umbral Desktop conserva sus borradores y conexiones personales locales mientras permite usar Notion y Slack por OAuth público; el puente Electron limita las solicitudes a rutas de conectores y mantiene la identidad Firebase anónima fuera del almacenamiento OAuth local.
+- Borradores and the evidence assistant now let users start ChatGPT or Claude sign-in directly from the provider selector; after the local session is recognized, the chosen provider is selected. User-facing connection messages no longer expose internal token or repository diagnostics.
+- El callback OAuth de ChatGPT admite el retorno local del navegador con un `state` pendiente, sin abrir las demás rutas de la API al exterior; al completarse confirma la conexión y el selector de Umbral se actualiza automáticamente.
+- El selector de modelos de ChatGPT queda accesible por encima del modal de cuentas en escritorio y móvil; tras OAuth espera a que haya un modelo elegido para activar ChatGPT y muestra los avisos del asistente como toasts temporales.
+- La portada adopta la estructura editorial de Umbral Mega con la identidad amarilla de Umbral, cifras del snapshot activo, carrusel accesible, promesas interactivas, preguntas frecuentes y llamadas a la agenda.
+- La cinta de categorías de la portada repite copias medidas y avanza a velocidad constante; espera a cubrir el ancho visible antes de moverse y respeta el movimiento reducido.
+- Los tooltips propios se cierran al salir el puntero, al perder foco la ventana o al ocultarse la aplicación, incluso si falta el evento `pointerleave`.
+
 ### Documentation
 
 - Registra la prueba real de instalación y actualización de la app de escritorio mediante GitHub Releases.

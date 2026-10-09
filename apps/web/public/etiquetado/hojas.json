@@ -1,0 +1,2433 @@
+{
+  "version": 1,
+  "snapshotId": "20261007-e704e952",
+  "topics": [
+    {
+      "id": "art_f4bd166a160421ab",
+      "text": "Sucasa Estate Developers inaugura su primera Sala de Ventas para presentar Baula Residences",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/sucasa-estate-developers-inaugura-primera_1_2260096.html",
+      "publishedAt": "2026-09-09T21:05:52Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_cd73f54cb7e0f734",
+      "text": "Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/mides-solicita-47-millones-completar-pagos-programa-transferencia-monetarias-noviembre_1_2264712.html",
+      "publishedAt": "2026-10-07T00:14:52Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_c7d1cf481fb272a8",
+      "text": "¡ Atención ! Sinaproc mantiene aviso por lluvias y tormentas : ¿ dónde lloverá hoy ?",
+      "outlet": "telemetro.com",
+      "url": "https://www.telemetro.com/nacionales/atencion-sinaproc-mantiene-aviso-lluvias-y-tormentas-donde-llovera-hoy-n6093647",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T13:00:00Z"
+    },
+    {
+      "id": "art_8dfcd92658f05909",
+      "text": "Productores de arroz en Panamá exigen proyectos de riego y semillas resistentes",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/sociedad/productores-de-arroz-en-panama-exigen-proyectos-de-riego-y-semillas-resistentes-1266942",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T03:00:00Z"
+    },
+    {
+      "id": "art_141bcdfeaa6773ce",
+      "text": "ENA refuerza campaña informativa por trabajos en el intercambiador de Costa del Este, en el Corredor Sur de Agosto a Diciembre 2026",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/ena-refuerza-campana-informativa-trabajos_1_2256795.html",
+      "publishedAt": "2026-08-21T18:06:51Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_1cf8078547cb907c",
+      "text": "TVN Media recibe reconocimiento del programa Reduce Tu Huella por su compromiso con la gestión ambiental",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/tvn-media-recibe-reconocimiento-programa-reduce-tu-huella-gestion-ambiental_1_2254331.html",
+      "publishedAt": "2026-08-05T00:38:03Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_b33b36c66b0dc8b9",
+      "text": "Proyecto de ley que dicta el presupuesto del Canal de Panamá pasa a tercer debate",
+      "outlet": "telemetro.com",
+      "url": "https://www.telemetro.com/nacionales/proyecto-ley-que-dicta-el-presupuesto-del-canal-panama-pasa-tercer-debate-n6092955",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T07:15:00Z"
+    },
+    {
+      "id": "art_d446f2d659b74dfc",
+      "text": "La historia de Leixer de la Cruz , un hombre que lucha por una nueva vida en Cuba tras haber sido expulsado de EEUU",
+      "outlet": "univision.com",
+      "url": "https://www.univision.com/noticias/america-latina/la-historia-de-leixer-de-la-cruz-un-hombre-que-lucha-por-una-nueva-vida-en-cuba-tras-haber-sido-expulsado-de-eeuu",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T08:30:00Z"
+    },
+    {
+      "id": "art_3e4497df454263ca",
+      "text": "Esto es lo que gana el cuñado del presidente como cónsul en Japón",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/politica/esto-es-lo-que-gana-el-cunado-del-presidente-como-consul-en-japon/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T23:30:00Z"
+    },
+    {
+      "id": "art_c476e48a05009d57",
+      "text": "Las noticias economía del 24Sep en Venezuela",
+      "outlet": "informe21.com",
+      "url": "https://www.informe21.com/post/las-noticias-econom%C3%ADa-del-24sep-en-venezuela",
+      "publishedAt": null,
+      "detectedAt": "2026-09-24T23:15:00Z"
+    },
+    {
+      "id": "art_80da2cef2f830e93",
+      "text": "Dominicanos caen goleados 1 - 4 por Haití y pierden invicto",
+      "outlet": "acento.com.do",
+      "url": "https://acento.com.do/deportes/dominicanos-caen-goleados-1-4-por-haiti-y-pierden-invicto-9762814.html",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T03:45:00Z"
+    },
+    {
+      "id": "art_4917994b5525ba7a",
+      "text": "Sólo en su primer día más de 25 mil talentos participaron de Empleo 2.0 Powered by Konzerta",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/primer-dia-25-mil-talentos_1_2261292.html",
+      "publishedAt": "2026-09-17T17:32:13Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_27235a737f51d7fa",
+      "text": "10 engineering marvels you must see in your lifetime",
+      "outlet": "aol.com",
+      "url": "https://www.aol.com/articles/10-engineering-marvels-must-see-120000000.html",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T15:15:00Z"
+    },
+    {
+      "id": "art_0e6c783388e9a799",
+      "text": "Asignan plazas de internado a nuevos médicos en la CSS para reforzar la atención de salud",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/salud/asignan-plazas-internado-nuevos-medicos_1_2264688.html",
+      "publishedAt": "2026-10-06T23:07:04Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_a943f8516d6cd418",
+      "text": "Panamá impulsa tecnología satelital y nuevos acuerdos contra el crimen",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/panama-impulsa-tecnologia-satelital-y-nuevos-acuerdos-contra-el-crimen-517316",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T06:00:00Z"
+    },
+    {
+      "id": "art_0324ef8050dca1e9",
+      "text": "BYD y Cofiño presentan oficialmente el nuevo TI 7 en Panamá",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/byd-cofino-presentan-oficialmente-nuevo_1_2256978.html",
+      "publishedAt": "2026-08-25T15:28:18Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_06687faa4cc2700e",
+      "text": "Canal de Panamá pospone restricciones de calado gracias a las lluvias",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/canal-de-panama-pospone-restricciones-de-calado-gracias-las-lluvias-1266715",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T01:00:00Z"
+    },
+    {
+      "id": "art_617919f9dcab52df",
+      "text": "César Caicedo ahora está recluido en el Hospital Santo Tomás; había sido trasladado a Coiba",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/judicial/cesar-caicedo-ahora-recluido-hospital-santotomas_1_2264431.html",
+      "publishedAt": "2026-10-05T19:03:37Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_281ecff3a4042d13",
+      "text": "El estatus migratorio y la vivienda principal : ¿ existe un exceso reglamentario y de aplicación de la ley ?",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/opinion/el-estatus-migratorio-y-la-vivienda-principal-existe-un-exceso-reglamentario-y-de-aplicacion-de-la-ley/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-13T04:15:00Z"
+    },
+    {
+      "id": "art_4e907b41e51bf242",
+      "text": "Internado : vivir dentro del hospital",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/opinion/internado-vivir-dentro-del-hospital/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T07:15:00Z"
+    },
+    {
+      "id": "art_e747696f0a56cf6e",
+      "text": "Panama Canal Eases Restrictions Adding Transit Slot and Maximum Draft",
+      "outlet": "maritime-executive.com",
+      "url": "https://maritime-executive.com/article/panama-canal-eases-restrictions-adding-transit-slot-and-maximum-draft",
+      "publishedAt": null,
+      "detectedAt": "2026-09-28T18:45:00Z"
+    },
+    {
+      "id": "art_87b93663741b589b",
+      "text": "Oferta exportable de Panamá alcanza $913 . 1 millones y sube 18 . 5 % a julio",
+      "outlet": "laestrella.com.pa",
+      "url": "https://www.laestrella.com.pa/economia/oferta-exportable-de-panama-alcanza-9131-millones-y-sube-185-a-julio-AC25637755",
+      "publishedAt": null,
+      "detectedAt": "2026-09-13T05:30:00Z"
+    },
+    {
+      "id": "art_e4ceedeeaeaa0c55",
+      "text": "Diario HOY | Paraguay gana protagonismo en la conducción de la Asociación Iberoamericana de Ministerios Públicos",
+      "outlet": "hoy.com.py",
+      "url": "https://www.hoy.com.py/nacionales/2026/10/01/paraguay-gana-protagonismo-en-la-conduccion-de-la-asociacion-iberoamericana-de-ministerios-publicos",
+      "publishedAt": "2026-10-01T00:00:00Z",
+      "detectedAt": "2026-10-01T22:45:00Z"
+    },
+    {
+      "id": "art_fb81e240af1620a1",
+      "text": "Costa Rica: Suspendió la investigación sobre el crimen del militar exiliado",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/mundo/suramerica/costa-rica-suspendio-investigacion-crimen_1_2264699.html",
+      "publishedAt": "2026-10-07T00:00:21Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_e778154c312d0303",
+      "text": "¡Emotivo! Lionel Messi tiene una despedida triunfal de la selección de Argentina",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/tvmax/futbol-internacional/lionel-messi-despedida-argentina-vs-benin-en-vivo-estadio-monumental-buenos-aires_6_2264650.html",
+      "publishedAt": "2026-10-06T22:00:42Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_92781a0b537f6dad",
+      "text": "Localizan los cuerpos de dos rescatistas tras emergencia en el Can de Macho de Monte en Chiriqu",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/provincias/localizan-los-cuerpos-de-dos-rescatistas-tras-emergencia-en-el-canon-de-macho-de-monte-en",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T22:30:00Z"
+    },
+    {
+      "id": "art_86082bb0c12b33ce",
+      "text": "Panama Canal to increase daily transits through larger locks to 10 - Xinhua",
+      "outlet": "english.news.cn",
+      "url": "https://english.news.cn/20260929/27bc5dcc459c4948b108cb2662b686ef/c.html",
+      "publishedAt": "2026-09-29T00:00:00Z",
+      "detectedAt": "2026-09-29T04:00:00Z"
+    },
+    {
+      "id": "art_3e379acea68fffbd",
+      "text": "El derecho de paso en el Canal de Panamá : ¿ la ley del más fuerte ?",
+      "outlet": "ambito.com",
+      "url": "https://www.ambito.com/opiniones/el-derecho-paso-el-canal-panama-la-ley-del-mas-fuerte-n6321399",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T05:45:00Z"
+    },
+    {
+      "id": "art_dd73be08a7e1cfe2",
+      "text": "Randy saca su lado más dulce en Romances de una novata volumen 3",
+      "outlet": "eldia.com.do",
+      "url": "https://eldia.com.do/randy-saca-su-lado-mas-dulce-en-romances-de-una-novata-volumen-3/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T05:30:00Z"
+    },
+    {
+      "id": "art_72020673e6ca464c",
+      "text": "El legado evoluciona: nuevo BMW X5 se presenta en el Panama Motor Show 2026",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/video-legado-evoluciona-nuevo-bmw-x5_8_2264457.html",
+      "publishedAt": "2026-10-05T21:00:13Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_59ef96ef85bc2a23",
+      "text": "Pinchotanos se unen para evitar la llegada de la subestación eléctrica Trinitaria",
+      "outlet": "vanguardia.com",
+      "url": "https://www.vanguardia.com/santander/guanenta/2026/10/01/pinchotanos-se-unen-para-evitar-la-llegada-de-la-subestacion-electrica-trinitaria/",
+      "publishedAt": "2026-10-01T00:00:00Z",
+      "detectedAt": "2026-10-01T22:30:00Z"
+    },
+    {
+      "id": "art_5e47b44858ebcbab",
+      "text": "¡ Atención ! SINAPROC advierte que lluvias y tormentas continuarán esta tarde",
+      "outlet": "telemetro.com",
+      "url": "https://www.telemetro.com/nacionales/atencion-sinaproc-advierte-que-lluvias-y-tormentas-continuaran-esta-tarde-n6093180",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T20:15:00Z"
+    },
+    {
+      "id": "art_35be60ab0dd98b5b",
+      "text": "Asamblea da luz verde al mapa electoral de 2029",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/asamblea-da-luz-verde-al-mapa-electoral-de-2029-516977",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T07:00:00Z"
+    },
+    {
+      "id": "art_42c4b9b4ef8a1262",
+      "text": "Contenido Exclusivo: Coclé, se seca el campo",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/contenido-exclusivo/contenido-exclusivo-cocle-seca-campo-fenomeno-de-el-nino-clima-agua-produccion-sequia_1_2263614.html",
+      "publishedAt": "2026-10-01T01:31:04Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_0a46c657d2a4fb78",
+      "text": "Perú entra al Escudo de las Américas : su impacto contra el crimen en la región y la cautela de Chile | Internacional",
+      "outlet": "biobiochile.cl",
+      "url": "https://www.biobiochile.cl/noticias/internacional/america-latina/2026/09/12/peru-entra-al-escudo-de-las-americas-su-impacto-contra-el-crimen-en-la-region-y-la-cautela-de-chile.shtml",
+      "publishedAt": "2026-09-12T00:00:00Z",
+      "detectedAt": "2026-09-12T13:15:00Z"
+    },
+    {
+      "id": "art_e422096cadd0e597",
+      "text": "La ausencia de servicios básicos limita la reducción del déficit habitacional",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/economia/la-ausencia-de-servicios-basicos-limita-la-reduccion-del-deficit-habitacional-1266707",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T06:15:00Z"
+    },
+    {
+      "id": "art_f925fac3816fe3d7",
+      "text": "MIDA extiende hasta el 11 de octubre retiro de medidor eléctrico en Puerto Armuelles",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/mida-extiende-11-octubre-retiro_1_2264654.html",
+      "publishedAt": "2026-10-06T21:41:54Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_96caf7104c3f4cac",
+      "text": "Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/judicial/caso-pandora-declaran-legal-aprehension-exjecutivo-bancario-autoriza-pagos-fiscales-dgi_1_2264701.html",
+      "publishedAt": "2026-10-06T23:57:05Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_070f6a99e2b4b88e",
+      "text": "Latin America Defense Monitor September 19 – 25 , 2026",
+      "outlet": "riotimesonline.com",
+      "url": "https://www.riotimesonline.com/latin-america-defense-monitor-september-19-25-2026/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T10:30:00Z"
+    },
+    {
+      "id": "art_e92b49c5b42a5cc2",
+      "text": "Rector de la UP elevará excelencia y vinculará a sectores productivos",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/nacion/rector-de-la-elevara-excelencia-y-vinculara-sectores-productivos-1266980",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T09:30:00Z"
+    },
+    {
+      "id": "art_f6dfac0e2a644c80",
+      "text": "¿ Dónde está Jafeth ?: a un mes de su desaparición , la UTP se moviliza y la justicia avanza contra seis implicados",
+      "outlet": "midiario.com",
+      "url": "https://www.midiario.com/nacionales/donde-esta-jafeth-a-un-mes-de-su-desaparicion-la-utp-se-moviliza-y-la-justicia-avanza-contra-seis-implicados/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-11T22:45:00Z"
+    },
+    {
+      "id": "art_914fdd0d61eb773a",
+      "text": "Delta Air Lines evalúa reinicio de rutas con Venezuela",
+      "outlet": "ultimasnoticias.com.ve",
+      "url": "https://ultimasnoticias.com.ve/actualidad/delta-air-lines-evalua-reinicio-de-rutas-con-venezuela/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T16:30:00Z"
+    },
+    {
+      "id": "art_ee96c06c17fd07fa",
+      "text": "Sismo de magnitud 5 . 4 sacude la frontera entre Panamá y Costa Rica",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/sismo-de-magnitud-54-sacude-la-frontera-entre-panama-y-costa-rica-516253",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T06:30:00Z"
+    },
+    {
+      "id": "art_1eb7404d0cdc23b3",
+      "text": "FILSD 2026 : actividades culturales en Panamá",
+      "outlet": "diariolibre.com",
+      "url": "https://www.diariolibre.com/revista/cultura/2026/09/25/filsd-2026-actividades-culturales-en-panama/3669186",
+      "publishedAt": "2026-09-25T00:00:00Z",
+      "detectedAt": "2026-09-25T05:30:00Z"
+    },
+    {
+      "id": "art_9b473aa08f935ddf",
+      "text": "Tocumen supera los 15 . 8 millones de pasajeros en agosto y crece un 15 %",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/economia/tocumen-supera-los-158-millones-de-pasajeros-en-agosto-y-crece-un-15-1266695",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T06:15:00Z"
+    },
+    {
+      "id": "art_d4025d585f5bd21b",
+      "text": "ZEEKR llega oficialmente a Panamá de la mano de Bahia Motors",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/zeekr-llega-oficialmente-panama-mano_1_2261254.html",
+      "publishedAt": "2026-09-16T21:03:24Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_a015ad17dff06457",
+      "text": "Empleo 2.0 Powered by Konzerta: Las claves de la feria laboral más grande del país",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/empleo-2-powered-by-konzerta_1_2261096.html",
+      "publishedAt": "2026-09-16T19:33:00Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_749a4ef5b5d4bd0b",
+      "text": "Cantante Boza se presentará en Costa Rica : conozca aquí todos los detalles de su concierto",
+      "outlet": "nacion.com",
+      "url": "https://www.nacion.com/spotlight/cantante-boza-se-presentara-en-costa-rica-conozca/QN2KES2ISBAH7K2SKJ7NVPXN3E/story/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T22:00:00Z"
+    },
+    {
+      "id": "art_2e0c287fbe399d94",
+      "text": "Diésel : Perú tiene el combustible más caro en la región , los factores que nos colocan en la cima de la lista | ECONOMIA",
+      "outlet": "gestion.pe",
+      "url": "https://gestion.pe/economia/diesel-peru-tiene-el-combustible-mas-caro-en-la-region-los-factores-que-nos-colocan-en-la-cima-de-la-lista-noticia/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T11:15:00Z"
+    },
+    {
+      "id": "art_9d68e6ea53eeffba",
+      "text": "Thomas Christiansen reconoce falencias de Panamá y valora a los jóvenes en la gira",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/deportes/thomas-christiansen-reconoce-falencias-de-panama-y-valora-a-los-jovenes-en-la-gira/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T23:30:00Z"
+    },
+    {
+      "id": "art_a8880a4de0b142ea",
+      "text": "Alcaldesa Stefany Peñalba: residentes protestan frente al Municipio de Arraiján y exigen auditorías contra su gestión",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/provincias/stefany-penalba-residentes-protesta-frente-municipio-de-arraijan-piden-auditoria_1_2264603.html",
+      "publishedAt": "2026-10-06T18:24:07Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_f0823c96deb6cc13",
+      "text": "Mario Castrellón protagoniza Líderes 360 este viernes en Noticias AM",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/lideres-360/mario-castrellon-protagoniza-lideres-360-noticias-am_1_2254164.html",
+      "publishedAt": "2026-08-05T11:00:19Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_10a2962e77076f4a",
+      "text": "Colombia y el nuevo tablero geopolítico",
+      "outlet": "elnuevosiglo.com.co",
+      "url": "https://www.elnuevosiglo.com.co/columnistas/colombia-y-el-nuevo-tablero-geopolitico",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T06:30:00Z"
+    },
+    {
+      "id": "art_82fe96a291887fed",
+      "text": "Where Carnival Is Sending Three Ships in 2028 and 2029",
+      "outlet": "cruisehive.com",
+      "url": "https://www.cruisehive.com/where-carnival-is-sending-three-ships-in-2028-and-2029/219528",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T18:30:00Z"
+    },
+    {
+      "id": "art_0a1d0d773c1caa03",
+      "text": "Urgen recolectores de café : Más del 50 % de quienes recogen el grano provienen del extranjero - Monumental",
+      "outlet": "monumental.co.cr",
+      "url": "https://www.monumental.co.cr/2026/09/27/urgen-recolectores-de-cafe-mas-del-50-de-quienes-recogen-el-grano-provienen-del-extranjero/",
+      "publishedAt": "2026-09-27T00:00:00Z",
+      "detectedAt": "2026-09-27T17:45:00Z"
+    },
+    {
+      "id": "art_8b729f2b5fc9618c",
+      "text": "Canal de Panamá evita nuevas restricciones y mantendrá 32 tránsitos hasta diciembre",
+      "outlet": "laestrella.com.pa",
+      "url": "https://www.laestrella.com.pa/economia/canal-de-panama-evita-nuevas-restricciones-y-mantendra-32-transitos-hasta-diciembre-FI25969491",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T08:15:00Z"
+    },
+    {
+      "id": "art_9108cb299fd69ac5",
+      "text": "Mercedes Moltó explota tras la cancelación del concierto de Ricardo Montaner",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/show/mercedes-molto-explota-tras-la-cancelacion-del-concierto-de-ricardo-montaner-517357",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T20:45:00Z"
+    },
+    {
+      "id": "art_2dcbf84e2b74a8b4",
+      "text": "Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/reforma-electrica-comision-comercio-aprueba-primer-debate-asamblea-nacional_1_2264662.html",
+      "publishedAt": "2026-10-06T22:14:00Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_d06b613096078ef0",
+      "text": "¡ La mola cruza fronteras ! Destacan la cultura Guna en aeropuerto de Bogotá",
+      "outlet": "midiario.com",
+      "url": "https://www.midiario.com/nacionales/la-mola-cruza-fronteras-destacan-la-cultura-guna-en-aeropuerto-de-bogota/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T22:00:00Z"
+    },
+    {
+      "id": "art_ceaff0834dc40868",
+      "text": "¿ Por qué debemos ir a la Feria del Libro y qué nos falta para crear lectores ?",
+      "outlet": "acentotv.acento.com.do",
+      "url": "https://acentotv.acento.com.do/gustavo-podcast/por-qu-debemos-ir-a-la-feria-del-libro-y-qu-nos-falta-para-crear-lectores-59268.html",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T01:15:00Z"
+    },
+    {
+      "id": "art_505b14a34e21b791",
+      "text": "Supermercados Xtra acompaña con solidaridad a pacientes oncológicos durante la Sandwichatón 2026",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/supermercados-xtra-acompana-solidaridad-pacientes_1_2263525.html",
+      "publishedAt": "2026-09-30T15:33:46Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_76cb9aebf25df5fd",
+      "text": "Veracruz entra en toque de queda y estos son los horarios para menores y adultos",
+      "outlet": "diaadia.com.pa",
+      "url": "https://www.diaadia.com.pa/el-pais/veracruz-entra-en-toque-de-queda-y-estos-son-los-horarios-para-menores-y-adultos-791823",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T00:00:00Z"
+    },
+    {
+      "id": "art_7b716a4e31006cf6",
+      "text": "South Korea kicks off US investment plan with $22 . 3 billion Texas power project",
+      "outlet": "asianews.network",
+      "url": "https://asianews.network/south-korea-kicks-off-us-investment-plan-with-22-3-billion-texas-power-project/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T03:45:00Z"
+    },
+    {
+      "id": "art_07e0923bbc1fad05",
+      "text": "Paraguas a mano : lluvias y tormentas seguirán hasta el sábado",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/sociedad/lluvias-y-tormentas-seguiran-afectando-a-panama-hasta-el-sabado-3-de-octubre/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T23:30:00Z"
+    },
+    {
+      "id": "art_facbc2f986b9851a",
+      "text": "No es necesario : Orman Innis cuestiona a Susan Castillo por publicar su chequeo ginecológico + VÍDEO",
+      "outlet": "midiario.com",
+      "url": "https://www.midiario.com/farandula/no-es-necesario-orman-innis-cuestiona-a-susan-castillo-por-publicar-su-chequeo-ginecologico/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T03:15:00Z"
+    },
+    {
+      "id": "art_ff1ca0ae73dcbf8e",
+      "text": "Lluvias y tormentas esta tarde : ¿ Dónde se concentrarán los aguaceros más fuertes ?",
+      "outlet": "telemetro.com",
+      "url": "https://www.telemetro.com/nacionales/lluvias-y-tormentas-esta-tarde-donde-se-concentraran-los-aguaceros-mas-fuertes-n6093698",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T17:30:00Z"
+    },
+    {
+      "id": "art_36a08c087c41a01d",
+      "text": "Grupo Cincuentenario fortalece su presencia en el interior del país con la apertura oficial de dos nuevas sucursales: Ford y JIM en Santiago",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/grupo-cincuentenario-fortalece-presencia-interior_1_2259377.html",
+      "publishedAt": "2026-09-05T01:09:36Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_24611564b940e76b",
+      "text": "Guayaquil tiene muchísimo más : la oferta turística en la ciudad está atravesada por la inseguridad",
+      "outlet": "expreso.ec",
+      "url": "https://www.expreso.ec/guayaquil/guayaquil-muchisimo-oferta-turistica-ciudad-atravesado-inseguridad-296999.html",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T12:45:00Z"
+    },
+    {
+      "id": "art_12d4bded7b44e8c8",
+      "text": "El Telégrafo - ¿ Quién es José Walther Manrique , detenido en España y procesado por el caso Apagón ?",
+      "outlet": "eltelegrafo.com.ec",
+      "url": "https://www.eltelegrafo.com.ec/noticias/nacionales/210/quien-es-jose-walther-manrique-detenido-en-espana-y-procesado-por-el-caso-apagon",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T05:00:00Z"
+    },
+    {
+      "id": "art_1bb4e9e0d3c80e37",
+      "text": "Policía detiene baile de Alfredo Escudero en Guararé y provoca molestias",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/policia-detiene-baile-de-alfredo-escudero-en-guarare-y-provoca-molestias-517071",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T17:15:00Z"
+    },
+    {
+      "id": "art_f5f0e584dd6b7f22",
+      "text": "Panamá muestra su diversidad cultural como País Invitado de Honor en la FIL Santo Domingo 2026",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/panama-muestra-diversidad-cultural-pais_1_2262840.html",
+      "publishedAt": "2026-09-25T22:09:21Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_3d4592c4f66e8aa8",
+      "text": "Héctor Lavoe : cuando El cantante dejó de ser una canción y se convirtió en su historia",
+      "outlet": "rpp.pe",
+      "url": "https://rpp.pe/famosos/celebridades/hector-lavoe-cuando-el-cantante-dejo-de-ser-una-cancion-y-se-convirtio-en-su-historia-noticia-1710067",
+      "publishedAt": null,
+      "detectedAt": "2026-09-30T14:00:00Z"
+    },
+    {
+      "id": "art_a6fa5359fb054f59",
+      "text": "Venezuela y EEUU firman nuevos acuerdos petroleros, figuran las empresas Chevron, Eni y GE Vernova",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/mundo/venezuela-eeuu-firma-acuerdos-petroleros_1_2258964.html",
+      "publishedAt": "2026-09-02T19:51:09Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_81f8888f78b63f7f",
+      "text": "ANALYSIS : $14 / mt Separates the Best and Worst Singapore Bunker Suppliers on the Cost of Doing Business , Fuelsure Data Shows",
+      "outlet": "shipandbunker.com",
+      "url": "https://shipandbunker.com/news/world/818979-analysis-14mt-separates-the-best-and-worst-singapore-bunker-suppliers-on-the-cost-of-doing-business-fuelsure-data-shows",
+      "publishedAt": null,
+      "detectedAt": "2026-09-28T04:30:00Z"
+    },
+    {
+      "id": "art_25f7ce48e9dc9594",
+      "text": "Panamá Oeste : MINSA confirma un muerto por dengue en Arraiján",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/panama-oeste-minsa-confirma-un-muerto-por-dengue-en-arraijan-516960",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T00:45:00Z"
+    },
+    {
+      "id": "art_22508587930a29c9",
+      "text": "El Tribunal Electoral rechaza categóricamente los cambios a la ley electoral y los llama retrocesos",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/politica/el-tribunal-electoral-rechaza-categoricamente-los-cambios-a-la-ley-electoral-y-los-llama-retrocesos/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T23:30:00Z"
+    },
+    {
+      "id": "art_2774424f37d74756",
+      "text": "Alias Cóndor",
+      "outlet": "elvigia.net",
+      "url": "https://www.elvigia.net/columnas/2026/10/1/alias-condor-513747.html",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T11:15:00Z"
+    },
+    {
+      "id": "art_299c125cc3e44680",
+      "text": "Fiscalía ordenó el embargo de tres propiedades de Óscar Iván Zuluaga : superan los $3 . 664 millones",
+      "outlet": "elheraldo.co",
+      "url": "https://www.elheraldo.co/colombia/2026/09/11/fiscalia-ordeno-el-embargo-de-tres-propiedades-de-oscar-ivan-zuluaga-superan-los-3664-millones/",
+      "publishedAt": "2026-09-11T00:00:00Z",
+      "detectedAt": "2026-09-12T02:15:00Z"
+    },
+    {
+      "id": "art_a2bf7b024a0bb143",
+      "text": "El desafío no es solo tener agua , sino saber gestionarla",
+      "outlet": "telesurtv.net",
+      "url": "https://www.telesurtv.net/opinion/el-desafio-no-es-solo-tener-agua-sino-saber-gestionarla/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T14:45:00Z"
+    },
+    {
+      "id": "art_bdefe0cf7f99c77c",
+      "text": "Paraguay gana espacio en la conducción de los Ministerios Públicos de Iberoamérica",
+      "outlet": "adndigital.com.py",
+      "url": "https://www.adndigital.com.py/paraguay-gana-espacio-en-la-conduccion-de-los-ministerios-publicos-de-iberoamerica/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T23:30:00Z"
+    },
+    {
+      "id": "art_115a652bef45ca01",
+      "text": "Lo que pasó este sábado 12 de septiembre : las noticias que marcaron la jornada",
+      "outlet": "laestrella.com.pa",
+      "url": "https://www.laestrella.com.pa/panama/nacional/lo-que-paso-este-sabado-12-de-septiembre-las-noticias-que-marcaron-la-jornada-CF25641399",
+      "publishedAt": null,
+      "detectedAt": "2026-09-13T01:00:00Z"
+    },
+    {
+      "id": "art_a4a834647e6d484e",
+      "text": "Protestan en Venezuela para exigir elecciones y regreso seguro de María Corina Machado | Internacional | Noticias",
+      "outlet": "eluniverso.com",
+      "url": "https://www.eluniverso.com/noticias/internacional/protestan-en-venezuela-para-exigir-elecciones-y-regreso-seguro-de-maria-corina-machado-nota/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T20:00:00Z"
+    },
+    {
+      "id": "art_1a1ccc1b7058c8ee",
+      "text": "Rosario presentó en Buenos Aires la oferta turística para esta primavera",
+      "outlet": "unosantafe.com.ar",
+      "url": "https://www.unosantafe.com.ar/la-ciudad/rosario-presento-buenos-aires-la-oferta-turistica-esta-primavera-n10284384.html",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T00:15:00Z"
+    },
+    {
+      "id": "art_4bc3bf3e7f4f44d2",
+      "text": "El Festival Internacional de Jazz San Diego - Tijuana celebrará su tercera edición con cuatro conciertos , tres de ellos gratuitos",
+      "outlet": "sandiegouniontribune.com",
+      "url": "https://www.sandiegouniontribune.com/2026/09/27/el-festival-internacional-de-jazz-san-diego-tijuana-celebrara-su-tercera-edicion-con-cuatro-conciertos-tres-de-ellos-gratuitos/",
+      "publishedAt": "2026-09-27T00:00:00Z",
+      "detectedAt": "2026-09-28T01:30:00Z"
+    },
+    {
+      "id": "art_56b5d2bbe175b4bc",
+      "text": "Las detenciones en China golpean al registro de naves ; la industria apela a acuerdo",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/economia/las-detenciones-en-china-golpean-al-registro-de-naves-la-industria-apela-acuerdo-1266987",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T08:00:00Z"
+    },
+    {
+      "id": "art_8ff7daad1aefd789",
+      "text": "Presidente de la Reserva Federal afirma que la inflación en EEUU es 'preocupante'",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/mundo/presidente-reserva-federal-afirma-inflacion_1_2258133.html",
+      "publishedAt": "2026-08-28T17:13:27Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_c88d65a1ab7d9506",
+      "text": "Ejecutivo sanciona la Ley 552 del Presupuesto del Canal de Panamá por $5 , 555 millones",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/economia/ejecutivo-sanciona-la-ley-552-del-presupuesto-del-canal-de-panama-por-5555-millones-1266965",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T22:30:00Z"
+    },
+    {
+      "id": "art_daad850437566f38",
+      "text": "Disparos a las 3 : 00 a . m . en Puerto Pilón dejan un muerto",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/sucesos/disparos-las-300-am-en-puerto-pilon-dejan-un-muerto-516220",
+      "publishedAt": null,
+      "detectedAt": "2026-09-11T19:30:00Z"
+    },
+    {
+      "id": "art_1b78adf77f8f99cf",
+      "text": "Costa Coffee se expande a Panamá con dos nuevas tiendas operadas por el socio franquiciado Grupo Maritanos",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/costa-coffee-expande-panama-nuevas_1_2256771.html",
+      "publishedAt": "2026-08-21T15:41:33Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_156d60136857163e",
+      "text": "Contenido Exclusivo: Turismo en transporte público",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/contenido-exclusivo/contenido-exclusivo-turismo-transporte-publico_1_2263290.html",
+      "publishedAt": "2026-09-29T01:23:06Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_d02481fa6512d366",
+      "text": "Agenda de la semana : actividades que habrá en Panamá",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/vivir/agenda-de-la-semana-actividades-que-habra-en-panama/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T07:15:00Z"
+    },
+    {
+      "id": "art_0f40376632558c18",
+      "text": "Ecuador busca redención ante Panamá : tercer amistoso en la Copa Kirin .",
+      "outlet": "futbolizados.com",
+      "url": "https://futbolizados.com/106665/ecuador-busca-redencion-ante-panama-tercer-amistoso-en-la-copa-kirin/",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T00:00:00Z"
+    },
+    {
+      "id": "art_1c7787bb3d9e4861",
+      "text": "Magistrados del TE rechazan últimos cambios a las reformas",
+      "outlet": "panamaamerica.com.pa",
+      "url": "https://www.panamaamerica.com.pa/nacion/magistrados-del-te-rechazan-ultimos-cambios-las-reformas-1266979",
+      "publishedAt": null,
+      "detectedAt": "2026-10-02T09:30:00Z"
+    },
+    {
+      "id": "art_81dfbaa2edb98534",
+      "text": "Silvio Rodríguez : « Cuba es una Gaza silenciosa . Hoy más que nunca necesitamos que nos visiten »",
+      "outlet": "elcorreo.com",
+      "url": "https://www.elcorreo.com/culturas/musica/silvio-rodriguez-cuba-gaza-silenciosa-hoy-nunca-20260911004020-nt.html",
+      "publishedAt": null,
+      "detectedAt": "2026-09-11T23:00:00Z"
+    },
+    {
+      "id": "art_1c24993814d244e2",
+      "text": "¿ Qué pasará con Aguas de Cartagena ? Directora de Veolia rompe el silencio ante la creación de una empresa pública",
+      "outlet": "eluniversal.com.co",
+      "url": "https://www.eluniversal.com.co/cartagena/2026/09/24/que-pasara-con-aguas-de-cartagena-directora-veolia-rompe-el-silencio-ante-la-creacion-de-una-empresa-publica/",
+      "publishedAt": "2026-09-24T00:00:00Z",
+      "detectedAt": "2026-09-25T00:00:00Z"
+    },
+    {
+      "id": "art_539cea73afe77f3e",
+      "text": "Paul Skenes alcanza los 200 ponches y revive una marca dormida desde 1966",
+      "outlet": "midiario.com",
+      "url": "https://www.midiario.com/deportivas/paul-skenes-alcanza-los-200-ponches-y-revive-una-marca-dormida-desde-1966/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T01:15:00Z"
+    },
+    {
+      "id": "art_ac549230891511eb",
+      "text": "TVN Media y UDELAS firman alianza para impulsar la educación, el bienestar y el desarrollo social",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/gente-tvn/tvn-media-udelas-firman-alianza_1_2253105.html",
+      "publishedAt": "2026-07-28T17:00:00Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_1511bbffed67eca8",
+      "text": "Mazda impacta en el Panama Motor Show con el lanzamiento del totalmente nuevo CX-5",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/mazda-impacta-panama-motor-show_1_2264382.html",
+      "publishedAt": "2026-10-05T16:26:56Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_1920cadadab0eac9",
+      "text": "Supermercados Xtra celebra 36 años agradeciendo a quienes forman parte de su historia",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/supermercados-xtra-celebra-36-anos_1_2259172.html",
+      "publishedAt": "2026-09-03T21:13:16Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_ea924af617c8ea73",
+      "text": "丙烷价格刷新十年新高 上下游企业多措应对",
+      "outlet": "stcn.com",
+      "url": "https://www.stcn.com/article/detail/4201650.html",
+      "publishedAt": null,
+      "detectedAt": "2026-09-28T15:30:00Z"
+    },
+    {
+      "id": "art_8581d3df61f86e88",
+      "text": "BYD Panamá reunió a representantes de medios de comunicación en su agencia de Calle 50 para realizar un Tech Talk dedicado a conocer de cerca la tecnología, innovación y propuesta de movilidad que distinguen a la marca.",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/video-byd-panama-reunio-representantes-medios_8_2263652.html",
+      "publishedAt": "2026-10-01T00:12:21Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_e6eca33d7d091782",
+      "text": "Montería estrenará vuelo directo a Panamá con Satena y conexión aérea de menos de una hora",
+      "outlet": "portafolio.co",
+      "url": "https://www.portafolio.co/economia/regiones/monteria-estrenara-vuelo-directo-a-panama-con-satena-y-conexion-aerea-de-menos-de-una-hora-503695",
+      "publishedAt": null,
+      "detectedAt": "2026-10-01T22:45:00Z"
+    },
+    {
+      "id": "art_47ccfe126a18e0cf",
+      "text": "VÍDEO | Chombón cruzó la frontera , pero no pasó agachado : lo ubicaron en Costa Rica",
+      "outlet": "midiario.com",
+      "url": "https://www.midiario.com/policiales/chombon-cruzo-la-frontera-pero-no-paso-agachado-lo-ubicaron-en-costa-rica/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-11T22:45:00Z"
+    },
+    {
+      "id": "art_2db16c5bd59fa99f",
+      "text": "BYD Panamá presenta su tecnología y anuncia su participación en Panamá Motor Show 2026",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/byd-panama-presenta-tecnologia-anuncia_1_2262930.html",
+      "publishedAt": "2026-09-29T20:35:51Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_ed266ecdd16c98f7",
+      "text": "¡ Ojo con ese palo de agua ! Hay alerta por inundaciones y deslizamientos",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/ojo-con-ese-palo-de-agua-hay-alerta-por-inundaciones-y-deslizamientos-517096",
+      "publishedAt": null,
+      "detectedAt": "2026-09-27T21:45:00Z"
+    },
+    {
+      "id": "art_f7f47c30cd9607f8",
+      "text": "Lionel Messi despedida| Argentina vs Benín: estadísticas del primer tiempo",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/tvmax/futbol-internacional/lionel-messi-despedida-argentina-vs-benin-estadisticas-primer-tiempo-estadio-monumental-buenos-aires_1_2264717.html",
+      "publishedAt": "2026-10-07T00:27:57Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_d116edbd8187982c",
+      "text": "MLB Playoffs 2026 resultado| Padres recortan distancia ante Cerveceros en la Serie Divisional",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/tvmax/beisbol/mlb/brewers-vs-padres-mlb-playoffs-2026-en-vivo-juego-3-divisional-series-beisbol-grandes-ligas_1_2264664.html",
+      "publishedAt": "2026-10-07T01:39:49Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_44808c7513832013",
+      "text": "Un estudio regional vincula un millón de empleos en Centroamérica al comercio intrarregional",
+      "outlet": "infobae.com",
+      "url": "https://www.infobae.com/el-salvador/2026/09/11/un-estudio-regional-vincula-un-millon-de-empleos-en-centroamerica-al-comercio-intrarregional/",
+      "publishedAt": "2026-09-11T00:00:00Z",
+      "detectedAt": "2026-09-11T19:00:00Z"
+    },
+    {
+      "id": "art_940fe59c5a4da3a3",
+      "text": "La suerte está echada",
+      "outlet": "prensa.com",
+      "url": "https://www.prensa.com/opinion/la-suerte-esta-echada/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-28T04:30:00Z"
+    },
+    {
+      "id": "art_17b5ed50fed7d6dc",
+      "text": "Lluvias dan un respiro al Canal : mantendría 48 pies y 32 tránsitos",
+      "outlet": "critica.com.pa",
+      "url": "https://www.critica.com.pa/nacional/lluvias-dan-un-respiro-al-canal-mantendria-48-pies-y-32-transitos-516962",
+      "publishedAt": null,
+      "detectedAt": "2026-09-25T00:45:00Z"
+    },
+    {
+      "id": "art_4c7577043fe6479e",
+      "text": "+Móvil lanza oficialmente más Starlink, el primer servicio de conectividad satelital móvil de Panamá",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/movil-lanza-oficialmente-starlink-primer_1_2261270.html",
+      "publishedAt": "2026-09-16T19:31:35Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_07a599a0354e6598",
+      "text": "Adultos mayores lo pierden todo tras incendio de su vivienda en Portachuelo",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/adultos-mayores-pierden-incendio-vivienda_1_2264695.html",
+      "publishedAt": "2026-10-07T00:16:11Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_6d38e00d9f28a92e",
+      "text": "Anthropic $2 trillion IPO S - 1 prospectus has leaked and it shows steep losses",
+      "outlet": "fortune.com",
+      "url": "https://fortune.com/2026/09/29/anthropic-ipo-s-1-prospectus-income-statement/",
+      "publishedAt": "2026-09-29T00:00:00Z",
+      "detectedAt": "2026-09-29T11:45:00Z"
+    },
+    {
+      "id": "art_be7a37db1bc8e1f8",
+      "text": "¡ Panamá Norte , llegó su turno ! IFARHU anuncia cuándo y dónde podrá retirar la tarjeta del PASE - U esta semana",
+      "outlet": "midiario.com",
+      "url": "https://www.midiario.com/nacionales/panama-norte-llego-tu-turno-ifarhu-anuncia-cuando-y-donde-podra-retirar-la-tarjeta-del-pase-u-esta-semana/",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T17:15:00Z"
+    },
+    {
+      "id": "art_bfa7ede8454ae006",
+      "text": "Avanzan gestiones para llevar electricidad a la comunidad de Quebraón",
+      "outlet": "diaadia.com.pa",
+      "url": "https://www.diaadia.com.pa/el-pais/avanzan-gestiones-para-llevar-electricidad-la-comunidad-de-quebraon-791562",
+      "publishedAt": null,
+      "detectedAt": "2026-09-12T18:00:00Z"
+    },
+    {
+      "id": "art_30141b4460487963",
+      "text": "Sánchez presenta ante el Congreso español decretos de vivienda con nuevas medidas",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/mundo/sanchez-presenta-congreso-espanol-decretos_1_2264678.html",
+      "publishedAt": "2026-10-07T08:01:00Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_0f0acc5cd80cd489",
+      "text": "Inicio | Periódico CiudadCCS",
+      "outlet": "ciudadccs.info",
+      "url": "http://www.ciudadccs.info/publicacion/50177-venezuela-asume-vicepresidencia-de-historiadores-del-caribe",
+      "publishedAt": null,
+      "detectedAt": "2026-09-13T01:00:00Z"
+    },
+    {
+      "id": "art_77479ef8d0acbc56",
+      "text": "Reconocen a promotores de turismo ; gobernadora entrega premio Orgullo Sinaloense 2026",
+      "outlet": "lineadirectaportal.com",
+      "url": "https://lineadirectaportal.com/sinaloa/reconocen-a-promotores-de-turismo-gobernadora-entrega-premio-orgullo-sinaloense-2026-2026-10-01__1712680",
+      "publishedAt": "2026-10-01T00:00:00Z",
+      "detectedAt": "2026-10-02T02:45:00Z"
+    },
+    {
+      "id": "art_f6ca5d164948b67b",
+      "text": "MOP solicita $43.1 millones para pagar compromisos y continuar obras en ejecución",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/nacionales/mop-solicita-43-1-millones-comision-presupuesto-obras-en-ejecucion_1_2264626.html",
+      "publishedAt": "2026-10-06T18:57:35Z",
+      "detectedAt": null
+    },
+    {
+      "id": "art_a41a9b13e0cb4979",
+      "text": "KFC presenta su nueva identidad de marca en Panamá y reafirma su evolución en la industria",
+      "outlet": "TVN Panamá",
+      "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/kfc-presenta-nueva-identidad-marca_1_2257543.html",
+      "publishedAt": "2026-09-07T15:13:36Z",
+      "detectedAt": null
+    }
+  ],
+  "pairs": [
+    {
+      "id": "pair_244d035dde95",
+      "a": {
+        "id": "art_b38b406b0c0be6bc",
+        "text": "La Nación / Paraguay gana protagonismo en la conducción de los Ministerios Públicos de Iberoamérica",
+        "outlet": "lanacion.com.py",
+        "url": "https://www.lanacion.com.py/politica/2026/10/01/paraguay-gana-protagonismo-en-la-conduccion-de-los-ministerios-publicos-de-iberoamerica/",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-02T00:00:00Z"
+      },
+      "b": {
+        "id": "art_bdefe0cf7f99c77c",
+        "text": "Paraguay gana espacio en la conducción de los Ministerios Públicos de Iberoamérica",
+        "outlet": "adndigital.com.py",
+        "url": "https://www.adndigital.com.py/paraguay-gana-espacio-en-la-conduccion-de-los-ministerios-publicos-de-iberoamerica/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T23:30:00Z"
+      }
+    },
+    {
+      "id": "pair_adb4f0646e51",
+      "a": {
+        "id": "art_5612cd123ec8957a",
+        "text": "Chichero , la apuesta de Panamá para los Óscar y los Goya",
+        "outlet": "laestrella.com.pa",
+        "url": "https://www.laestrella.com.pa/vida-y-cultura/cine/chichero-la-apuesta-de-panama-para-los-oscar-y-los-goya-EA25616983",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T06:30:00Z"
+      },
+      "b": {
+        "id": "art_cf834ccf3bb133b6",
+        "text": "Chichero representará a Panamá en los Goya y los Óscar",
+        "outlet": "panamaamerica.com.pa",
+        "url": "https://www.panamaamerica.com.pa/variedades/chichero-representara-panama-en-los-goya-y-los-oscar-1266249",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T21:15:00Z"
+      }
+    },
+    {
+      "id": "pair_4a95cafff776",
+      "a": {
+        "id": "art_7dea5225e36748f7",
+        "text": "Detienen en Panamá a tres dominicanos acusados de reclutar personas para guerra en Ucrania",
+        "outlet": "diaadia.com.pa",
+        "url": "https://www.diaadia.com.pa/el-pais/detienen-en-panama-tres-dominicanos-acusados-de-reclutar-personas-para-guerra-en-ucrania",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T01:00:00Z"
+      },
+      "b": {
+        "id": "art_d55fdd50d578b5ab",
+        "text": "En Panamá : Detienen a tres dominicanos acusados de reclutar personas para guerra en Ucrania",
+        "outlet": "listindiario.com",
+        "url": "https://listindiario.com/las-mundiales/20260927/panama-detienen-tres-dominicanos-acusados-reclutar-personas-guerra-ucrania_923860.html",
+        "publishedAt": "2026-09-27T00:00:00Z",
+        "detectedAt": "2026-09-27T15:30:00Z"
+      }
+    },
+    {
+      "id": "pair_abd27f9e3f41",
+      "a": {
+        "id": "art_5faa2918c3ddf7f7",
+        "text": "Bay , una historia con aroma a café",
+        "outlet": "ultimahora.es",
+        "url": "https://www.ultimahora.es/noticias/economico/2026/09/25/2715217/bay-historia-aroma-cafe.html",
+        "publishedAt": "2026-09-25T00:00:00Z",
+        "detectedAt": "2026-09-25T07:15:00Z"
+      },
+      "b": {
+        "id": "art_d5234ba4bedd9206",
+        "text": "Bay , una historia con aroma a café",
+        "outlet": "menorca.info",
+        "url": "https://www.menorca.info/balears/economico/2026/09/25/2715217/bay-historia-aroma-cafe.html",
+        "publishedAt": "2026-09-25T00:00:00Z",
+        "detectedAt": "2026-09-27T19:00:00Z"
+      }
+    },
+    {
+      "id": "pair_36f6ce6e2d60",
+      "a": {
+        "id": "art_92dab34bc67d74ec",
+        "text": "LNG Canada Announces Phase 2 Final Investment Decision",
+        "outlet": "thewhig.com",
+        "url": "https://www.thewhig.com/press-releases/pr-newswire/lng-canada-announces-phase-2-final-investment-decision/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-29T07:45:00Z"
+      },
+      "b": {
+        "id": "art_de94cb515331b9e1",
+        "text": "LNG Canada Announces Phase 2 Final Investment Decision",
+        "outlet": "chathamdailynews.ca",
+        "url": "https://www.chathamdailynews.ca/press-releases/pr-newswire/lng-canada-announces-phase-2-final-investment-decision/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-29T08:00:00Z"
+      }
+    },
+    {
+      "id": "pair_9b83f16eb5a8",
+      "a": {
+        "id": "art_5df2bc6e7257d8a1",
+        "text": "Liberty Global ( NASDAQ : LILAK ) Director Purchases $23 , 210 . 75 in Stock",
+        "outlet": "themarketsdaily.com",
+        "url": "https://www.themarketsdaily.com/2026/09/28/liberty-global-nasdaqlilak-director-purchases-23210-75-in-stock.html",
+        "publishedAt": "2026-09-28T00:00:00Z",
+        "detectedAt": "2026-09-29T00:00:00Z"
+      },
+      "b": {
+        "id": "art_aadb5f885120c991",
+        "text": "Insider Buying : Liberty Global ( NASDAQ : LILAK ) Director Purchases 7 , 945 Shares of Company Stock",
+        "outlet": "dailypolitical.com",
+        "url": "https://www.dailypolitical.com/2026/09/28/insider-buying-liberty-global-nasdaqlilak-director-purchases-7945-shares-of-company-stock.html",
+        "publishedAt": "2026-09-28T00:00:00Z",
+        "detectedAt": "2026-09-28T23:30:00Z"
+      }
+    },
+    {
+      "id": "pair_c3e647e5c8b7",
+      "a": {
+        "id": "art_33f4285e48297e94",
+        "text": "República Dominicana se encuentra entre los países con menor incidencia de dengue en la región",
+        "outlet": "presidencia.gob.do",
+        "url": "https://presidencia.gob.do/noticias/republica-dominicana-se-encuentra-entre-los-paises-con-menor-incidencia-de-dengue-en-la",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T16:00:00Z"
+      },
+      "b": {
+        "id": "art_a653d7f68b99eab2",
+        "text": "República Dominicana entre los países con menor incidencia de dengue en la región",
+        "outlet": "dominicanoshoy.com",
+        "url": "https://www.dominicanoshoy.com/2026/10/01/republica-dominicana-entre-los-paises-con-menor-incidencia-de-dengue-en-la-region/",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T19:00:00Z"
+      }
+    },
+    {
+      "id": "pair_310d3b826164",
+      "a": {
+        "id": "art_8a0e22701226d5d3",
+        "text": "Asamblea aprueba nueva configuración de los circuitos electorales",
+        "outlet": "laestrella.com.pa",
+        "url": "https://www.laestrella.com.pa/panama/politica/asamblea-aprueba-nueva-configuracion-de-los-circuitos-electorales-OJ25970439",
+        "publishedAt": null,
+        "detectedAt": "2026-09-25T08:15:00Z"
+      },
+      "b": {
+        "id": "art_983a07b347e1ddb9",
+        "text": "Asamblea aprueba nueva distribución de circuitos electorales",
+        "outlet": "critica.com.pa",
+        "url": "https://www.critica.com.pa/nacional/asamblea-aprueba-nueva-distribucion-de-circuitos-electorales-516945",
+        "publishedAt": null,
+        "detectedAt": "2026-09-24T23:15:00Z"
+      }
+    },
+    {
+      "id": "pair_8a7e52ecb84c",
+      "a": {
+        "id": "art_bdefe0cf7f99c77c",
+        "text": "Paraguay gana espacio en la conducción de los Ministerios Públicos de Iberoamérica",
+        "outlet": "adndigital.com.py",
+        "url": "https://www.adndigital.com.py/paraguay-gana-espacio-en-la-conduccion-de-los-ministerios-publicos-de-iberoamerica/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T23:30:00Z"
+      },
+      "b": {
+        "id": "art_e4ceedeeaeaa0c55",
+        "text": "Diario HOY | Paraguay gana protagonismo en la conducción de la Asociación Iberoamericana de Ministerios Públicos",
+        "outlet": "hoy.com.py",
+        "url": "https://www.hoy.com.py/nacionales/2026/10/01/paraguay-gana-protagonismo-en-la-conduccion-de-la-asociacion-iberoamericana-de-ministerios-publicos",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_da706cea3cf2",
+      "a": {
+        "id": "art_374db66a91c765ae",
+        "text": "José Caballero y Yankees avanzan a la Serie Divisional para medirse a los Rays de Tampa Bay",
+        "outlet": "prensa.com",
+        "url": "https://www.prensa.com/deportes/jose-caballero-y-yankees-avanzan-a-la-serie-divisional-para-medirse-a-los-rays-de-tampa-bay/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T23:30:00Z"
+      },
+      "b": {
+        "id": "art_86c04e7d1ac655de",
+        "text": "José Caballero y los Yankees barren a Boston y avanzan a la Serie Divisional",
+        "outlet": "midiario.com",
+        "url": "https://www.midiario.com/deportivas/jose-caballero-y-los-yankees-barren-a-boston-y-avanzan-a-la-serie-divisional/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_408952dd9860",
+      "a": {
+        "id": "art_9fe8ea28ebe9bc9f",
+        "text": "Trump unveils 3 projects under Korea $200b US investment plan",
+        "outlet": "koreaherald.com",
+        "url": "https://www.koreaherald.com/article/10889661",
+        "publishedAt": null,
+        "detectedAt": "2026-09-30T21:45:00Z"
+      },
+      "b": {
+        "id": "art_c3cc501736acf08c",
+        "text": "US President Trump unveils 3 projects under South Korea US$200 billion US investment plan",
+        "outlet": "asianews.network",
+        "url": "https://asianews.network/us-president-trump-unveils-3-projects-under-south-koreas-us200-billion-us-investment-plan/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T02:00:00Z"
+      }
+    },
+    {
+      "id": "pair_aeef4bb6fdda",
+      "a": {
+        "id": "art_081c1ec234cef4ba",
+        "text": "Exiliados nicaragüenses piden a EE . UU . una intervención militar en Nicaragua",
+        "outlet": "confirmado.com.ve",
+        "url": "https://confirmado.com.ve/exiliados-nicaraguenses-piden-a-ee-uu-una-intervencion-militar-en-nicaragua/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:45:00Z"
+      },
+      "b": {
+        "id": "art_255f7da7e5c558c3",
+        "text": "Exiliados piden a EE . UU . intervención militar en Nicaragua",
+        "outlet": "elinformador.com.co",
+        "url": "https://www.elinformador.com.co/index.php/general/163-internacional/358614-exiliados-piden-a-ee-uu-intervencion-militar-en-nicaragua",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T13:15:00Z"
+      }
+    },
+    {
+      "id": "pair_5fc2137f1565",
+      "a": {
+        "id": "art_11a89229db0c9b27",
+        "text": "Navidad 2026 de la Alcaldía de Panamá superaría los $3 . 8 millones en contratos",
+        "outlet": "midiario.com",
+        "url": "https://www.midiario.com/nacionales/navidad-2026-de-la-alcaldia-de-panama-superaria-los-38-millones-en-contratos/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-13T02:45:00Z"
+      },
+      "b": {
+        "id": "art_f3df3d2d9573abc5",
+        "text": "Navidad 2026 de la Alcaldía de Panamá superaría los $3 . 8 millones en contratos",
+        "outlet": "prensa.com",
+        "url": "https://www.prensa.com/politica/navidad-2026-de-la-alcaldia-de-panama-superaria-los-38-millones-en-contratos/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T19:30:00Z"
+      }
+    },
+    {
+      "id": "pair_75cb41444c1f",
+      "a": {
+        "id": "art_4996c43e1be8f575",
+        "text": "La selección alcanzó un nuevo récord con su vigésimo triunfo consecutivo en amistosos",
+        "outlet": "cadena3.com",
+        "url": "https://www.cadena3.com/noticia/seleccion-argentina/la-seleccion-alcanzo-un-nuevo-record-con-su-vigesimo-triunfo-consecutivo-en-amistosos_599773",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T01:15:00Z"
+      },
+      "b": {
+        "id": "art_feabaf056cc49f29",
+        "text": "La Selección Argentina llegó a su vigésimo triunfo consecutivo en amistosos",
+        "outlet": "unosantafe.com.ar",
+        "url": "https://www.unosantafe.com.ar/ovacion/la-seleccion-argentina-llego-su-vigesimo-triunfo-consecutivo-amistosos-n10284419.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T04:15:00Z"
+      }
+    },
+    {
+      "id": "pair_4b0591d7f5d4",
+      "a": {
+        "id": "art_2ef5cde6ecaaeeae",
+        "text": "Trump streicht Europa - Hilfe , lenkt Millionen nach Lateinamerika",
+        "outlet": "fnp.de",
+        "url": "http://www.fnp.de/politik/trump-streicht-europa-hilfe-lenkt-millionen-nach-lateinamerika-zr-94521334.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T08:00:00Z"
+      },
+      "b": {
+        "id": "art_ee5063c514621275",
+        "text": "Trump streicht Europa - Hilfe , lenkt Millionen nach Lateinamerika",
+        "outlet": "az-online.de",
+        "url": "https://www.az-online.de/politik/trump-streicht-europa-hilfe-lenkt-millionen-nach-lateinamerika-zr-94521334.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T08:15:00Z"
+      }
+    },
+    {
+      "id": "pair_91caba2938bb",
+      "a": {
+        "id": "art_1920cadadab0eac9",
+        "text": "Supermercados Xtra celebra 36 años agradeciendo a quienes forman parte de su historia",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/supermercados-xtra-celebra-36-anos_1_2259172.html",
+        "publishedAt": "2026-09-03T21:13:16Z",
+        "detectedAt": null
+      },
+      "b": {
+        "id": "art_505b14a34e21b791",
+        "text": "Supermercados Xtra acompaña con solidaridad a pacientes oncológicos durante la Sandwichatón 2026",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/supermercados-xtra-acompana-solidaridad-pacientes_1_2263525.html",
+        "publishedAt": "2026-09-30T15:33:46Z",
+        "detectedAt": null
+      }
+    },
+    {
+      "id": "pair_cd599cb6c7f1",
+      "a": {
+        "id": "art_8270be132d56c220",
+        "text": "Santa Fe abre los Juegos Suramericanos 2026 con 60 disciplinas y 15 países",
+        "outlet": "lacapitalmdp.com",
+        "url": "https://www.lacapitalmdp.com/santa-fe-abre-los-juegos-suramericanos-2026-con-60-disciplinas-y-15-paises/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T20:15:00Z"
+      },
+      "b": {
+        "id": "art_880d05e939cd7063",
+        "text": "Arrancan los Juegos Suramericanos 2026 que tendrán como sede a Santa Fe",
+        "outlet": "diarioelargentino.com",
+        "url": "https://diarioelargentino.com/deportes/arrancan-los-juegos-suramericanos-2026-que-tendran-como-sede-a-santa-fe.htm",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T23:15:00Z"
+      }
+    },
+    {
+      "id": "pair_dea81a0da919",
+      "a": {
+        "id": "art_451f8c89c8690c19",
+        "text": "Hoy Tamaulipas - Tamaulipas Erasmo Gonzalez Robledo rinde su Segundo Informe de Gobierno",
+        "outlet": "hoytamaulipas.net",
+        "url": "https://hoytamaulipas.net/notas/626948/Erasmo-Gonzalez-Robledo-rinde-su-Segundo-Informe-de-Gobierno.html",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T04:30:00Z"
+      },
+      "b": {
+        "id": "art_f0ec6ff0f33a0c0e",
+        "text": "Erasmo González Robledo rinde Segundo Informe de Gobierno",
+        "outlet": "horacero.com.mx",
+        "url": "https://horacero.com.mx/tamaulipas/erasmo-gonzalez-robledo-rinde-segundo-informe",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T07:15:00Z"
+      }
+    },
+    {
+      "id": "pair_d8d133e92fca",
+      "a": {
+        "id": "art_401846b0ae4c68ac",
+        "text": "Así quedó el medallero de los Juegos Suramericanos Santa Fe 2026 , con Argentina en el segundo lugar",
+        "outlet": "unoentrerios.com.ar",
+        "url": "https://www.unoentrerios.com.ar/ovacion/asi-quedo-el-medallero-los-juegos-suramericanos-santa-fe-2026-argentina-el-segundo-lugar-n10283434.html",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T12:30:00Z"
+      },
+      "b": {
+        "id": "art_c1cef6a41a379d91",
+        "text": "Así quedó el medallero de los Juegos Suramericanos Santa Fe 2026 , con Argentina en el segundo lugar",
+        "outlet": "unosantafe.com.ar",
+        "url": "https://www.unosantafe.com.ar/ovacion/asi-quedo-el-medallero-los-juegos-suramericanos-santa-fe-2026-argentina-el-segundo-lugar-n10283415.html",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T01:00:00Z"
+      }
+    },
+    {
+      "id": "pair_91e9f9ea9c01",
+      "a": {
+        "id": "art_4634f50b7d96810e",
+        "text": "Ecuador empató con Japón , perdió por penales y Marcelo Gallardo todavía no pudo ganar",
+        "outlet": "losandes.com.ar",
+        "url": "https://www.losandes.com.ar/deportes/ecuador-empato-japon-perdio-penales-y-marcelo-gallardo-todavia-no-pudo-ganar-n6008675",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T02:15:00Z"
+      },
+      "b": {
+        "id": "art_c53fb4cb0c82f8f6",
+        "text": "Ecuador cayó por penales ante Japón y Marcelo Gallardo sigue sin ganar",
+        "outlet": "442.perfil.com",
+        "url": "https://442.perfil.com/noticias/futbol/ecuador-cayo-por-penales-ante-japon-y-marcelo-gallardo-sigue-sin-ganar.phtml",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T15:00:00Z"
+      }
+    },
+    {
+      "id": "pair_501e3fe0676f",
+      "a": {
+        "id": "art_60f8b4dfc53784f7",
+        "text": "El ídolo de ídolo recibe su último homenaje : Panamá despide a Ismael Laguna",
+        "outlet": "midiario.com",
+        "url": "https://www.midiario.com/deportivas/el-idolo-de-idolos-recibe-su-ultimo-homenaje-panama-despide-a-ismael-laguna/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:45:00Z"
+      },
+      "b": {
+        "id": "art_baf833cd6e63c5ab",
+        "text": "El ídolo de ídolo recibe su último homenaje : Panamá despide a Ismael Laguna",
+        "outlet": "prensa.com",
+        "url": "https://www.prensa.com/deportes/el-idolo-de-idolos-recibe-su-ultimo-homenaje-panama-despide-a-ismael-laguna/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T19:30:00Z"
+      }
+    },
+    {
+      "id": "pair_8878ec8d23fa",
+      "a": {
+        "id": "art_b38b406b0c0be6bc",
+        "text": "La Nación / Paraguay gana protagonismo en la conducción de los Ministerios Públicos de Iberoamérica",
+        "outlet": "lanacion.com.py",
+        "url": "https://www.lanacion.com.py/politica/2026/10/01/paraguay-gana-protagonismo-en-la-conduccion-de-los-ministerios-publicos-de-iberoamerica/",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-02T00:00:00Z"
+      },
+      "b": {
+        "id": "art_e4ceedeeaeaa0c55",
+        "text": "Diario HOY | Paraguay gana protagonismo en la conducción de la Asociación Iberoamericana de Ministerios Públicos",
+        "outlet": "hoy.com.py",
+        "url": "https://www.hoy.com.py/nacionales/2026/10/01/paraguay-gana-protagonismo-en-la-conduccion-de-la-asociacion-iberoamericana-de-ministerios-publicos",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_0b175b7e2766",
+      "a": {
+        "id": "art_151ee957a4538205",
+        "text": "Liberty Latin America ( NASDAQ : LILA ) Stock : Insider John Malone Buys 1 , 135 Shares",
+        "outlet": "dailypolitical.com",
+        "url": "https://www.dailypolitical.com/2026/09/28/liberty-latin-america-nasdaqlila-stock-insider-john-malone-buys-1135-shares.html",
+        "publishedAt": "2026-09-28T00:00:00Z",
+        "detectedAt": "2026-09-28T23:30:00Z"
+      },
+      "b": {
+        "id": "art_92110409651001d1",
+        "text": "Liberty Latin America ( NASDAQ : LILA ) Stock : Insider John Malone Acquires 13 , 362 Shares",
+        "outlet": "tickerreport.com",
+        "url": "https://www.tickerreport.com/banking-finance/13599910/liberty-latin-america-nasdaqlila-stock-insider-john-malone-acquires-13362-shares.html",
+        "publishedAt": null,
+        "detectedAt": "2026-09-29T00:00:00Z"
+      }
+    },
+    {
+      "id": "pair_78fd362a7725",
+      "a": {
+        "id": "art_d00fcad8e97eaea9",
+        "text": "Gallardo valoró la reacción de Ecuador tras la caída ante Japón : El equipo respondió bien",
+        "outlet": "diariopanorama.com",
+        "url": "https://www.diariopanorama.com/noticia/568293/gallardo-valoro-reaccion-ecuador-tras-caida-ante-japon-equipo-respondio-bien",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T16:00:00Z"
+      },
+      "b": {
+        "id": "art_d50ed84f1714446a",
+        "text": "Gallardo , tras la caída en Japón por penales : El equipo respondió bien :: Olé",
+        "outlet": "ole.com.ar",
+        "url": "https://www.ole.com.ar/futbol-internacional/conferencia-prensa-marcelo-gallardo-eliminacion-ecuador-japon_0_70liTUKZmI.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T16:45:00Z"
+      }
+    },
+    {
+      "id": "pair_1dff4ce49481",
+      "a": {
+        "id": "art_549cf0ad43c3eb23",
+        "text": "Marcelo Gallardo sufrió su segunda derrota en Ecuador : perdió por penales un amistoso ante Japón",
+        "outlet": "infobae.com",
+        "url": "https://www.infobae.com/deportes/2026/10/01/marcelo-gallardo-sufrio-su-segunda-derrota-en-ecuador-perdio-por-penales-un-amistoso-ante-japon/",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T16:00:00Z"
+      },
+      "b": {
+        "id": "art_bae38e10c930e556",
+        "text": "Marcelo Gallardo no encuentra el rumbo en Ecuador y hay preocupación",
+        "outlet": "elintransigente.com",
+        "url": "https://elintransigente.com/2026/10/marcelo-gallardo-ecuador-japon-2/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T00:15:00Z"
+      }
+    },
+    {
+      "id": "pair_412ac924b1a6",
+      "a": {
+        "id": "art_aadb5f885120c991",
+        "text": "Insider Buying : Liberty Global ( NASDAQ : LILAK ) Director Purchases 7 , 945 Shares of Company Stock",
+        "outlet": "dailypolitical.com",
+        "url": "https://www.dailypolitical.com/2026/09/28/insider-buying-liberty-global-nasdaqlilak-director-purchases-7945-shares-of-company-stock.html",
+        "publishedAt": "2026-09-28T00:00:00Z",
+        "detectedAt": "2026-09-28T23:30:00Z"
+      },
+      "b": {
+        "id": "art_fdfd6602d7b4fc13",
+        "text": "Liberty Latin America ( NASDAQ : LILA ) Director Purchases 7 , 945 Shares of Company Stock",
+        "outlet": "themarketsdaily.com",
+        "url": "https://www.themarketsdaily.com/2026/09/28/liberty-latin-america-nasdaqlila-director-purchases-7945-shares-of-company-stock.html",
+        "publishedAt": "2026-09-28T00:00:00Z",
+        "detectedAt": "2026-09-29T00:00:00Z"
+      }
+    },
+    {
+      "id": "pair_658c20e46da9",
+      "a": {
+        "id": "art_2a60f65cdef59679",
+        "text": "Top Fitness Stocks To Watch Today – September 27th",
+        "outlet": "dailypolitical.com",
+        "url": "https://www.dailypolitical.com/2026/09/30/top-fitness-stocks-to-watch-today-september-27th.html",
+        "publishedAt": "2026-09-30T00:00:00Z",
+        "detectedAt": "2026-09-30T11:15:00Z"
+      },
+      "b": {
+        "id": "art_346572996de4492e",
+        "text": "Top Fitness Stocks To Follow Today – October 1st",
+        "outlet": "dailypolitical.com",
+        "url": "https://www.dailypolitical.com/2026/10/01/top-fitness-stocks-to-follow-today-october-1st.html",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T20:30:00Z"
+      }
+    },
+    {
+      "id": "pair_e55da4ea5076",
+      "a": {
+        "id": "art_58c4c92f4e4e1d7c",
+        "text": "Vídeo : Delegados abandonan sala durante discurso de Netanyahu en ONU",
+        "outlet": "hispantv.com",
+        "url": "https://www.hispantv.com/noticias/asia-occidental/661043/delegados-abandonan-sala-discurso-netanyahu-onu",
+        "publishedAt": null,
+        "detectedAt": "2026-09-25T00:00:00Z"
+      },
+      "b": {
+        "id": "art_acc7ada3a451d292",
+        "text": "Delegados abandonaron la sala durante discurso del criminal de guerra Netanyahu en la ONU",
+        "outlet": "tercerainformacion.es",
+        "url": "https://www.tercerainformacion.es/articulo/internacional/25/09/2026/delegados-abandonaron-la-sala-durante-discurso-del-criminal-de-guerra-netanyahu-en-la-onu/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-25T08:45:00Z"
+      }
+    },
+    {
+      "id": "pair_4071153df3ee",
+      "a": {
+        "id": "art_c53fb4cb0c82f8f6",
+        "text": "Ecuador cayó por penales ante Japón y Marcelo Gallardo sigue sin ganar",
+        "outlet": "442.perfil.com",
+        "url": "https://442.perfil.com/noticias/futbol/ecuador-cayo-por-penales-ante-japon-y-marcelo-gallardo-sigue-sin-ganar.phtml",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T15:00:00Z"
+      },
+      "b": {
+        "id": "art_c54ef769dfe09236",
+        "text": "Gallardo sigue sin poder ganar : Ecuador perdió por penales ante Japón",
+        "outlet": "unosantafe.com.ar",
+        "url": "https://www.unosantafe.com.ar/ovacion/gallardo-sigue-poder-ganar-ecuador-perdio-penales-japon-n10284240.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T15:30:00Z"
+      }
+    },
+    {
+      "id": "pair_6dba3ad51419",
+      "a": {
+        "id": "art_57a786b684cb546b",
+        "text": "World Insights : Intensifying El Nino deepens economic risks across LatAm",
+        "outlet": "bignewsnetwork.com",
+        "url": "http://www.bignewsnetwork.com/news/279347044/world-insights-intensifying-el-nino-deepens-economic-risks-across-latam",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T06:45:00Z"
+      },
+      "b": {
+        "id": "art_cf185ab4cfafb425",
+        "text": "Intensifying El Nino deepens economic risks across LatAm",
+        "outlet": "newzealandstar.com",
+        "url": "http://www.newzealandstar.com/news/279346957/intensifying-el-nino-deepens-economic-risks-across-latam",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T06:45:00Z"
+      }
+    },
+    {
+      "id": "pair_caf13a777a3f",
+      "a": {
+        "id": "art_4e6a7b1f37c9f717",
+        "text": "Feria del libro : Dinámicas infantiles , charlas y talleres para incentivar la lectura",
+        "outlet": "listindiario.com",
+        "url": "https://listindiario.com/la-republica/20261001/feria-internacional-libro-dinamicas-infantiles-charlas-talleres-incentivar-lectura_924343.html",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T23:15:00Z"
+      },
+      "b": {
+        "id": "art_8ec7f7f491ba677d",
+        "text": "Feria del libro : Dinámicas infantiles , charlas y talleres para incentivar la lectura - Dominican Republic Post – Caribbean News , Business , Travel & Culture",
+        "outlet": "dominicanrepublicpost.com",
+        "url": "https://dominicanrepublicpost.com/feria-del-libro-dinamicas-infantiles-charlas-y-talleres-para-incentivar-la-lectura/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T23:00:00Z"
+      }
+    },
+    {
+      "id": "pair_46f94b343ede",
+      "a": {
+        "id": "art_056b79601443992c",
+        "text": "Jóvenes de Haina que se fueron engañados para pelear en Rusia piden auxilio para retornar al país",
+        "outlet": "listindiario.com",
+        "url": "https://listindiario.com/la-republica/20261001/jovenes-haina-enganados-pelear-rusia-piden-auxilio-retornar-pais_924385.html",
+        "publishedAt": "2026-10-01T00:00:00Z",
+        "detectedAt": "2026-10-01T23:15:00Z"
+      },
+      "b": {
+        "id": "art_df4373827a385b4f",
+        "text": "Jóvenes de Haina que se fueron engañados para pelear en Rusia piden auxilio para retornar al país - Dominican Republic Post – Caribbean News , Business , Travel & Culture",
+        "outlet": "dominicanrepublicpost.com",
+        "url": "https://dominicanrepublicpost.com/jovenes-de-haina-que-se-fueron-enganados-para-pelear-en-rusia-piden-auxilio-para-retornar-al-pais/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T02:00:00Z"
+      }
+    },
+    {
+      "id": "pair_9dbd3dc19a7a",
+      "a": {
+        "id": "art_16c3cf23ac67676b",
+        "text": "Colombiano de 21 años se entrega en Darién y pide refugio en Panamá : esto dijeron las autoridades",
+        "outlet": "telemetro.com",
+        "url": "https://www.telemetro.com/nacionales/colombiano-21-anos-se-entrega-darien-y-pide-refugio-panama-esto-dijeron-las-autoridades-n6091514",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:30:00Z"
+      },
+      "b": {
+        "id": "art_4141cfd6a1f046f4",
+        "text": "Domingo Alonso entrega a SIXT Panamá su primera flota mediante arrendamiento operativo",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/domingo-alonso-entrega-sixt-panama_1_2257729.html",
+        "publishedAt": "2026-08-28T20:28:02Z",
+        "detectedAt": null
+      }
+    },
+    {
+      "id": "pair_c2072dea83b7",
+      "a": {
+        "id": "art_48a2e5f2a7bd13a6",
+        "text": "Panamá ordena detención provisional de tres dominicanos acusados de reclutar personas para Rusia",
+        "outlet": "barrigaverde.net",
+        "url": "https://barrigaverde.net/panama-ordena-detencion-provisional-de-tres-dominicanos-acusados-de-reclutar-personas-para-rusia/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T15:45:00Z"
+      },
+      "b": {
+        "id": "art_7dea5225e36748f7",
+        "text": "Detienen en Panamá a tres dominicanos acusados de reclutar personas para guerra en Ucrania",
+        "outlet": "diaadia.com.pa",
+        "url": "https://www.diaadia.com.pa/el-pais/detienen-en-panama-tres-dominicanos-acusados-de-reclutar-personas-para-guerra-en-ucrania",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T01:00:00Z"
+      }
+    },
+    {
+      "id": "pair_13ac7aeb062e",
+      "a": {
+        "id": "art_4251e52a7638c715",
+        "text": "Segundo embarque de concentrado de cobre de Cobre Panamá saldrá hacia India",
+        "outlet": "larepublica.co",
+        "url": "https://www.larepublica.co/globoeconomia/segundo-embarque-de-cobre-panama-saldra-hacia-india-con-38-000-toneladas-4479777",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:30:00Z"
+      },
+      "b": {
+        "id": "art_f52e70d2ebfd61dd",
+        "text": "Segundo embarque de concentrado de minera Cobre Panamá zarpa con destino a India",
+        "outlet": "mundomaritimo.cl",
+        "url": "https://www.mundomaritimo.cl/noticias/segundo-embarque-de-concentrado-de-minera-cobre-panama-zarpa-con-destino-a-india",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_f4f0ca6bf9d5",
+      "a": {
+        "id": "art_100fce4dada8a9e0",
+        "text": "Capturan en Costa Rica a criminal panameño vinculado al Tren de Aragua",
+        "outlet": "laverdad.com",
+        "url": "https://laverdad.com/capturan-en-costa-rica-a-criminal-panameno-vinculado-al-tren-de-aragua/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T21:30:00Z"
+      },
+      "b": {
+        "id": "art_47ccfe126a18e0cf",
+        "text": "VÍDEO | Chombón cruzó la frontera , pero no pasó agachado : lo ubicaron en Costa Rica",
+        "outlet": "midiario.com",
+        "url": "https://www.midiario.com/policiales/chombon-cruzo-la-frontera-pero-no-paso-agachado-lo-ubicaron-en-costa-rica/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_ea6714d9592c",
+      "a": {
+        "id": "art_39666969ba302f59",
+        "text": "Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .",
+        "outlet": "newsroompanama.com",
+        "url": "https://newsroompanama.com/2026/09/28/panama-canal-increases-daily-transits-to-33-and-maximum-draft-to-49-feet/",
+        "publishedAt": "2026-09-28T00:00:00Z",
+        "detectedAt": "2026-09-28T23:45:00Z"
+      },
+      "b": {
+        "id": "art_92fff79020ce94f0",
+        "text": "Panama Canal increases daily transit slots to 33",
+        "outlet": "freshplaza.com",
+        "url": "https://www.freshplaza.com/north-america/article/9877740/panama-canal-increases-daily-transit-slots-to-33/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-29T16:45:00Z"
+      }
+    },
+    {
+      "id": "pair_93504fdd9401",
+      "a": {
+        "id": "art_4679c2d38c7201bc",
+        "text": "Ministro de Comercio de Francia visitará el Canal de Panamá para explorar negocios",
+        "outlet": "revistaeyn.com",
+        "url": "https://www.revistaeyn.com/centroamericaymundo/ministro-de-comercio-de-francia-visitara-el-canal-de-panama-para-explorar-negocios-HB32009583",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T16:00:00Z"
+      },
+      "b": {
+        "id": "art_592e628b408fac2b",
+        "text": "El ministro de Comercio de Francia visita el lunes Panamá con su Canal como prioridad",
+        "outlet": "diaadia.com.pa",
+        "url": "https://www.diaadia.com.pa/el-pais/el-ministro-de-comercio-de-francia-visita-el-lunes-panama-con-su-canal-como-prioridad",
+        "publishedAt": null,
+        "detectedAt": "2026-09-11T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_acb336f98df0",
+      "a": {
+        "id": "art_2db16c5bd59fa99f",
+        "text": "BYD Panamá presenta su tecnología y anuncia su participación en Panamá Motor Show 2026",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/byd-panama-presenta-tecnologia-anuncia_1_2262930.html",
+        "publishedAt": "2026-09-29T20:35:51Z",
+        "detectedAt": null
+      },
+      "b": {
+        "id": "art_412a3e33a42c3829",
+        "text": "Mercantil está presente en Panamá Motor Show 2026",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/mercantil-estara-presente-panama-motor_1_2264122.html",
+        "publishedAt": "2026-10-03T21:38:49Z",
+        "detectedAt": null
+      }
+    },
+    {
+      "id": "pair_87536abd7301",
+      "a": {
+        "id": "art_8e5685256320eb1d",
+        "text": "Lionel Messi despedida | Argentina vs Benín | EN VIVO",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/tvmax/futbol-internacional/video-ext-lionel-messi-despedida-en-vivo-argentina-vs-benin_7_2264670.html",
+        "publishedAt": "2026-10-06T21:56:35Z",
+        "detectedAt": null
+      },
+      "b": {
+        "id": "art_f7f47c30cd9607f8",
+        "text": "Lionel Messi despedida| Argentina vs Benín: estadísticas del primer tiempo",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/tvmax/futbol-internacional/lionel-messi-despedida-argentina-vs-benin-estadisticas-primer-tiempo-estadio-monumental-buenos-aires_1_2264717.html",
+        "publishedAt": "2026-10-07T00:27:57Z",
+        "detectedAt": null
+      }
+    },
+    {
+      "id": "pair_42343e1af8da",
+      "a": {
+        "id": "art_88db16270f492423",
+        "text": "El ministro del Interior tilda de show las denuncias sobre obstáculos al regreso de María Corina Machado",
+        "outlet": "diariosigloxxi.com",
+        "url": "https://www.diariosigloxxi.com/texto-ep/mostrar/20261001090432/ministro-interior-tilda-show-denuncias-sobre-obstaculos-regreso-maria-corina-machado",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T09:15:00Z"
+      },
+      "b": {
+        "id": "art_fee9c0bb6403bbf4",
+        "text": "El ministro del Interior de Venezuela tilda de show las denuncias sobre obstáculos al regreso de María Corina Machado",
+        "outlet": "notimerica.com",
+        "url": "https://www.notimerica.com/politica/noticia-ministro-interior-venezuela-tilda-show-denuncias-obstaculos-regreso-maria-corina-machado-20261001090433.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T11:45:00Z"
+      }
+    },
+    {
+      "id": "pair_99773db0edf5",
+      "a": {
+        "id": "art_7835a65aee4cf2c2",
+        "text": "Gobierno de Trump pide a la Corte Suprema permitir deportaciones rápidas a terceros países",
+        "outlet": "telemundoatlanta.com",
+        "url": "https://www.telemundoatlanta.com/2026/09/24/gobierno-de-trump-pide-la-corte-suprema-permitir-deportaciones-rpidas-terceros-pases/",
+        "publishedAt": "2026-09-24T00:00:00Z",
+        "detectedAt": "2026-09-25T00:45:00Z"
+      },
+      "b": {
+        "id": "art_f39f8bcfaa9b4c0d",
+        "text": "Corte Suprema tramita tres demandas contra acuerdo que creó la policía municipal",
+        "outlet": "prensa.com",
+        "url": "https://www.prensa.com/judiciales/corte-suprema-tramita-tres-demandas-contra-acuerdo-que-creo-la-policia-municipal/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T09:45:00Z"
+      }
+    },
+    {
+      "id": "pair_d39269beb548",
+      "a": {
+        "id": "art_1137f5f542d51bca",
+        "text": "Miembro de red de sicarios buscado en Colombia estuvo preso en Panamá bajo un nombre falso",
+        "outlet": "diaadia.com.pa",
+        "url": "https://www.diaadia.com.pa/el-pais/miembro-de-red-de-sicarios-buscado-en-colombia-estuvo-preso-en-panama-bajo-un-nombre-falso",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T03:30:00Z"
+      },
+      "b": {
+        "id": "art_c145c5b292ed87ee",
+        "text": "Miembro de red de sicarios buscado en Colombia estuvo preso en Panamá bajo un nombre falso",
+        "outlet": "elheraldo.co",
+        "url": "https://www.elheraldo.co/colombia/2026/09/11/miembro-de-red-de-sicarios-buscado-en-colombia-estuvo-preso-en-panama-bajo-un-nombre-falso/",
+        "publishedAt": "2026-09-11T00:00:00Z",
+        "detectedAt": "2026-09-12T02:15:00Z"
+      }
+    },
+    {
+      "id": "pair_66ffc815828f",
+      "a": {
+        "id": "art_1cf8078547cb907c",
+        "text": "TVN Media recibe reconocimiento del programa Reduce Tu Huella por su compromiso con la gestión ambiental",
+        "outlet": "TVN Panamá",
+        "url": "https://www.tvn-2.com/nacionales/tvn-media-recibe-reconocimiento-programa-reduce-tu-huella-gestion-ambiental_1_2254331.html",
+        "publishedAt": "2026-08-05T00:38:03Z",
+        "detectedAt": null
+      },
+      "b": {
+        "id": "art_29833449d55e69ca",
+        "text": "Nataly Delgado recibe reconocimiento del Gobierno y se alista para unificar coronas en Texas",
+        "outlet": "midiario.com",
+        "url": "https://www.midiario.com/deportivas/nataly-delgado-recibe-reconocimiento-del-gobierno-y-se-alista-para-unificar-coronas-en-texas/",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T22:45:00Z"
+      }
+    },
+    {
+      "id": "pair_d008717abe9c",
+      "a": {
+        "id": "art_1200299af30cb69b",
+        "text": "Sydney Harbour to Antarctica : 10 ultimate cruise moments | Glen Innes Examiner",
+        "outlet": "gleninnesexaminer.com.au",
+        "url": "https://www.gleninnesexaminer.com.au/story/9349631/sydney-harbour-to-antarctica-10-ultimate-cruise-moments/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-28T01:00:00Z"
+      },
+      "b": {
+        "id": "art_5f8335fc8c48ab3a",
+        "text": "Sydney Harbour to Antarctica : 10 ultimate cruise moments | Southern Cross",
+        "outlet": "juneesoutherncross.com.au",
+        "url": "https://www.juneesoutherncross.com.au/story/9349631/sydney-harbour-to-antarctica-10-ultimate-cruise-moments/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T21:45:00Z"
+      }
+    },
+    {
+      "id": "pair_60212015bc6a",
+      "a": {
+        "id": "art_bad06ecbb8fe6b8a",
+        "text": "La Selección argentina alcanza un nuevo récord con su vigésimo triunfo consecutivo en amistosos",
+        "outlet": "cadena3.com",
+        "url": "https://www.cadena3.com/noticia/deportes/la-seleccion-argentina-alcanza-un-nuevo-record-con-su-vigesimo-triunfo-consecutivo-en-amistosos_599773",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T23:45:00Z"
+      },
+      "b": {
+        "id": "art_feabaf056cc49f29",
+        "text": "La Selección Argentina llegó a su vigésimo triunfo consecutivo en amistosos",
+        "outlet": "unosantafe.com.ar",
+        "url": "https://www.unosantafe.com.ar/ovacion/la-seleccion-argentina-llego-su-vigesimo-triunfo-consecutivo-amistosos-n10284419.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T04:15:00Z"
+      }
+    },
+    {
+      "id": "pair_1786ce126b7a",
+      "a": {
+        "id": "art_48a2e5f2a7bd13a6",
+        "text": "Panamá ordena detención provisional de tres dominicanos acusados de reclutar personas para Rusia",
+        "outlet": "barrigaverde.net",
+        "url": "https://barrigaverde.net/panama-ordena-detencion-provisional-de-tres-dominicanos-acusados-de-reclutar-personas-para-rusia/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-27T15:45:00Z"
+      },
+      "b": {
+        "id": "art_d55fdd50d578b5ab",
+        "text": "En Panamá : Detienen a tres dominicanos acusados de reclutar personas para guerra en Ucrania",
+        "outlet": "listindiario.com",
+        "url": "https://listindiario.com/las-mundiales/20260927/panama-detienen-tres-dominicanos-acusados-reclutar-personas-guerra-ucrania_923860.html",
+        "publishedAt": "2026-09-27T00:00:00Z",
+        "detectedAt": "2026-09-27T15:30:00Z"
+      }
+    },
+    {
+      "id": "pair_ec6d29d5df99",
+      "a": {
+        "id": "art_275d65fc2529fb5c",
+        "text": "Localizan los cuerpos sin vida de dos personas desaparecidas en el Can Macho de Monte",
+        "outlet": "telemetro.com",
+        "url": "https://www.telemetro.com/entrevistas/nacionales/localizan-los-cuerpos-vida-dos-personas-desaparecidas-el-canon-macho-monte-n6093653",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T15:30:00Z"
+      },
+      "b": {
+        "id": "art_92781a0b537f6dad",
+        "text": "Localizan los cuerpos de dos rescatistas tras emergencia en el Can de Macho de Monte en Chiriqu",
+        "outlet": "panamaamerica.com.pa",
+        "url": "https://www.panamaamerica.com.pa/provincias/localizan-los-cuerpos-de-dos-rescatistas-tras-emergencia-en-el-canon-de-macho-de-monte-en",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T22:30:00Z"
+      }
+    },
+    {
+      "id": "pair_bb3c239d8037",
+      "a": {
+        "id": "art_4949b89d4c27fb15",
+        "text": "¡ Jefa , jefa , jefa !: quién es Ilya Espino de Marotta , la ingeniera de casco rosa que al frente del Canal de Panamá supervisa parte del comercio mundial | Sociedad | La Revista",
+        "outlet": "eluniverso.com",
+        "url": "https://www.eluniverso.com/larevista/sociedad/jefa-jefa-jefa-quien-es-ilya-espino-de-marotta-la-ingeniera-de-casco-rosa-que-al-frente-del-canal-de-panama-supervisa-parte-del-comercio-mundial-nota/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T02:00:00Z"
+      },
+      "b": {
+        "id": "art_4d6dbb48f44cba3a",
+        "text": "¡ Jefa , jefa , jefa !: quién es Ilya Espino de Marotta , la ingeniera de casco rosa que al frente del Canal de Panamá supervisa parte del comercio mundial",
+        "outlet": "prensalibre.com",
+        "url": "https://www.prensalibre.com/internacional/bbc-news-mundo-internacional/jefa-jefa-jefa-quien-es-ilya-espino-de-marotta-la-ingeniera-de-casco-rosa-que-al-frente-del-canal-de-panama-supervisa-parte-del-comercio-mundial-2/",
+        "publishedAt": null,
+        "detectedAt": "2026-09-12T20:15:00Z"
+      }
+    },
+    {
+      "id": "pair_eed5bf1a742d",
+      "a": {
+        "id": "art_4634f50b7d96810e",
+        "text": "Ecuador empató con Japón , perdió por penales y Marcelo Gallardo todavía no pudo ganar",
+        "outlet": "losandes.com.ar",
+        "url": "https://www.losandes.com.ar/deportes/ecuador-empato-japon-perdio-penales-y-marcelo-gallardo-todavia-no-pudo-ganar-n6008675",
+        "publishedAt": null,
+        "detectedAt": "2026-10-02T02:15:00Z"
+      },
+      "b": {
+        "id": "art_c54ef769dfe09236",
+        "text": "Gallardo sigue sin poder ganar : Ecuador perdió por penales ante Japón",
+        "outlet": "unosantafe.com.ar",
+        "url": "https://www.unosantafe.com.ar/ovacion/gallardo-sigue-poder-ganar-ecuador-perdio-penales-japon-n10284240.html",
+        "publishedAt": null,
+        "detectedAt": "2026-10-01T15:30:00Z"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "id": "evt_0181057560d6d1b3:c1",
+      "text": "laestrella.com.pa reporta en su titular: «Hoteles y franquicia ingresan al mercado eléctrico mayorista»",
+      "citations": [
+        {
+          "evidenceId": "art_b3e900544003153b",
+          "field": "title",
+          "passage": "Hoteles y franquicia ingresan al mercado eléctrico mayorista",
+          "title": "Hoteles y franquicia ingresan al mercado eléctrico mayorista",
+          "outlet": "laestrella.com.pa",
+          "url": "https://www.laestrella.com.pa/economia/hoteles-y-franquicia-ingresan-al-mercado-electrico-mayorista-GC25638718",
+          "publishedAt": null,
+          "detectedAt": "2026-09-13T05:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_19b73acbcedfc5cd:c1",
+      "text": "telemetro.com reporta en su titular: «Proyecto de ley que dicta el presupuesto del Canal de Panamá pasa a tercer debate»",
+      "citations": [
+        {
+          "evidenceId": "art_b33b36c66b0dc8b9",
+          "field": "title",
+          "passage": "Proyecto de ley que dicta el presupuesto del Canal de Panamá pasa a tercer debate",
+          "title": "Proyecto de ley que dicta el presupuesto del Canal de Panamá pasa a tercer debate",
+          "outlet": "telemetro.com",
+          "url": "https://www.telemetro.com/nacionales/proyecto-ley-que-dicta-el-presupuesto-del-canal-panama-pasa-tercer-debate-n6092955",
+          "publishedAt": null,
+          "detectedAt": "2026-09-25T07:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_0356e6c6b43abbdd:c1",
+      "text": "laestrella.com.pa reporta en su titular: «Convenio Herrán - Cass : el inicio de las ambiciones de EE . UU . sobre Panamá»",
+      "citations": [
+        {
+          "evidenceId": "art_166cc1507d0f88fa",
+          "field": "title",
+          "passage": "Convenio Herrán - Cass : el inicio de las ambiciones de EE . UU . sobre Panamá",
+          "title": "Convenio Herrán - Cass : el inicio de las ambiciones de EE . UU . sobre Panamá",
+          "outlet": "laestrella.com.pa",
+          "url": "https://www.laestrella.com.pa/panama/publicando-historia/convenio-herran-cass-el-inicio-de-las-ambiciones-de-ee-uu-sobre-panama-EB25605463",
+          "publishedAt": null,
+          "detectedAt": "2026-09-13T05:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_1efabc91b63440c7:c1",
+      "text": "vozpopuli.com reporta en su titular: «Miguel Bosé ( 70 años ): No he hecho la mili porque tengo pasaporte de Panamá y nací allí . No tengo la nacionalidad española»",
+      "citations": [
+        {
+          "evidenceId": "art_cf6f96725f5884a7",
+          "field": "title",
+          "passage": "Miguel Bosé ( 70 años ): No he hecho la mili porque tengo pasaporte de Panamá y nací allí . No tengo la nacionalidad española",
+          "title": "Miguel Bosé ( 70 años ): No he hecho la mili porque tengo pasaporte de Panamá y nací allí . No tengo la nacionalidad española",
+          "outlet": "vozpopuli.com",
+          "url": "https://www.vozpopuli.com/dolcevita/miguel-bose-70-anos-no-he-hecho-la-mili-porque-tengo-pasaporte-de-panama-y-naci-alli-no-tengo-la-nacionalidad-espanola.html",
+          "publishedAt": null,
+          "detectedAt": "2026-10-02T05:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_14e3c5966edd71e3:c1",
+      "text": "panamaamerica.com.pa reporta en su titular: «Tocumen supera los 15 . 8 millones de pasajeros en agosto y crece un 15 %»",
+      "citations": [
+        {
+          "evidenceId": "art_9b473aa08f935ddf",
+          "field": "title",
+          "passage": "Tocumen supera los 15 . 8 millones de pasajeros en agosto y crece un 15 %",
+          "title": "Tocumen supera los 15 . 8 millones de pasajeros en agosto y crece un 15 %",
+          "outlet": "panamaamerica.com.pa",
+          "url": "https://www.panamaamerica.com.pa/economia/tocumen-supera-los-158-millones-de-pasajeros-en-agosto-y-crece-un-15-1266695",
+          "publishedAt": null,
+          "detectedAt": "2026-09-25T06:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_8401bf5de8bc7a71:c1",
+      "text": "TVN Panamá reporta en su titular: «+Móvil lanza oficialmente más Starlink, el primer servicio de conectividad satelital móvil de Panamá»",
+      "citations": [
+        {
+          "evidenceId": "art_4c7577043fe6479e",
+          "field": "title",
+          "passage": "+Móvil lanza oficialmente más Starlink, el primer servicio de conectividad satelital móvil de Panamá",
+          "title": "+Móvil lanza oficialmente más Starlink, el primer servicio de conectividad satelital móvil de Panamá",
+          "outlet": "TVN Panamá",
+          "url": "https://www.tvn-2.com/economia/empresas/publirreportajes/movil-lanza-oficialmente-starlink-primer_1_2261270.html",
+          "publishedAt": "2026-09-16T19:31:35Z",
+          "detectedAt": null
+        }
+      ]
+    },
+    {
+      "id": "evt_0a6ea3e3729e1f7b:c1",
+      "text": "prensa.com reporta en su titular: «MiBus tiene 306 autobuses fuera de servicio ; 171 tienen más de 15 años»",
+      "citations": [
+        {
+          "evidenceId": "art_ebab158f921bff69",
+          "field": "title",
+          "passage": "MiBus tiene 306 autobuses fuera de servicio ; 171 tienen más de 15 años",
+          "title": "MiBus tiene 306 autobuses fuera de servicio ; 171 tienen más de 15 años",
+          "outlet": "prensa.com",
+          "url": "https://www.prensa.com/sociedad/mibus-tiene-306-autobuses-fuera-de-servicio-171-tienen-mas-de-15-anos/",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T06:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_37a37cb02d7269d1:c1",
+      "text": "newsroompanama.com reporta en su titular: «Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .»",
+      "citations": [
+        {
+          "evidenceId": "art_39666969ba302f59",
+          "field": "title",
+          "passage": "Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .",
+          "title": "Panama Canal Increases Daily Transits to 33 and Maximum Draft to 49 Feet .",
+          "outlet": "newsroompanama.com",
+          "url": "https://newsroompanama.com/2026/09/28/panama-canal-increases-daily-transits-to-33-and-maximum-draft-to-49-feet/",
+          "publishedAt": "2026-09-28T00:00:00Z",
+          "detectedAt": "2026-09-28T23:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_014063903242e157:c1",
+      "text": "critica.com.pa reporta en su titular: «Panamá Oeste : MINSA confirma un muerto por dengue en Arraiján»",
+      "citations": [
+        {
+          "evidenceId": "art_25f7ce48e9dc9594",
+          "field": "title",
+          "passage": "Panamá Oeste : MINSA confirma un muerto por dengue en Arraiján",
+          "title": "Panamá Oeste : MINSA confirma un muerto por dengue en Arraiján",
+          "outlet": "critica.com.pa",
+          "url": "https://www.critica.com.pa/nacional/panama-oeste-minsa-confirma-un-muerto-por-dengue-en-arraijan-516960",
+          "publishedAt": null,
+          "detectedAt": "2026-09-25T00:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_87a35159a963fdc8:c1",
+      "text": "TVN Panamá reporta en su titular: «Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI»",
+      "citations": [
+        {
+          "evidenceId": "art_96caf7104c3f4cac",
+          "field": "title",
+          "passage": "Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI",
+          "title": "Caso Pandora: Detención provisional para exejecutivo bancario señalado por autorizar pagos de créditos fiscales de la DGI",
+          "outlet": "TVN Panamá",
+          "url": "https://www.tvn-2.com/nacionales/judicial/caso-pandora-declaran-legal-aprehension-exjecutivo-bancario-autoriza-pagos-fiscales-dgi_1_2264701.html",
+          "publishedAt": "2026-10-06T23:57:05Z",
+          "detectedAt": null
+        }
+      ]
+    },
+    {
+      "id": "evt_73bcca4f3d5a80aa:c1",
+      "text": "infobae.com reporta en su titular: «Cobre Panamá volvería a producir : lo que falta definir es bajo qué modelo»",
+      "citations": [
+        {
+          "evidenceId": "art_ef25850c4be72572",
+          "field": "title",
+          "passage": "Cobre Panamá volvería a producir : lo que falta definir es bajo qué modelo",
+          "title": "Cobre Panamá volvería a producir : lo que falta definir es bajo qué modelo",
+          "outlet": "infobae.com",
+          "url": "https://www.infobae.com/panama/2026/10/01/cobre-panama-volveria-a-producir-lo-que-falta-definir-es-bajo-que-modelo/",
+          "publishedAt": "2026-10-01T00:00:00Z",
+          "detectedAt": "2026-10-02T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_1d91fa650cdb7867:c1",
+      "text": "rpctv.com reporta en su titular: «Ecuador pierde ante Japón y Panamá ya conoce su próximo rival»",
+      "citations": [
+        {
+          "evidenceId": "art_8caedf3c010947f0",
+          "field": "title",
+          "passage": "Ecuador pierde ante Japón y Panamá ya conoce su próximo rival",
+          "title": "Ecuador pierde ante Japón y Panamá ya conoce su próximo rival",
+          "outlet": "rpctv.com",
+          "url": "https://www.rpctv.com/futbol-internacional/futbol/ecuador-pierde-japon-y-panama-ya-conoce-su-proximo-rival-n6093662",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T16:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_1f6e20472e279be4:c1",
+      "text": "elmundo.es reporta en su titular: «Desde Nueva York , que desbanca a San Francisco como verdadera capital de Silicon Valley , hasta el Canal de Panamá que se suma al Estrecho de Ormuz para liar la economía mundial»",
+      "citations": [
+        {
+          "evidenceId": "art_14a79197a446c085",
+          "field": "title",
+          "passage": "Desde Nueva York , que desbanca a San Francisco como verdadera capital de Silicon Valley , hasta el Canal de Panamá que se suma al Estrecho de Ormuz para liar la economía mundial",
+          "title": "Desde Nueva York , que desbanca a San Francisco como verdadera capital de Silicon Valley , hasta el Canal de Panamá que se suma al Estrecho de Ormuz para liar la economía mundial",
+          "outlet": "elmundo.es",
+          "url": "https://www.elmundo.es/economia/macroeconomia/2026/09/13/6aa4190121efa0632e8b45a3.html",
+          "publishedAt": "2026-09-13T00:00:00Z",
+          "detectedAt": "2026-09-13T02:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_c20cc06ac2700a8b:c1",
+      "text": "prensa-latina.cu reporta en su titular: «Más trabajadores panameños con ingresos inferiores al salario mínimo»",
+      "citations": [
+        {
+          "evidenceId": "art_88fe4a5145798aba",
+          "field": "title",
+          "passage": "Más trabajadores panameños con ingresos inferiores al salario mínimo",
+          "title": "Más trabajadores panameños con ingresos inferiores al salario mínimo",
+          "outlet": "prensa-latina.cu",
+          "url": "https://www.prensa-latina.cu/2026/10/01/mas-trabajadores-panamenos-con-ingresos-inferiores-al-salario-minimo/",
+          "publishedAt": "2026-10-01T00:00:00Z",
+          "detectedAt": "2026-10-01T11:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_340bc1f6642b7bcf:c1",
+      "text": "TVN Panamá reporta en su titular: «Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones»",
+      "citations": [
+        {
+          "evidenceId": "art_7ec07b57b74f8924",
+          "field": "title",
+          "passage": "Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones",
+          "title": "Comisión de Presupuesto tramita traslados y créditos por casi $100 millones entre seis instituciones",
+          "outlet": "TVN Panamá",
+          "url": "https://www.tvn-2.com/nacionales/comision-presupuesto-tramita-traslados-creditos_1_2264698.html",
+          "publishedAt": "2026-10-07T00:21:09Z",
+          "detectedAt": null
+        }
+      ]
+    },
+    {
+      "id": "evt_10dffcc13c61a57c:c1",
+      "text": "midiario.com reporta en su titular: «¡ VUELTA AL MARCADOR ! Panamá Oeste supera a Los Santos y se corona campeón en el U10»",
+      "citations": [
+        {
+          "evidenceId": "art_8fc1665362cce17c",
+          "field": "title",
+          "passage": "¡ VUELTA AL MARCADOR ! Panamá Oeste supera a Los Santos y se corona campeón en el U10",
+          "title": "¡ VUELTA AL MARCADOR ! Panamá Oeste supera a Los Santos y se corona campeón en el U10",
+          "outlet": "midiario.com",
+          "url": "https://www.midiario.com/deportivas/vuelta-al-marcador-panama-oeste-supera-a-los-santos-y-se-corona-campeon-en-el-u10/",
+          "publishedAt": null,
+          "detectedAt": "2026-09-13T02:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_200136338629a112:c1",
+      "text": "critica.com.pa reporta en su titular: «Minsa consigue B /. 26 . 1 millones para pagar turnos y cubrir necesidades de salud»",
+      "citations": [
+        {
+          "evidenceId": "art_25e59422ee80cefd",
+          "field": "title",
+          "passage": "Minsa consigue B /. 26 . 1 millones para pagar turnos y cubrir necesidades de salud",
+          "title": "Minsa consigue B /. 26 . 1 millones para pagar turnos y cubrir necesidades de salud",
+          "outlet": "critica.com.pa",
+          "url": "https://www.critica.com.pa/nacional/minsa-consigue-b261-millones-para-pagar-turnos-y-cubrir-necesidades-de-salud-516954",
+          "publishedAt": null,
+          "detectedAt": "2026-09-24T23:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_312002fce7ac30c7:c1",
+      "text": "prensa.com reporta en su titular: «Thomas Christiansen reconoce falencias de Panamá y valora a los jóvenes en la gira»",
+      "citations": [
+        {
+          "evidenceId": "art_9d68e6ea53eeffba",
+          "field": "title",
+          "passage": "Thomas Christiansen reconoce falencias de Panamá y valora a los jóvenes en la gira",
+          "title": "Thomas Christiansen reconoce falencias de Panamá y valora a los jóvenes en la gira",
+          "outlet": "prensa.com",
+          "url": "https://www.prensa.com/deportes/thomas-christiansen-reconoce-falencias-de-panama-y-valora-a-los-jovenes-en-la-gira/",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T23:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_1c03ba26c8331f34:c1",
+      "text": "prensa-latina.cu reporta en su titular: «Panamá refuerza promoción turística en Argentina - Noticias Prensa Latina»",
+      "citations": [
+        {
+          "evidenceId": "art_10e38daa636dedb4",
+          "field": "title",
+          "passage": "Panamá refuerza promoción turística en Argentina - Noticias Prensa Latina",
+          "title": "Panamá refuerza promoción turística en Argentina - Noticias Prensa Latina",
+          "outlet": "prensa-latina.cu",
+          "url": "https://www.prensa-latina.cu/2026/09/27/panama-refuerza-promocion-turistica-en-argentina/",
+          "publishedAt": "2026-09-27T00:00:00Z",
+          "detectedAt": "2026-09-27T10:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_33bde38e4d1c736a:c1",
+      "text": "prensa.com reporta en su titular: «Ecuador pierde en los penaltis ante Japón y se medirá a Panamá»",
+      "citations": [
+        {
+          "evidenceId": "art_72e0058742eb49ac",
+          "field": "title",
+          "passage": "Ecuador pierde en los penaltis ante Japón y se medirá a Panamá",
+          "title": "Ecuador pierde en los penaltis ante Japón y se medirá a Panamá",
+          "outlet": "prensa.com",
+          "url": "https://www.prensa.com/deportes/ecuador-pierde-en-los-penaltis-ante-japon-en-la-semifinal-de-la-copa-kirin/",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T18:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_209fa160264282ef:c1",
+      "text": "diaadia.com.pa reporta en su titular: «Avanzan gestiones para llevar electricidad a la comunidad de Quebraón»",
+      "citations": [
+        {
+          "evidenceId": "art_bfa7ede8454ae006",
+          "field": "title",
+          "passage": "Avanzan gestiones para llevar electricidad a la comunidad de Quebraón",
+          "title": "Avanzan gestiones para llevar electricidad a la comunidad de Quebraón",
+          "outlet": "diaadia.com.pa",
+          "url": "https://www.diaadia.com.pa/el-pais/avanzan-gestiones-para-llevar-electricidad-la-comunidad-de-quebraon-791562",
+          "publishedAt": null,
+          "detectedAt": "2026-09-12T18:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_1efa44270b4d9117:c1",
+      "text": "panamaamerica.com.pa reporta en su titular: «BDA recupera $22 . 8 millones a agosto y alista su transformación en el Instituto de Fomento Agropecuario»",
+      "citations": [
+        {
+          "evidenceId": "art_d575b8ddb323776c",
+          "field": "title",
+          "passage": "BDA recupera $22 . 8 millones a agosto y alista su transformación en el Instituto de Fomento Agropecuario",
+          "title": "BDA recupera $22 . 8 millones a agosto y alista su transformación en el Instituto de Fomento Agropecuario",
+          "outlet": "panamaamerica.com.pa",
+          "url": "https://www.panamaamerica.com.pa/economia/bda-recupera-228-millones-agosto-y-alista-su-transformacion-en-el-instituto-de-fomento",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T22:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_8a5ce1f85d32cb77:c1",
+      "text": "TVN Panamá reporta en su titular: «Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026»",
+      "citations": [
+        {
+          "evidenceId": "art_cd73f54cb7e0f734",
+          "field": "title",
+          "passage": "Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026",
+          "title": "Mides solicita $47 millones para completar último pago de transferencias monetarias de 2026",
+          "outlet": "TVN Panamá",
+          "url": "https://www.tvn-2.com/nacionales/mides-solicita-47-millones-completar-pagos-programa-transferencia-monetarias-noviembre_1_2264712.html",
+          "publishedAt": "2026-10-07T00:14:52Z",
+          "detectedAt": null
+        }
+      ]
+    },
+    {
+      "id": "evt_135b9208a094844f:c1",
+      "text": "midiario.com reporta en su titular: «¡ Panamá Norte , llegó su turno ! IFARHU anuncia cuándo y dónde podrá retirar la tarjeta del PASE - U esta semana»",
+      "citations": [
+        {
+          "evidenceId": "art_be7a37db1bc8e1f8",
+          "field": "title",
+          "passage": "¡ Panamá Norte , llegó su turno ! IFARHU anuncia cuándo y dónde podrá retirar la tarjeta del PASE - U esta semana",
+          "title": "¡ Panamá Norte , llegó su turno ! IFARHU anuncia cuándo y dónde podrá retirar la tarjeta del PASE - U esta semana",
+          "outlet": "midiario.com",
+          "url": "https://www.midiario.com/nacionales/panama-norte-llego-tu-turno-ifarhu-anuncia-cuando-y-donde-podra-retirar-la-tarjeta-del-pase-u-esta-semana/",
+          "publishedAt": null,
+          "detectedAt": "2026-09-12T17:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_12eb109d7f692997:c1",
+      "text": "midiario.com reporta en su titular: «Navidad 2026 de la Alcaldía de Panamá superaría los $3 . 8 millones en contratos»",
+      "citations": [
+        {
+          "evidenceId": "art_11a89229db0c9b27",
+          "field": "title",
+          "passage": "Navidad 2026 de la Alcaldía de Panamá superaría los $3 . 8 millones en contratos",
+          "title": "Navidad 2026 de la Alcaldía de Panamá superaría los $3 . 8 millones en contratos",
+          "outlet": "midiario.com",
+          "url": "https://www.midiario.com/nacionales/navidad-2026-de-la-alcaldia-de-panama-superaria-los-38-millones-en-contratos/",
+          "publishedAt": null,
+          "detectedAt": "2026-09-13T02:45:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_5863c6be84f9a409:c1",
+      "text": "panamaamerica.com.pa reporta en su titular: «Chapman : Sector privado es el principal motor del crecimiento económico»",
+      "citations": [
+        {
+          "evidenceId": "art_9522e1d78c209bf7",
+          "field": "title",
+          "passage": "Chapman : Sector privado es el principal motor del crecimiento económico",
+          "title": "Chapman : Sector privado es el principal motor del crecimiento económico",
+          "outlet": "panamaamerica.com.pa",
+          "url": "https://www.panamaamerica.com.pa/economia/chapman-sector-privado-es-el-principal-motor-del-crecimiento-economico-1266265",
+          "publishedAt": null,
+          "detectedAt": "2026-09-12T20:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_25da4a2514fae1db:c1",
+      "text": "critica.com.pa reporta en su titular: «Ñero le pegó un susto a su madre con la caída»",
+      "citations": [
+        {
+          "evidenceId": "art_3474a587614eae63",
+          "field": "title",
+          "passage": "Ñero le pegó un susto a su madre con la caída",
+          "title": "Ñero le pegó un susto a su madre con la caída",
+          "outlet": "critica.com.pa",
+          "url": "https://www.critica.com.pa/show/nero-le-pego-un-susto-su-madre-con-la-caida-516949",
+          "publishedAt": null,
+          "detectedAt": "2026-09-24T23:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_56a6a12f071fbbf0:c1",
+      "text": "TVN Panamá reporta en su titular: «Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo»",
+      "citations": [
+        {
+          "evidenceId": "art_2dcbf84e2b74a8b4",
+          "field": "title",
+          "passage": "Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo",
+          "title": "Reforma eléctrica: Comisión de Comercio aprueba en primer debate el proyecto de ley impulsado por el Ejecutivo",
+          "outlet": "TVN Panamá",
+          "url": "https://www.tvn-2.com/nacionales/reforma-electrica-comision-comercio-aprueba-primer-debate-asamblea-nacional_1_2264662.html",
+          "publishedAt": "2026-10-06T22:14:00Z",
+          "detectedAt": null
+        }
+      ]
+    },
+    {
+      "id": "evt_128a60a8785df0b8:c1",
+      "text": "prensa.com reporta en su titular: «Paraguas a mano : lluvias y tormentas seguirán hasta el sábado»",
+      "citations": [
+        {
+          "evidenceId": "art_07e0923bbc1fad05",
+          "field": "title",
+          "passage": "Paraguas a mano : lluvias y tormentas seguirán hasta el sábado",
+          "title": "Paraguas a mano : lluvias y tormentas seguirán hasta el sábado",
+          "outlet": "prensa.com",
+          "url": "https://www.prensa.com/sociedad/lluvias-y-tormentas-seguiran-afectando-a-panama-hasta-el-sabado-3-de-octubre/",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T23:30:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_a0607f3ace52bfb5:c1",
+      "text": "TVN Panamá reporta en su titular: «MIDA extiende hasta el 11 de octubre retiro de medidor eléctrico en Puerto Armuelles»",
+      "citations": [
+        {
+          "evidenceId": "art_f925fac3816fe3d7",
+          "field": "title",
+          "passage": "MIDA extiende hasta el 11 de octubre retiro de medidor eléctrico en Puerto Armuelles",
+          "title": "MIDA extiende hasta el 11 de octubre retiro de medidor eléctrico en Puerto Armuelles",
+          "outlet": "TVN Panamá",
+          "url": "https://www.tvn-2.com/nacionales/mida-extiende-11-octubre-retiro_1_2264654.html",
+          "publishedAt": "2026-10-06T21:41:54Z",
+          "detectedAt": null
+        }
+      ]
+    },
+    {
+      "id": "evt_25153974b4f3bc55:c1",
+      "text": "prensa.com reporta en su titular: «Panamá crece 6 . 4 %: ¿ por qué no todos lo sienten ?»",
+      "citations": [
+        {
+          "evidenceId": "art_10ef93c769be4970",
+          "field": "title",
+          "passage": "Panamá crece 6 . 4 %: ¿ por qué no todos lo sienten ?",
+          "title": "Panamá crece 6 . 4 %: ¿ por qué no todos lo sienten ?",
+          "outlet": "prensa.com",
+          "url": "https://www.prensa.com/opinion/panama-crece-64-por-que-no-todos-lo-sienten/",
+          "publishedAt": null,
+          "detectedAt": "2026-09-25T07:15:00Z"
+        }
+      ]
+    },
+    {
+      "id": "evt_fa46a124ae717825:c1",
+      "text": "laestrella.com.pa reporta en su titular: «Canasta básica ronda los $303 y anticipan posible alza a fin de año»",
+      "citations": [
+        {
+          "evidenceId": "art_3079bd4c630820f9",
+          "field": "title",
+          "passage": "Canasta básica ronda los $303 y anticipan posible alza a fin de año",
+          "title": "Canasta básica ronda los $303 y anticipan posible alza a fin de año",
+          "outlet": "laestrella.com.pa",
+          "url": "https://www.laestrella.com.pa/economia/canasta-basica-ronda-los-303-y-anticipan-posible-alza-a-fin-de-ano-KH26122967",
+          "publishedAt": null,
+          "detectedAt": "2026-10-01T07:00:00Z"
+        }
+      ]
+    }
+  ],
+  "sheetHash": "7ca2db4c1a9ae6c7935ea08e76abc87edf3b88b7d9fa3dac17e79bd1a252cee3"
+}

@@ -83,7 +83,7 @@ function mount(ui: ReactNode, api = new MockApi(), route: Route = { view: 'agend
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
-      <AppContext.Provider value={{ api, route, go, mockReason: 'fixture de prueba', reviewer: '', setReviewer: vi.fn(), openAssistant: vi.fn(), authMode: 'local' }}>
+      <AppContext.Provider value={{ api, route, go, toast: null, showToast: vi.fn(), dismissToast: vi.fn(), mockReason: 'fixture de prueba', reviewer: '', setReviewer: vi.fn(), openAssistant: vi.fn(), authMode: 'local' }}>
         {ui}
       </AppContext.Provider>
     </QueryClientProvider>,

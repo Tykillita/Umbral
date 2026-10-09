@@ -199,6 +199,28 @@ def test_connection_routes_reject_remote_clients_origin_and_web(make_app, tmp_pa
     assert client.get("/api/v1/connections/chatgpt", headers={"Host": "attacker.test"}).status_code == 403
 
 
+def test_desktop_oauth_callback_works_without_renderer_token(make_app, tmp_path, monkeypatch):
+    import umbral_api.connections as module
+
+    monkeypatch.setattr(module, "repo_root", lambda: tmp_path / "workspace")
+    client = make_app(auth_mode="local", desktop_token="ephemeral-desktop-token",
+                      chatgpt_credentials_file=tmp_path / "private" / "chatgpt.dat")
+    connection = client.svc.providers["chatgpt"].connection
+    monkeypatch.setattr(connection, "callback", lambda **_: connection.status())
+
+    response = client.get("/api/v1/auth/callback", params={
+        "state": "valid-test-state", "code": "synthetic-code", "client_id": "test-client",
+    })
+
+    assert response.status_code == 200, response.text
+    assert response.headers["content-type"].startswith("text/html")
+    assert "ChatGPT conectado" in response.text
+    assert "se actualizará automáticamente" in response.text
+    assert client.get("/api/v1/health").status_code == 403
+    assert client.get("/api/v1/auth/callback", params={"state": "valid-test-state", "code": "x"},
+                      headers={"Origin": "https://auth.openai.com"}).status_code == 403
+
+
 def test_offline_does_not_call_transport(connection):
     from dataclasses import replace
 

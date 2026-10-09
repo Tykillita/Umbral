@@ -8,6 +8,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 from e2e.helpers import choose, open_app, open_first_ficha, tid
 from playwright.sync_api import Page, expect
@@ -56,9 +58,18 @@ def go(page: Page, nav: str) -> None:
 def test_el_dom_real_no_contiene_controles_nativos(page: Page, stack, w, h):
     page.set_viewport_size({"width": w, "height": h})
     open_app(page, stack.url)
+    tid(page, "role-change").click()
+    tid(page, "role-juror").click()
+    expect(tid(page, "nav-borradores")).to_be_visible()
+    expect(tid(page, "active-role")).to_have_text("Jurado")
     problems: list[str] = []
     problems += [f"agenda: {x}" for x in page.evaluate(JS_NATIVE_SCAN)]
     open_first_ficha(page)
+    assert tid(page, "nav-borradores").count() == 1, (
+        f"Jurado debe conservar Borradores al abrir una ficha; ruta={page.url}, "
+        f"rol={tid(page, 'active-role').inner_text() if tid(page, 'active-role').count() else 'sin rol'}, "
+        f"navegación={page.locator('[data-testid^=nav-]').all_text_contents()}"
+    )
     tid(page, "impact-form").locator("button[aria-expanded]").first.click()
     problems += [f"ficha+impacto: {x}" for x in page.evaluate(JS_NATIVE_SCAN)]
     go(page, "nav-borradores")
@@ -138,6 +149,60 @@ def test_menu_propio_se_abre_como_hoja_inferior_en_movil(browser, stack):
         ctx.close()
 
 
+@pytest.mark.parametrize("w,h", [(1366, 900), (390, 844)], ids=["escritorio", "movil"])
+def test_selector_modelo_chatgpt_se_muestra_y_guarda_sobre_modal(page: Page, stack, w: int, h: int):
+    """El catálogo del perfil activo debe poder elegirse aun cuando su Select vive en un modal."""
+    selected = {"model": None}
+    profile = {
+        "profileId": "profile-test", "label": "Cuenta ChatGPT", "email": None,
+        "connected": True, "planUsageEnabled": True, "model": None, "active": True,
+    }
+    catalog = [{"slug": "gpt-test", "displayName": "GPT de prueba"}]
+
+    def connections(route):
+        route.fulfill(status=200, content_type="application/json", body=json.dumps({
+            "available": True, "reason": None, "profiles": [profile], "activeProfileId": "profile-test",
+        }))
+
+    def models(route):
+        route.fulfill(status=200, content_type="application/json", body=json.dumps({
+            "profileId": "profile-test", "models": catalog, "selectedModel": selected["model"],
+        }))
+
+    def choose_model(route):
+        body = route.request.post_data_json
+        selected["model"] = body["model"]
+        route.fulfill(status=200, content_type="application/json", body=json.dumps({
+            "profileId": "profile-test", "models": catalog, "selectedModel": selected["model"],
+        }))
+
+    page.route("**/api/v1/connections/chatgpt/models", models)
+    page.route("**/api/v1/connections/chatgpt/model", choose_model)
+    page.route("**/api/v1/connections/chatgpt", connections)
+    page.set_viewport_size({"width": w, "height": h})
+    open_app(page, stack.url)
+    tid(page, "assistant-toggle").click()
+    tid(page, "assistant-model-accounts").click()
+    modal = tid(page, "assistant-provider-accounts-modal")
+    expect(modal).to_be_visible()
+
+    trigger = page.get_by_role("combobox", name="Modelo de la cuenta activa")
+    expect(trigger).to_be_visible()
+    trigger.click()
+    menu = page.locator(".select-layer" if w <= 639 else ".select-popover")
+    expect(menu).to_be_visible()
+    modal_z = int(modal.evaluate("el => getComputedStyle(el.closest('.comic-modal-layer')).zIndex"))
+    menu_z = int(menu.evaluate("el => getComputedStyle(el).zIndex"))
+    assert menu_z > modal_z, f"el selector debe quedar por encima del modal: menú={menu_z}, modal={modal_z}"
+
+    option = page.get_by_role("option", name="GPT de prueba")
+    with page.expect_request(lambda request: request.url.endswith("/api/v1/connections/chatgpt/model") and request.method == "PUT") as sent:
+        option.click()
+    assert sent.value.post_data_json == {"model": "gpt-test"}
+    expect(trigger).to_contain_text("GPT de prueba")
+    expect(tid(page, "chatgpt-model-required")).to_have_count(0)
+
+
 # ---------------------------------------------------------------------------------- otros controles propios
 
 
@@ -210,10 +275,11 @@ def test_globo_de_ayuda_propio(page: Page, stack):
     expect(tip).to_have_count(0)
 
 
-def test_selector_flotante_de_movimiento_con_teclado_y_persistencia(page: Page, stack):
+def test_preferencia_de_movimiento_en_configuracion_con_teclado_y_persistencia(page: Page, stack):
     page.set_viewport_size({"width": 390, "height": 844})
     page.add_init_script("localStorage.removeItem('umbral.motion-preference.v1')")
     open_app(page, stack.url)
+    tid(page, "settings-toggle").click()
 
     group = page.get_by_role("radiogroup", name="Movimiento reducido")
     system = page.get_by_role("radio", name="Usar preferencia del sistema", exact=True)
@@ -221,10 +287,13 @@ def test_selector_flotante_de_movimiento_con_teclado_y_persistencia(page: Page, 
     full = page.get_by_role("radio", name="Desactivar movimiento reducido", exact=True)
     expect(group).to_be_visible()
     expect(system).to_have_attribute("aria-checked", "true")
+    dialog = tid(page, "settings-dialog")
+    expect(dialog).to_be_visible()
     switch_box = page.get_by_test_id("motion-preference-switch").bounding_box()
-    tabbar_box = page.locator(".comic-tabbar").bounding_box()
-    assert switch_box is not None and tabbar_box is not None
-    assert switch_box["y"] + switch_box["height"] <= tabbar_box["y"], "el selector debe quedar encima de la navegación móvil"
+    dialog_box = dialog.bounding_box()
+    assert switch_box is not None and dialog_box is not None
+    assert dialog_box["x"] <= switch_box["x"] < switch_box["x"] + switch_box["width"] <= dialog_box["x"] + dialog_box["width"]
+    assert dialog_box["y"] <= switch_box["y"] < switch_box["y"] + switch_box["height"] <= dialog_box["y"] + dialog_box["height"]
     for option in (system, reduced, full):
         box = option.bounding_box()
         assert box is not None and box["width"] >= 43.5 and box["height"] >= 43.5, f"zona táctil insuficiente: {box}"
@@ -243,3 +312,132 @@ def test_selector_flotante_de_movimiento_con_teclado_y_persistencia(page: Page, 
     expect(full).to_have_attribute("aria-checked", "true")
     page.keyboard.press("Home")
     expect(system).to_have_attribute("aria-checked", "true")
+
+
+@pytest.mark.parametrize("width,height", [(320, 800), (390, 844), (1440, 900)], ids=["320px", "390px", "escritorio"])
+def test_aviso_notion_compacto_muestra_accion_y_conserva_texto_accesible(page: Page, stack, width: int, height: int):
+    """El toast real conserva contenido accesible y sus controles caben en los tres anchos acordados."""
+    page.set_viewport_size({"width": width, "height": height})
+    page.route("**/api/v1/notion/status", lambda route: route.fulfill(status=200, json={"configured": True}))
+    page.route(
+        "**/api/v1/cases/*/export/notion",
+        lambda route: route.fulfill(status=200, json={
+            "page_id": "notion-page-e2e",
+            "url": "https://www.notion.so/umbral/notion-page-e2e",
+            "title": "Ficha de prueba exportada a Notion con un título extenso",
+        }),
+    )
+    open_app(page, stack.url)
+    tid(page, "role-change").click()
+    tid(page, "role-juror").click()
+    open_first_ficha(page)
+    tid(page, "go-drafts").click()
+    choose(page, "draft-provider", "plantilla")
+    tid(page, "draft-generate").click()
+    expect(tid(page, "draft-origin-label")).to_be_visible(timeout=60_000)
+    tid(page, "export-notion").click()
+
+    toast = tid(page, "export-toast")
+    expect(toast).to_be_visible()
+    expect(toast).to_have_attribute("role", "status")
+    expect(toast.locator(".export-toast-copy strong")).to_have_text("Ficha exportada a Notion")
+    expect(toast.locator(".export-toast-copy span")).to_have_text("Ficha de prueba exportada a Notion con un título extenso se guardó como una página nueva.")
+    action = toast.get_by_role("link", name="Abrir Notion")
+    expect(action).to_have_attribute("href", "https://www.notion.so/umbral/notion-page-e2e")
+
+    box = toast.bounding_box()
+    close_box = toast.get_by_role("button", name="Cerrar aviso").bounding_box()
+    action_box = action.bounding_box()
+    assert box is not None and 52 <= box["height"] <= 56.5, f"alto del aviso fuera de 52–56 px: {box}"
+    assert box["x"] >= 0 and box["x"] + box["width"] <= width + 1, f"el aviso desborda el viewport: {box}"
+    assert close_box is not None and close_box["width"] >= 43.5 and close_box["height"] >= 43.5, f"cierre demasiado pequeño: {close_box}"
+    assert action_box is not None and action_box["height"] >= 43.5, f"acción demasiado pequeña: {action_box}"
+
+    close = toast.get_by_role("button", name="Cerrar aviso")
+    close.focus()
+    page.keyboard.press("Enter")
+    expect(toast).to_have_count(0)
+
+
+def test_configuracion_superpuesta_cierra_con_escape_y_clic_exterior(page: Page, stack):
+    page.set_viewport_size({"width": 1440, "height": 900})
+    open_app(page, stack.url)
+    trigger = tid(page, "settings-toggle")
+    card = tid(page, "topic-card").first
+    before = card.bounding_box()
+    trigger.focus()
+    page.keyboard.press("Enter")
+    dialog = tid(page, "settings-dialog")
+    expect(dialog).to_be_visible()
+    expect(dialog).to_have_attribute("aria-modal", "true")
+    while_open = card.bounding_box()
+    assert before is not None and while_open is not None
+    assert abs(before["x"] - while_open["x"]) <= 1 and abs(before["y"] - while_open["y"]) <= 1, "el panel no debe desplazar el contenido"
+    page.keyboard.press("Escape")
+    expect(dialog).to_have_count(0)
+    expect(trigger).to_be_focused()
+
+    trigger.click()
+    layer = page.get_by_test_id("settings-dialog-layer")
+    layer_box = layer.bounding_box()
+    assert layer_box is not None
+    page.mouse.click(layer_box["x"] + layer_box["width"] - 8, layer_box["y"] + 8)
+    expect(dialog).to_have_count(0)
+    expect(trigger).to_be_focused()
+
+
+@pytest.mark.parametrize("width,height", [(320, 640), (390, 844)], ids=["320x640", "390x844"])
+def test_configuracion_ocupa_pantalla_y_se_puede_usar_con_tacto_en_movil(browser, stack, width: int, height: int):
+    context = browser.new_context(viewport={"width": width, "height": height}, has_touch=True, is_mobile=True)
+    try:
+        page = context.new_page()
+        open_app(page, stack.url)
+        trigger = tid(page, "settings-toggle")
+        trigger.tap()
+        dialog = tid(page, "settings-dialog")
+        expect(dialog).to_be_visible()
+        box = dialog.bounding_box()
+        assert box is not None and box["x"] == 0 and box["y"] == 0 and box["width"] == width and box["height"] == height, f"el panel no ocupa la pantalla móvil: {box}"
+        header = dialog.locator(":scope > header")
+        nav = header.get_by_role("navigation", name="Secciones de configuración")
+        expect(nav).to_be_visible()
+        header_box = header.bounding_box()
+        assert header_box is not None
+        for button in (nav.get_by_role("button", name="Preferencias"), nav.get_by_role("button", name="Conexiones")):
+            button_box = button.bounding_box()
+            assert button_box is not None and button_box["height"] >= 43.5, f"botón de sección demasiado pequeño: {button_box}"
+            assert header_box["x"] <= button_box["x"] and button_box["x"] + button_box["width"] <= header_box["x"] + header_box["width"], f"el botón quedó fuera del encabezado: {button_box}, {header_box}"
+
+        choose(page, "settings-theme", "tvn")
+        assert page.locator("html").get_attribute("data-theme") == "tvn"
+        assert page.evaluate("localStorage.getItem('umbral.theme.v1')") == "tvn"
+        reduced = page.get_by_test_id("motion-option-reduced")
+        reduced.tap()
+        expect(reduced).to_have_attribute("aria-checked", "true")
+        assert page.evaluate("localStorage.getItem('umbral.motion-preference.v1')") == "reduced"
+        dialog.get_by_role("button", name="Cerrar ventana").tap()
+        expect(dialog).to_have_count(0)
+    finally:
+        context.close()
+
+
+def test_tema_se_aplica_a_toda_umbral_y_se_recuerda_entre_rutas(page: Page, stack):
+    page.set_viewport_size({"width": 1280, "height": 850})
+    page.goto(stack.url + "/")
+    page.evaluate("localStorage.removeItem('umbral.theme.v1')")
+    open_app(page, stack.url)
+    tid(page, "settings-toggle").click()
+    choose(page, "settings-theme", "tvn")
+    expect(page.locator("html")).to_have_attribute("data-theme", "tvn")
+    assert page.evaluate("getComputedStyle(document.documentElement).backgroundColor") == "rgb(243, 248, 252)"
+
+    page.goto(stack.url + "/")
+    expect(page.locator("html")).to_have_attribute("data-theme", "tvn")
+    assert page.evaluate("getComputedStyle(document.documentElement).backgroundColor") == "rgb(243, 248, 252)", "la portada debe conservar el tema elegido en la app"
+
+    open_app(page, stack.url)
+    expect(page.locator("html")).to_have_attribute("data-theme", "tvn")
+    tid(page, "settings-toggle").click()
+    choose(page, "settings-theme", "original")
+    expect(page.locator("html")).to_have_attribute("data-theme", "original")
+    assert page.evaluate("localStorage.getItem('umbral.theme.v1')") == "original"

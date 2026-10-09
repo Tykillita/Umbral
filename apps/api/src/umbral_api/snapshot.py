@@ -21,6 +21,8 @@ from .models import (
     IntegrityReport,
 )
 from .security import looks_like_instruction
+from .seismology import SeismicEvent, load_seismic_events
+from .semantic import load_semantic_artifacts
 
 FIXTURE_DIR = Path(__file__).resolve().parents[2] / "fixtures" / "snapshot-fixture"
 
@@ -89,6 +91,10 @@ class Corpus:
     clusters: dict[str, dict[str, Any]]
     integrity: IntegrityReport
     notes: list[str] = field(default_factory=list)
+    neighbors: dict[str, list[tuple[str, float]]] = field(default_factory=dict)
+    semantic_model: str | None = None
+    events: dict[str, SeismicEvent] = field(default_factory=dict)
+    events_metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def counts(self) -> dict[str, int]:
@@ -267,6 +273,19 @@ def load_corpus(settings: Settings) -> Corpus:
     if integrity.errors:
         notes.append("La verificación de integridad del snapshot reportó errores; los datos se sirven marcados como no verificados.")
 
+    semantic = None
+    if settings.semantic_enabled and integrity.manifest_verified and integrity.predictions_hash_verified is not False:
+        semantic = load_semantic_artifacts(settings.semantic_root, path, manifest.get("snapshotId", path.name),
+                                          clusters_raw, article_ids)
+        if semantic.warning:
+            notes.append(semantic.warning)
+        elif semantic.clusters:
+            clusters_raw = semantic.clusters
+            notes.append("Agrupación y vecinos multilingües precalculados con MiniLM; hashes y referencias verificados.")
+    events, events_metadata, events_warning = load_seismic_events(path, manifest)
+    if events_warning:
+        notes.append(events_warning)
+
     cutoff = parse_dt(manifest.get("cutoffUtc")) or datetime.now(UTC)
     preds = {p["articleId"]: p for p in preds_raw}
     cluster_of: dict[str, str] = {}
@@ -383,4 +402,8 @@ def load_corpus(settings: Settings) -> Corpus:
         clusters=clusters,
         integrity=integrity,
         notes=notes,
+        neighbors=semantic.neighbors if semantic else {},
+        semantic_model=semantic.model if semantic else None,
+        events=events,
+        events_metadata=events_metadata,
     )

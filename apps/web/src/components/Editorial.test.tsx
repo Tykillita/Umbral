@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { useState, type ReactNode } from 'react';
 import type { Route } from '../lib/router';
+import type { DemoSession } from '../lib/session';
 import { ApiError } from '../lib/api/client';
 import * as authModule from '../lib/auth';
 import { MockApi } from '../lib/mock/mockApi';
@@ -16,15 +17,15 @@ beforeAll(() => {
   Object.defineProperty(HTMLElement.prototype, 'scrollTo', { value: vi.fn(), configurable: true });
   Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', { value: vi.fn(), configurable: true });
 });
-afterEach(cleanup);
+afterEach(() => { cleanup(); delete window.umbralDesktop; });
 
 let testIdentity = 0;
-function mount(ui: ReactNode, api = new MockApi(), route: Route = { view: 'agenda' }) {
+function mount(ui: ReactNode, api = new MockApi(), route: Route = { view: 'agenda' }, session?: DemoSession) {
   vi.spyOn(authModule, 'authState').mockReturnValue({ mode: 'local', uid: `editorial-test-${++testIdentity}`, error: null });
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
-      <AppContext.Provider value={{ api, route, go: vi.fn(), mockReason: 'fixture de prueba', reviewer: '', setReviewer: vi.fn(), openAssistant: vi.fn(), authMode: 'local' }}>
+      <AppContext.Provider value={{ api, route, go: vi.fn(), toast: null, showToast: vi.fn(), dismissToast: vi.fn(), mockReason: 'fixture de prueba', reviewer: '', setReviewer: vi.fn(), openAssistant: vi.fn(), authMode: 'local', session }}>
         {ui}
       </AppContext.Provider>
     </QueryClientProvider>,
@@ -32,6 +33,49 @@ function mount(ui: ReactNode, api = new MockApi(), route: Route = { view: 'agend
 }
 
 const assistant = <AssistantPanel state="open" onStateChange={() => {}} onClose={() => {}} seed={{ text: '', topicId: null, topicTitle: '', n: 0 }} />;
+
+it('activa y limpia el filtro TVN junto a la búsqueda con estado accesible', async () => {
+  const api = new MockApi();
+  const topics = vi.spyOn(api, 'topics');
+  mount(<Agenda />, api);
+  const toggle = await screen.findByTestId('agenda-tvn-gap');
+  expect(toggle.getAttribute('aria-pressed')).toBe('false');
+  fireEvent.click(toggle);
+  await waitFor(() => expect(toggle.getAttribute('aria-pressed')).toBe('true'));
+  await waitFor(() => expect(topics).toHaveBeenLastCalledWith(expect.objectContaining({ tvnGap: true })));
+  fireEvent.change(screen.getByTestId('agenda-search'), { target: { value: 'canal' } });
+  await waitFor(() => expect(topics).toHaveBeenLastCalledWith(expect.objectContaining({ tvnGap: true, q: 'canal' })));
+  fireEvent.click(screen.getByTestId('filters-clear'));
+  await waitFor(() => expect(toggle.getAttribute('aria-pressed')).toBe('false'));
+  expect((screen.getByTestId('agenda-search') as HTMLInputElement).value).toBe('');
+});
+
+it('mantiene las sugerencias actuales y añade cuatro consultas de demostración para Jurado', async () => {
+  mount(assistant, new MockApi(), { view: 'agenda' }, {
+    role: 'juror', sessionId: '00000000-0000-4000-8000-000000000001', labeler: 'Jurado',
+  });
+  expect(await screen.findByText('Preguntas para empezar')).toBeTruthy();
+  expect(screen.getByText('Pruebas para el Jurado')).toBeTruthy();
+  const demos = await screen.findAllByTestId('assistant-juror-suggestion');
+  expect(demos).toHaveLength(4);
+  expect(demos.map((item) => item.textContent).join(' ')).toMatch(/de qué año|procedencias independientes|SYSTEM:|32 frente a 33/i);
+  expect(screen.getAllByTestId('assistant-suggestion').length).toBeGreaterThan(0);
+});
+
+it('actualiza las variantes sociales al editar el copy y excluye notas de producción del tiempo hablado', async () => {
+  const api = new MockApi();
+  mount(<Drafts />, api, { view: 'borradores', topicId: 'tema-mock-001' }, {
+    role: 'producer', sessionId: '00000000-0000-4000-8000-000000000002', labeler: 'Productor/a digital',
+  });
+  fireEvent.click(await screen.findByTestId('draft-generate'));
+  const copy = await screen.findByTestId('draft-copy');
+  fireEvent.change(copy, { target: { value: 'Texto editorial editado para redes.' } });
+  await waitFor(() => expect(screen.getByTestId('draft-social-variants').textContent).toContain('Texto editorial editado para redes.'));
+  const script = screen.getByTestId('draft-script') as HTMLTextAreaElement;
+  const before = screen.getByTestId('draft-script-count').textContent;
+  fireEvent.change(script, { target: { value: `${script.value}\n\nNOTAS DE PRODUCCIÓN:\n${'Revisar el enlace. '.repeat(40)}` } });
+  await waitFor(() => expect(screen.getByTestId('draft-script-count').textContent).toBe(before));
+});
 
 async function availableGemini(api: MockApi) {
   const health = await api.health();
@@ -58,7 +102,7 @@ describe('estados editoriales y teclado', () => {
     expect(saved.currentDraft?.package.proposedTitle).toBe('Título editado durante la prueba');
   });
 
-  it('ofrece en Borradores solo las conexiones locales disponibles y separa el texto de ayuda', async () => {
+  it('ofrece ChatGPT y Claude sin sesión como opciones accionables y separa el texto de ayuda', async () => {
     const api = new MockApi();
     const health = await api.health();
     const base = health.providers.find((provider) => provider.name === 'gemini')!;
@@ -77,9 +121,51 @@ describe('estados editoriales y teclado', () => {
     await waitFor(() => expect(screen.getAllByRole('option').some((option) => /ChatGPT/.test(option.textContent ?? ''))).toBe(true));
     const options = screen.getAllByRole('option');
     expect(options.map((option) => option.textContent).join(' ')).toMatch(/ChatGPT.*gpt-test/);
-    expect(options.map((option) => option.textContent).join(' ')).not.toMatch(/Claude/);
+    expect(options.map((option) => option.textContent).join(' ')).toMatch(/Claude.*Inicia sesión con tu cuenta de Claude/);
+    expect(options.find((option) => /ChatGPT/.test(option.textContent ?? ''))?.getAttribute('aria-disabled')).toBeNull();
+    expect(options.find((option) => /Claude/.test(option.textContent ?? ''))?.getAttribute('aria-disabled')).toBeNull();
+    expect(options.map((option) => option.textContent).join(' ')).not.toMatch(/token|fuera del repo|permiso chatgpt/i);
     expect(screen.getByTestId('draft-provider-help').className).toContain('mt-2');
     expect(screen.getByTestId('draft-provider-accounts')).toBeTruthy();
+  });
+
+  it('al elegir ChatGPT sin sesión inicia OAuth y muestra una salida al acceso oficial', async () => {
+    const api = new MockApi();
+    Object.defineProperty(api, 'kind', { value: 'live' });
+    const health = await api.health();
+    vi.spyOn(api, 'health').mockResolvedValue({ ...health, localMode: true, authMode: 'local', offline: false,
+      providers: health.providers.map((item) => ({ ...item, available: item.name === 'gemini' })) });
+    vi.spyOn(api, 'connections').mockResolvedValue({ available: true, reason: null, profiles: [], activeProfileId: null });
+    const start = vi.spyOn(api, 'startConnection').mockResolvedValue({ authorizationUrl: 'https://auth.openai.com/oauth/authorize?state=fixture', expiresIn: 600 });
+    const openAuth = vi.fn().mockResolvedValue(undefined);
+    window.umbralDesktop = { openChatGPTAuth: openAuth } as unknown as typeof window.umbralDesktop;
+    mount(<Drafts />, api, { view: 'borradores', topicId: 'tema-mock-001' });
+    fireEvent.click(await screen.findByRole('combobox', { name: 'Proveedor de redacción' }));
+    fireEvent.click(await screen.findByRole('option', { name: /ChatGPT/ }));
+    await waitFor(() => expect(start).toHaveBeenCalledWith({ label: 'Cuenta ChatGPT' }));
+    await waitFor(() => expect(openAuth).toHaveBeenCalledWith('https://auth.openai.com/oauth/authorize?state=fixture'));
+    expect(await screen.findByTestId('chatgpt-login-link')).toBeTruthy();
+    expect(screen.queryByText(/token|fuera del repo|permiso chatgpt/i)).toBeNull();
+  });
+
+  it('al elegir Claude en el panel del Asistente inicia su acceso local', async () => {
+    const api = new MockApi();
+    Object.defineProperty(api, 'kind', { value: 'live' });
+    const health = await api.health();
+    const localHealth = { ...health, localMode: true, authMode: 'local' as const, offline: false };
+    const disconnectedHealth = { ...localHealth, providers: health.providers.map((item) => ({ ...item, available: item.name === 'gemini' })) };
+    const connectedHealth = { ...localHealth, providers: health.providers.map((item) => ({ ...item, available: ['gemini', 'claude'].includes(item.name), ...(item.name === 'claude' ? { model: 'claude-test' } : {}) })) };
+    vi.spyOn(api, 'health').mockResolvedValueOnce(disconnectedHealth).mockResolvedValue(connectedHealth);
+    vi.spyOn(api, 'claudeConnection')
+      .mockResolvedValueOnce({ available: true, installed: true, loggedIn: false, loginPending: false, loginCommand: 'claude auth login --claudeai', account: null, authMethod: null, reason: null })
+      .mockResolvedValue({ available: true, installed: true, loggedIn: true, loginPending: false, loginCommand: 'claude auth login --claudeai', account: null, authMethod: 'claudeai', reason: null });
+    const start = vi.spyOn(api, 'startClaudeLogin').mockResolvedValue({ available: true, installed: true, loggedIn: true, loginPending: false, loginCommand: 'claude auth login --claudeai', account: null, authMethod: 'claudeai', reason: null });
+    mount(assistant, api);
+    fireEvent.click(await screen.findByTestId('assistant-model-selector'));
+    fireEvent.click(await screen.findByRole('option', { name: /Claude/ }));
+    await waitFor(() => expect(start).toHaveBeenCalledOnce());
+    expect(await screen.findByRole('combobox', { name: /Proveedor de redacción: Claude/ })).toBeTruthy();
+    expect(screen.queryByText(/no conectado: token|fuera del repo|permiso chatgpt/i)).toBeNull();
   });
 
   it('agenda anuncia la carga, muestra un fallo real y permite recuperar mediante Reintentar', async () => {
@@ -417,7 +503,8 @@ describe('estados editoriales y teclado', () => {
     const selectedSelector = await screen.findByRole('combobox', { name: /Proveedor de redacción: ChatGPT/ });
     fireEvent.click(selectedSelector);
     const claudeOption = await screen.findByRole('option', { name: /Claude/ });
-    expect(claudeOption.getAttribute('aria-disabled')).toBe('true');
+    expect(claudeOption.getAttribute('aria-disabled')).toBeNull();
+    expect(claudeOption.textContent).toMatch(/Inicia sesión con tu cuenta de Claude/);
     fireEvent.keyDown(selectedSelector, { key: 'Escape' });
     fireEvent.click(await screen.findByRole('button', { name: 'Redactar con ChatGPT' }));
     await waitFor(() => expect(compose).toHaveBeenCalledWith(

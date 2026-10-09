@@ -60,6 +60,22 @@ def test_public_configuration_health_and_read_contracts(fixture_dir):
     assert c.post(API + "/public/agenda", json={"context": context(svc)}).status_code == 200
 
 
+def test_public_agenda_tvn_gap_uses_same_snapshot_criteria(fixture_dir):
+    c, svc = public_app(fixture_dir)
+    expected = {
+        base.id for base in svc.bases.values()
+        if base.independent >= 2 and not any(article.is_tvn for article in base.articles)
+    }
+    response = c.post(API + "/public/agenda", json={
+        "context": context(svc),
+        "filters": {"limit": 100, "scope": "all", "tvnGap": True},
+    })
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert {item["id"] for item in data["items"]} == expected
+    assert data["applied"]["tvnGap"] is True
+
+
 @pytest.mark.parametrize(("method", "path"), [
     ("put", "/rules"), ("put", "/topics/evt/impact"), ("post", "/topics/evt/drafts"),
     ("put", "/cases/case-evt/draft"), ("patch", "/cases/case-evt/review"),

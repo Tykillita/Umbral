@@ -11,6 +11,7 @@ import pytest
 from umbral_pipeline.classify.calibration import (
     CalibrationProfile,
     load_profile,
+    require_calibrated_classifier_binding,
     resolve_model_version,
 )
 from umbral_pipeline.classify.laya_clf import LayaClassifier
@@ -38,6 +39,26 @@ def test_profile_applies_temperature_to_logits() -> None:
     result = profile.apply_logits({"economia": 2.0, "otro": 0.0})
     assert result["economia"] == pytest.approx(math.exp(1) / (math.exp(1) + 1))
     assert sum(result.values()) == pytest.approx(1.0)
+
+
+def test_snapshot_requires_exact_calibrated_laya_profile_binding() -> None:
+    profile = CalibrationProfile("laya-cal-test", "laya-ft-test", 1.8, 0.57,
+                                 sha256="profile-sha256")
+    classifier = {
+        "classifier": "laya",
+        "calibrated": True,
+        "modelVersion": "laya-ft-test",
+        "calibrationProfileId": "laya-cal-test",
+        "calibrationProfileSha256": "profile-sha256",
+    }
+    require_calibrated_classifier_binding(classifier, "laya-ft-test", profile)
+
+    for key, value in (("calibrated", False), ("modelVersion", "base"),
+                       ("calibrationProfileId", "other-profile"),
+                       ("calibrationProfileSha256", "other-sha256")):
+        mismatched = {**classifier, key: value}
+        with pytest.raises(ValueError, match="artefacto Laya calibrado exacto"):
+            require_calibrated_classifier_binding(mismatched, "laya-ft-test", profile)
 
 
 def test_profile_is_bound_to_model_version_and_support(tmp_path) -> None:

@@ -6,10 +6,11 @@ import { Button, Card, ErrorBox, Field, Loading, Notice, SectionTitle, inputCls 
 import { Disclosure } from './ui/controls';
 import type { DesktopStatus } from '../lib/desktop';
 import { parseWorkspace } from '../lib/api/workspace';
+import { canPerform, canView } from '../lib/session';
 
 const MAX_COPY_BYTES = 20 * 1024 * 1024;
 export function WorkspaceCard() {
-  const { api, authMode } = useApp();
+  const { api, authMode, session } = useApp();
   const health = useHealth(), queryClient = useQueryClient(), id = useId();
   const [source, setSource] = useState('');
   const [error, setError] = useState<unknown>(null);
@@ -38,11 +39,11 @@ export function WorkspaceCard() {
   return <Card data-testid="workspace-card">
     <SectionTitle kicker="Tu trabajo">Copia y traslado del espacio de trabajo</SectionTitle>
     <Notice tone="info" title={authMode === 'public' ? 'Privado en este navegador' : 'Guardado en este equipo'}>
-      Los borradores, revisiones y pesos no se comparten entre dispositivos. Exporta una copia antes de borrar los datos del navegador o cambiar de equipo.
+      Los borradores y pesos son personales. La mesa comparte una copia de las decisiones cuando está configurada. Exporta tu espacio antes de borrar los datos del navegador o cambiar de equipo.
       Las consultas y la generación se envían a la API; para revisar una edición se envía su texto y evidencia de forma temporal, sin guardar el caso en la nube.
     </Notice>
     <div className="mt-3"><Button data-testid="workspace-export" busy={exportCopy.isPending} onClick={() => { setMessage(null); exportCopy.mutate(); }}>Exportar copia JSON</Button></div>
-    <Disclosure className="mt-3" testId="workspace-import-panel" summary={<span className="font-semibold">Importar una copia</span>}>
+    {(!session||canPerform(session.role,'importWorkspace')) && <Disclosure className="mt-3" testId="workspace-import-panel" summary={<span className="font-semibold">Importar una copia</span>}>
       <div className={'mt-3 space-y-3 border-2 border-dashed p-3 ' + (dragging ? 'border-amber-600 bg-amber-50' : 'border-rule-strong')}
         data-testid="workspace-drop" onDragOver={(event) => { event.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)} onDrop={async (event) => {
@@ -57,14 +58,15 @@ export function WorkspaceCard() {
         </Field>
         <Button data-testid="workspace-import" disabled={!source.trim()} busy={importCopy.isPending} onClick={() => { setMessage(null); importCopy.mutate(); }}>Importar casos y pesos</Button>
       </div>
-    </Disclosure>
+    </Disclosure>}
     {(error || exportCopy.error || importCopy.error) && <div className="mt-3"><ErrorBox error={error || exportCopy.error || importCopy.error} /></div>}
     {message && <Notice tone="ok" role="status" testId="workspace-notice">{message}</Notice>}
   </Card>;
 }
 
 export function SavedCases() {
-  const { api, go, authMode } = useApp();
+  const { api, go, authMode, session } = useApp();
+  const target = session&&!canView(session.role,'borradores')?'ficha':'borradores';
   const health = useHealth();
   const eligible = Boolean(api.savedCases) && (authMode === 'public' || health.data?.localMode === true);
   const cases = useQuery({ queryKey: ['workspace-cases'], queryFn: () => api.savedCases!(), enabled: eligible });
@@ -74,8 +76,8 @@ export function SavedCases() {
     {cases.error && <ErrorBox error={cases.error} onRetry={() => cases.refetch()} />}
     {!cases.isLoading && !cases.error && !cases.data?.length && <p className="text-sm text-ink-3">Los casos aparecerán aquí al guardar un borrador, una revisión o un cambio de impacto.</p>}
     <ul className="space-y-2">{cases.data?.map((entry) => <li key={entry.case.caseId} className="border-l-2 border-rule pl-3">
-      <a className="comic-link min-h-11 font-semibold underline underline-offset-4" href={'#/borradores/' + encodeURIComponent(entry.case.topicId)}
-        onClick={(event) => { event.preventDefault(); go({ view: 'borradores', topicId: entry.case.topicId }); }}>{entry.detail.summary.title}</a>
+      <a className="comic-link min-h-11 font-semibold underline underline-offset-4" href={`#/${target}/` + encodeURIComponent(entry.case.topicId)}
+        onClick={(event) => { event.preventDefault(); go({ view:target, topicId: entry.case.topicId }); }}>{entry.detail.summary.title}</a>
       <p className="text-xs text-ink-3">{entry.case.statusLabel} · v{entry.case.version} · snapshot {entry.detail.snapshotId}{health.data && entry.detail.snapshotId !== health.data.snapshotId ? ' · archivado, conserva sus fuentes' : ''}</p>
     </li>)}</ul>
   </Card>;
@@ -102,8 +104,20 @@ export function DesktopCard() {
     catch (error) { setFailure(error); } finally { setPending(false); }
   };
   const busy = pending || status?.busy === true;
+  const automation = status?.newsAutomation;
+  const formatPanamaDate = (value: string) => new Intl.DateTimeFormat('es-PA', {
+    dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Panama',
+  }).format(new Date(value));
   return <Card data-testid="desktop-card"><SectionTitle kicker={'Windows · Umbral ' + bridge.version}>Datos y clasificación en este equipo</SectionTitle>
     <p className="text-sm text-ink-2">Laya clasifica las noticias en este equipo. Actualizar descarga el último corte disponible; si falla, se conserva el snapshot válido y tus casos guardados.</p>
+    <Notice tone="info" title="Búsqueda automática de noticias" testId="desktop-news-schedule">
+      {automation?.enabled
+        ? `Umbral busca noticias cada ${automation.intervalHours} horas mientras la aplicación está abierta y hay conexión. Laya las clasifica en este equipo; solo activa el corte si pasa las verificaciones.`
+        : 'La búsqueda automática está pausada mientras Umbral funciona sin conexión.'}
+      {automation?.nextRunAt && <p className="mt-1">Próxima búsqueda: {formatPanamaDate(automation.nextRunAt)}.</p>}
+      {automation?.lastSuccessAt && <p>Última búsqueda activada: {formatPanamaDate(automation.lastSuccessAt)} · snapshot {automation.lastCandidateId}.</p>}
+    </Notice>
+    {automation?.lastWarning && <Notice tone="warn" title="No se activaron noticias nuevas" testId="desktop-news-warning">{automation.lastWarning}</Notice>}
     <div className="mt-3 flex flex-wrap gap-2"><Button disabled={!status?.available || busy} busy={pending} data-testid="desktop-reclassify" onClick={() => run('reclassify')}>Reclasificar con Laya local</Button>
       <Button disabled={!status?.available || busy} data-testid="desktop-update" onClick={() => run('update')}>Actualizar noticias</Button></div>
     {status && <p className="mt-3 text-sm" role="status" aria-live="polite" data-testid="desktop-progress">{status.message ?? status.stage}{status.total > 0 ? ' · ' + status.completed + '/' + status.total : ''}</p>}
