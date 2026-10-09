@@ -1,0 +1,85 @@
+{
+  "verifiedAtUtc": "2026-10-09T11:36:11.686955+00:00",
+  "command": "python docs/video/verify.py",
+  "passed": true,
+  "exports": [
+    {
+      "file": "umbral-tour-es.mp4",
+      "sha256": "2fb3c993ec966eb43d56dcf4860db4cdd0c22a62c567f88b53065a79ccffc2e5",
+      "bytes": 15080325,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "fps": 30,
+      "frames": 2310,
+      "durationSeconds": 77,
+      "audioPeakDbfs": -1.479,
+      "audioRmsDbfs": -19.643,
+      "captionCues": 21
+    },
+    {
+      "file": "umbral-reel-es.mp4",
+      "sha256": "ec25ef3ce18018e93bcd67e57d348167fc44d04a6cecf7ab67c29d8ec2edace1",
+      "bytes": 12772780,
+      "resolution": [
+        1080,
+        1920
+      ],
+      "fps": 30,
+      "frames": 2310,
+      "durationSeconds": 77,
+      "audioPeakDbfs": -1.477,
+      "audioRmsDbfs": -19.638,
+      "captionCues": 21
+    },
+    {
+      "file": "umbral-tour-en.mp4",
+      "sha256": "a7b246049fb0373eecf1ad9d92e52b1c0a66eed7b6d185430ae1ae5755535451",
+      "bytes": 15064990,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "fps": 30,
+      "frames": 2310,
+      "durationSeconds": 77,
+      "audioPeakDbfs": -1.452,
+      "audioRmsDbfs": -19.558,
+      "captionCues": 19
+    },
+    {
+      "file": "umbral-reel-en.mp4",
+      "sha256": "75263b5961f5da0e43f172c3bd90d5fd85d387651ae1464719a9b2c18db15822",
+      "bytes": 12744750,
+      "resolution": [
+        1080,
+        1920
+      ],
+      "fps": 30,
+      "frames": 2310,
+      "durationSeconds": 77,
+      "audioPeakDbfs": -1.484,
+      "audioRmsDbfs": -19.561,
+      "captionCues": 19
+    }
+  ],
+  "captures": [
+    {
+      "orientation": "landscape",
+      "snapshotId": "20261007-e704e952",
+      "applicationCommit": "6cc3831919874bd8d8c9032cf5e68eb4c646f7f3",
+      "clicks": 14,
+      "containsFixtures": false,
+      "externalRequests": 0
+    },
+    {
+      "orientation": "portrait",
+      "snapshotId": "20261007-e704e952",
+      "applicationCommit": "6cc3831919874bd8d8c9032cf5e68eb4c646f7f3",
+      "clicks": 12,
+      "containsFixtures": false,
+      "externalRequests": 0
+    }
+  ]
+}

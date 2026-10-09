@@ -1,0 +1,140 @@
+{
+  "snapshotId": "20261007-e704e952",
+  "dataMode": "provisional",
+  "offline": true,
+  "containsFixtures": false,
+  "externalRequests": 0,
+  "topic": {
+    "id": "evt_0fc2be4daea069a8",
+    "title": "Sinaproc extiende vigilancia por lluvias, tormentas y vientos hasta el viernes",
+    "score": 74.55,
+    "band": "alto",
+    "evidenceStatus": "insuficiente"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 820
+  },
+  "applicationCommit": "6cc3831919874bd8d8c9032cf5e68eb4c646f7f3",
+  "recordedAtUtc": "2026-10-09T11:28:14.179147+00:00",
+  "scenes": [
+    {
+      "id": "agenda",
+      "file": "agenda-landscape.mp4",
+      "duration": 12,
+      "sha256": "a460dede886f8c7c97ed941affa54c717d882155c060ab377aefb40b5c8477aa",
+      "clicks": [
+        {
+          "time": 3.0,
+          "x": 719.9921875,
+          "y": 596.15625
+        }
+      ]
+    },
+    {
+      "id": "ficha",
+      "file": "ficha-landscape.mp4",
+      "duration": 13,
+      "sha256": "0c953a1e2e33b73de7357cd606ba6fc24856f82eda3877ae5432d72bf48b6028",
+      "clicks": [
+        {
+          "time": 0.849,
+          "x": 1018.34375,
+          "y": 441.609375
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "file": "assistant-landscape.mp4",
+      "duration": 10,
+      "sha256": "66eac1e99e2477d09f7b060bbba7caad9fcb71a759839de91215d751a5d42f5c",
+      "clicks": [
+        {
+          "time": 0.542,
+          "x": 1364.3359375,
+          "y": 31.0
+        },
+        {
+          "time": 1.549,
+          "x": 1335.0,
+          "y": 117.0
+        },
+        {
+          "time": 2.546,
+          "x": 720.0,
+          "y": 733.203125
+        },
+        {
+          "time": 5.341,
+          "x": 1364.0,
+          "y": 786.0
+        }
+      ]
+    },
+    {
+      "id": "draft",
+      "file": "draft-landscape.mp4",
+      "duration": 12,
+      "sha256": "3e1708ed50697981bcc495f26cd637c620099f85c6be53008768edeb28e97926",
+      "clicks": [
+        {
+          "time": 0.581,
+          "x": 340.1875,
+          "y": 425.25
+        },
+        {
+          "time": 3.776,
+          "x": 1176.90625,
+          "y": 579.28125
+        },
+        {
+          "time": 9.095,
+          "x": 720.0,
+          "y": 325.96875
+        },
+        {
+          "time": 10.838,
+          "x": 241.5859375,
+          "y": 442.15625
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "file": "review-landscape.mp4",
+      "duration": 10,
+      "sha256": "d54849c44a8ca73910787de50ea96f33f12a71ebf3c17d7cfb30accd2a5f9644",
+      "clicks": [
+        {
+          "time": 0.852,
+          "x": 446.5,
+          "y": 441.84375
+        },
+        {
+          "time": 3.746,
+          "x": 252.71875,
+          "y": 705.09375
+        },
+        {
+          "time": 7.283,
+          "x": 268.5234375,
+          "y": 217.0
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "file": "sources-landscape.mp4",
+      "duration": 7,
+      "sha256": "866b9993e3c0a0ab4e1fd5a34c2678bddf74c1d206b875ee7537719670096921",
+      "clicks": [
+        {
+          "time": 0.708,
+          "x": 675.9921875,
+          "y": 31.0
+        }
+      ]
+    }
+  ]
+}
