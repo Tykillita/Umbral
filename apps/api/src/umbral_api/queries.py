@@ -1019,7 +1019,7 @@ class QueryEngine:
                 "danos": "daños o pérdidas",
                 "porcentaje": "porcentaje",
                 "dinero": "dinero o costo",
-            }.get(requested_kind, "fecha solicitada")
+            }.get(requested_kind or "", "fecha solicitada")
             return self._abstain(
                 req, QueryIntent.busqueda, t0,
                 f"las coincidencias no contienen una cifra del tipo solicitado ({kind_text})"
