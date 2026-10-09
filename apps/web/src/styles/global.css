@@ -428,8 +428,7 @@ html[data-motion-preference="reduced"] *::after {
 .landing-actions > a { width: 100%; min-width: 0; }
 .landing-stats { display: grid; min-width: 0; gap: .7rem; }
 .landing-stat { display: flex; min-height: 4.5rem; align-items: center; justify-content: center; gap: .7rem; border: 2px solid var(--color-ink); padding: .65rem 1rem; background: var(--color-card); box-shadow: 3px 3px 0 var(--color-ink); }
-.landing-stat-offset { width: 88%; justify-self: center; }
-.landing-stat-featured { width: 72%; justify-self: center; background: var(--color-amber-100); }
+.landing-stat-featured { background: var(--color-amber-100); }
 .landing-stat > strong { flex: 0 0 auto; font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1; }
 .landing-stat > span { max-width: 13rem; font-size: .9rem; font-weight: 700; line-height: 1.35; }
 .landing-snapshot { display: flex; min-width: 0; align-items: flex-start; gap: .45rem; margin-top: .25rem; font-size: .74rem; line-height: 1.45; overflow-wrap: anywhere; }
