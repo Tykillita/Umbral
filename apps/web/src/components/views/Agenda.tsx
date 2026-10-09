@@ -210,7 +210,7 @@ export function Agenda() {
       </header>
 
       <form noValidate role="search" aria-label="Filtros de la agenda" className="comic-filters space-y-3 p-3" onSubmit={(e) => e.preventDefault()}>
-        <div className="grid grid-cols-1 items-end gap-2">
+        <div className="grid grid-cols-1 items-end gap-2 min-[640px]:grid-cols-[minmax(0,1fr)_auto]">
           <div className="min-w-0">
             <label htmlFor={`${uid}-q`} className="mb-1 block text-xs font-semibold text-ink-2">
               Buscar en los temas
@@ -239,7 +239,7 @@ export function Agenda() {
           <Button
             variant={tvnGap ? 'primary' : 'secondary'}
             icon={Radio}
-            className="justify-self-start"
+            className="justify-self-start min-[640px]:justify-self-end"
             aria-pressed={tvnGap}
             data-testid="agenda-tvn-gap"
             onClick={() => setTvnGap((current) => !current)}

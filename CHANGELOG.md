@@ -27,12 +27,17 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
-- En la web, el desplazamiento queda confinado al contenido en todos los tamaños; en móvil, las acciones del encabezado permanecen en una fila y la navegación inferior conserva todo el ancho.
+- En `/app`, el desplazamiento queda confinado al contenido en todos los tamaños; la portada y las páginas del jurado conservan el scroll normal del navegador.
 - Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
 
 ### Changed
 
+- La cabecera de la app mantiene «Asistente» accesible al desplazarse, también en anchos de escritorio y móvil.
+- Ampliar el asistente abre una vista de conversación a pantalla completa, oculta e inhabilita la página de fondo y permite volver al panel flotante sin perder el contexto; al cerrar, devuelve el foco al botón del asistente.
+- El botón flotante de Configuración se oculta mientras el asistente ocupa la pantalla en móvil y reaparece al cerrar o minimizar el chat.
 - En pantallas anchas, marca, navegación y acciones comparten una fila en el ancho disponible; el escritorio reserva espacio para los controles de ventana.
+- En ventanas intermedias, las seis vistas tienen botones individuales con iconos de trazo grueso y centrados; en ventanas anchas conservan sus rótulos en una línea. En móvil, «Más» lleva icono, tipografía de navegación y se intercala en el centro de las vistas visibles; su menú flota centrado sobre el botón.
+- En la agenda, «TVN aún no lo cubre» comparte fila con el buscador en pantallas de 640 px o más.
 - Los avisos aparecen en la esquina inferior derecha y, con el asistente minimizado, se ubican encima de su botón flotante.
 - El aviso de Mesa sin sincronización se integra al centro de advertencias en web y se oculta en Desktop, donde la copia local es el comportamiento esperado.
 - Umbral Desktop conserva sus borradores y conexiones personales locales mientras permite usar Notion y Slack por OAuth público; el puente Electron limita las solicitudes a rutas de conectores y mantiene la identidad Firebase anónima fuera del almacenamiento OAuth local.

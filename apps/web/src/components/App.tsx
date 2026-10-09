@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { Bot, ChevronDown, CircleAlert, CircleCheck, CircleX, Database, ExternalLink, FileSearch, FlaskConical, ListOrdered, LoaderCircle, PenLine, Tags, Users, WifiOff, X } from 'lucide-react';
+import { Bot, ChevronDown, CircleAlert, CircleCheck, CircleX, Database, Ellipsis, ExternalLink, FileSearch, FlaskConical, ListOrdered, LoaderCircle, PenLine, Tags, Users, WifiOff, X } from 'lucide-react';
 import type { BootProgress, UmbralApi } from '../lib/api/client';
 import { resolveApi } from '../lib/api';
 import { initAuth, type AuthState } from '../lib/auth';
@@ -23,6 +23,7 @@ import { Mesa } from './views/Mesa';
 import { Etiquetar } from './views/Etiquetar';
 import { SessionGate } from './SessionGate';
 import { AssistantPanel } from './AssistantPanel';
+import { readAssistantSize } from './assistant/shared';
 import { Button, ErrorBox, Loading, Notice, Pill } from './ui';
 import { SettingsPanel } from './SettingsPanel';
 import { WarningCenter, WarningCenterProvider } from './ui/warnings';
@@ -205,8 +206,19 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   const navigation = NAV.filter(({view}) => !session || canView(session.role,view));
   const mobilePrimaryViews: Route['view'][] = ['agenda', 'ficha', 'borradores', 'fuentes'];
   const mobileOverflow = navigation.filter(({view}) => !mobilePrimaryViews.includes(view));
-  const mobileNavColumns = navigation.filter(({view}) => mobilePrimaryViews.includes(view)).length + (mobileOverflow.length ? 1 : 0);
+  const mobilePrimaryNavigation = navigation.filter(({view}) => mobilePrimaryViews.includes(view));
+  const mobileNavColumns = mobilePrimaryNavigation.length + (mobileOverflow.length ? 1 : 0);
+  const moreInsertAfter = Math.floor((mobilePrimaryNavigation.length + 1) / 2);
+  const headerNavigationItems = mobileOverflow.length
+    ? [
+        ...mobilePrimaryNavigation.slice(0, moreInsertAfter).map((item) => ({ kind: 'view' as const, item })),
+        { kind: 'more' as const },
+        ...mobilePrimaryNavigation.slice(moreInsertAfter).map((item) => ({ kind: 'view' as const, item })),
+        ...mobileOverflow.map((item) => ({ kind: 'view' as const, item })),
+      ]
+    : navigation.map((item) => ({ kind: 'view' as const, item }));
   const [mobile, setMobile] = useState(false);
+  const [assistantExpanded, setAssistantExpanded] = useState(() => readAssistantSize() === 'expanded');
   const [warningCenterOpen, setWarningCenterOpen] = useState(false);
   const { data: health } = useHealth();
   const mainRef = useRef<HTMLElement>(null);
@@ -272,6 +284,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   }, []);
 
   const assistantOpen = assistantState === 'open' && !assistantClosing;
+  const assistantFullscreen = assistantState === 'open' && (mobile || assistantExpanded);
 
   // Mover el foco al contenido principal al cambiar de vista (accesibilidad de SPA).
   useEffect(() => {
@@ -282,25 +295,52 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   }, [route.view]);
 
   return (
-    <div data-testid="app-root" inert={warningCenterOpen || undefined}>
+    <div
+      id="app-root"
+      data-testid="app-root"
+      data-assistant-fullscreen={assistantFullscreen ? 'true' : undefined}
+      inert={warningCenterOpen || undefined}
+    >
       <SnapshotDataRefresh snapshotId={health?.snapshotId} />
       <SettingsPanel />
-      <a href="#contenido" inert={assistantOpen && mobile} className="skip-link">
+      <a href="#contenido" inert={assistantFullscreen || undefined} className="skip-link">
         Saltar al contenido
       </a>
-      <header ref={mastheadRef} inert={assistantOpen && mobile} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
+      <header ref={mastheadRef} inert={assistantFullscreen || undefined} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
         <div className="comic-app-header w-full px-4 py-2">
           <a href="/" className="comic-brand md:justify-self-start" aria-label="Umbral, inicio">
             Umbral<span className="text-amber-600">.</span>
           </a>
           <nav aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center" style={{'--nav-count':navigation.length, '--mobile-nav-count':mobileNavColumns} as CSSProperties}>
-            {navigation.map(({ view, label, icon: Ico, testId }) => {
+            {headerNavigationItems.map((navItem) => {
+              if (navItem.kind === 'more') {
+                return (
+                  <div key="nav-more" className="comic-tabbar-more">
+                    <Select
+                      label="Más vistas"
+                      testId="nav-more"
+                      value={mobileOverflow.some(({ view }) => view === route.view) ? route.view : ''}
+                      onChange={navigateToView}
+                      options={mobileOverflow.map(({ view, label }) => ({ value: view, label }))}
+                      placeholder="Más"
+                      displayValue="Más"
+                      triggerIcon={<Ellipsis size={16} aria-hidden="true" />}
+                      mobilePresentation="popover"
+                      popoverAlign="center"
+                      popoverMinWidth={144}
+                      className="comic-mobile-more-trigger"
+                    />
+                  </div>
+                );
+              }
+              const { view, label, icon: Ico, testId } = navItem.item;
               const active = route.view === view;
               return (
                 <a
                   key={view}
                   href={`#/${view}`}
                   data-testid={testId}
+                  aria-label={label}
                   aria-current={active ? 'page' : undefined}
                   onClick={(e) => {
                     e.preventDefault();
@@ -312,31 +352,18 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
                     active ? 'border-amber-600 bg-amber-100 text-ink' : 'border-transparent text-ink-2 hover:bg-sunk'
                   }`}
                 >
-                  <Ico size={16} aria-hidden="true" />
+                  <Ico size={18} strokeWidth={2.5} aria-hidden="true" />
                   {label === 'Fuentes y evaluación' ? (
                     <>
-                      <span className="@5xl:hidden">Fuentes</span>
-                      <span className="hidden @5xl:inline">{label}</span>
+                      <span className="comic-nav-label @5xl:hidden">Fuentes</span>
+                      <span className="comic-nav-label hidden @5xl:inline">{label}</span>
                     </>
                   ) : (
-                    label
+                    <span className="comic-nav-label">{label}</span>
                   )}
-                </a>
+                  </a>
               );
             })}
-            {mobileOverflow.length > 0 && (
-              <div className="comic-tabbar-more">
-                <Select
-                  label="Más vistas"
-                  testId="nav-more"
-                  value={mobileOverflow.some(({ view }) => view === route.view) ? route.view : ''}
-                  onChange={navigateToView}
-                  options={mobileOverflow.map(({ view, label }) => ({ value: view, label }))}
-                  placeholder="Más"
-                  className="comic-mobile-more-trigger"
-                />
-              </div>
-            )}
           </nav>
           <div className="comic-header-actions ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:justify-self-end">
             {session && <div className="comic-active-role"><span data-testid="active-role">{session.labeler}</span><Button variant="ghost" onClick={changeRole} data-testid="role-change">Cambiar</Button></div>}
@@ -350,7 +377,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
               data-testid="assistant-toggle"
               className="ml-auto md:ml-0 md:justify-self-end"
             >
-              <span className="@max-3xl:sr-only">Asistente</span>
+              <span className="comic-assistant-toggle-label @max-3xl:sr-only">Asistente</span>
               {assistantUnread > 0 && !assistantOpen && (
                 <>
                   <span className="assistant-unread ml-1" aria-hidden="true" data-testid="assistant-toggle-unread">{assistantUnread}</span>
@@ -362,7 +389,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
         </div>
       </header>
 
-      <main id="contenido" inert={assistantOpen && mobile} ref={mainRef} tabIndex={-1} className="comic-sheet mx-auto max-w-6xl space-y-4 px-4 pb-24 pt-5 outline-none md:pb-5">
+      <main id="contenido" inert={assistantFullscreen || undefined} ref={mainRef} tabIndex={-1} className="comic-sheet mx-auto max-w-6xl space-y-4 px-4 pb-24 pt-5 outline-none md:pb-5">
         <StatusBar />
         <div key={route.view} className="pt-1">
           {route.view === 'agenda' && <Agenda />}
@@ -376,7 +403,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
           Umbral prioriza la atención editorial y prepara borradores para revisión humana. No publica, no etiqueta noticias como verdaderas o falsas y no sustituye el criterio del equipo.
         </footer>
       </main>
-      <AssistantPanel state={assistantState} modal={mobile} closing={assistantClosing} onStateChange={setAssistantState} onClose={closeAssistantPanel} seed={seed} onUnreadChange={onAssistantUnread} />
+      <AssistantPanel state={assistantState} modal={mobile} closing={assistantClosing} onFullscreenChange={setAssistantExpanded} onStateChange={setAssistantState} onClose={closeAssistantPanel} seed={seed} onUnreadChange={onAssistantUnread} />
       <ExportToast toast={toast} anchor={assistantState === 'minimized' ? 'dock' : 'toggle'} onDismiss={dismissToast} />
     </div>
   );
@@ -403,7 +430,20 @@ function Inner() {
   const [assistantUnread, setAssistantUnread] = useState(0);
   const [assistantClosing, setAssistantClosing] = useState(false);
   const assistantCloseTimer = useRef<number | undefined>(undefined);
+  const assistantWasOpen = useRef(false);
   const [seed, setSeed] = useState({ text: '', topicId: null as string | null, topicTitle: '', n: 0 });
+
+  useEffect(() => {
+    if (assistantState === 'open') {
+      assistantWasOpen.current = true;
+      return;
+    }
+    if (assistantState !== 'closed' || !assistantWasOpen.current) return;
+    assistantWasOpen.current = false;
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('[data-testid="assistant-toggle"]')?.focus({ preventScroll: true });
+    });
+  }, [assistantState]);
 
   const openAssistantPanel = useCallback(() => {
     window.clearTimeout(assistantCloseTimer.current);

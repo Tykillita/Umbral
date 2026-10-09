@@ -55,6 +55,7 @@ export function Select<T extends string>({
   label,
   labelledBy,
   placeholder = 'Selecciona…',
+  displayValue,
   disabled = false,
   testId,
   className = '',
@@ -62,6 +63,8 @@ export function Select<T extends string>({
   triggerPrefix,
   iconOnly = false,
   popoverMinWidth = 0,
+  mobilePresentation = 'sheet',
+  popoverAlign = 'start',
 }: {
   id?: string;
   value: T | '';
@@ -71,6 +74,8 @@ export function Select<T extends string>({
   label?: string;
   labelledBy?: string;
   placeholder?: string;
+  /** Etiqueta visible fija para disparadores cuyo valor seleccionado se indica por separado. */
+  displayValue?: string;
   disabled?: boolean;
   testId?: string;
   className?: string;
@@ -79,8 +84,12 @@ export function Select<T extends string>({
   /** Texto breve visible antes del valor seleccionado. */
   triggerPrefix?: string;
   iconOnly?: boolean;
-  /** Ancho mínimo en píxeles del menú de escritorio, independiente del disparador. */
+  /** Ancho mínimo en píxeles del menú, independiente del disparador. */
   popoverMinWidth?: number;
+  /** Presentación en pantallas estrechas; por defecto conserva la hoja inferior actual. */
+  mobilePresentation?: 'sheet' | 'popover';
+  /** Alineación horizontal del menú respecto al disparador. */
+  popoverAlign?: 'start' | 'center' | 'end';
 }) {
   const autoId = useId();
   const baseId = id ?? autoId;
@@ -93,7 +102,8 @@ export function Select<T extends string>({
   const popRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const typed = useRef({ text: '', at: 0 });
-  const sheet = useMediaQuery('(max-width: 639px)');
+  const narrowViewport = useMediaQuery('(max-width: 639px)');
+  const sheet = narrowViewport && mobilePresentation === 'sheet';
   const selectedIndex = options.findIndex((o) => o.value === value);
   const selected = selectedIndex >= 0 ? options[selectedIndex] : null;
 
@@ -124,9 +134,10 @@ export function Select<T extends string>({
     const useBelow = below >= 220 || below >= above;
     const maxHeight = Math.max(140, Math.min(320, useBelow ? below : above));
     const width = Math.min(Math.max(r.width, popoverMinWidth), Math.max(0, window.innerWidth - 16));
-    const left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8));
+    const alignedLeft = popoverAlign === 'center' ? r.left + (r.width - width) / 2 : popoverAlign === 'end' ? r.right - width : r.left;
+    const left = Math.max(8, Math.min(alignedLeft, window.innerWidth - width - 8));
     setPos({ left, width, maxHeight, ...(useBelow ? { top: r.bottom + 4 } : { bottom: vh - r.top + 4 }) });
-  }, [popoverMinWidth]);
+  }, [popoverAlign, popoverMinWidth]);
 
   useLayoutEffect(() => {
     if (!open || sheet) return;
@@ -309,7 +320,7 @@ export function Select<T extends string>({
       >
         {triggerIcon && <span className="select-trigger-icon" aria-hidden="true">{triggerIcon}</span>}
         {triggerPrefix && <span className="select-trigger-prefix" aria-hidden="true">{triggerPrefix}</span>}
-        <span className={`select-value ${selected ? '' : 'is-placeholder'} ${iconOnly ? 'sr-only' : ''}`}>{selected ? selected.label : placeholder}</span>
+        <span className={`select-value ${selected && !displayValue ? '' : 'is-placeholder'} ${iconOnly ? 'sr-only' : ''}`}>{displayValue ?? selected?.label ?? placeholder}</span>
         <ChevronDown size={16} aria-hidden="true" className="select-chevron" />
       </div>
       {open &&

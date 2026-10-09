@@ -9,12 +9,13 @@ import '@fontsource/atkinson-hyperlegible/latin-700.css';
 interface Props {
   title: string;
   description?: string;
+  appShell?: boolean;
 }
-const { title, description = 'Umbral: agenda editorial priorizada, evidencia trazable y borradores para revisión humana (TVN Media).' } = Astro.props;
+const { title, description = 'Umbral: agenda editorial priorizada, evidencia trazable y borradores para revisión humana (TVN Media).', appShell = false } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" class={appShell ? 'app-shell' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
