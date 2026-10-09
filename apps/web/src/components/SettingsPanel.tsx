@@ -153,7 +153,9 @@ function PublicConnectors() {
 
 export function SettingsPanel() {
   const { api } = useApp();
-  const desktopShell = typeof window !== 'undefined' && Boolean(window.umbralDesktop?.windowControls);
+  const desktopShell = typeof window !== 'undefined'
+    && window.umbralDesktop?.platform === 'win32'
+    && Boolean(window.umbralDesktop.windowControls);
   const [theme, setTheme] = useState<ThemePreference>(() => getThemePreference());
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);

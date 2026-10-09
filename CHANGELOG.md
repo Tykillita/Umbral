@@ -48,8 +48,8 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 - El selector de modelos de ChatGPT queda accesible por encima del modal de cuentas en escritorio y móvil; tras OAuth espera a que haya un modelo elegido para activar ChatGPT y muestra los avisos del asistente como toasts temporales.
 - La portada adopta la estructura editorial de Umbral Mega con la identidad amarilla de Umbral, cifras del snapshot activo, carrusel accesible, promesas interactivas, preguntas frecuentes y llamadas a la agenda.
 - La cinta de categorías de la portada repite copias medidas y avanza a velocidad constante; espera a cubrir el ancho visible antes de moverse y respeta el movimiento reducido.
-- La portada equilibra el espacio alrededor de la cinta, reduce su velocidad, anima el giro de las tarjetas de confianza y compacta los enlaces a documentos para el jurado.
-- La sección de actualizaciones de Configuración solo aparece en Umbral Desktop; se oculta en la web.
+- La portada deja más aire arriba y abajo de la cinta, reduce su velocidad, gira la tarjeta de confianza completa y compacta los enlaces a documentos para el jurado.
+- La sección de actualizaciones de Configuración solo aparece con el puente de Umbral Desktop para Windows; se oculta en la web.
 - Los tooltips propios se cierran al salir el puntero, al perder foco la ventana o al ocultarse la aplicación, incluso si falta el evento `pointerleave`.
 
 ### Documentation

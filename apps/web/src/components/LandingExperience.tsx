@@ -485,33 +485,34 @@ export default function LandingExperience() {
                 const isFlipped = flipped === id;
                 return (
                   <article
-                    className={`landing-promise-card comic-panel${dragging === id ? ' is-dragging' : ''}`}
+                    className={`landing-promise-card${dragging === id ? ' is-dragging' : ''}`}
                     key={id}
                     data-promise-id={id}
                     data-order={index + 1}
                     data-testid={`landing-promise-${id}`}
                   >
-                    <button
-                      type="button"
-                      className="landing-promise-flip"
-                      aria-label={`${isFlipped ? 'Mostrar promesa' : 'Mostrar límite'}: ${promise.title}`}
-                      aria-pressed={isFlipped}
-                      data-flipped={isFlipped}
-                      onClick={() => setFlipped(isFlipped ? null : id)}
-                    >
-                      <span className="landing-promise-face landing-promise-front" aria-hidden={isFlipped}>
-                        <span className="landing-promise-label">Sí</span>
-                        <strong className="font-display">{promise.title}</strong>
-                        <span className="landing-promise-copy">{promise.yes}</span>
-                        <span className="landing-promise-hint">Voltea para ver el límite ↻</span>
-                      </span>
-                      <span className="landing-promise-face landing-promise-back" aria-hidden={!isFlipped}>
-                        <span className="landing-promise-label">Hasta aquí</span>
-                        <strong className="font-display">{promise.title}</strong>
-                        <span className="landing-promise-copy">{promise.limit}</span>
-                        <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
-                      </span>
-                    </button>
+                    <div className="landing-promise-plane" data-flipped={isFlipped}>
+                      <button
+                        type="button"
+                        className="landing-promise-flip"
+                        aria-label={`${isFlipped ? 'Mostrar promesa' : 'Mostrar límite'}: ${promise.title}`}
+                        aria-pressed={isFlipped}
+                        onClick={() => setFlipped(isFlipped ? null : id)}
+                      >
+                        <span className="landing-promise-face landing-promise-front" aria-hidden={isFlipped}>
+                          <span className="landing-promise-label">Sí</span>
+                          <strong className="font-display">{promise.title}</strong>
+                          <span className="landing-promise-copy">{promise.yes}</span>
+                          <span className="landing-promise-hint">Voltea para ver el límite ↻</span>
+                        </span>
+                        <span className="landing-promise-face landing-promise-back" aria-hidden={!isFlipped}>
+                          <span className="landing-promise-label">Hasta aquí</span>
+                          <strong className="font-display">{promise.title}</strong>
+                          <span className="landing-promise-copy">{promise.limit}</span>
+                          <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
+                        </span>
+                      </button>
+                    </div>
                     <button
                       type="button"
                       className="landing-promise-handle"

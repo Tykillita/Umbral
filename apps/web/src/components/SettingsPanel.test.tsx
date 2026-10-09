@@ -94,11 +94,19 @@ describe('panel flotante de configuración', () => {
   });
 
   it('mantiene la sección de actualizaciones en la aplicación de escritorio', () => {
-    window.umbralDesktop = { windowControls: {} } as unknown as typeof window.umbralDesktop;
+    window.umbralDesktop = { platform: 'win32', windowControls: {} } as unknown as typeof window.umbralDesktop;
     mountSettings();
     fireEvent.click(screen.getByTestId('settings-toggle'));
     expect(screen.getByRole('button', { name: 'Actualizaciones' })).toBeTruthy();
     expect(document.getElementById('settings-updates')).toBeTruthy();
+  });
+
+  it('oculta actualizaciones en web aunque exista un puente parcial sin plataforma de escritorio', () => {
+    window.umbralDesktop = { windowControls: {} } as unknown as typeof window.umbralDesktop;
+    mountSettings();
+    fireEvent.click(screen.getByTestId('settings-toggle'));
+    expect(screen.queryByRole('button', { name: 'Actualizaciones' })).toBeNull();
+    expect(document.getElementById('settings-updates')).toBeNull();
   });
 
   it('aplica el tema TVN al elegirlo, lo persiste y permite volver al original', () => {

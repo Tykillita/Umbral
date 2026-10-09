@@ -29,7 +29,7 @@ const shellClass = [appShell ? 'app-shell' : '', landingShell ? 'landing-shell' 
     <title>{title}</title>
     <script is:inline>
       // En la app de escritorio la cabecera ya nace fija y con su hueco reservado, sin parpadeo al hidratar.
-      if (window.umbralDesktop && window.umbralDesktop.windowControls) document.documentElement.classList.add('desktop-shell');
+      if (window.umbralDesktop && window.umbralDesktop.platform === 'win32' && window.umbralDesktop.windowControls) document.documentElement.classList.add('desktop-shell');
       const preferenceKey = 'umbral.motion-preference.v1';
       const validPreference = (value) => value === 'system' || value === 'reduced' || value === 'full';
       let motionPreference = window.umbralDesktop && window.umbralDesktop.motionPreference;
