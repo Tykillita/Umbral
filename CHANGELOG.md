@@ -32,6 +32,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Changed
 
+- CI conserva la suite completa de integración y E2E, la distribuye en dos workers aislados y reutiliza la caché de dependencias `uv`.
 - La cabecera de la app mantiene «Asistente» accesible al desplazarse, también en anchos de escritorio y móvil.
 - Ampliar el asistente abre una vista de conversación a pantalla completa, oculta e inhabilita la página de fondo y permite volver al panel flotante sin perder el contexto; al cerrar, devuelve el foco al botón del asistente.
 - El botón flotante de Configuración se oculta mientras el asistente ocupa la pantalla en móvil y reaparece al cerrar o minimizar el chat.

@@ -127,6 +127,10 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+          cache-dependency-glob: |
+            apps/api/uv.lock
+            pipeline/uv.lock
+            tests/uv.lock
       - uses: actions/download-artifact@v4
         with:
           name: web-dist
@@ -140,7 +144,7 @@ jobs:
       - run: uv sync --frozen --project tests --extra e2e
       - run: uv run --project tests playwright install --with-deps chromium
       - name: Pruebas de integración y E2E
-        run: uv run --frozen --project tests --extra e2e pytest tests -ra --junitxml=tests/.results/ci.xml --screenshot=only-on-failure --tracing=retain-on-failure
+        run: uv run --frozen --project tests --extra e2e pytest tests -ra -n 2 --dist=loadscope --junitxml=tests/.results/ci.xml --screenshot=only-on-failure --tracing=retain-on-failure
       - uses: actions/upload-artifact@v4
         if: always()
         with:
