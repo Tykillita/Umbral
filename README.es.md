@@ -38,7 +38,7 @@ La interfaz está en español. El código y los identificadores están en inglé
 
 https://github.com/user-attachments/assets/a5efe3bc-9854-404e-bb10-0080f941e92f
 
-Recorrido de **77 segundos** por la app real: Agenda, Ficha, Asistente, Borradores, revisión y exportación. Incluye animaciones de cómic, voz en español, subtítulos y clics visibles y audibles. Las pantallas usan el snapshot real provisional `20261007-e704e952`, en modo local sin conexión; el borrador mostrado es una plantilla con citas.
+Recorrido de **77 segundos** por la app real: Agenda, Ficha, Asistente, Borradores, revisión y exportación. Incluye animaciones de cómic, voz en español, subtítulos y clics visibles y audibles. **Activa el sonido** para escuchar la voz, la música y los clics. Las pantallas usan el snapshot real provisional `20261007-e704e952`, en modo local sin conexión; el borrador mostrado es una plantilla con citas.
 
 [Abrir el video](https://github.com/user-attachments/assets/a5efe3bc-9854-404e-bb10-0080f941e92f) · [MP4 del repositorio](docs/video/umbral-tour-es.mp4) · [Subtítulos WebVTT](docs/video/umbral-es.vtt) · [in English](README.md#video)
 
