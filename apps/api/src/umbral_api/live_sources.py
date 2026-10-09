@@ -96,6 +96,11 @@ class _Links(HTMLParser):
 def _date(value: str | None) -> datetime | None:
     if not value:
         return None
+    try:
+        parsed = parsedate_to_datetime(value)
+        return parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed.astimezone(UTC)
+    except (TypeError, ValueError, OverflowError):
+        return None
 
 
 def _date_in_title(value: str) -> datetime | None:
@@ -106,11 +111,6 @@ def _date_in_title(value: str) -> datetime | None:
         date = datetime.strptime(f"{match[1]} {match[2]} {match[3].upper()}", "%d/%m/%Y %I:%M %p")
         return date.replace(tzinfo=timezone(timedelta(hours=-5))).astimezone(UTC)
     except ValueError:
-        return None
-    try:
-        parsed = parsedate_to_datetime(value)
-        return parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed.astimezone(UTC)
-    except (TypeError, ValueError, OverflowError):
         return None
 
 

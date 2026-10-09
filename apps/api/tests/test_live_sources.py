@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from umbral_api.live_sources import (
     LiveItem,
     LiveResult,
+    _date,
     _date_in_title,
     _diverse,
     _matches_query,
@@ -91,6 +92,10 @@ def test_curated_headlines_are_filtered_by_the_user_topic():
 
 def test_imhpa_published_date_is_converted_from_panama_time_to_utc():
     assert _date_in_title("Aviso 08/10/2026 04:41 pm") == datetime(2026, 10, 8, 21, 41, tzinfo=UTC)
+
+
+def test_rss_published_date_is_parsed_as_utc():
+    assert _date("Fri, 09 Oct 2026 12:00:00 GMT") == datetime(2026, 10, 9, 12, tzinfo=UTC)
 
 
 def test_recent_search_keeps_multiple_publishers_visible():
