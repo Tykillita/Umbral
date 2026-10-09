@@ -10,7 +10,7 @@ pytestmark = pytest.mark.e2e
 
 
 @pytest.mark.parametrize("width", [1440, 1024, 768, 390, 320])
-def test_filtro_tvn_al_lado_de_busqueda_y_accesible_por_teclado(page: Page, stack, width: int):
+def test_filtro_tvn_debajo_de_busqueda_y_accesible_por_teclado(page: Page, stack, width: int):
     page.set_viewport_size({"width": width, "height": 900 if width >= 768 else 844})
     open_app(page, stack.url)
     search = tid(page, "agenda-search")
@@ -33,9 +33,8 @@ def test_filtro_tvn_al_lado_de_busqueda_y_accesible_por_teclado(page: Page, stac
     search_box = search.bounding_box()
     toggle_box = toggle.bounding_box()
     assert search_box and toggle_box
-    if width >= 640:
-        assert toggle_box["x"] >= search_box["x"] + search_box["width"] - 2
-        assert abs(toggle_box["y"] - search_box["y"]) <= 2
+    assert abs(toggle_box["x"] - search_box["x"]) <= 2
+    assert toggle_box["y"] >= search_box["y"] + search_box["height"] - 2
 
 
 def test_filtro_tvn_acepta_toque(browser: Browser, stack):
