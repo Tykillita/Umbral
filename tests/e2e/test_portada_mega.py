@@ -29,6 +29,32 @@ def test_portada_muestra_estructura_y_snapshot_actual(page: Page, stack, width: 
     assert page.locator(".landing-stat strong").nth(0).inner_text() != "Cargando…"
     assert page.locator(".landing-stat strong").nth(1).inner_text() != "Cargando…"
 
+    layout_geometry = page.evaluate(
+        """() => {
+          const header = document.querySelector('.landing-header').getBoundingClientRect();
+          const footer = document.querySelector('.landing-footer').getBoundingClientRect();
+          return {
+            viewportWidth: window.innerWidth,
+            documentWidth: document.documentElement.clientWidth,
+            scrollbarWidth: getComputedStyle(document.documentElement).scrollbarWidth,
+            bodyScrollbarWidth: getComputedStyle(document.body).scrollbarWidth,
+            header: {left: header.left, right: header.right},
+            footer: {left: footer.left, right: footer.right}
+          };
+        }"""
+    )
+    assert layout_geometry["documentWidth"] == layout_geometry["viewportWidth"], layout_geometry
+    assert layout_geometry["scrollbarWidth"] == "none", layout_geometry
+    assert layout_geometry["bodyScrollbarWidth"] == "none", layout_geometry
+    assert layout_geometry["header"] == {"left": 0, "right": layout_geometry["viewportWidth"]}, layout_geometry
+    assert layout_geometry["footer"] == {"left": 0, "right": layout_geometry["viewportWidth"]}, layout_geometry
+
+    page.evaluate("window.scrollTo(0, 0)")
+    page.mouse.wheel(0, 600)
+    page.wait_for_function("window.scrollY > 0", timeout=2_000)
+    assert page.evaluate("window.scrollY") > 0, f"La portada no se desplaza verticalmente a {width}px"
+    page.evaluate("window.scrollTo(0, 0)")
+
     cards_geometry = page.get_by_test_id("landing-steps-track").evaluate(
         """track => {
           const clip = track.getBoundingClientRect();
@@ -99,7 +125,7 @@ def test_orden_de_promesas_se_puede_cambiar_arrastrando(page: Page, stack):
     cards = page.locator("[data-testid^='landing-promise-'][data-promise-id]")
     cards.first.scroll_into_view_if_needed()
     before = cards.evaluate_all("items => items.map(item => item.dataset.promiseId)")
-    source_handle = cards.first.locator(".landing-promise-handle")
+    source_handle = cards.first.locator(".landing-promise-handle[aria-hidden='false']")
     target_card = page.get_by_test_id("landing-promise-muestra-procedencia")
     target_card.scroll_into_view_if_needed()
     source = source_handle.bounding_box()
@@ -108,7 +134,7 @@ def test_orden_de_promesas_se_puede_cambiar_arrastrando(page: Page, stack):
     page.mouse.move(source["x"] + source["width"] / 2, source["y"] + source["height"] / 2)
     page.mouse.down()
     page.mouse.move(source["x"] + source["width"] / 2 + 32, source["y"] + source["height"] / 2 + 24, steps=2)
-    expect(cards.first).to_have_class("landing-promise-card comic-panel is-dragging")
+    expect(cards.first).to_have_class("landing-promise-card is-dragging")
     assert cards.first.evaluate("card => getComputedStyle(card).transform") != "none"
     page.mouse.move(target["x"] + target["width"] / 2, target["y"] + target["height"] / 2, steps=5)
     page.mouse.up()
@@ -152,7 +178,7 @@ def test_cinta_de_categorias_se_mueve_en_bucle(page: Page, stack):
           const copies = [...track.querySelectorAll('.landing-ticker-copy')];
           const width = copies[0].getBoundingClientRect().width;
           const duration = Number.parseFloat(getComputedStyle(track).animationDuration);
-          return {width, duration, expectedDuration: Math.max(11, width / 64)};
+          return {width, duration, expectedDuration: Math.max(11, width / 52)};
         }"""
     )
     assert abs(geometry["duration"] - geometry["expectedDuration"]) < 0.2, geometry

@@ -153,6 +153,9 @@ function PublicConnectors() {
 
 export function SettingsPanel() {
   const { api } = useApp();
+  const desktopShell = typeof window !== 'undefined'
+    && window.umbralDesktop?.platform === 'win32'
+    && Boolean(window.umbralDesktop.windowControls);
   const [theme, setTheme] = useState<ThemePreference>(() => getThemePreference());
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -181,7 +184,7 @@ export function SettingsPanel() {
       headerContent={
         <nav className="settings-section-nav" aria-label="Secciones de configuración">
           <button type="button" onClick={() => document.getElementById('settings-preferences')?.scrollIntoView({ block: 'start' })}>Preferencias</button>
-          <button type="button" onClick={() => document.getElementById('settings-updates')?.scrollIntoView({ block: 'start' })}>Actualizaciones</button>
+          {desktopShell && <button type="button" onClick={() => document.getElementById('settings-updates')?.scrollIntoView({ block: 'start' })}>Actualizaciones</button>}
           <button type="button" onClick={() => document.getElementById('settings-connections')?.scrollIntoView({ block: 'start' })}>Conexiones</button>
         </nav>
       }
@@ -215,10 +218,10 @@ export function SettingsPanel() {
           <MotionPreferenceSwitch />
         </div>
       </section>
-      <section id="settings-updates" className="mb-6 scroll-mt-16" aria-labelledby="settings-updates-title">
+      {desktopShell && <section id="settings-updates" className="mb-6 scroll-mt-16" aria-labelledby="settings-updates-title">
         <SectionTitle id="settings-updates-title" kicker="Aplicación">Actualizaciones</SectionTitle>
         <DesktopUpdateSettings />
-      </section>
+      </section>}
       <section id="settings-connections" className="scroll-mt-16" aria-labelledby="settings-connections-title">
         <SectionTitle id="settings-connections-title" kicker="Servicios">Conexiones</SectionTitle>
         {api.kind === 'mock' ? <Notice tone="warn">Las conexiones no están disponibles en la demostración.</Notice> : <>

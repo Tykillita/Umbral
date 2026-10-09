@@ -69,7 +69,7 @@ type PromiseDrag = {
 };
 const PROMISE_ORDER_KEY = 'umbral.landing-promises.order.v1';
 const CATEGORIES = ['Canal de Panamá', 'Turismo', 'Economía', 'Servicios públicos', 'Eventos naturales', 'Regulación'];
-const TICKER_SPEED_PX_PER_SECOND = 64;
+const TICKER_SPEED_PX_PER_SECOND = 52;
 
 const FAQ = [
   {
@@ -485,46 +485,55 @@ export default function LandingExperience() {
                 const isFlipped = flipped === id;
                 return (
                   <article
-                    className={`landing-promise-card comic-panel${dragging === id ? ' is-dragging' : ''}`}
+                    className={`landing-promise-card${dragging === id ? ' is-dragging' : ''}`}
                     key={id}
                     data-promise-id={id}
                     data-order={index + 1}
                     data-testid={`landing-promise-${id}`}
                   >
-                    <button
-                      type="button"
-                      className="landing-promise-flip"
-                      aria-label={`${isFlipped ? 'Mostrar promesa' : 'Mostrar límite'}: ${promise.title}`}
-                      aria-pressed={isFlipped}
-                      data-flipped={isFlipped}
-                      onClick={() => setFlipped(isFlipped ? null : id)}
-                    >
-                      <span className="landing-promise-face landing-promise-front" aria-hidden={isFlipped}>
-                        <span className="landing-promise-label">Sí</span>
-                        <strong className="font-display">{promise.title}</strong>
-                        <span className="landing-promise-copy">{promise.yes}</span>
-                        <span className="landing-promise-hint">Voltea para ver el límite ↻</span>
-                      </span>
-                      <span className="landing-promise-face landing-promise-back" aria-hidden={!isFlipped}>
-                        <span className="landing-promise-label">Hasta aquí</span>
-                        <strong className="font-display">{promise.title}</strong>
-                        <span className="landing-promise-copy">{promise.limit}</span>
-                        <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      className="landing-promise-handle"
-                      aria-label={`Mover ${promise.title}. Usa Alt y las flechas izquierda o derecha para cambiar su orden.`}
-                      onKeyDown={(event) => handlePromiseKeyDown(event, index)}
-                      onPointerDown={(event) => startPromiseDrag(event, index, id)}
-                      onPointerMove={movePromiseDrag}
-                      onPointerUp={finishPromiseDrag}
-                      onPointerCancel={cancelPromiseDrag}
-                      data-testid={`landing-promise-handle-${id}`}
-                    >
-                      <GripVertical size={20} aria-hidden="true" />
-                    </button>
+                    <div className="landing-promise-plane" data-flipped={isFlipped}>
+                      <button
+                        type="button"
+                        className="landing-promise-flip"
+                        aria-label={`${isFlipped ? 'Mostrar promesa' : 'Mostrar límite'}: ${promise.title}`}
+                        aria-pressed={isFlipped}
+                        onClick={() => setFlipped(isFlipped ? null : id)}
+                      >
+                        <span className="landing-promise-face landing-promise-front" aria-hidden={isFlipped}>
+                          <span className="landing-promise-label">Sí</span>
+                          <strong className="font-display">{promise.title}</strong>
+                          <span className="landing-promise-copy">{promise.yes}</span>
+                          <span className="landing-promise-hint">Voltea para ver el límite ↻</span>
+                        </span>
+                        <span className="landing-promise-face landing-promise-back" aria-hidden={!isFlipped}>
+                          <span className="landing-promise-label">Hasta aquí</span>
+                          <strong className="font-display">{promise.title}</strong>
+                          <span className="landing-promise-copy">{promise.limit}</span>
+                          <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
+                        </span>
+                      </button>
+                      {(['front', 'back'] as const).map((side) => {
+                        const visible = side === 'front' ? !isFlipped : isFlipped;
+                        return (
+                          <button
+                            key={side}
+                            type="button"
+                            className={`landing-promise-handle landing-promise-handle-${side}`}
+                            aria-label={`Mover ${promise.title}. Usa Alt y las flechas izquierda o derecha para cambiar su orden.`}
+                            aria-hidden={!visible}
+                            tabIndex={visible ? 0 : -1}
+                            onKeyDown={(event) => handlePromiseKeyDown(event, index)}
+                            onPointerDown={(event) => startPromiseDrag(event, index, id)}
+                            onPointerMove={movePromiseDrag}
+                            onPointerUp={finishPromiseDrag}
+                            onPointerCancel={cancelPromiseDrag}
+                            data-testid={visible ? `landing-promise-handle-${id}` : undefined}
+                          >
+                            <GripVertical size={20} aria-hidden="true" />
+                          </button>
+                        );
+                      })}
+                    </div>
                   </article>
                 );
               })}
