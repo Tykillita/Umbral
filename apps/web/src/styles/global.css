@@ -392,16 +392,16 @@ html[data-motion-preference="reduced"] .cite-marker { transition: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-motion-preference="full"]) *,
-  html:not([data-motion-preference="full"]) *::before,
-  html:not([data-motion-preference="full"]) *::after {
+  html:not([data-motion-preference="full"]) *:not(.landing-ticker-track),
+  html:not([data-motion-preference="full"]) *:not(.landing-ticker-track)::before,
+  html:not([data-motion-preference="full"]) *:not(.landing-ticker-track)::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
 }
-html[data-motion-preference="reduced"] *,
-html[data-motion-preference="reduced"] *::before,
-html[data-motion-preference="reduced"] *::after {
+html[data-motion-preference="reduced"] *:not(.landing-ticker-track),
+html[data-motion-preference="reduced"] *:not(.landing-ticker-track)::before,
+html[data-motion-preference="reduced"] *:not(.landing-ticker-track)::after {
   animation-duration: 0.001ms !important;
   transition-duration: 0.001ms !important;
 }
@@ -538,11 +538,9 @@ html[data-motion-preference="reduced"] *::after {
   .landing-carousel-controls { align-self: flex-end; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-motion-preference="full"]) .landing-ticker-track { animation: none; }
   html:not([data-motion-preference="full"]) .landing-step-track { scroll-behavior: auto; }
   html:not([data-motion-preference="full"]) .landing-promise-plane { transition-duration: .001ms; }
 }
-html[data-motion-preference="reduced"] .landing-ticker-track { animation: none; }
 html[data-motion-preference="reduced"] .landing-promise-plane { transition-duration: .001ms; }
 html[data-motion-preference="reduced"] .assistant-panel,
 html[data-motion-preference="reduced"] .assistant-panel.is-closing { animation: none; }
