@@ -178,7 +178,7 @@ def test_cinta_de_categorias_se_mueve_en_bucle(page: Page, stack):
           const copies = [...track.querySelectorAll('.landing-ticker-copy')];
           const width = copies[0].getBoundingClientRect().width;
           const duration = Number.parseFloat(getComputedStyle(track).animationDuration);
-          return {width, duration, expectedDuration: Math.max(11, width / 64)};
+          return {width, duration, expectedDuration: Math.max(11, width / 52)};
         }"""
     )
     assert abs(geometry["duration"] - geometry["expectedDuration"]) < 0.2, geometry

@@ -69,7 +69,7 @@ type PromiseDrag = {
 };
 const PROMISE_ORDER_KEY = 'umbral.landing-promises.order.v1';
 const CATEGORIES = ['Canal de Panamá', 'Turismo', 'Economía', 'Servicios públicos', 'Eventos naturales', 'Regulación'];
-const TICKER_SPEED_PX_PER_SECOND = 64;
+const TICKER_SPEED_PX_PER_SECOND = 52;
 
 const FAQ = [
   {

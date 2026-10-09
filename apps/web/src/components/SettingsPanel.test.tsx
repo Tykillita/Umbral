@@ -15,8 +15,10 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  delete window.umbralDesktop;
   localStorage.removeItem(THEME_PREFERENCE_STORAGE_KEY);
   document.documentElement.removeAttribute('data-theme');
+  document.documentElement.classList.remove('desktop-shell');
 });
 
 function mountSettings() {
@@ -75,6 +77,8 @@ describe('panel flotante de configuración', () => {
     const header = dialog.querySelector('header');
     const nav = header?.querySelector('nav[aria-label="Secciones de configuración"]');
     expect(nav).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Actualizaciones' })).toBeNull();
+    expect(document.getElementById('settings-updates')).toBeNull();
 
     const preferences = document.getElementById('settings-preferences')!;
     const connections = document.getElementById('settings-connections')!;
@@ -87,6 +91,14 @@ describe('panel flotante de configuración', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Conexiones' }));
     expect(preferencesScroll).toHaveBeenCalledWith({ block: 'start' });
     expect(connectionsScroll).toHaveBeenCalledWith({ block: 'start' });
+  });
+
+  it('mantiene la sección de actualizaciones en la aplicación de escritorio', () => {
+    window.umbralDesktop = { windowControls: {} } as unknown as typeof window.umbralDesktop;
+    mountSettings();
+    fireEvent.click(screen.getByTestId('settings-toggle'));
+    expect(screen.getByRole('button', { name: 'Actualizaciones' })).toBeTruthy();
+    expect(document.getElementById('settings-updates')).toBeTruthy();
   });
 
   it('aplica el tema TVN al elegirlo, lo persiste y permite volver al original', () => {
