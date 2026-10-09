@@ -25,6 +25,10 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 - Borradores ajusta preguntas a la categoría y las brechas de evidencia, separa `GUION` de `NOTAS DE PRODUCCIÓN` y genera variantes derivadas para X, Instagram y TikTok.
 - El asistente valida tipo de evidencia y periodos contra el corte del snapshot, limita correcciones difusas a errores de tipeo, rechaza inyecciones/perfilamiento y atribuye consultas de culpabilidad; Jurado conserva sus sugerencias y suma cuatro demos.
 
+### Fixed
+
+- Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
+
 ### Changed
 
 - En pantallas anchas, marca, navegación y acciones comparten una fila en el ancho disponible; el escritorio reserva espacio para los controles de ventana.

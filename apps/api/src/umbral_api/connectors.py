@@ -414,14 +414,15 @@ class ConnectorManager:
             return True
         payload = {
             "code": code,
-            "client_id": self.settings.slack_oauth_client_id,
-            "client_secret": self.settings.slack_oauth_client_secret,
+            "client_id": self.settings.slack_oauth_client_id or "",
+            "client_secret": self.settings.slack_oauth_client_secret or "",
             "redirect_uri": self._redirect_uri(self.settings.slack_oauth_redirect_uri),
         }
         response = self._post_token(f"{_SLACK_API}/oauth.v2.access", payload)
         body = self._json(response)
         access = body.get("access_token")
-        team = body.get("team") if isinstance(body.get("team"), dict) else {}
+        team_value = body.get("team")
+        team: dict[str, Any] = team_value if isinstance(team_value, dict) else {}
         if not response.is_success or body.get("ok") is not True or not isinstance(access, str) or not access or not team.get("id"):
             raise ServiceUnavailable("Slack no pudo completar la autorización. Revisa la aplicación OAuth e inténtalo de nuevo.")
         self._put_credential(uid, provider, {
@@ -511,7 +512,8 @@ class ConnectorManager:
 
     @staticmethod
     def _page_title(page: dict[str, Any]) -> str:
-        properties = page.get("properties") if isinstance(page.get("properties"), dict) else {}
+        properties_value = page.get("properties")
+        properties: dict[str, Any] = properties_value if isinstance(properties_value, dict) else {}
         for prop in properties.values():
             if not isinstance(prop, dict):
                 continue
@@ -536,7 +538,8 @@ class ConnectorManager:
                 for page in results:
                     if not isinstance(page, dict) or not isinstance(page.get("id"), str):
                         continue
-                    url = page.get("url") if isinstance(page.get("url"), str) and page["url"].startswith("https://") else ""
+                    raw_url = page.get("url")
+                    url = raw_url if isinstance(raw_url, str) and raw_url.startswith("https://") else ""
                     items.append({"id": page["id"], "title": self._page_title(page), "url": url})
             cursor = body.get("next_cursor") if body.get("has_more") and isinstance(body.get("next_cursor"), str) else None
             if not cursor:
@@ -604,7 +607,8 @@ class ConnectorManager:
                     if not isinstance(channel, dict) or not isinstance(channel.get("id"), str) or not channel.get("is_member"):
                         continue
                     items.append({"id": channel["id"], "name": str(channel.get("name", "canal"))[:100], "is_private": bool(channel.get("is_private"))})
-            metadata = body.get("response_metadata") if isinstance(body.get("response_metadata"), dict) else {}
+            metadata_value = body.get("response_metadata")
+            metadata: dict[str, Any] = metadata_value if isinstance(metadata_value, dict) else {}
             cursor = metadata.get("next_cursor") if isinstance(metadata.get("next_cursor"), str) and metadata.get("next_cursor") else None
             if not cursor:
                 break

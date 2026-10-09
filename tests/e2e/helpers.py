@@ -22,14 +22,14 @@ def settle_motion(page: Page) -> None:
     page.wait_for_function(_MOTION_IDLE, timeout=5000)
 
 
-def open_app(page: Page, base: str) -> None:
+def open_app(page: Page, base: str, *, role: str = "editor") -> None:
     page.goto(base + "/app")
     try:
         page.get_by_test_id("app-root").wait_for(timeout=8000)
     except Exception:  # noqa: BLE001
-        role_editor = page.get_by_test_id("role-editor")
-        if role_editor.is_visible():
-            role_editor.click()
+        role_choice = page.get_by_test_id(f"role-{role}")
+        if role_choice.is_visible():
+            role_choice.click()
             page.get_by_test_id("app-root").wait_for(timeout=8000)
         else:
             msg = "el frontend no expone data-testid='app-root' ni la entrada de Editor en /app (ver tests/e2e/TESTIDS.md)"

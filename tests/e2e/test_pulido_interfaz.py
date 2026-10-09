@@ -47,7 +47,7 @@ def box(page: Page, testid: str) -> dict:
 @pytest.mark.parametrize("w,h", [(390, 844), (320, 640)], ids=lambda v: str(v))
 def test_zonas_tactiles_de_44px_en_movil(page: Page, stack, w, h):
     page.set_viewport_size({"width": w, "height": h})
-    open_app(page, stack.url)
+    open_app(page, stack.url, role="juror")
     problems: list[str] = []
     tid(page, "filters-toggle").click()
     settle_motion(page)  # la animación de pulsación escala el botón (~0,98) y falsearía la medida
@@ -70,7 +70,7 @@ def test_zonas_tactiles_de_44px_en_movil(page: Page, stack, w, h):
 @pytest.mark.parametrize("w,h", [(390, 844), (320, 640)], ids=lambda v: str(v))
 def test_cuatro_pestanas_siempre_visibles_en_barra_inferior(page: Page, stack, w, h):
     page.set_viewport_size({"width": w, "height": h})
-    open_app(page, stack.url)
+    open_app(page, stack.url, role="juror")
     boxes = [box(page, n) for n in ("nav-agenda", "nav-ficha", "nav-borradores", "nav-fuentes")]
     for b in boxes:
         assert b["x"] >= -1 and b["x"] + b["width"] <= w + 1, f"pestaña fuera de la pantalla: {b}"
@@ -196,7 +196,7 @@ def test_formulario_de_impacto_abierto_no_desborda_en_movil(page: Page, stack, w
 @pytest.mark.parametrize("w,h", [(390, 844), (320, 640)], ids=lambda v: str(v))
 def test_borradores_no_desborda_en_movil(page: Page, stack, w, h):
     page.set_viewport_size({"width": w, "height": h})
-    open_app(page, stack.url)
+    open_app(page, stack.url, role="juror")
     tid(page, "nav-borradores").click()
     page.wait_for_timeout(500)
     assert page.evaluate("document.documentElement.scrollWidth") <= w, "Borradores (selector de tema) desborda la pantalla"
@@ -239,11 +239,18 @@ def test_respuesta_del_asistente_viene_organizada(page: Page, stack, w, h):
 def test_pestanas_de_la_cabecera_estan_centradas(page: Page, stack, w):
     """En escritorio y tableta las pestañas quedan centradas en la cabecera (marca a la izquierda, asistente a la derecha)."""
     page.set_viewport_size({"width": w, "height": 900})
-    open_app(page, stack.url)
-    first, last = box(page, "nav-agenda"), box(page, "nav-fuentes")
+    open_app(page, stack.url, role="juror")
+    navigation = page.locator('nav[aria-label="Vistas principales"] .comic-nav:visible')
+    first, last = navigation.first.bounding_box(), navigation.last.bounding_box()
+    assert first and last, "la navegación principal debe tener pestañas visibles"
     brand = page.locator("header .comic-brand").bounding_box()
     asistente = box(page, "assistant-toggle")
     nav_center = (first["x"] + last["x"] + last["width"]) / 2
     assert abs(nav_center - w / 2) <= 2, f"las pestañas no están centradas: centro {nav_center} vs {w / 2}"
-    assert brand and brand["x"] + brand["width"] < first["x"], "la marca debe quedar a la izquierda de las pestañas"
-    assert asistente["x"] > last["x"] + last["width"], "el asistente debe quedar a la derecha de las pestañas"
+    assert brand
+    if w >= 1024:
+        assert brand["x"] + brand["width"] < first["x"], "la marca debe quedar a la izquierda de las pestañas"
+        assert asistente["x"] > last["x"] + last["width"], "el asistente debe quedar a la derecha de las pestañas"
+    else:
+        assert brand["y"] + brand["height"] <= first["y"] and asistente["y"] + asistente["height"] <= first["y"], \
+            "a 768 px, la marca y el asistente deben quedar en la fila superior"

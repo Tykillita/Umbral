@@ -73,7 +73,7 @@ class PublicTopicRequest(ApiModel):
 
 
 class PublicAgendaRequest(PublicTopicRequest):
-    filters: AgendaFilters = Field(default_factory=lambda: AgendaFilters(limit=5, q=None))
+    filters: AgendaFilters = Field(default_factory=lambda: AgendaFilters(limit=5, q=None, tvn_gap=False))
 
 
 class PublicQueryRequest(QueryRequest):
