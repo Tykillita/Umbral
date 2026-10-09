@@ -125,7 +125,7 @@ def test_orden_de_promesas_se_puede_cambiar_arrastrando(page: Page, stack):
     cards = page.locator("[data-testid^='landing-promise-'][data-promise-id]")
     cards.first.scroll_into_view_if_needed()
     before = cards.evaluate_all("items => items.map(item => item.dataset.promiseId)")
-    source_handle = cards.first.locator(".landing-promise-handle")
+    source_handle = cards.first.locator(".landing-promise-handle[aria-hidden='false']")
     target_card = page.get_by_test_id("landing-promise-muestra-procedencia")
     target_card.scroll_into_view_if_needed()
     source = source_handle.bounding_box()
@@ -134,7 +134,7 @@ def test_orden_de_promesas_se_puede_cambiar_arrastrando(page: Page, stack):
     page.mouse.move(source["x"] + source["width"] / 2, source["y"] + source["height"] / 2)
     page.mouse.down()
     page.mouse.move(source["x"] + source["width"] / 2 + 32, source["y"] + source["height"] / 2 + 24, steps=2)
-    expect(cards.first).to_have_class("landing-promise-card comic-panel is-dragging")
+    expect(cards.first).to_have_class("landing-promise-card is-dragging")
     assert cards.first.evaluate("card => getComputedStyle(card).transform") != "none"
     page.mouse.move(target["x"] + target["width"] / 2, target["y"] + target["height"] / 2, steps=5)
     page.mouse.up()

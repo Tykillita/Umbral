@@ -512,19 +512,27 @@ export default function LandingExperience() {
                           <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
                         </span>
                       </button>
-                      <button
-                        type="button"
-                        className="landing-promise-handle"
-                        aria-label={`Mover ${promise.title}. Usa Alt y las flechas izquierda o derecha para cambiar su orden.`}
-                        onKeyDown={(event) => handlePromiseKeyDown(event, index)}
-                        onPointerDown={(event) => startPromiseDrag(event, index, id)}
-                        onPointerMove={movePromiseDrag}
-                        onPointerUp={finishPromiseDrag}
-                        onPointerCancel={cancelPromiseDrag}
-                        data-testid={`landing-promise-handle-${id}`}
-                      >
-                        <GripVertical size={20} aria-hidden="true" />
-                      </button>
+                      {(['front', 'back'] as const).map((side) => {
+                        const visible = side === 'front' ? !isFlipped : isFlipped;
+                        return (
+                          <button
+                            key={side}
+                            type="button"
+                            className={`landing-promise-handle landing-promise-handle-${side}`}
+                            aria-label={`Mover ${promise.title}. Usa Alt y las flechas izquierda o derecha para cambiar su orden.`}
+                            aria-hidden={!visible}
+                            tabIndex={visible ? 0 : -1}
+                            onKeyDown={(event) => handlePromiseKeyDown(event, index)}
+                            onPointerDown={(event) => startPromiseDrag(event, index, id)}
+                            onPointerMove={movePromiseDrag}
+                            onPointerUp={finishPromiseDrag}
+                            onPointerCancel={cancelPromiseDrag}
+                            data-testid={visible ? `landing-promise-handle-${id}` : undefined}
+                          >
+                            <GripVertical size={20} aria-hidden="true" />
+                          </button>
+                        );
+                      })}
                     </div>
                   </article>
                 );

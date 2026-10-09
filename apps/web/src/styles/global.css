@@ -476,7 +476,9 @@ html[data-motion-preference="reduced"] *::after {
 .landing-promise-face > strong { display: block; max-width: 15ch; margin-top: .7rem; font-size: 1.45rem; font-weight: 800; line-height: 1.08; }
 .landing-promise-copy { display: block; margin-top: .6rem; color: var(--color-ink-2); font-size: .9rem; line-height: 1.45; }
 .landing-promise-hint { display: block; margin-top: auto; padding-top: .75rem; color: var(--color-ink-3); font-size: .74rem; font-weight: 700; }
-.landing-promise-handle { position: absolute; z-index: 3; top: .45rem; right: .45rem; display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 1.5px solid var(--color-ink); background: var(--color-card); color: var(--color-ink); cursor: grab; touch-action: none; }
+.landing-promise-handle { position: absolute; z-index: 3; top: .45rem; display: grid; width: 2.75rem; height: 2.75rem; place-items: center; border: 1.5px solid var(--color-ink); background: var(--color-card); color: var(--color-ink); cursor: grab; touch-action: none; backface-visibility: hidden; }
+.landing-promise-handle-front { right: .45rem; }
+.landing-promise-handle-back { left: .45rem; transform: rotateY(180deg); }
 .landing-promise-handle:active { cursor: grabbing; background: var(--color-amber-300); }
 .landing-promise-handle:focus-visible { outline: 3px solid var(--color-info); outline-offset: 2px; }
 .landing-faq { max-width: 54rem; }
