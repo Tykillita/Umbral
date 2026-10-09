@@ -816,6 +816,12 @@ html.desktop-shell .desktop-hidden { display: none; }
   .comic-active-role { flex: 0 1 auto; max-width: min(14rem, 42vw); justify-content: space-between; }
   .settings-trigger { bottom: calc(var(--mobile-nav-height) + .75rem); }
 }
+@media (min-width: 1024px) and (max-width: 1400px) {
+  .comic-app-header .comic-tabbar { gap: .2rem; }
+  .comic-app-header .comic-tabbar .comic-nav-overflow { display: none; }
+  .comic-app-header .comic-tabbar-more { display: block; flex: 0 0 auto; }
+  .comic-app-header .comic-mobile-more-trigger { min-height: 2.75rem; padding-inline: .65rem; white-space: nowrap; }
+}
 /* En la web, el scroll pertenece al contenido; header y navegación quedan fuera del área desplazable. */
 html:not(.desktop-shell) { height: 100%; overflow: hidden; scrollbar-gutter: auto; }
 html:not(.desktop-shell) body { height: 100%; min-height: 0; overflow: hidden; }

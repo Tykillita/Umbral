@@ -36,6 +36,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 - Ampliar el asistente abre una vista de conversación a pantalla completa, oculta e inhabilita la página de fondo y permite volver al panel flotante sin perder el contexto.
 - El botón flotante de Configuración se oculta mientras el asistente ocupa la pantalla en móvil y reaparece al cerrar o minimizar el chat.
 - En pantallas anchas, marca, navegación y acciones comparten una fila en el ancho disponible; el escritorio reserva espacio para los controles de ventana.
+- La navegación no parte los rótulos en dos líneas; en anchos de escritorio intermedios, las vistas secundarias se agrupan en «Más» para mantener libre la fila principal.
 - Los avisos aparecen en la esquina inferior derecha y, con el asistente minimizado, se ubican encima de su botón flotante.
 - El aviso de Mesa sin sincronización se integra al centro de advertencias en web y se oculta en Desktop, donde la copia local es el comportamiento esperado.
 - Umbral Desktop conserva sus borradores y conexiones personales locales mientras permite usar Notion y Slack por OAuth público; el puente Electron limita las solicitudes a rutas de conectores y mantiene la identidad Firebase anónima fuera del almacenamiento OAuth local.
