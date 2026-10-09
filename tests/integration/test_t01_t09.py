@@ -335,7 +335,8 @@ class TestT09PaqueteEditorial:
         assert pkg["publicInterestAngle"].strip()
         assert pkg["pendingVerifications"], "debe listar verificaciones pendientes"
         assert words(pkg["socialCopy"]) <= 80
-        n = words(pkg["script"])
+        speech = pkg["script"].split("NOTAS DE PRODUCCIÓN:", 1)[0].replace("GUION:", "", 1)
+        n = words(speech)
         assert 100 <= n <= 160, f"guion de {n} palabras (45-60 s ≈ 112-150 palabras)"
 
     def test_origen_del_borrador_identificado(self, draft):

@@ -26,6 +26,7 @@ import { AssistantPanel } from './AssistantPanel';
 import { Button, ErrorBox, Loading, Notice, Pill } from './ui';
 import { SettingsPanel } from './SettingsPanel';
 import { WarningCenter, WarningCenterProvider } from './ui/warnings';
+import { Select } from './ui/controls';
 
 const NAV: { view: Route['view']; label: string; icon: typeof ListOrdered; testId: string }[] = [
   { view: 'agenda', label: 'Agenda', icon: ListOrdered, testId: 'nav-agenda' },
@@ -202,6 +203,9 @@ export function ExportToast({ toast, anchor, onDismiss }: { toast: AppToast | nu
 function Shell({ assistantState, setAssistantState, assistantClosing, openAssistantPanel, closeAssistantPanel, seed, assistantUnread, onAssistantUnread }: { assistantUnread: number; onAssistantUnread: (count: number) => void; assistantState: AssistantVisibility; setAssistantState: (v: AssistantVisibility) => void; assistantClosing: boolean; openAssistantPanel: () => void; closeAssistantPanel: () => void; seed: { text: string; topicId: string | null; topicTitle: string; n: number } }) {
   const { route, go, toast, showToast, dismissToast, session, changeRole } = useApp();
   const navigation = NAV.filter(({view}) => !session || canView(session.role,view));
+  const mobilePrimaryViews: Route['view'][] = ['agenda', 'ficha', 'borradores', 'fuentes'];
+  const mobileOverflow = navigation.filter(({view}) => !mobilePrimaryViews.includes(view));
+  const mobileNavColumns = navigation.filter(({view}) => mobilePrimaryViews.includes(view)).length + (mobileOverflow.length ? 1 : 0);
   const [mobile, setMobile] = useState(false);
   const [warningCenterOpen, setWarningCenterOpen] = useState(false);
   const { data: health } = useHealth();
@@ -209,6 +213,9 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   const mastheadRef = useRef<HTMLElement>(null);
   const lastTopic = useRef<string | null>(null);
   if ('topicId' in route && route.topicId) lastTopic.current = route.topicId;
+  const navigateToView = (view: Route['view']) => {
+    go(view === 'ficha' || view === 'borradores' ? { view, topicId: lastTopic.current } : { view });
+  };
 
   // Respuesta táctil global (pulsación, trazos y detalles); se retira al desmontar la aplicación.
   useEffect(() => installInteractions(), []);
@@ -285,7 +292,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
           <a href="/" className="comic-brand md:justify-self-start" aria-label="Umbral, inicio">
             Umbral<span className="text-amber-600">.</span>
           </a>
-          <nav aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center" style={{'--nav-count':navigation.length} as CSSProperties}>
+          <nav aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center" style={{'--nav-count':navigation.length, '--mobile-nav-count':mobileNavColumns} as CSSProperties}>
             {navigation.map(({ view, label, icon: Ico, testId }) => {
               const active = route.view === view;
               return (
@@ -296,9 +303,11 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
                   aria-current={active ? 'page' : undefined}
                   onClick={(e) => {
                     e.preventDefault();
-                    go(view === 'ficha' || view === 'borradores' ? { view, topicId:lastTopic.current } : {view});
+                    navigateToView(view);
                   }}
                   className={`comic-nav inline-flex min-h-11 shrink-0 items-center gap-1.5 px-3 py-1.5 text-sm font-semibold ${
+                    mobilePrimaryViews.includes(view) ? '' : 'comic-nav-overflow'
+                  } ${
                     active ? 'border-amber-600 bg-amber-100 text-ink' : 'border-transparent text-ink-2 hover:bg-sunk'
                   }`}
                 >
@@ -314,6 +323,19 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
                 </a>
               );
             })}
+            {mobileOverflow.length > 0 && (
+              <div className="comic-tabbar-more">
+                <Select
+                  label="Más vistas"
+                  testId="nav-more"
+                  value={mobileOverflow.some(({ view }) => view === route.view) ? route.view : ''}
+                  onChange={navigateToView}
+                  options={mobileOverflow.map(({ view, label }) => ({ value: view, label }))}
+                  placeholder="Más"
+                  className="comic-mobile-more-trigger"
+                />
+              </div>
+            )}
           </nav>
           <div className="comic-header-actions ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:justify-self-end">
             {session && <div className="comic-active-role"><span data-testid="active-role">{session.labeler}</span><Button variant="ghost" onClick={changeRole} data-testid="role-change">Cambiar</Button></div>}

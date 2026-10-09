@@ -21,7 +21,7 @@ def generate(page):
 
 
 def test_centro_de_advertencias_en_build_publico(page, public_stack):
-    open_app(page, public_stack.url)
+    open_app(page, public_stack.url, role="juror")
     expect(tid(page, "fixture-notice")).to_have_count(0)
     trigger = tid(page, "warning-center-toggle")
     trigger.click()
@@ -32,7 +32,7 @@ def test_centro_de_advertencias_en_build_publico(page, public_stack):
 def test_entrada_publica_y_revision_persisten_sin_autenticacion(page, public_stack):
     calls = []
     page.on("request", lambda request: calls.append((request.url, request.method, request.headers)))
-    open_app(page, public_stack.url)
+    open_app(page, public_stack.url, role="juror")
     expect(tid(page, "status-bar")).to_contain_text("Público")
     assert tid(page, "mock-banner").count() == 0
     open_first_ficha(page)
@@ -52,10 +52,10 @@ def test_dos_navegadores_no_comparten_borradores(browser, public_stack):
     try:
         first = first_context.new_page()
         second = second_context.new_page()
-        open_app(first, public_stack.url)
+        open_app(first, public_stack.url, role="juror")
         generate(first)
         draft_url = first.url
-        open_app(second, public_stack.url)
+        open_app(second, public_stack.url, role="juror")
         second.goto(draft_url)
         expect(tid(second, "draft-generate")).to_be_visible(timeout=30_000)
         expect(tid(second, "draft-brief")).to_have_count(0)
@@ -72,7 +72,7 @@ def test_copia_json_restaura_versiones_en_otro_navegador(browser, public_stack, 
     try:
         source = source_context.new_page()
         destination = destination_context.new_page()
-        open_app(source, public_stack.url)
+        open_app(source, public_stack.url, role="juror")
         generate(source)
         before = tid(source, "draft-brief").input_value()
         tid(source, "draft-brief").fill(before + "\nRevisión automatizada para probar una copia local.")
@@ -88,7 +88,7 @@ def test_copia_json_restaura_versiones_en_otro_navegador(browser, public_stack, 
         assert archive["format"] == "umbral-workspace" and archive["version"] == 1
         assert len(archive["cases"]) == 1
         assert len(archive["cases"][0]["case"]["drafts"]) == 2
-        open_app(destination, public_stack.url)
+        open_app(destination, public_stack.url, role="juror")
         destination.get_by_test_id("nav-fuentes").click()
         destination.get_by_role("button", name="Importar una copia").click()
         tid(destination, "workspace-json").fill(copy_file.read_text(encoding="utf-8"))
@@ -103,7 +103,7 @@ def test_copia_json_restaura_versiones_en_otro_navegador(browser, public_stack, 
 
 
 def test_pestana_antigua_no_sobrescribe_edicion_nueva(page, public_stack):
-    open_app(page, public_stack.url)
+    open_app(page, public_stack.url, role="juror")
     generate(page)
     other = page.context.new_page()
     try:

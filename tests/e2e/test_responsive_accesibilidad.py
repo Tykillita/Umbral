@@ -101,7 +101,7 @@ def test_vistas_sin_desborde_ni_controles_sin_nombre(page: Page, stack, w, h):
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.set_viewport_size({"width": w, "height": h})
     RESULTS.mkdir(parents=True, exist_ok=True)
-    open_app(page, stack.url)
+    open_app(page, stack.url, role="juror")
     problems: list[str] = []
     for nav, label in (("nav-agenda", "agenda"), ("nav-ficha", "ficha"), ("nav-borradores", "borradores"), ("nav-fuentes", "fuentes")):
         if nav == "nav-ficha":

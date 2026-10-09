@@ -28,7 +28,7 @@ def test_flujo_completo_con_la_red_bloqueada(context: BrowserContext, page: Page
             route.abort("internetdisconnected")
 
     context.route("**/*", guard)
-    open_app(page, offline_stack.url)                                    # carga + ranking
+    open_app(page, offline_stack.url, role="juror")                     # carga + ranking y flujo completo
     expect(tid(page, "offline-indicator")).to_be_visible()
     ask(page, "¿Qué hay sobre turismo y cruceristas en Panamá?", 1)       # consulta con evidencia
     assert tid(page, "assistant-citation").count() >= 1

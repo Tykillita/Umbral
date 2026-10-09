@@ -29,7 +29,7 @@ def test_snapshot_real_carga_consulta_ficha_borrador_revision_y_export(context, 
         detail = api.get(f"/topics/{first['id']}").json()
         title = detail["articles"][0]["title"]
 
-    open_app(page, delivered_stack.url)
+    open_app(page, delivered_stack.url, role="juror")
     expect(tid(page, "snapshot-badge")).to_contain_text(health["snapshotId"])
     expect(tid(page, "offline-indicator")).to_be_visible()
     assert tid(page, "mock-banner").count() == 0

@@ -58,7 +58,7 @@ def test_asistente_responde_con_citas_y_se_abstiene(page: Page, stack):
 
 
 def test_borrador_revision_y_exportacion(page: Page, stack):
-    open_app(page, stack.url)
+    open_app(page, stack.url, role="juror")
     open_first_ficha(page)
     draft_and_review(page)
     expect(tid(page, "draft-origin-label")).to_have_attribute("data-mode", "plantilla")   # sin clave de Gemini
@@ -72,7 +72,7 @@ def test_borrador_revision_y_exportacion(page: Page, stack):
 
 def test_conflicto_de_revision_se_muestra(page: Page, stack):
     """Otro cliente revisa el mismo caso mientras la pantalla tiene la versión vieja: el 409 se muestra y se puede recargar."""
-    open_app(page, stack.url)
+    open_app(page, stack.url, role="juror")
     topic_id = open_first_ficha(page, index=2)  # un tema que ningún otro E2E haya revisado
     tid(page, "go-drafts").click()
     expect(tid(page, "draft-generate")).to_be_visible(timeout=30_000)
@@ -131,6 +131,7 @@ def test_ui_t05_contradiccion_muestra_ambas_versiones(page: Page, stack):
 
 def test_ui_t07_fuente_con_instrucciones_se_marca_como_no_confiable(page: Page, stack):
     # el tema sospechoso no aparece en la búsqueda (el backend no indexa el texto con instrucciones): se abre por id
+    open_app(page, stack.url, role="juror")
     with stack.client(user=None) as api:
         items = api.get("/topics", params={"limit": 100}).json()["items"]
     tema = next(t for t in items if t["hasSuspiciousSource"])
