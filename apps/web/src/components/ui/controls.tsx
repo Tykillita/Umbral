@@ -96,6 +96,8 @@ export function Select<T extends string>({
   const listId = `${baseId}-list`;
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
+  const activeIndexRef = useRef(0);
+  const [navigationMode, setNavigationMode] = useState<'keyboard' | 'pointer'>('pointer');
   const [pos, setPos] = useState<PopoverPos | null>(null);
   const [sheetTitle, setSheetTitle] = useState('');
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -106,10 +108,15 @@ export function Select<T extends string>({
   const sheet = narrowViewport && mobilePresentation === 'sheet';
   const selectedIndex = options.findIndex((o) => o.value === value);
   const selected = selectedIndex >= 0 ? options[selectedIndex] : null;
+  const updateActive = (next: number | ((current: number) => number)) => {
+    const index = typeof next === 'function' ? next(activeIndexRef.current) : next;
+    activeIndexRef.current = index;
+    setActive(index);
+  };
 
   const openList = () => {
     if (disabled || options.length === 0) return;
-    setActive(Math.max(0, selectedIndex));
+    updateActive(Math.max(0, selectedIndex));
     setSheetTitle(label ?? document.getElementById(labelledBy ?? `${baseId}-label`)?.textContent?.trim() ?? 'Elige una opción');
     setOpen(true);
   };
@@ -192,7 +199,7 @@ export function Select<T extends string>({
     for (let step = 0; step < options.length; step += 1) {
       const index = (start + step) % options.length;
       if (options[index]?.label.toLowerCase().startsWith(text)) {
-        setActive(index);
+        updateActive(index);
         return;
       }
     }
@@ -205,9 +212,11 @@ export function Select<T extends string>({
     if (!open) {
       if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {
         event.preventDefault();
+        setNavigationMode('keyboard');
         openList();
       } else if (printable) {
         event.preventDefault();
+        setNavigationMode('keyboard');
         openList();
         typeahead(key);
       }
@@ -216,32 +225,38 @@ export function Select<T extends string>({
     switch (key) {
       case 'ArrowDown':
         event.preventDefault();
-        setActive((i) => Math.min(options.length - 1, i + 1));
+        setNavigationMode('keyboard');
+        updateActive((i) => Math.min(options.length - 1, i + 1));
         break;
       case 'ArrowUp':
         event.preventDefault();
-        setActive((i) => Math.max(0, i - 1));
+        setNavigationMode('keyboard');
+        updateActive((i) => Math.max(0, i - 1));
         break;
       case 'PageDown':
         event.preventDefault();
-        setActive((i) => Math.min(options.length - 1, i + 5));
+        setNavigationMode('keyboard');
+        updateActive((i) => Math.min(options.length - 1, i + 5));
         break;
       case 'PageUp':
         event.preventDefault();
-        setActive((i) => Math.max(0, i - 5));
+        setNavigationMode('keyboard');
+        updateActive((i) => Math.max(0, i - 5));
         break;
       case 'Home':
         event.preventDefault();
-        setActive(0);
+        setNavigationMode('keyboard');
+        updateActive(0);
         break;
       case 'End':
         event.preventDefault();
-        setActive(options.length - 1);
+        setNavigationMode('keyboard');
+        updateActive(options.length - 1);
         break;
       case 'Enter':
       case ' ':
         event.preventDefault();
-        choose(active);
+        choose(activeIndexRef.current);
         break;
       case 'Escape':
         event.preventDefault();
@@ -254,6 +269,7 @@ export function Select<T extends string>({
       default:
         if (printable) {
           event.preventDefault();
+          setNavigationMode('keyboard');
           typeahead(key);
         }
     }
@@ -266,6 +282,7 @@ export function Select<T extends string>({
       role="listbox"
       tabIndex={-1}
       aria-labelledby={labelledBy ?? `${baseId}-label`}
+      data-navigation-mode={navigationMode}
       className="select-list"
       style={sheet ? undefined : { maxHeight: pos?.maxHeight }}
     >
@@ -281,10 +298,15 @@ export function Select<T extends string>({
           data-testid="select-option"
           data-active={index === active ? 'true' : undefined}
           className="select-option"
-          onPointerEnter={(e) => {
-            if (e.pointerType === 'mouse') setActive(index);
+          onPointerMove={(e) => {
+            if (e.pointerType === 'mouse' && (e.movementX !== 0 || e.movementY !== 0)) {
+              setNavigationMode('pointer');
+            }
           }}
-          onPointerDown={(e) => e.preventDefault()}
+          onPointerDown={(e) => {
+            setNavigationMode('pointer');
+            e.preventDefault();
+          }}
           onClick={() => choose(index)}
         >
           <span className="min-w-0">
@@ -315,7 +337,11 @@ export function Select<T extends string>({
         data-value={value}
         data-open={open ? 'true' : 'false'}
         className={`${FIELD} select-trigger ${disabled ? 'is-disabled' : ''} ${className}`}
-        onClick={() => (open ? close(false) : openList())}
+        onClick={() => {
+          setNavigationMode('pointer');
+          if (open) close(false);
+          else openList();
+        }}
         onKeyDown={onKeyDown}
       >
         {triggerIcon && <span className="select-trigger-icon" aria-hidden="true">{triggerIcon}</span>}

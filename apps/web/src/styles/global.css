@@ -686,6 +686,7 @@ textarea { resize: none; field-sizing: content; min-height: 5rem; max-height: 24
 .select-list { list-style: none; margin: 0; padding: .25rem; overflow-y: auto; outline: none; }
 .select-option { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 2.75rem; padding: .5rem .65rem; cursor: pointer; border: 1.5px solid transparent; font-size: .9375rem; }
 .select-option[data-active="true"] { background: var(--color-amber-100); border-color: var(--color-ink); }
+.select-list[data-navigation-mode="pointer"] .select-option:hover:not([data-disabled="true"]) { background: var(--color-amber-100); border-color: var(--color-ink); }
 .select-option[aria-selected="true"] { font-weight: 700; }
 .select-option[data-disabled="true"] { color: var(--color-ink-3); cursor: not-allowed; }
 .select-option[data-disabled="true"][data-active="true"] { background: var(--color-sunk); }

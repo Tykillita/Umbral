@@ -29,6 +29,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- El menú «Más» conserva la opción activa al navegar con el teclado, aunque el puntero quede inmóvil sobre otra opción.
 - La portada mantiene el desplazamiento vertical en todos los anchos, incluso después de navegar desde la aplicación; la barra lateral no estrecha el encabezado ni el pie.
 - En `/app`, el desplazamiento queda confinado al contenido en todos los tamaños; la portada y las páginas del jurado conservan el scroll normal del navegador.
 - Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
