@@ -178,7 +178,7 @@ def test_cinta_de_categorias_se_mueve_en_bucle(page: Page, stack):
           const copies = [...track.querySelectorAll('.landing-ticker-copy')];
           const width = copies[0].getBoundingClientRect().width;
           const duration = Number.parseFloat(getComputedStyle(track).animationDuration);
-          return {width, duration, expectedDuration: Math.max(11, width / 52)};
+          return {width, duration, expectedDuration: Math.max(11, width / 46)};
         }"""
     )
     assert abs(geometry["duration"] - geometry["expectedDuration"]) < 0.2, geometry
@@ -204,7 +204,7 @@ def test_tarjetas_y_faq_aceptan_toque_en_movil(browser, stack):
         context.close()
 
 
-def test_movimiento_reducido_detiene_la_cinta_y_el_desplazamiento_suave(browser, stack):
+def test_movimiento_reducido_mantiene_la_cinta_y_detiene_el_desplazamiento_suave(browser, stack):
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
     try:
         page = context.new_page()
@@ -212,10 +212,24 @@ def test_movimiento_reducido_detiene_la_cinta_y_el_desplazamiento_suave(browser,
         motion = page.evaluate(
             """() => ({
               ticker: getComputedStyle(document.querySelector('.landing-ticker-track')).animationName,
+              iterations: getComputedStyle(document.querySelector('.landing-ticker-track')).animationIterationCount,
               scroll: getComputedStyle(document.querySelector('.landing-step-track')).scrollBehavior
             })"""
         )
-        assert motion["ticker"] == "none"
+        assert motion["ticker"] == "landing-marquee"
+        assert motion["iterations"] == "infinite"
         assert motion["scroll"] == "auto"
+
+        page.locator("html").evaluate("element => element.dataset.motionPreference = 'reduced'")
+        app_ticker = page.locator(".landing-ticker-track").evaluate(
+            "element => ({name: getComputedStyle(element).animationName, iterations: getComputedStyle(element).animationIterationCount})"
+        )
+        assert app_ticker == {"name": "landing-marquee", "iterations": "infinite"}
+        page.wait_for_function("document.querySelector('.landing-ticker-track')?.dataset.ready === 'true'")
+        before = page.locator(".landing-ticker-track").evaluate("element => getComputedStyle(element).transform")
+        page.wait_for_function(
+            "initial => getComputedStyle(document.querySelector('.landing-ticker-track')).transform !== initial",
+            arg=before,
+        )
     finally:
         context.close()
