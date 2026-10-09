@@ -318,7 +318,10 @@ def test_mas_permita_elegir_con_raton_y_teclado(page: Page, stack):
     assert "#/mesa" in page.url
     expect(more).to_have_attribute("data-value", "mesa")
 
+    # La aplicación devuelve el foco al contenido al cambiar de ruta; espera ese ciclo antes de re-enfocar el selector.
+    expect(page.locator("#contenido")).to_be_focused()
     more.focus()
+    expect(more).to_be_focused()
     page.keyboard.press("ArrowDown")
     expect(page.get_by_role("listbox")).to_be_visible()
     page.keyboard.press("ArrowDown")
