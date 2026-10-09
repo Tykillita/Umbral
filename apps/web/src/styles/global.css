@@ -872,15 +872,15 @@ html.app-shell:not(.desktop-shell) .comic-sheet#contenido {
   overscroll-behavior-y: contain; scrollbar-gutter: auto; padding-bottom: 1.25rem;
 }
 /* La portada se desplaza como documento incluso si otro shell dejó un bloqueo global en el historial de navegación. */
+html.landing-shell { scrollbar-gutter: auto; scrollbar-width: none; }
+html.landing-shell body { scrollbar-width: none; }
+html.landing-shell::-webkit-scrollbar, html.landing-shell body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 html.landing-shell:not(.desktop-shell) {
   height: auto;
   min-height: 100%;
   overflow-x: clip;
   overflow-y: auto;
-  scrollbar-gutter: auto;
-  scrollbar-width: none;
 }
-html.landing-shell:not(.desktop-shell)::-webkit-scrollbar { display: none; width: 0; height: 0; }
 html.landing-shell:not(.desktop-shell) body {
   position: static;
   inset: auto;

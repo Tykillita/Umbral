@@ -37,6 +37,7 @@ def test_portada_muestra_estructura_y_snapshot_actual(page: Page, stack, width: 
             viewportWidth: window.innerWidth,
             documentWidth: document.documentElement.clientWidth,
             scrollbarWidth: getComputedStyle(document.documentElement).scrollbarWidth,
+            bodyScrollbarWidth: getComputedStyle(document.body).scrollbarWidth,
             header: {left: header.left, right: header.right},
             footer: {left: footer.left, right: footer.right}
           };
@@ -44,6 +45,7 @@ def test_portada_muestra_estructura_y_snapshot_actual(page: Page, stack, width: 
     )
     assert layout_geometry["documentWidth"] == layout_geometry["viewportWidth"], layout_geometry
     assert layout_geometry["scrollbarWidth"] == "none", layout_geometry
+    assert layout_geometry["bodyScrollbarWidth"] == "none", layout_geometry
     assert layout_geometry["header"] == {"left": 0, "right": layout_geometry["viewportWidth"]}, layout_geometry
     assert layout_geometry["footer"] == {"left": 0, "right": layout_geometry["viewportWidth"]}, layout_geometry
 
