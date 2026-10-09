@@ -36,8 +36,16 @@ FAKE_GEMINI_KEY = "TESTKEY_NOT_A_REAL_KEY_0123456789"  # centinela: nunca debe a
 def _free_port() -> int:
     # Chromium rejects several otherwise valid server ports, and some Windows
     # configurations include 4045 in the ephemeral range. Stay in the high
-    # dynamic range and bind-probe so local services already using a port are skipped.
-    for port in range(49152, 65536):
+    # dynamic range; under xdist, each worker gets a disjoint range to avoid
+    # port races when their API servers start concurrently.
+    worker = os.environ.get("PYTEST_XDIST_WORKER", "")
+    worker_index = int(worker[2:]) if worker.startswith("gw") and worker[2:].isdigit() else 0
+    worker_count = max(int(os.environ.get("PYTEST_XDIST_WORKER_COUNT", str(worker_index + 1))), 1)
+    first = 49152
+    port_count = 65536 - first
+    start = first + worker_index * port_count // worker_count
+    stop = first + (worker_index + 1) * port_count // worker_count
+    for port in range(start, stop):
         with socket.socket() as s:
             try:
                 s.bind(("127.0.0.1", port))
@@ -208,6 +216,10 @@ def words(text: str) -> int:
 
 @pytest.hookimpl(trylast=True)
 def pytest_terminal_summary(terminalreporter, exitstatus, config):  # noqa: ANN001
+    # xdist's controller aggregates results and writes one complete summary;
+    # workers must not race to replace the same artifact with partial reports.
+    if hasattr(config, "workerinput"):
+        return
     tr = terminalreporter
     summary = {k: len(tr.stats.get(k, [])) for k in ("passed", "failed", "skipped", "xfailed", "xpassed", "error")}
     summary["fecha_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
