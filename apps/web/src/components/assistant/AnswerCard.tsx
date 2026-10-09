@@ -130,7 +130,8 @@ export function Answer({ turn, onCopy, onRelatedTitles, onNavigate, composing, c
   const visibleGroups = grouped.slice(0, 2);
   const remainingGroups = grouped.slice(2);
   const citedIds = new Set(grouped.map(([evidenceId]) => evidenceId));
-  const composable = turn.state === 'complete' && (result.answerStatus === 'respondida' || result.answerStatus === 'parcial') && result.citations.length > 0;
+  const searchMode = result.searchMode ?? 'snapshot';
+  const composable = turn.state === 'complete' && searchMode === 'snapshot' && (result.answerStatus === 'respondida' || result.answerStatus === 'parcial') && result.citations.length > 0;
   const excluded = [...new Map(result.hits.filter((hit) => hit.suspiciousInstructions && !citedIds.has(hit.evidenceId)).map((hit) => [hit.evidenceId, hit])).values()];
   function focusSource(index: number) {
     if (index > visibleGroups.length) setMoreOpen(true);
@@ -147,6 +148,10 @@ export function Answer({ turn, onCopy, onRelatedTitles, onNavigate, composing, c
           <Pill tone={STATUS_TONE[result.answerStatus]} icon={result.answerStatus === 'contradiccion' ? TriangleAlert : Bot}>{ANSWER_LABEL[result.answerStatus]}</Pill>
           <span className="assistant-mode" data-testid="assistant-mode" data-mode={turn.answerMode === 'modelo' ? 'modelo' : 'reglas'}>
             {turn.answerMode === 'modelo' ? `Redactada con IA (${turn.composedBy ?? 'modelo'}) · verificada por código contra las fuentes` : 'Reglas y fuentes · sin modelo de IA'}
+          </span>
+          <span className="assistant-mode" data-testid="assistant-search-source">
+            {searchMode === 'live' ? 'Búsqueda en vivo' : searchMode === 'hybrid' ? 'Fuentes en vivo + snapshot' : 'Snapshot verificado'}
+            {result.liveCheckedAt ? ` · consultado ${fmtDateTime(result.liveCheckedAt)}` : ''}
           </span>
         </div>
         <Button variant="ghost" icon={Copy} onClick={() => onCopy(turn)} data-testid="assistant-copy">Copiar respuesta con fuentes</Button>

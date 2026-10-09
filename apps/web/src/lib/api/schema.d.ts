@@ -518,6 +518,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Alertas y cobertura reciente de fuentes públicas */
+        get: operations["public_alerts_api_v1_public_alerts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/public/drafts": {
         parameters: {
             query?: never;
@@ -1132,6 +1149,13 @@ export interface components {
             provider: "gemini" | "chatgpt" | "claude";
             /** Question */
             question: string;
+            /**
+             * Searchmode
+             * @description Origen de búsqueda: corte verificado, fuentes vivas o selección automática.
+             * @default snapshot
+             * @enum {string}
+             */
+            searchMode: "auto" | "snapshot" | "live";
             /**
              * Topicid
              * @description Limita la consulta a un tema
@@ -2255,6 +2279,44 @@ export interface components {
             evidence?: components["schemas"]["ArchivedEvidence-Input"] | null;
             filters?: components["schemas"]["AgendaFilters"];
         };
+        /** PublicAlert */
+        PublicAlert: {
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "sismo" | "aviso" | "noticia";
+            /** Magnitude */
+            magnitude: number | null;
+            /** Occurredat */
+            occurredAt: string | null;
+            /** Place */
+            place: string | null;
+            /** Publishedat */
+            publishedAt: string | null;
+            /** Source */
+            source: string;
+            /** Status */
+            status: string | null;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /** PublicAlertFeed */
+        PublicAlertFeed: {
+            /**
+             * Checkedat
+             * Format: date-time
+             */
+            checkedAt: string;
+            /** Items */
+            items: components["schemas"]["PublicAlert"][];
+            /** Warnings */
+            warnings: string[];
+        };
         /** PublicComposeRequest */
         PublicComposeRequest: {
             context: components["schemas"]["PublicContext"];
@@ -2273,6 +2335,13 @@ export interface components {
             provider: "gemini" | "chatgpt" | "claude";
             /** Question */
             question: string;
+            /**
+             * Searchmode
+             * @description Origen de búsqueda: corte verificado, fuentes vivas o selección automática.
+             * @default snapshot
+             * @enum {string}
+             */
+            searchMode: "auto" | "snapshot" | "live";
             /**
              * Topicid
              * @description Limita la consulta a un tema
@@ -2320,6 +2389,13 @@ export interface components {
             limit: number;
             /** Question */
             question: string;
+            /**
+             * Searchmode
+             * @description Origen de búsqueda: corte verificado, fuentes vivas o selección automática.
+             * @default snapshot
+             * @enum {string}
+             */
+            searchMode: "auto" | "snapshot" | "live";
             /**
              * Topicid
              * @description Limita la consulta a un tema
@@ -2473,6 +2549,13 @@ export interface components {
             /** Question */
             question: string;
             /**
+             * Searchmode
+             * @description Origen de búsqueda: corte verificado, fuentes vivas o selección automática.
+             * @default snapshot
+             * @enum {string}
+             */
+            searchMode: "auto" | "snapshot" | "live";
+            /**
              * Topicid
              * @description Limita la consulta a un tema
              */
@@ -2496,6 +2579,8 @@ export interface components {
             /** Hits */
             hits: components["schemas"]["QueryHit"][];
             intent: components["schemas"]["QueryIntent"];
+            /** Livecheckedat */
+            liveCheckedAt: string | null;
             /** Missing */
             missing: string[];
             /** Queryid */
@@ -2512,6 +2597,12 @@ export interface components {
             retrieval: components["schemas"]["RetrievalInfo"];
             /** Rulesversion */
             rulesVersion: string;
+            /**
+             * Searchmode
+             * @default snapshot
+             * @enum {string}
+             */
+            searchMode: "snapshot" | "live" | "hybrid";
             /** Snapshotid */
             snapshotId: string;
             /** Warnings */
@@ -5668,6 +5759,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    public_alerts_api_v1_public_alerts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicAlertFeed"];
                 };
             };
         };

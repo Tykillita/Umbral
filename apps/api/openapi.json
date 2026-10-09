@@ -1143,6 +1143,17 @@
             "title": "Question",
             "type": "string"
           },
+          "searchMode": {
+            "default": "snapshot",
+            "description": "Origen de búsqueda: corte verificado, fuentes vivas o selección automática.",
+            "enum": [
+              "auto",
+              "snapshot",
+              "live"
+            ],
+            "title": "Searchmode",
+            "type": "string"
+          },
           "topicId": {
             "anyOf": [
               {
@@ -4267,6 +4278,136 @@
         "title": "PublicAgendaRequest",
         "type": "object"
       },
+      "PublicAlert": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "sismo",
+              "aviso",
+              "noticia"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "magnitude": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Magnitude"
+          },
+          "occurredAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurredat"
+          },
+          "place": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Place"
+          },
+          "publishedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publishedat"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "source",
+          "url",
+          "publishedAt",
+          "occurredAt",
+          "magnitude",
+          "place",
+          "status"
+        ],
+        "title": "PublicAlert",
+        "type": "object"
+      },
+      "PublicAlertFeed": {
+        "properties": {
+          "checkedAt": {
+            "format": "date-time",
+            "title": "Checkedat",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PublicAlert"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "checkedAt",
+          "items",
+          "warnings"
+        ],
+        "title": "PublicAlertFeed",
+        "type": "object"
+      },
       "PublicComposeRequest": {
         "properties": {
           "context": {
@@ -4304,6 +4445,17 @@
             "maxLength": 500,
             "minLength": 3,
             "title": "Question",
+            "type": "string"
+          },
+          "searchMode": {
+            "default": "snapshot",
+            "description": "Origen de búsqueda: corte verificado, fuentes vivas o selección automática.",
+            "enum": [
+              "auto",
+              "snapshot",
+              "live"
+            ],
+            "title": "Searchmode",
             "type": "string"
           },
           "topicId": {
@@ -4460,6 +4612,17 @@
             "maxLength": 500,
             "minLength": 3,
             "title": "Question",
+            "type": "string"
+          },
+          "searchMode": {
+            "default": "snapshot",
+            "description": "Origen de búsqueda: corte verificado, fuentes vivas o selección automática.",
+            "enum": [
+              "auto",
+              "snapshot",
+              "live"
+            ],
+            "title": "Searchmode",
             "type": "string"
           },
           "topicId": {
@@ -4991,6 +5154,17 @@
             "title": "Question",
             "type": "string"
           },
+          "searchMode": {
+            "default": "snapshot",
+            "description": "Origen de búsqueda: corte verificado, fuentes vivas o selección automática.",
+            "enum": [
+              "auto",
+              "snapshot",
+              "live"
+            ],
+            "title": "Searchmode",
+            "type": "string"
+          },
           "topicId": {
             "anyOf": [
               {
@@ -5075,6 +5249,18 @@
           "intent": {
             "$ref": "#/components/schemas/QueryIntent"
           },
+          "liveCheckedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Livecheckedat"
+          },
           "missing": {
             "items": {
               "type": "string"
@@ -5116,6 +5302,16 @@
             "title": "Rulesversion",
             "type": "string"
           },
+          "searchMode": {
+            "default": "snapshot",
+            "enum": [
+              "snapshot",
+              "live",
+              "hybrid"
+            ],
+            "title": "Searchmode",
+            "type": "string"
+          },
           "snapshotId": {
             "title": "Snapshotid",
             "type": "string"
@@ -5142,6 +5338,8 @@
           "relatedTopicIds",
           "warnings",
           "snapshotId",
+          "searchMode",
+          "liveCheckedAt",
           "rulesVersion",
           "dataMode",
           "retrieval",
@@ -9950,6 +10148,27 @@
           }
         },
         "summary": "Public Agenda",
+        "tags": [
+          "publico"
+        ]
+      }
+    },
+    "/api/v1/public/alerts": {
+      "get": {
+        "operationId": "public_alerts_api_v1_public_alerts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicAlertFeed"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Alertas y cobertura reciente de fuentes públicas",
         "tags": [
           "publico"
         ]

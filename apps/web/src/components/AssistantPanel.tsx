@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEve
 import {
   Bot, ChevronDown, Cpu, History, Maximize2, MessageSquarePlus, Minus, Minimize2, Settings2, Trash2, X,
 } from 'lucide-react';
-import type { ComposeProvider, QueryContext } from '../lib/api/types';
+import type { ComposeProvider, QueryContext, SearchMode } from '../lib/api/types';
 import { authState } from '../lib/auth';
 import {
   exportAssistantMarkdown, loadAssistantComposeProvider, newAssistantId, saveAssistantComposeProvider, turnToMarkdown,
@@ -62,6 +62,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
   const [pendingSeed, setPendingSeed] = useState<Seed | null>(null);
   const [now, setNow] = useState(Date.now());
   const [continueContext, setContinueContext] = useState(true);
+  const [searchMode, setSearchMode] = useState<SearchMode>('auto');
   const [replaceDraftWith, setReplaceDraftWith] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLElement>(null);
@@ -294,7 +295,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
     return () => window.clearInterval(timer);
   }, [retryReadyAt]);
 
-  function submit(questionText = draft, followUpOverride?: QueryContext | null) {
+  function submit(questionText = draft, followUpOverride?: QueryContext | null, mode: SearchMode = searchMode) {
     const question = questionText.trim();
     const length = [...question].length;
     if (length < 3 || length > 500 || (activeId != null && inFlight.current.has(activeId))) return;
@@ -308,6 +309,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
     }
     const turn: AssistantTurn = {
       id: newAssistantId(), question, topicId: conversation.scopeTopicId, followUp,
+      searchMode: mode,
       topicTitle: conversation.scopeTopicTitle, createdAt: new Date().toISOString(), state: 'pending',
     };
     history.discardPendingDraft();
@@ -535,6 +537,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
               scopeTitle={scopeTopicTitle || (scopeTopicId === activeRouteTopic ? currentTopicTitle : 'tema guardado')}
               onScope={changeScope} draft={draft} onDraft={changeDraft} onKeyDown={onComposerKeyDown} inputRef={inputRef}
               touch={touchComposer} charCount={charCount} running={Boolean(runningId)} onSubmit={() => submit()}
+              searchMode={searchMode} onSearchMode={setSearchMode}
             />
           </>
         )}
