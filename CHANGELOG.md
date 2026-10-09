@@ -27,6 +27,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- La compilación web de producción y de vistas previas recibe y valida la configuración pública de Firebase; así se inicia la identidad anónima que habilita las conexiones OAuth de Notion y Slack.
 - La portada mantiene el desplazamiento vertical en todos los anchos, incluso después de navegar desde la aplicación; la barra lateral no estrecha el encabezado ni el pie.
 - En `/app`, el desplazamiento queda confinado al contenido en todos los tamaños; la portada y las páginas del jurado conservan el scroll normal del navegador.
 - Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
