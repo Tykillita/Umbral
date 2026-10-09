@@ -863,17 +863,17 @@ html.desktop-shell .desktop-hidden { display: none; }
   .comic-app-header .comic-mobile-more-trigger .select-chevron { display: none; }
 }
 /* En la web, el scroll pertenece al contenido; header y navegación quedan fuera del área desplazable. */
-html:not(.desktop-shell) { height: 100%; overflow: clip; scrollbar-gutter: auto; }
-html:not(.desktop-shell) body { position: fixed; inset: 0; width: auto; height: 100dvh; min-height: 0; overflow: hidden; }
-html:not(.desktop-shell) #app-root { display: flex; width: 100%; height: 100dvh; min-height: 0; flex-direction: column; overflow: hidden; }
-html:not(.desktop-shell) #app-root > .comic-masthead { position: relative; inset: auto; z-index: 30; width: 100%; flex: 0 0 auto; }
-html:not(.desktop-shell) .comic-sheet#contenido {
+html.app-shell:not(.desktop-shell) { height: 100%; overflow: clip; scrollbar-gutter: auto; }
+html.app-shell:not(.desktop-shell) body { position: fixed; inset: 0; width: auto; height: 100dvh; min-height: 0; overflow: hidden; }
+html.app-shell:not(.desktop-shell) #app-root { display: flex; width: 100%; height: 100dvh; min-height: 0; flex-direction: column; overflow: hidden; }
+html.app-shell:not(.desktop-shell) #app-root > .comic-masthead { position: relative; inset: auto; z-index: 30; width: 100%; flex: 0 0 auto; }
+html.app-shell:not(.desktop-shell) .comic-sheet#contenido {
   min-height: 0; flex: 1 1 0; margin: 0 auto; overflow-x: hidden; overflow-y: auto;
   overscroll-behavior-y: contain; scrollbar-gutter: auto; padding-bottom: 1.25rem;
 }
 @media (max-width: 767px) {
-  html:not(.desktop-shell) .comic-masthead > .comic-app-header { box-sizing: border-box; width: 100%; }
-  html:not(.desktop-shell) .comic-sheet#contenido {
+  html.app-shell:not(.desktop-shell) .comic-masthead > .comic-app-header { box-sizing: border-box; width: 100%; }
+  html.app-shell:not(.desktop-shell) .comic-sheet#contenido {
     width: 100%; max-width: none; min-height: 0; flex: 1 1 0; margin: 0 0 var(--mobile-nav-height);
   }
 }
