@@ -1,78 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 980" role="img" aria-labelledby="title desc">
   <title id="title">Umbral architecture</title>
-  <desc id="desc">Public sources feed a Python and Laya pipeline that publishes verified snapshots. The hosted web uses Firebase Hosting, a stateless Render API and browser IndexedDB. Windows Desktop bundles its local API, pipeline and model and stores work in SQLite.</desc>
+  <desc id="desc">Public sources feed a Python and Laya pipeline that publishes verified snapshots. The hosted web uses Firebase Hosting, a public Render API, and browser IndexedDB. The Windows desktop app bundles its API, pipeline, and model and stores work locally in SQLite.</desc>
   <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#172337"/></marker>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0 0 14 7 0 14Z" fill="#172337"/>
+    </marker>
   </defs>
-  <rect width="1200" height="700" fill="#FFF7DF"/>
-  <text x="42" y="55" fill="#172337" font-family="Arial, sans-serif" font-size="19" font-weight="800" letter-spacing="2">ONE VERIFIED DATA PATH · TWO PLACES TO WORK</text>
-  <path d="M42 75H1158" stroke="#172337" stroke-width="3"/>
-  <g font-family="Arial, sans-serif" fill="#172337">
+  <rect width="1280" height="980" fill="#FFF7DF"/>
+  <text x="64" y="68" fill="#172337" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="800" letter-spacing="2">ONE VERIFIED FEED · TWO WORKSPACES</text>
+  <path d="M64 96H1216" stroke="#172337" stroke-width="3"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#172337">
     <g>
-      <rect x="47" y="128" width="220" height="156" fill="#172337"/>
-      <rect x="40" y="120" width="220" height="156" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
-      <path d="M42 124H258" stroke="#CEE5EC" stroke-width="12"/>
-      <text x="150" y="176" text-anchor="middle" font-size="23" font-weight="800">PUBLIC SOURCES</text>
-      <text x="150" y="216" text-anchor="middle" font-size="18">News &amp; official</text>
-      <text x="150" y="242" text-anchor="middle" font-size="18">indicators</text>
+      <rect x="64" y="138" width="330" height="160" fill="#172337"/>
+      <rect x="56" y="130" width="330" height="160" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M58 134H384" stroke="#CEE5EC" stroke-width="10"/>
+      <text x="82" y="172" font-size="16" font-weight="800" letter-spacing="1.5">01 · INPUT</text>
+      <text x="82" y="211" font-size="25" font-weight="800">PUBLIC SOURCES</text>
+      <text x="82" y="248" font-size="18">News headlines</text>
+      <text x="82" y="273" font-size="18">Official indicators</text>
     </g>
-    <path d="M272 197h67" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
     <g>
-      <rect x="347" y="128" width="280" height="156" fill="#172337"/>
-      <rect x="340" y="120" width="280" height="156" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
-      <path d="M342 124H618" stroke="#F7C744" stroke-width="12"/>
-      <text x="480" y="176" text-anchor="middle" font-size="23" font-weight="800">PYTHON PIPELINE</text>
-      <text x="480" y="216" text-anchor="middle" font-size="18">Ingest · classify with Laya</text>
-      <text x="480" y="242" text-anchor="middle" font-size="18">validate · group · export</text>
+      <rect x="483" y="138" width="330" height="160" fill="#172337"/>
+      <rect x="475" y="130" width="330" height="160" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M477 134H803" stroke="#F7C744" stroke-width="10"/>
+      <text x="501" y="172" font-size="16" font-weight="800" letter-spacing="1.5">02 · PROCESS</text>
+      <text x="501" y="211" font-size="25" font-weight="800">PYTHON PIPELINE</text>
+      <text x="501" y="248" font-size="18">Laya classification · validation</text>
+      <text x="501" y="273" font-size="18">Event grouping · snapshot export</text>
     </g>
-    <path d="M632 197h67" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
     <g>
-      <rect x="707" y="128" width="250" height="156" fill="#172337"/>
-      <rect x="700" y="120" width="250" height="156" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
-      <path d="M702 124H948" stroke="#F7C744" stroke-width="12"/>
-      <text x="825" y="176" text-anchor="middle" font-size="22" font-weight="800">VERIFIED FEED</text>
-      <text x="825" y="216" text-anchor="middle" font-size="18">Versioned snapshots</text>
-      <text x="825" y="242" text-anchor="middle" font-size="18">manifest + SHA-256</text>
+      <rect x="902" y="138" width="330" height="160" fill="#172337"/>
+      <rect x="894" y="130" width="330" height="160" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M896 134H1222" stroke="#F7C744" stroke-width="10"/>
+      <text x="920" y="172" font-size="16" font-weight="800" letter-spacing="1.5">03 · VERIFIED DATA</text>
+      <text x="920" y="211" font-size="25" font-weight="800">VERIFIED FEED</text>
+      <text x="920" y="248" font-size="18">Versioned snapshot + manifest</text>
+      <text x="920" y="273" font-size="18">Integrity checked with SHA-256</text>
     </g>
-    <path d="M825 284v66H300v30" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
-    <path d="M825 350h75v30" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
-
+    <path d="M404 211H459" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <path d="M823 211H878" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <g fill="none" stroke="#172337" stroke-width="5">
+      <path d="M1059 290V341H322V388" marker-end="url(#arrow)"/>
+      <path d="M958 341V388" marker-end="url(#arrow)"/>
+    </g>
     <g>
-      <rect x="47" y="388" width="520" height="232" fill="#172337"/>
-      <rect x="40" y="380" width="520" height="232" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
-      <path d="M42 384H558" stroke="#CEE5EC" stroke-width="12"/>
-      <text x="66" y="430" font-size="24" font-weight="800">HOSTED WEB</text>
+      <rect x="56" y="412" width="548" height="420" fill="#172337"/>
+      <rect x="48" y="404" width="548" height="420" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M50 408H594" stroke="#CEE5EC" stroke-width="10"/>
+      <text x="80" y="451" font-size="29" font-weight="800">HOSTED WEB</text>
+      <path d="M80 468H564" stroke="#172337" stroke-width="2"/>
       <g>
-        <rect x="64" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
-        <text x="136" y="482" text-anchor="middle" font-size="17" font-weight="800">FIREBASE</text>
-        <text x="136" y="511" text-anchor="middle" font-size="16">static web</text>
-        <rect x="226" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
-        <text x="298" y="482" text-anchor="middle" font-size="17" font-weight="800">RENDER</text>
-        <text x="298" y="511" text-anchor="middle" font-size="16">public FastAPI</text>
-        <rect x="388" y="452" width="153" height="96" fill="#CEE5EC" stroke="#172337" stroke-width="3"/>
-        <text x="464" y="482" text-anchor="middle" font-size="17" font-weight="800">BROWSER</text>
-        <text x="464" y="511" text-anchor="middle" font-size="16">private IndexedDB</text>
+        <rect x="78" y="484" width="488" height="82" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <path d="M80 486V564" stroke="#CEE5EC" stroke-width="8"/>
+        <text x="104" y="518" font-size="21" font-weight="800">FIREBASE HOSTING</text>
+        <text x="104" y="545" font-size="18">Static interface and public data feed</text>
       </g>
-      <text x="66" y="580" font-size="16">API stores no personal workspace.</text>
+      <g>
+        <rect x="78" y="582" width="488" height="82" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <path d="M80 584V662" stroke="#F7C744" stroke-width="8"/>
+        <text x="104" y="616" font-size="21" font-weight="800">RENDER API</text>
+        <text x="104" y="643" font-size="18">Public FastAPI service; no editorial workspace</text>
+      </g>
+      <g>
+        <rect x="78" y="680" width="488" height="82" fill="#CEE5EC" stroke="#172337" stroke-width="3"/>
+        <path d="M80 682V760" stroke="#F7C744" stroke-width="8"/>
+        <text x="104" y="714" font-size="21" font-weight="800">BROWSER STORAGE</text>
+        <text x="104" y="741" font-size="18">Drafts and reviews remain in IndexedDB</text>
+      </g>
+      <text x="80" y="798" font-size="18">Personal editorial work stays in the browser.</text>
     </g>
     <g>
-      <rect x="647" y="388" width="520" height="232" fill="#172337"/>
-      <rect x="640" y="380" width="520" height="232" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
-      <path d="M642 384H1158" stroke="#F7C744" stroke-width="12"/>
-      <text x="666" y="430" font-size="24" font-weight="800">WINDOWS DESKTOP</text>
+      <rect x="692" y="412" width="548" height="420" fill="#172337"/>
+      <rect x="684" y="404" width="548" height="420" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M686 408H1230" stroke="#F7C744" stroke-width="10"/>
+      <text x="716" y="451" font-size="29" font-weight="800">WINDOWS DESKTOP</text>
+      <path d="M716 468H1200" stroke="#172337" stroke-width="2"/>
       <g>
-        <rect x="664" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
-        <text x="736" y="482" text-anchor="middle" font-size="17" font-weight="800">ELECTRON</text>
-        <text x="736" y="511" text-anchor="middle" font-size="16">local interface</text>
-        <rect x="826" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
-        <text x="898" y="482" text-anchor="middle" font-size="17" font-weight="800">BUNDLED</text>
-        <text x="898" y="507" text-anchor="middle" font-size="15">API + pipeline</text>
-        <text x="898" y="529" text-anchor="middle" font-size="15">Laya on CPU</text>
-        <rect x="988" y="452" width="153" height="96" fill="#CEE5EC" stroke="#172337" stroke-width="3"/>
-        <text x="1064" y="482" text-anchor="middle" font-size="17" font-weight="800">SQLITE</text>
-        <text x="1064" y="511" text-anchor="middle" font-size="16">local workspace</text>
+        <rect x="714" y="484" width="488" height="82" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <path d="M716 486V564" stroke="#CEE5EC" stroke-width="8"/>
+        <text x="740" y="518" font-size="21" font-weight="800">ELECTRON</text>
+        <text x="740" y="545" font-size="18">Windows application</text>
       </g>
-      <text x="666" y="580" font-size="15">Offline classification · verified news updates when connected.</text>
+      <g>
+        <rect x="714" y="582" width="488" height="82" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <path d="M716 584V662" stroke="#F7C744" stroke-width="8"/>
+        <text x="740" y="616" font-size="21" font-weight="800">BUNDLED RUNTIME</text>
+        <text x="740" y="643" font-size="18">API, pipeline and Laya model on CPU</text>
+      </g>
+      <g>
+        <rect x="714" y="680" width="488" height="82" fill="#CEE5EC" stroke="#172337" stroke-width="3"/>
+        <path d="M716 682V760" stroke="#F7C744" stroke-width="8"/>
+        <text x="740" y="714" font-size="21" font-weight="800">LOCAL SQLITE</text>
+        <text x="740" y="741" font-size="18">On-device workspace · offline classification</text>
+      </g>
+      <text x="716" y="798" font-size="18">Checks for verified updates while connected.</text>
     </g>
   </g>
+  <path d="M48 878H1232V938H48Z" fill="#CEE5EC" stroke="#172337" stroke-width="4"/>
+  <text x="640" y="916" text-anchor="middle" fill="#172337" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" letter-spacing=".4">VERIFIED DATA IS SHARED · EDITORIAL WORK STAYS SEPARATE</text>
 </svg>
