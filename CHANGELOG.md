@@ -27,6 +27,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- En la web, el desplazamiento queda confinado al contenido en todos los tamaños; en móvil, las acciones del encabezado permanecen en una fila y la navegación inferior conserva todo el ancho.
 - Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
 
 ### Changed

@@ -7,6 +7,7 @@
   --umbral-space-4: 1rem;
   --umbral-space-6: 1.5rem;
   --umbral-space-8: 2rem;
+  --mobile-nav-height: calc(3.625rem + env(safe-area-inset-bottom));
 }
 
 @theme {
@@ -580,7 +581,7 @@ h1, h2, h3, .comic-page-heading, .topic-copy h3 {
     position: fixed; inset: auto 0 0 0; z-index: 30;
     display: grid; grid-template-columns: repeat(var(--mobile-nav-count, 4), minmax(0, 1fr)); gap: 0;
     background: var(--color-card); border-top: 2px solid var(--color-ink);
-    padding-bottom: env(safe-area-inset-bottom);
+    width: 100%; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom);
   }
   .comic-tabbar .comic-nav-overflow { display: none; }
   .comic-tabbar-more { display: block; }
@@ -809,12 +810,29 @@ html.desktop-shell .desktop-hidden { display: none; }
 }
 @media (max-width: 767px) {
   .comic-app-header .comic-tabbar { justify-self: stretch; }
-  .comic-app-header .comic-header-actions { flex-wrap: wrap; justify-content: flex-end; max-width: 14rem; gap: .35rem; }
-  .comic-active-role { flex-basis: 100%; max-width: 14rem; justify-content: space-between; }
-  .comic-sheet#contenido { padding-bottom: calc(8rem + env(safe-area-inset-bottom)); }
-  .settings-trigger { bottom: calc(7.5rem + env(safe-area-inset-bottom)); }
+  .comic-app-header .comic-header-actions { flex-wrap: nowrap; justify-content: flex-end; max-width: none; gap: .35rem; }
+  .comic-active-role { flex: 0 1 auto; max-width: min(14rem, 42vw); justify-content: space-between; }
+  .settings-trigger { bottom: calc(var(--mobile-nav-height) + .75rem); }
+}
+/* En la web, el scroll pertenece al contenido; header y navegación quedan fuera del área desplazable. */
+html:not(.desktop-shell) { height: 100%; overflow: hidden; scrollbar-gutter: auto; }
+html:not(.desktop-shell) body { height: 100%; min-height: 0; overflow: hidden; }
+html:not(.desktop-shell) #app-root { display: flex; width: 100%; height: 100dvh; min-height: 0; flex-direction: column; overflow: hidden; }
+html:not(.desktop-shell) #app-root > .comic-masthead { position: relative; inset: auto; z-index: 30; width: 100%; flex: 0 0 auto; }
+html:not(.desktop-shell) .comic-sheet#contenido {
+  min-height: 0; flex: 1 1 0; margin: 0 auto; overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior-y: contain; scrollbar-gutter: auto; padding-bottom: 1.25rem;
+}
+@media (max-width: 767px) {
+  html:not(.desktop-shell) .comic-masthead > .comic-app-header { box-sizing: border-box; width: 100%; }
+  html:not(.desktop-shell) .comic-sheet#contenido {
+    width: 100%; max-width: none; min-height: 0; flex: 1 1 0; margin: 0 0 var(--mobile-nav-height);
+  }
+}
+@media (max-width: 520px) {
+  .comic-app-header > .comic-brand { grid-column: 1 / -1; grid-row: 1; }
+  .comic-app-header .comic-header-actions { grid-column: 1 / -1; grid-row: 2; justify-self: end; }
 }
 @media (max-width: 359px) {
-  .comic-app-header .comic-header-actions { max-width: 11rem; }
-  .comic-active-role { max-width: 11rem; }
+  .comic-active-role { max-width: 42vw; }
 }

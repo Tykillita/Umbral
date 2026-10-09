@@ -276,6 +276,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   // Mover el foco al contenido principal al cambiar de vista (accesibilidad de SPA).
   useEffect(() => {
     mainRef.current?.focus({ preventScroll: true });
+    mainRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     window.scrollTo({ top: 0 });
     document.body.scrollTo({ top: 0 });
   }, [route.view]);
