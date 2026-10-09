@@ -790,8 +790,9 @@ html.desktop-shell .desktop-hidden { display: none; }
 
 /* Roles, mesa y evaluación humana: usan la misma tinta y el amarillo de Umbral. */
 .comic-masthead > .comic-app-header { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .5rem 1rem; }
-.comic-app-header .comic-tabbar { grid-column: 1 / -1; grid-row: 2; justify-self: center; flex-wrap: wrap; }
-.comic-app-header .comic-header-actions { grid-column: 2; grid-row: 1; justify-self: end; min-width: 0; }
+.comic-app-header .comic-tabbar { grid-column: 1 / -1; grid-row: 2; justify-self: center; flex-wrap: nowrap; white-space: nowrap; }
+.comic-app-header .comic-header-actions { grid-column: 2; grid-row: 1; justify-self: end; min-width: 0; flex-wrap: nowrap; white-space: nowrap; }
+.comic-app-header .comic-nav { white-space: nowrap; }
 .comic-active-role { display: flex; align-items: center; gap: .35rem; min-width: 0; max-width: 17rem; border: 1px solid var(--color-rule-strong); background: var(--color-amber-100); padding-left: .65rem; font-size: .8rem; font-weight: 700; }
 .comic-active-role > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .comic-active-role .comic-button { padding-inline: .5rem; }
@@ -803,7 +804,7 @@ html.desktop-shell .desktop-hidden { display: none; }
 .comic-label-mode.is-active { background: var(--color-amber-200); box-shadow: 2px 2px 0 var(--color-ink); }
 .comic-label-progress { display: block; height: .5rem; margin-top: .35rem; border: 1px solid var(--color-ink); background: var(--color-card); }
 .comic-label-progress > span { display: block; height: 100%; background: var(--color-amber-500); }
-@media (min-width: 1401px) {
+@media (min-width: 1024px) {
   .comic-masthead > .comic-app-header { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; }
   .comic-app-header .comic-tabbar { grid-column: 2; grid-row: 1; justify-self: center; flex-wrap: nowrap; }
   .comic-app-header .comic-header-actions { grid-column: 3; grid-row: 1; justify-self: end; }
