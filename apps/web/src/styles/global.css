@@ -112,7 +112,7 @@ body {
   border-top: 3px solid var(--color-ink);
 }
 
-.comic-masthead { background: var(--color-card); box-shadow: 0 3px 0 var(--color-ink); }
+.comic-masthead { position: sticky; top: 0; z-index: 30; background: var(--color-card); box-shadow: 0 3px 0 var(--color-ink); }
 .comic-brand { font-family: var(--font-serif); font-size: 2.25rem; font-weight: 800; line-height: 1; letter-spacing: .025em; text-transform: uppercase; }
 .comic-brand span { color: var(--color-ink); }
 .comic-sheet { background: var(--color-paper); border-inline: 1px solid var(--color-rule); }
@@ -211,7 +211,7 @@ button.comic-icon-button { padding: 0; }
   box-shadow: 6px 6px 0 var(--color-ink); transform-origin: right bottom;
   animation: assistant-enter 180ms ease-out both;
 }
-.assistant-panel-expanded { width: min(38rem, calc(100vw - 2rem)); }
+.assistant-panel-expanded { inset: 0; width: 100vw; height: 100dvh; max-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; transform-origin: center; }
 .assistant-panel.is-closing { animation: assistant-exit 120ms ease-in forwards; pointer-events: none; }
 .assistant-header { flex: 0 0 auto; padding: .75rem 1rem .5rem; border-bottom: 2px solid var(--color-ink); background: #cee5ec; }
 .assistant-header-main { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
@@ -737,6 +737,7 @@ textarea { resize: none; field-sizing: content; min-height: 5rem; max-height: 24
 .settings-trigger:hover { background: var(--color-amber-100); }
 .settings-trigger[aria-expanded="true"] { background: var(--color-amber-300); box-shadow: 2px 2px 0 var(--color-ink); }
 .settings-trigger:focus-visible { outline: 3px solid var(--color-info); outline-offset: 3px; }
+#app-root[data-assistant-fullscreen="true"] .settings-trigger { display: none; }
 .motion-switch { border: 2px solid var(--color-ink); padding: .2rem; background: var(--color-card); box-shadow: 2px 2px 0 var(--color-ink); }
 .motion-switch-options { display: flex; align-items: center; gap: .1rem; }
 .motion-switch-options > span { display: flex; }
@@ -784,6 +785,7 @@ html.desktop-shell .comic-masthead a, html.desktop-shell .comic-masthead button,
 @media (max-width: 1023px) {
   html.desktop-shell .assistant-panel, html.desktop-shell .assistant-panel-expanded { top: var(--titlebar-h); height: calc(var(--assistant-viewport-height, 100dvh) - var(--titlebar-h)); max-height: calc(var(--assistant-viewport-height, 100dvh) - var(--titlebar-h)); }
 }
+html.desktop-shell .assistant-panel-expanded { top: var(--titlebar-h); height: calc(100dvh - var(--titlebar-h)); max-height: calc(100dvh - var(--titlebar-h)); }
 /* En la app de escritorio ya se está dentro de la aplicación: lo que sobra se oculta. */
 html.desktop-shell .desktop-hidden { display: none; }
 

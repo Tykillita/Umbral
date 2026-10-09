@@ -23,6 +23,7 @@ import { Mesa } from './views/Mesa';
 import { Etiquetar } from './views/Etiquetar';
 import { SessionGate } from './SessionGate';
 import { AssistantPanel } from './AssistantPanel';
+import { readAssistantSize } from './assistant/shared';
 import { Button, ErrorBox, Loading, Notice, Pill } from './ui';
 import { SettingsPanel } from './SettingsPanel';
 import { WarningCenter, WarningCenterProvider } from './ui/warnings';
@@ -207,6 +208,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   const mobileOverflow = navigation.filter(({view}) => !mobilePrimaryViews.includes(view));
   const mobileNavColumns = navigation.filter(({view}) => mobilePrimaryViews.includes(view)).length + (mobileOverflow.length ? 1 : 0);
   const [mobile, setMobile] = useState(false);
+  const [assistantExpanded, setAssistantExpanded] = useState(() => readAssistantSize() === 'expanded');
   const [warningCenterOpen, setWarningCenterOpen] = useState(false);
   const { data: health } = useHealth();
   const mainRef = useRef<HTMLElement>(null);
@@ -272,6 +274,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   }, []);
 
   const assistantOpen = assistantState === 'open' && !assistantClosing;
+  const assistantFullscreen = assistantState === 'open' && (mobile || assistantExpanded);
 
   // Mover el foco al contenido principal al cambiar de vista (accesibilidad de SPA).
   useEffect(() => {
@@ -282,13 +285,17 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   }, [route.view]);
 
   return (
-    <div data-testid="app-root" inert={warningCenterOpen || undefined}>
+    <div
+      data-testid="app-root"
+      data-assistant-fullscreen={assistantFullscreen ? 'true' : undefined}
+      inert={warningCenterOpen || undefined}
+    >
       <SnapshotDataRefresh snapshotId={health?.snapshotId} />
       <SettingsPanel />
-      <a href="#contenido" inert={assistantOpen && mobile} className="skip-link">
+      <a href="#contenido" inert={assistantFullscreen || undefined} className="skip-link">
         Saltar al contenido
       </a>
-      <header ref={mastheadRef} inert={assistantOpen && mobile} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
+      <header ref={mastheadRef} inert={assistantFullscreen || undefined} className="comic-masthead @container sticky top-0 z-30 border-b-2 border-ink no-print">
         <div className="comic-app-header w-full px-4 py-2">
           <a href="/" className="comic-brand md:justify-self-start" aria-label="Umbral, inicio">
             Umbral<span className="text-amber-600">.</span>
@@ -362,7 +369,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
         </div>
       </header>
 
-      <main id="contenido" inert={assistantOpen && mobile} ref={mainRef} tabIndex={-1} className="comic-sheet mx-auto max-w-6xl space-y-4 px-4 pb-24 pt-5 outline-none md:pb-5">
+      <main id="contenido" inert={assistantFullscreen || undefined} ref={mainRef} tabIndex={-1} className="comic-sheet mx-auto max-w-6xl space-y-4 px-4 pb-24 pt-5 outline-none md:pb-5">
         <StatusBar />
         <div key={route.view} className="pt-1">
           {route.view === 'agenda' && <Agenda />}
@@ -376,7 +383,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
           Umbral prioriza la atención editorial y prepara borradores para revisión humana. No publica, no etiqueta noticias como verdaderas o falsas y no sustituye el criterio del equipo.
         </footer>
       </main>
-      <AssistantPanel state={assistantState} modal={mobile} closing={assistantClosing} onStateChange={setAssistantState} onClose={closeAssistantPanel} seed={seed} onUnreadChange={onAssistantUnread} />
+      <AssistantPanel state={assistantState} modal={mobile} closing={assistantClosing} onFullscreenChange={setAssistantExpanded} onStateChange={setAssistantState} onClose={closeAssistantPanel} seed={seed} onUnreadChange={onAssistantUnread} />
       <ExportToast toast={toast} anchor={assistantState === 'minimized' ? 'dock' : 'toggle'} onDismiss={dismissToast} />
     </div>
   );

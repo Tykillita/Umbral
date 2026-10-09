@@ -32,8 +32,8 @@ function IconAction({ label, content, icon: Icon, onClick, testId, pressed }: {
   return <Tooltip content={content}><Button variant="ghost" icon={Icon} iconOnly aria-label={label} onClick={onClick} data-testid={testId} aria-pressed={pressed} /></Tooltip>;
 }
 
-export function AssistantPanel({ state, modal = false, closing = false, onStateChange, onClose, seed, onUnreadChange }: {
-  state: AssistantVisibility; modal?: boolean; closing?: boolean; onStateChange: (state: AssistantVisibility) => void; onClose: () => void; seed: Seed;
+export function AssistantPanel({ state, modal = false, closing = false, onFullscreenChange, onStateChange, onClose, seed, onUnreadChange }: {
+  state: AssistantVisibility; modal?: boolean; closing?: boolean; onFullscreenChange?: (fullscreen: boolean) => void; onStateChange: (state: AssistantVisibility) => void; onClose: () => void; seed: Seed;
   /** Cantidad de respuestas recibidas que la persona todavía no ha visto (para el indicador de la cabecera). */
   onUnreadChange?: (count: number) => void;
 }) {
@@ -96,6 +96,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
   ] : [];
   const charCount = [...draft.trim()].length;
   const isOpen = state === 'open' && !closing;
+  const isFullscreen = modal || size === 'expanded';
   const isMinimized = state === 'minimized' && !modal;
   const turns = activeConversation?.turns ?? [];
   const latestContext: QueryContext | null = [...turns].reverse().find((turn) => turn.result?.followUpContext)?.result?.followUpContext ?? null;
@@ -241,7 +242,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
   }, [isOpen, loaded]);
 
   useEffect(() => {
-    if (!isOpen || !modal) return;
+    if (!isOpen || !isFullscreen) return;
     const previousBody = document.body.style.overflow;
     const previousRoot = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -258,7 +259,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
       viewport?.removeEventListener('resize', updateHeight);
       viewport?.removeEventListener('scroll', updateHeight);
     };
-  }, [isOpen, modal]);
+  }, [isOpen, isFullscreen]);
 
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -439,15 +440,15 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
         data-testid="assistant-panel"
         data-size={size}
         aria-label="Asistente de evidencia"
-        role={modal && isOpen ? 'dialog' : undefined}
-        aria-modal={modal && isOpen || undefined}
+        role={isFullscreen && isOpen ? 'dialog' : undefined}
+        aria-modal={isFullscreen && isOpen || undefined}
         inert={!isOpen || undefined}
         aria-hidden={!isOpen || undefined}
         className={`comic-dialogue assistant-panel assistant-panel-${size} fixed z-40 flex flex-col bg-paper ${isOpen ? 'is-open' : ''} ${closing ? 'is-closing' : ''}`}
         onKeyDown={(event) => {
           if (event.defaultPrevented) return;
           if (event.key === 'Escape') { event.preventDefault(); onClose(); }
-          if (event.key === 'Tab' && modal) {
+          if (event.key === 'Tab' && isFullscreen) {
             const focusable = panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not(:disabled), input:not(:disabled), textarea:not(:disabled), [role="combobox"][tabindex="0"], [tabindex="0"]');
             const items = [...(focusable ?? [])].filter((item) => item.getAttribute('aria-hidden') !== 'true');
             const first = items[0]; const last = items.at(-1);
@@ -461,7 +462,7 @@ export function AssistantPanel({ state, modal = false, closing = false, onStateC
             <div className="min-w-0"><p className="kicker">Umbral · evidencia</p><h2 className="font-display text-xl font-bold leading-tight">Asistente de evidencia</h2></div>
             <div className="assistant-header-actions">
               {!modal && <IconAction label="Minimizar asistente" content="Minimizar" icon={Minus} onClick={() => { onStateChange('minimized'); requestAnimationFrame(() => dockRef.current?.focus()); }} testId="assistant-minimize" />}
-              {!modal && <IconAction label={size === 'compact' ? 'Ampliar asistente' : 'Restaurar tamaño compacto'} content={size === 'compact' ? 'Ampliar panel' : 'Restaurar tamaño'} icon={size === 'compact' ? Maximize2 : Minimize2} onClick={() => { const next = size === 'compact' ? 'expanded' : 'compact'; setSize(next); try { window.localStorage.setItem('umbral.assistant.size', next); } catch { /* La preferencia es opcional; el tamaño permanece en memoria. */ } }} testId="assistant-resize" />}
+              {!modal && <IconAction label={size === 'compact' ? 'Abrir asistente a pantalla completa' : 'Volver al panel flotante'} content={size === 'compact' ? 'Abrir en pantalla completa' : 'Volver al panel'} icon={size === 'compact' ? Maximize2 : Minimize2} pressed={size === 'expanded'} onClick={() => { const next = size === 'compact' ? 'expanded' : 'compact'; setSize(next); onFullscreenChange?.(next === 'expanded'); try { window.localStorage.setItem('umbral.assistant.size', next); } catch { /* La preferencia es opcional; el tamaño permanece en memoria. */ } }} testId="assistant-resize" />}
               <IconAction label="Cerrar asistente" content="Cerrar" icon={X} onClick={onClose} testId="assistant-close" />
             </div>
           </div>
