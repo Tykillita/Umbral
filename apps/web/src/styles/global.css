@@ -871,6 +871,22 @@ html.app-shell:not(.desktop-shell) .comic-sheet#contenido {
   min-height: 0; flex: 1 1 0; margin: 0 auto; overflow-x: hidden; overflow-y: auto;
   overscroll-behavior-y: contain; scrollbar-gutter: auto; padding-bottom: 1.25rem;
 }
+/* La portada se desplaza como documento incluso si otro shell dejó un bloqueo global en el historial de navegación. */
+html.landing-shell:not(.desktop-shell) {
+  height: auto;
+  min-height: 100%;
+  overflow-x: clip;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+html.landing-shell:not(.desktop-shell) body {
+  position: static;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+}
 @media (max-width: 767px) {
   html.app-shell:not(.desktop-shell) .comic-masthead > .comic-app-header { box-sizing: border-box; width: 100%; }
   html.app-shell:not(.desktop-shell) .comic-sheet#contenido {

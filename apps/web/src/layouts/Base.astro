@@ -10,12 +10,14 @@ interface Props {
   title: string;
   description?: string;
   appShell?: boolean;
+  landingShell?: boolean;
 }
-const { title, description = 'Umbral: agenda editorial priorizada, evidencia trazable y borradores para revisión humana (TVN Media).', appShell = false } = Astro.props;
+const { title, description = 'Umbral: agenda editorial priorizada, evidencia trazable y borradores para revisión humana (TVN Media).', appShell = false, landingShell = false } = Astro.props;
+const shellClass = [appShell ? 'app-shell' : '', landingShell ? 'landing-shell' : ''].filter(Boolean).join(' ') || undefined;
 ---
 
 <!doctype html>
-<html lang="es" class={appShell ? 'app-shell' : undefined}>
+<html lang="es" class={shellClass}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

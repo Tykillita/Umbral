@@ -29,6 +29,12 @@ def test_portada_muestra_estructura_y_snapshot_actual(page: Page, stack, width: 
     assert page.locator(".landing-stat strong").nth(0).inner_text() != "Cargando…"
     assert page.locator(".landing-stat strong").nth(1).inner_text() != "Cargando…"
 
+    page.evaluate("window.scrollTo(0, 0)")
+    page.mouse.wheel(0, 600)
+    page.wait_for_function("window.scrollY > 0", timeout=2_000)
+    assert page.evaluate("window.scrollY") > 0, f"La portada no se desplaza verticalmente a {width}px"
+    page.evaluate("window.scrollTo(0, 0)")
+
     cards_geometry = page.get_by_test_id("landing-steps-track").evaluate(
         """track => {
           const clip = track.getBoundingClientRect();

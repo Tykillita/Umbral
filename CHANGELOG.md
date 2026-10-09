@@ -27,6 +27,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- La portada mantiene el desplazamiento vertical del documento en todos los anchos, incluso después de navegar desde la aplicación.
 - En `/app`, el desplazamiento queda confinado al contenido en todos los tamaños; la portada y las páginas del jurado conservan el scroll normal del navegador.
 - Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
 
