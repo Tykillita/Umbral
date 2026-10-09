@@ -1,0 +1,129 @@
+{
+  "snapshotId": "20261007-e704e952",
+  "dataMode": "provisional",
+  "offline": true,
+  "containsFixtures": false,
+  "externalRequests": 0,
+  "topic": {
+    "id": "evt_0fc2be4daea069a8",
+    "title": "Sinaproc extiende vigilancia por lluvias, tormentas y vientos hasta el viernes",
+    "score": 74.55,
+    "band": "alto",
+    "evidenceStatus": "insuficiente"
+  },
+  "viewport": {
+    "width": 390,
+    "height": 780
+  },
+  "applicationCommit": "6cc3831919874bd8d8c9032cf5e68eb4c646f7f3",
+  "recordedAtUtc": "2026-10-09T11:30:08.815624+00:00",
+  "scenes": [
+    {
+      "id": "agenda",
+      "file": "agenda-portrait.mp4",
+      "duration": 12,
+      "sha256": "1d5326cf48aff114985944ed11627d24015d9dd804ffb4005ad98617f6ee8576",
+      "clicks": []
+    },
+    {
+      "id": "ficha",
+      "file": "ficha-portrait.mp4",
+      "duration": 13,
+      "sha256": "70fbfb74ddb1e77833409a74b4dc167348e89c64d589593e6ea8b0fc99a86d9c",
+      "clicks": [
+        {
+          "time": 0.831,
+          "x": 210.203125,
+          "y": 418.640625
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "file": "assistant-portrait.mp4",
+      "duration": 10,
+      "sha256": "ad1fb97706f0caca20c57d3ba546cdb7c0a1245b47d0cc7e050c6c8ee0d4d931",
+      "clicks": [
+        {
+          "time": 0.633,
+          "x": 350.0,
+          "y": 83.0
+        },
+        {
+          "time": 1.732,
+          "x": 195.0,
+          "y": 688.203125
+        },
+        {
+          "time": 4.875,
+          "x": 314.0,
+          "y": 746.0
+        }
+      ]
+    },
+    {
+      "id": "draft",
+      "file": "draft-portrait.mp4",
+      "duration": 12,
+      "sha256": "e097f64e4e0904f378f95d45ca7a8193b36b5181dee5ef960c4d08e6f2f17ac7",
+      "clicks": [
+        {
+          "time": 0.572,
+          "x": 195.0,
+          "y": 599.21875
+        },
+        {
+          "time": 3.753,
+          "x": 195.0,
+          "y": 419.09375
+        },
+        {
+          "time": 9.098,
+          "x": 195.0,
+          "y": 164.84375
+        },
+        {
+          "time": 10.835,
+          "x": 97.5859375,
+          "y": 418.53125
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "file": "review-portrait.mp4",
+      "duration": 10,
+      "sha256": "de4e5bf5ca072185f2a940472618e34e3dea2618cbbde2824789683dae831c1a",
+      "clicks": [
+        {
+          "time": 0.824,
+          "x": 195.0,
+          "y": 419.0
+        },
+        {
+          "time": 3.748,
+          "x": 108.71875,
+          "y": 419.25
+        },
+        {
+          "time": 7.301,
+          "x": 124.5234375,
+          "y": 419.15625
+        }
+      ]
+    },
+    {
+      "id": "sources",
+      "file": "sources-portrait.mp4",
+      "duration": 7,
+      "sha256": "efe16805f7f68ac566cdeec039f57a9b809739377ce7efed882fb707afc802a7",
+      "clicks": [
+        {
+          "time": 0.722,
+          "x": 351.0,
+          "y": 752.0
+        }
+      ]
+    }
+  ]
+}

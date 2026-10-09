@@ -8,6 +8,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Added
 
+- Presentación audiovisual de 77 segundos en español e inglés: recorrido horizontal y reel vertical de la app real, con animaciones de cómic, voz local, subtítulos incrustados/WebVTT, clics sincronizados y fuentes reproducibles.
 - Aviso flotante y preferencia de actualizaciones de escritorio: un interruptor en Configuración permite desactivar la descarga e instalación automáticas; con las automáticas apagadas Umbral solo avisa de la versión disponible y ofrece «Actualizar ahora» para descargarla e instalarla.
 - Panel flotante de Configuración desde la tuerca fija, con Preferencias y Conexiones; los avisos globales se compactan a 56 px con texto elíptico accesible y controles táctiles de 44 px.
 - Temas «Original» y «TVN Noticias» en Configuración, con preferencia local para toda Umbral; Preferencias y Conexiones ahora forman parte del encabezado de la tarjeta.

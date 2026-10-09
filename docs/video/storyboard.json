@@ -1,0 +1,266 @@
+{
+  "duration": 77,
+  "fps": 30,
+  "languages": {
+    "es": {
+      "voice": "Microsoft Helena Desktop",
+      "locale": "es-ES",
+      "badge": "RECORRIDO EDITORIAL",
+      "data": "Corte real · provisional",
+      "repo": "github.com/Tykillita/Umbral"
+    },
+    "en": {
+      "voice": "Microsoft Zira Desktop",
+      "locale": "en-US",
+      "badge": "EDITORIAL TOUR",
+      "data": "Real snapshot · provisional",
+      "repo": "github.com/Tykillita/Umbral"
+    }
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "duration": 7,
+      "es": {
+        "title": "De la señal\na la decisión",
+        "points": [
+          "Agenda editorial",
+          "Evidencia a la vista"
+        ],
+        "narration": "Umbral. De la señal a la decisión. Una agenda editorial con evidencia.",
+        "captions": [
+          "Umbral.",
+          "De la señal a la decisión.",
+          "Una agenda editorial con evidencia."
+        ]
+      },
+      "en": {
+        "title": "From signals\nto decisions",
+        "points": [
+          "Editorial agenda",
+          "Evidence in view"
+        ],
+        "narration": "Umbral. From signals to decisions. An editorial agenda with evidence.",
+        "captions": [
+          "Umbral.",
+          "From signals to decisions.",
+          "An editorial agenda with evidence."
+        ]
+      }
+    },
+    {
+      "id": "agenda",
+      "duration": 12,
+      "es": {
+        "title": "Una agenda\nque explica",
+        "points": [
+          "Cinco temas",
+          "Cinco componentes",
+          "Filtros propios"
+        ],
+        "narration": "La agenda ordena cinco temas de Panamá. Relevancia, impacto, urgencia, novedad y evidencia explican el puntaje. Los filtros ayudan a comparar señales.",
+        "captions": [
+          "La agenda ordena cinco temas de Panamá.",
+          "Relevancia, impacto, urgencia, novedad y evidencia explican el puntaje.",
+          "Los filtros ayudan a comparar señales."
+        ]
+      },
+      "en": {
+        "title": "An agenda\nthat explains",
+        "points": [
+          "Five topics",
+          "Five components",
+          "Custom filters"
+        ],
+        "narration": "The agenda ranks five topics for Panama. Relevance, impact, urgency, novelty and evidence explain each score. Filters help you compare the signals.",
+        "captions": [
+          "The agenda ranks five topics for Panama.",
+          "Relevance, impact, urgency, novelty and evidence explain each score.",
+          "Filters help you compare the signals."
+        ]
+      }
+    },
+    {
+      "id": "ficha",
+      "duration": 13,
+      "es": {
+        "title": "Prioridad y\nevidencia",
+        "points": [
+          "Fuentes y fechas",
+          "Procedencias",
+          "Límites visibles"
+        ],
+        "narration": "Un tema puede tener prioridad alta y evidencia insuficiente. Su ficha muestra titulares, procedencias, fechas y preguntas pendientes. La repetición no crea una fuente independiente.",
+        "captions": [
+          "Un tema puede tener prioridad alta y evidencia insuficiente.",
+          "Su ficha muestra titulares, procedencias, fechas y preguntas pendientes.",
+          "La repetición no crea una fuente independiente."
+        ]
+      },
+      "en": {
+        "title": "Priority and\nevidence",
+        "points": [
+          "Sources and dates",
+          "Provenance",
+          "Visible limits"
+        ],
+        "narration": "A topic can have high priority and insufficient evidence. Its case sheet shows headlines, provenance, dates and open questions. Repetition does not create an independent source.",
+        "captions": [
+          "A topic can have high priority and insufficient evidence.",
+          "Its case sheet shows headlines, provenance, dates and open questions.",
+          "Repetition does not create an independent source."
+        ]
+      }
+    },
+    {
+      "id": "assistant",
+      "duration": 10,
+      "es": {
+        "title": "Preguntar con\nreferencias",
+        "points": [
+          "Consulta al corte",
+          "Citas trazables",
+          "Qué falta verificar"
+        ],
+        "narration": "El asistente consulta el mismo corte. Puedes preguntar qué falta verificar y seguir las citas hasta su evidencia.",
+        "captions": [
+          "El asistente consulta el mismo corte.",
+          "Puedes preguntar qué falta verificar y seguir las citas hasta su evidencia."
+        ]
+      },
+      "en": {
+        "title": "Ask with\nreferences",
+        "points": [
+          "Query the snapshot",
+          "Traceable citations",
+          "What needs checking"
+        ],
+        "narration": "The assistant searches the same snapshot. Ask what still needs checking, then follow the citations back to the evidence.",
+        "captions": [
+          "The assistant searches the same snapshot.",
+          "Ask what still needs checking, then follow the citations back to the evidence."
+        ]
+      }
+    },
+    {
+      "id": "draft",
+      "duration": 12,
+      "es": {
+        "title": "Un borrador\ncon sustento",
+        "points": [
+          "Plantilla offline",
+          "Origen identificado",
+          "Texto editable"
+        ],
+        "narration": "Desde una ficha preparas un borrador con referencias. Aquí funciona sin conexión mediante una plantilla, claramente identificada. El texto sigue siendo editable.",
+        "captions": [
+          "Desde una ficha preparas un borrador con referencias.",
+          "Aquí funciona sin conexión mediante una plantilla, claramente",
+          "identificada.",
+          "El texto sigue siendo editable."
+        ]
+      },
+      "en": {
+        "title": "A draft with\nreferences",
+        "points": [
+          "Offline template",
+          "Origin identified",
+          "Editable text"
+        ],
+        "narration": "Prepare a referenced draft from a case sheet. This demonstration works offline with a clearly identified template. You can edit the text before reviewing it.",
+        "captions": [
+          "Prepare a referenced draft from a case sheet.",
+          "This demonstration works offline with a clearly identified template.",
+          "You can edit the text before reviewing it."
+        ]
+      }
+    },
+    {
+      "id": "review",
+      "duration": 10,
+      "es": {
+        "title": "Criterio\nhumano",
+        "points": [
+          "Responsable",
+          "Revisión e historial",
+          "Exportar Markdown"
+        ],
+        "narration": "Registra responsable y revisión, conserva el historial y exporta la ficha a Markdown. Aprobar un borrador no publica una noticia.",
+        "captions": [
+          "Registra responsable y revisión, conserva el historial y exporta la ficha a",
+          "Markdown.",
+          "Aprobar un borrador no publica una noticia."
+        ]
+      },
+      "en": {
+        "title": "Human\njudgment",
+        "points": [
+          "Named reviewer",
+          "Review and history",
+          "Markdown export"
+        ],
+        "narration": "Record the reviewer and decision, preserve the history and export the case to Markdown. Approving a draft does not publish a story.",
+        "captions": [
+          "Record the reviewer and decision, preserve the history and export the case to Markdown.",
+          "Approving a draft does not publish a story."
+        ]
+      }
+    },
+    {
+      "id": "sources",
+      "duration": 7,
+      "es": {
+        "title": "Un corte\nidentificable",
+        "points": [
+          "Snapshot servido",
+          "Estado provisional",
+          "Límites de los datos"
+        ],
+        "narration": "Fuentes muestra el corte, su estado provisional y los límites de los datos.",
+        "captions": [
+          "Fuentes muestra el corte, su estado provisional y los límites de los datos."
+        ]
+      },
+      "en": {
+        "title": "An identified\nsnapshot",
+        "points": [
+          "Served snapshot",
+          "Provisional status",
+          "Data limitations"
+        ],
+        "narration": "Sources shows the snapshot, its provisional status and the limits of the data.",
+        "captions": [
+          "Sources shows the snapshot, its provisional status and the limits of the data."
+        ]
+      }
+    },
+    {
+      "id": "outro",
+      "duration": 6,
+      "es": {
+        "title": "La última palabra\nes del equipo",
+        "points": [
+          "Web y Windows",
+          "Código abierto · MIT"
+        ],
+        "narration": "Umbral organiza la atención. El equipo conserva la última palabra.",
+        "captions": [
+          "Umbral organiza la atención.",
+          "El equipo conserva la última palabra."
+        ]
+      },
+      "en": {
+        "title": "Your team has\nthe final word",
+        "points": [
+          "Web and Windows",
+          "Open source · MIT"
+        ],
+        "narration": "Umbral organizes attention. Your team keeps the final word.",
+        "captions": [
+          "Umbral organizes attention.",
+          "Your team keeps the final word."
+        ]
+      }
+    }
+  ]
+}

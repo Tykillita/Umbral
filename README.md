@@ -22,7 +22,7 @@
 
 <img src="apps/web/public/brand/social.png" width="720" alt="Umbral social card: a five-panel prioritised agenda">
 
-<p><a href="https://site-umbral.web.app/app">Open the app</a> &bull; <a href="#features">Features</a> &bull; <a href="#how-it-works">How it works</a> &bull; <a href="#quick-start">Quick start</a> &bull; <a href="#architecture">Architecture</a> &bull; <a href="#windows-app">Windows app</a> &bull; <a href="#known-limits">Known limits</a> &bull; <a href="SECURITY.md">Security policy</a></p>
+<p><a href="https://site-umbral.web.app/app">Open the app</a> &bull; <a href="#video">Video</a> &bull; <a href="#features">Features</a> &bull; <a href="#how-it-works">How it works</a> &bull; <a href="#quick-start">Quick start</a> &bull; <a href="#architecture">Architecture</a> &bull; <a href="#windows-app">Windows app</a> &bull; <a href="#known-limits">Known limits</a> &bull; <a href="SECURITY.md">Security policy</a></p>
 
 <sub>Panama news and official indicators · Spanish interface · Hosted services use free tiers</sub>
 
@@ -33,6 +33,17 @@ Umbral was built for the TVN Media hackathon challenge *“From signal to decisi
 > Everything Umbral produces is a **draft or a signal for review**. Nothing is published automatically, approving a draft is **not** publishing it, and the system never labels news as true or false.
 
 The interface is in Spanish. Code and identifiers are in English; [the Spanish README](README.es.md) mirrors this overview.
+
+## Video
+
+https://github.com/user-attachments/assets/b11e44dc-640f-4a29-a3c2-50afb65d22c4
+
+A **77-second** tour of the real app: Agenda, Case Sheet, Assistant, Drafts, review and export. Includes comic animations, English narration, subtitles and visible, audible clicks. **Unmute** to hear the narration, music and clicks. The UI remains in Spanish and uses the real provisional snapshot `20261007-e704e952` in offline local mode; the demonstrated draft is a cited template.
+
+[Open the video](https://github.com/user-attachments/assets/b11e44dc-640f-4a29-a3c2-50afb65d22c4) · [Repository MP4](docs/video/umbral-tour-en.mp4) · [WebVTT subtitles](docs/video/umbral-en.vtt) · [en español](README.es.md#video)
+
+**Reels edition · 1080 × 1920:** [English](https://github.com/user-attachments/assets/2d0c072a-097e-4588-9e54-808417ddf845) · [español](https://github.com/user-attachments/assets/16ac484f-ebe9-4cc3-961d-25e1db1b8441). [Sources, reproduction and verification](docs/public/VIDEO.md).
+
 
 ## Features
 
