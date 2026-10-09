@@ -48,6 +48,7 @@ def test_filtro_tvn_acepta_toque(browser: Browser, stack):
     try:
         open_app(page, stack.url)
         toggle = tid(page, "agenda-tvn-gap")
+        toggle.scroll_into_view_if_needed()
         bounds = toggle.bounding_box()
         assert bounds
         page.touchscreen.tap(bounds["x"] + bounds["width"] / 2, bounds["y"] + bounds["height"] / 2)
