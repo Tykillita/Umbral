@@ -29,11 +29,20 @@ def test_asistente_no_redimensiona_el_contenido(page: Page, stack, width: int):
     page.set_viewport_size({"width": width, "height": height})
     open_app(page, stack.url)
     settle_motion(page)
-    page.evaluate("window.scrollTo(0, Math.min(600, document.documentElement.scrollHeight - innerHeight))")
+    page.evaluate("window.scrollTo(0, 600)")
     scroll_before = page.evaluate("window.scrollY")
+    assert scroll_before == 0, "el documento no debe desplazar la cabecera"
     main = page.locator("#contenido")
+    main_scroll_before = main.evaluate("el => { el.scrollTop = Math.min(600, el.scrollHeight - el.clientHeight); return el.scrollTop; }")
+    assert main_scroll_before > 0, "el contenido principal debe tener su propio desplazamiento"
     before = main.bounding_box()
     assert before is not None
+    header = page.locator(".comic-masthead")
+    header_before = header.bounding_box()
+    assert header_before and header_before["y"] == 0
+    mobile_nav = page.locator(".comic-tabbar").bounding_box() if width < 768 else None
+    if width < 768:
+        assert mobile_nav and mobile_nav["y"] >= 0
 
     toggle = tid(page, "assistant-toggle")
     toggle_box = toggle.bounding_box()
@@ -42,6 +51,10 @@ def test_asistente_no_redimensiona_el_contenido(page: Page, stack, width: int):
     expect(tid(page, "assistant-input")).to_be_visible()
     settle_motion(page)
     assert page.evaluate("window.scrollY") == pytest.approx(scroll_before, abs=1)
+    assert main.evaluate("el => el.scrollTop") == pytest.approx(main_scroll_before, abs=1)
+    assert header.bounding_box() == pytest.approx(header_before, abs=1)
+    if mobile_nav:
+        assert page.locator(".comic-tabbar").bounding_box() == pytest.approx(mobile_nav, abs=1)
     RESULTS.mkdir(parents=True, exist_ok=True)
     page.screenshot(path=str(RESULTS / f"assistant-after-{width}.png"), full_page=True)
     after = main.bounding_box()
@@ -175,7 +188,9 @@ def test_tamano_minimizar_historial_y_borrador_persisten(page: Page, stack):
     panel = tid(page, "assistant-panel")
     expect(panel).to_have_attribute("data-size", "expanded")
     bounds = panel.bounding_box()
-    assert bounds and bounds["width"] == pytest.approx(608, abs=1)
+    assert bounds and bounds["x"] == pytest.approx(0, abs=1) and bounds["y"] == pytest.approx(0, abs=1)
+    assert bounds["width"] == pytest.approx(1440, abs=1) and bounds["height"] == pytest.approx(900, abs=1)
+    expect(panel).to_have_attribute("aria-modal", "true")
     assert main.bounding_box() == pytest.approx(before, abs=1)
     assert page.evaluate("window.scrollY") == pytest.approx(scroll_before, abs=1)
 

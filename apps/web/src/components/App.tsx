@@ -296,6 +296,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
 
   return (
     <div
+      id="app-root"
       data-testid="app-root"
       data-assistant-fullscreen={assistantFullscreen ? 'true' : undefined}
       inert={warningCenterOpen || undefined}
@@ -351,7 +352,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
                     active ? 'border-amber-600 bg-amber-100 text-ink' : 'border-transparent text-ink-2 hover:bg-sunk'
                   }`}
                 >
-                  <Ico size={16} aria-hidden="true" />
+                  <Ico size={18} strokeWidth={2.5} aria-hidden="true" />
                   {label === 'Fuentes y evaluación' ? (
                     <>
                       <span className="comic-nav-label @5xl:hidden">Fuentes</span>
@@ -429,7 +430,20 @@ function Inner() {
   const [assistantUnread, setAssistantUnread] = useState(0);
   const [assistantClosing, setAssistantClosing] = useState(false);
   const assistantCloseTimer = useRef<number | undefined>(undefined);
+  const assistantWasOpen = useRef(false);
   const [seed, setSeed] = useState({ text: '', topicId: null as string | null, topicTitle: '', n: 0 });
+
+  useEffect(() => {
+    if (assistantState === 'open') {
+      assistantWasOpen.current = true;
+      return;
+    }
+    if (assistantState !== 'closed' || !assistantWasOpen.current) return;
+    assistantWasOpen.current = false;
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('[data-testid="assistant-toggle"]')?.focus({ preventScroll: true });
+    });
+  }, [assistantState]);
 
   const openAssistantPanel = useCallback(() => {
     window.clearTimeout(assistantCloseTimer.current);

@@ -115,9 +115,13 @@ def test_filtros_forman_una_rejilla_simetrica_y_sin_texto_cortado(page: Page, st
     assert len({round(x["y"]) for x in row2}) == 1, f"segunda fila desalineada: {[round(x['y']) for x in row2]}"
     assert len({round(x["width"]) for x in b}) <= 2, f"anchos desiguales en la rejilla: {[round(x['width']) for x in b]}"
     assert len({round(x["height"]) for x in b}) == 1, f"alturas desiguales: {[round(x['height']) for x in b]}"
-    # El buscador ocupa todo el ancho de la barra y queda sobre la rejilla.
+    # El buscador y el filtro TVN comparten la fila superior y ocupan todo el ancho antes de la rejilla.
     search = box(page, "agenda-search")
-    assert search["y"] < row1[0]["y"] and search["width"] >= (row2[2]["x"] + row2[2]["width"]) - row1[0]["x"] - 40
+    tvn = box(page, "agenda-tvn-gap")
+    assert search["y"] < row1[0]["y"]
+    assert tvn["x"] >= search["x"] + search["width"], "el filtro TVN debe ir a la derecha del buscador"
+    assert tvn["y"] < search["y"] + search["height"] and tvn["y"] + tvn["height"] > search["y"]
+    assert tvn["x"] + tvn["width"] >= row2[2]["x"] + row2[2]["width"] - 40
     assert search["height"] >= 43.5
     assert not page.evaluate(JS_SELECT_TRUNCATED), f"menús con el texto cortado: {page.evaluate(JS_SELECT_TRUNCATED)}"
 
@@ -268,6 +272,13 @@ def test_pestanas_de_la_cabecera_estan_centradas(page: Page, stack, w):
     assert max(centers) - min(centers) <= 4, f"marca, pestañas y controles deben compartir una fila: {centers}"
     assert all(link.evaluate("element => getComputedStyle(element).whiteSpace") == "nowrap" for link in visible_links.all()), \
         "los botones de navegación deben mantener cada rótulo en una sola línea"
+    if 768 <= w <= 1200:
+        assert visible_links.count() == 6, "en ventanas intermedias las seis vistas deben tener un botón individual"
+        expect(more).to_be_hidden()
+        assert all(link.locator("svg").evaluate("icon => Number(icon.getAttribute('stroke-width')) >= 2.5") for link in visible_links.all()), \
+            "los iconos de navegación deben conservar un trazo grueso y legible"
+        assert all(link.locator(".comic-nav-label").evaluate_all("labels => labels.every(label => label.getBoundingClientRect().width <= 1)") for link in visible_links.all()), \
+            "en ventanas intermedias la navegación debe mostrar solo iconos"
 
 
 @pytest.mark.parametrize("w,h", [(320, 640), (390, 844), (640, 900), (689, 900), (767, 900)])
@@ -312,6 +323,7 @@ def test_mas_permita_elegir_con_raton_y_teclado(page: Page, stack):
     expect(page.get_by_role("listbox")).to_be_visible()
     page.keyboard.press("ArrowDown")
     page.keyboard.press("Enter")
+    expect(more).to_have_attribute("data-value", "etiquetar")
     assert "#/etiquetar" in page.url
     expect(more).to_have_attribute("data-value", "etiquetar")
 
