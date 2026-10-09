@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+  <title id="title">De la señal a la revisión editorial</title>
+  <desc id="desc">Las fuentes públicas generan un snapshot verificado, luego una agenda de cinco temas con evidencia y, por último, un borrador para revisión humana. Nada se publica automáticamente.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#172337"/></marker>
+  </defs>
+  <rect width="1200" height="480" fill="#FFF7DF"/>
+  <text x="42" y="57" fill="#172337" font-family="Arial, sans-serif" font-size="19" font-weight="800" letter-spacing="2">DE LA SEÑAL A LA REVISIÓN EDITORIAL</text>
+  <path d="M42 75H1158" stroke="#172337" stroke-width="3"/>
+
+  <g font-family="Arial, sans-serif" fill="#172337">
+    <g>
+      <rect x="47" y="132" width="250" height="220" fill="#172337"/>
+      <rect x="40" y="124" width="250" height="220" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M42 128H288" stroke="#CEE5EC" stroke-width="12"/>
+      <circle cx="79" cy="170" r="25" fill="#F7C744" stroke="#172337" stroke-width="3"/>
+      <path d="M68 160h22v20H68zM72 165h14M72 170h14M72 175h9" fill="none" stroke="#172337" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="165" y="220" text-anchor="middle" font-size="24" font-weight="800">FUENTES PÚBLICAS</text>
+      <text x="165" y="259" text-anchor="middle" font-size="18">Titulares de noticias</text>
+      <text x="165" y="286" text-anchor="middle" font-size="18">e indicadores oficiales</text>
+    </g>
+    <path d="M302 235h35" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <g>
+      <rect x="337" y="132" width="250" height="220" fill="#172337"/>
+      <rect x="330" y="124" width="250" height="220" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M332 128H578" stroke="#F7C744" stroke-width="12"/>
+      <circle cx="369" cy="170" r="25" fill="#F7C744" stroke="#172337" stroke-width="3"/>
+      <path d="M358 171l8 8 15-18" fill="none" stroke="#172337" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="455" y="220" text-anchor="middle" font-size="23" font-weight="800">SNAPSHOT VERIFICADO</text>
+      <text x="455" y="259" text-anchor="middle" font-size="18">Clasificación Laya</text>
+      <text x="455" y="286" text-anchor="middle" font-size="18">integridad + SHA-256</text>
+    </g>
+    <path d="M592 235h35" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <g>
+      <rect x="627" y="132" width="250" height="220" fill="#172337"/>
+      <rect x="620" y="124" width="250" height="220" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M622 128H868" stroke="#F7C744" stroke-width="12"/>
+      <circle cx="659" cy="170" r="25" fill="#F7C744" stroke="#172337" stroke-width="3"/>
+      <path d="M648 179v-9h7v9M658 179v-17h7v17M668 179v-12h7v12" fill="none" stroke="#172337" stroke-width="2.5"/>
+      <text x="745" y="220" text-anchor="middle" font-size="19" font-weight="800">AGENDA DE CINCO TEMAS</text>
+      <text x="745" y="259" text-anchor="middle" font-size="18">Temas priorizados</text>
+      <text x="745" y="286" text-anchor="middle" font-size="16">fuentes y puntaje explicado</text>
+    </g>
+    <path d="M882 235h35" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <g>
+      <rect x="917" y="132" width="250" height="220" fill="#172337"/>
+      <rect x="910" y="124" width="250" height="220" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M912 128H1158" stroke="#AE342D" stroke-width="12"/>
+      <circle cx="949" cy="170" r="25" fill="#F7C744" stroke="#172337" stroke-width="3"/>
+      <path d="M939 160h17v21h-17zM943 166h9M943 171h9M943 176h6" fill="none" stroke="#172337" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="1035" y="220" text-anchor="middle" font-size="24" font-weight="800">REVISIÓN HUMANA</text>
+      <text x="1035" y="259" text-anchor="middle" font-size="18">Revisar y editar</text>
+      <text x="1035" y="286" text-anchor="middle" font-size="18">sin publicación automática</text>
+    </g>
+  </g>
+  <path d="M40 389H1160V449H40Z" fill="#CEE5EC" stroke="#172337" stroke-width="4"/>
+  <text x="600" y="428" text-anchor="middle" fill="#172337" font-family="Arial, sans-serif" font-size="21" font-weight="800" letter-spacing=".4">UNA PERSONA REVISA · NADA SE PUBLICA AUTOMÁTICAMENTE</text>
+</svg>

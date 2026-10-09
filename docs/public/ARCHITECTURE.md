@@ -11,7 +11,7 @@ Fuentes públicas ─► pipeline (Laya, Python 3.12) ─► snapshot verificado
                     ▼                                   ▼
           Firebase Hosting                       Render (FastAPI, plan Free)
           web estática + feed /data              API pública sin estado
-                    │                            Firestore: solo la cuota diaria de Gemini
+                    │                            Firestore: cuota Gemini y credenciales OAuth cifradas si se configuran
                     ▼
           Navegador (Astro + React) ── IndexedDB: borradores, revisiones, impacto y pesos
 
@@ -60,11 +60,15 @@ Cada borrador cita fuentes del snapshot y declara su origen: **generado por un m
 - Ante cuota agotada, fallo del proveedor o contador no disponible, se genera una **plantilla con citas** y se muestra el motivo. No hay cambio automático a un proveedor de pago.
 - Conexiones personales (ChatGPT, Claude) existen solo en ejecución local y están deshabilitadas en la API pública.
 
+## Conectores opcionales de Notion y Slack
+
+Los conectores usan OAuth para exportar fichas nuevas a Notion, compartir en Slack y, si se activa, enviar avisos de revisión. Solo están disponibles cuando se configuran las aplicaciones OAuth, Firebase/Firestore y `CONNECTOR_ENCRYPTION_KEY`. La web pública usa una identidad anónima de Firebase para asociar cada autorización; la API cifra los tokens antes de guardarlos en Firestore. Estos conectores no habilitan cuentas de Umbral ni guardan el espacio de trabajo editorial.
+
 ## Modos de ejecución
 
 | Modo | Acceso (`UMBRAL_AUTH_MODE`) | Persistencia | Notas |
 |---|---|---|---|
-| Web pública | `public` | Ninguna en servidor; IndexedDB en el navegador | Sin cuentas ni Firebase Auth; escrituras privadas responden 403 |
+| Web pública | `public` | Espacio de trabajo en IndexedDB; credenciales OAuth opcionales cifradas en Firestore | Sin cuentas personales; Firebase anónimo solo para conectores; escrituras del espacio de trabajo responden 403 |
 | Escritorio | `local` (credencial efímera del proceso) | SQLite en `%LOCALAPPDATA%\Umbral` | Funciona sin internet; Gemini solo si hay conexión |
 | Desarrollo | `local` | SQLite local | `scripts/start-local.*` o `scripts/dev.*` |
 | Pruebas | `dev-header` | Memoria o SQLite temporal | Nunca en producción |

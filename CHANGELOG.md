@@ -54,6 +54,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Documentation
 
+- Se actualizan los README y la arquitectura pública con las funciones separadas por entorno, el estado de producción y diagramas SVG localizados del flujo editorial y la arquitectura.
 - Registra la prueba real de instalación y actualización de la app de escritorio mediante GitHub Releases.
 
 ## [0.1.1] — 2026-10-08

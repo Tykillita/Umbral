@@ -80,6 +80,14 @@ Compilada y probada en el equipo de desarrollo el 2026-10-07:
 
 Esta prueba **no llama a Gemini real** y no acredita revisión humana.
 
+**Comprobación alojada de solo lectura (2026-10-09, 09:42 UTC):**
+
+- `Invoke-RestMethod -Uri 'https://site-umbral.web.app/data/current.json'`: feed `20261007-cfa338b6`, snapshot provisional; `publishedAt` `2026-10-09T07:01:49.51653Z`, hash del manifest `dbba62f3d01d962d09018f7a00b82e6fd068aa7b705145898a9b2c739a74b050`.
+- `Invoke-RestMethod -Uri 'https://umbral-m330.onrender.com/api/v1/health'`: `status: ok`, modo `public`, persistencia `none`, clasificador Laya, snapshot `20261007-cfa338b6`, commit alojado `5dcf938e4cd9062cf1269f381ac9a0f248c75801`.
+- `gh run list --repo Tykillita/Umbral --workflow daily-data.yml --limit 10 --json createdAt,status,conclusion,headSha,displayTitle,event`: la última ejecución programada devuelta fue omitida (`skipped`) el `2026-10-08T17:52:19Z`, con SHA `85be6577ba919f0b4eed5a9c0ff2e4eea6df7cb8`.
+
+El feed y la API siguen en el snapshot base provisional. Que el descriptor se haya publicado de nuevo con el mismo ID no demuestra que se haya completado un ciclo nuevo de ingesta; la continuidad diaria y dos ciclos reales siguen pendientes.
+
 ## 6. Pendiente (no ejecutado)
 
 - Generación real con Gemini sostenida, el contador de cuota de Firestore de producción y el arranque en frío medido en Render.

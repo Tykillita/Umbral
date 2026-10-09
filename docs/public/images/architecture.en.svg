@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Umbral architecture</title>
+  <desc id="desc">Public sources feed a Python and Laya pipeline that publishes verified snapshots. The hosted web uses Firebase Hosting, a stateless Render API and browser IndexedDB. Windows Desktop bundles its local API, pipeline and model and stores work in SQLite.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#172337"/></marker>
+  </defs>
+  <rect width="1200" height="700" fill="#FFF7DF"/>
+  <text x="42" y="55" fill="#172337" font-family="Arial, sans-serif" font-size="19" font-weight="800" letter-spacing="2">ONE VERIFIED DATA PATH · TWO PLACES TO WORK</text>
+  <path d="M42 75H1158" stroke="#172337" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" fill="#172337">
+    <g>
+      <rect x="47" y="128" width="220" height="156" fill="#172337"/>
+      <rect x="40" y="120" width="220" height="156" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M42 124H258" stroke="#CEE5EC" stroke-width="12"/>
+      <text x="150" y="176" text-anchor="middle" font-size="23" font-weight="800">PUBLIC SOURCES</text>
+      <text x="150" y="216" text-anchor="middle" font-size="18">News &amp; official</text>
+      <text x="150" y="242" text-anchor="middle" font-size="18">indicators</text>
+    </g>
+    <path d="M272 197h67" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <g>
+      <rect x="347" y="128" width="280" height="156" fill="#172337"/>
+      <rect x="340" y="120" width="280" height="156" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M342 124H618" stroke="#F7C744" stroke-width="12"/>
+      <text x="480" y="176" text-anchor="middle" font-size="23" font-weight="800">PYTHON PIPELINE</text>
+      <text x="480" y="216" text-anchor="middle" font-size="18">Ingest · classify with Laya</text>
+      <text x="480" y="242" text-anchor="middle" font-size="18">validate · group · export</text>
+    </g>
+    <path d="M632 197h67" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <g>
+      <rect x="707" y="128" width="250" height="156" fill="#172337"/>
+      <rect x="700" y="120" width="250" height="156" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M702 124H948" stroke="#F7C744" stroke-width="12"/>
+      <text x="825" y="176" text-anchor="middle" font-size="22" font-weight="800">VERIFIED FEED</text>
+      <text x="825" y="216" text-anchor="middle" font-size="18">Versioned snapshots</text>
+      <text x="825" y="242" text-anchor="middle" font-size="18">manifest + SHA-256</text>
+    </g>
+    <path d="M825 284v66H300v30" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+    <path d="M825 350h75v30" fill="none" stroke="#172337" stroke-width="5" marker-end="url(#arrow)"/>
+
+    <g>
+      <rect x="47" y="388" width="520" height="232" fill="#172337"/>
+      <rect x="40" y="380" width="520" height="232" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M42 384H558" stroke="#CEE5EC" stroke-width="12"/>
+      <text x="66" y="430" font-size="24" font-weight="800">HOSTED WEB</text>
+      <g>
+        <rect x="64" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <text x="136" y="482" text-anchor="middle" font-size="17" font-weight="800">FIREBASE</text>
+        <text x="136" y="511" text-anchor="middle" font-size="16">static web</text>
+        <rect x="226" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <text x="298" y="482" text-anchor="middle" font-size="17" font-weight="800">RENDER</text>
+        <text x="298" y="511" text-anchor="middle" font-size="16">public FastAPI</text>
+        <rect x="388" y="452" width="153" height="96" fill="#CEE5EC" stroke="#172337" stroke-width="3"/>
+        <text x="464" y="482" text-anchor="middle" font-size="17" font-weight="800">BROWSER</text>
+        <text x="464" y="511" text-anchor="middle" font-size="16">private IndexedDB</text>
+      </g>
+      <text x="66" y="580" font-size="16">API stores no personal workspace.</text>
+    </g>
+    <g>
+      <rect x="647" y="388" width="520" height="232" fill="#172337"/>
+      <rect x="640" y="380" width="520" height="232" fill="#FFFEF7" stroke="#172337" stroke-width="4"/>
+      <path d="M642 384H1158" stroke="#F7C744" stroke-width="12"/>
+      <text x="666" y="430" font-size="24" font-weight="800">WINDOWS DESKTOP</text>
+      <g>
+        <rect x="664" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <text x="736" y="482" text-anchor="middle" font-size="17" font-weight="800">ELECTRON</text>
+        <text x="736" y="511" text-anchor="middle" font-size="16">local interface</text>
+        <rect x="826" y="452" width="145" height="96" fill="#FFF7DF" stroke="#172337" stroke-width="3"/>
+        <text x="898" y="482" text-anchor="middle" font-size="17" font-weight="800">BUNDLED</text>
+        <text x="898" y="507" text-anchor="middle" font-size="15">API + pipeline</text>
+        <text x="898" y="529" text-anchor="middle" font-size="15">Laya on CPU</text>
+        <rect x="988" y="452" width="153" height="96" fill="#CEE5EC" stroke="#172337" stroke-width="3"/>
+        <text x="1064" y="482" text-anchor="middle" font-size="17" font-weight="800">SQLITE</text>
+        <text x="1064" y="511" text-anchor="middle" font-size="16">local workspace</text>
+      </g>
+      <text x="666" y="580" font-size="15">Offline classification · verified news updates when connected.</text>
+    </g>
+  </g>
+</svg>

@@ -22,9 +22,9 @@
 
 <img src="apps/web/public/brand/social.png" width="720" alt="Umbral social card: a five-panel prioritised agenda">
 
-<p><a href="https://site-umbral.web.app/app">Open the app</a> &bull; <a href="#features">Features</a> &bull; <a href="#quick-start">Quick start</a> &bull; <a href="#architecture">Architecture</a> &bull; <a href="#windows-app">Windows app</a> &bull; <a href="#known-limits">Known limits</a> &bull; <a href="SECURITY.md">Security policy</a></p>
+<p><a href="https://site-umbral.web.app/app">Open the app</a> &bull; <a href="#features">Features</a> &bull; <a href="#how-it-works">How it works</a> &bull; <a href="#quick-start">Quick start</a> &bull; <a href="#architecture">Architecture</a> &bull; <a href="#windows-app">Windows app</a> &bull; <a href="#known-limits">Known limits</a> &bull; <a href="SECURITY.md">Security policy</a></p>
 
-<sub>Panama news and official indicators · Spanish interface · Free tiers only</sub>
+<sub>Panama news and official indicators · Spanish interface · Hosted services use free tiers</sub>
 
 </div>
 
@@ -32,33 +32,27 @@ Umbral was built for the TVN Media hackathon challenge *“From signal to decisi
 
 > Everything Umbral produces is a **draft or a signal for review**. Nothing is published automatically, approving a draft is **not** publishing it, and the system never labels news as true or false.
 
-The interface is in Spanish. Code, identifiers and this README are in English; the Spanish README mirrors this one.
+The interface is in Spanish. Code and identifiers are in English; [the Spanish README](README.es.md) mirrors this overview.
 
 ## Features
 
-- **Prioritised agenda.** A transparent, versioned score (`scoring-v1`): `P = 30R + 25I + 20U + 15N + 10E` (relevance, impact, urgency, novelty, evidence). Low `[0, 40)`, medium `[40, 70)`, high `[70, 100]`. The *evidence status* (insufficient / partial / sufficient for a draft) is independent of the score, and a syndicated wire story counts as **one** provenance.
-- **Evidence cards.** Each topic lists its sources, official indicators (World Bank), contradictions, sponsored-content warnings and why each component scored what it did.
-- **Grounded drafts.** Gemini generates a structured draft with citations; if the quota is exhausted or the provider fails, a **citation-backed template** is produced instead. The UI always says whether a draft was *model-generated*, *recovered* or *template-built*.
-- **Private by design.** The public web has no accounts. Drafts, versions, reviews, impact notes and weights live in each browser's **IndexedDB**; the API stores no personal work. Export and restore a portable JSON copy, or export Markdown.
-- **Local classification.** News are classified with the open [Laya](https://huggingface.co/convaiinnovations/laya) model on CPU, pinned to a fixed revision. The Windows app ships the model and works offline.
-- **Daily refresh.** A scheduled workflow builds a verified snapshot (SHA-256 manifest, no fixtures) and publishes it as a feed; the API and the desktop app download it only when it changes and keep the last valid snapshot if anything fails.
-- **A hand-made interface.** No native browser controls: selects, checkboxes, number fields, disclosures and tooltips are custom, keyboard-accessible components (a static guard and E2E tests enforce it).
+- **Prioritised agenda.** A transparent, versioned score (`scoring-v1`): `P = 30R + 25I + 20U + 15N + 10E` (relevance, impact, urgency, novelty and evidence). Low `[0, 40)`, medium `[40, 70)`, high `[70, 100]`. Evidence status is independent of the score, and syndicated versions of one report count as **one** provenance.
+- **Evidence cards.** Each topic shows its sources, World Bank indicators, contradictions, possible sponsored content and the reason behind each score component. A citation's structure does not by itself prove that a claim is supported.
+- **Evidence assistant and drafts.** The assistant answers from the verified snapshot with citations and can abstain when it lacks evidence. Gemini can optionally compose a sourced answer or draft on the server; the UI labels the origin and keeps a cited template or rules-based answer when the model is unavailable. The shared Gemini limit is 20 calls per UTC day, retries included.
+- **Private workspace.** The hosted web has no user accounts and the public API does not store personal editorial work. Drafts, versions, reviews, impact notes and weights stay in the browser's **IndexedDB**. Export or restore the portable JSON workspace, or export a case to Markdown.
+- **Local personal providers.** A local web/API setup or Umbral Desktop can use a connected ChatGPT account or the installed Claude CLI session. These connections are localhost-only; the hosted public API cannot use personal sessions, and Umbral does not switch providers automatically.
+- **Optional Notion and Slack connectors.** When their OAuth applications, Firebase storage and encryption key are configured, users can export a case to Notion, share it in Slack and enable review notices. They are unavailable until that server configuration is supplied.
+- **Laya classification.** The pipeline uses the open [Laya](https://huggingface.co/convaiinnovations/laya) model on CPU. Umbral Desktop bundles the API, pipeline and model for local reclassification; the web consumes preclassified, verified snapshots.
+- **Verified data updates.** A scheduled workflow prepares snapshot candidates and publishes only those that pass integrity and coverage gates. The hosted API and Desktop check the feed, activate only verified data and retain the last valid snapshot after a failure. The production cadence is not yet confirmed; see [validation](docs/public/VALIDATION.md).
+- **A hand-made interface.** Umbral replaces native browser controls with custom, keyboard-accessible selects, checkboxes, number fields, disclosures and tooltips. Static and end-to-end checks enforce this rule.
+
+## How it works
+
+![Editorial flow: public sources become a verified snapshot, then a five-topic agenda with evidence, and finally a draft for human review. Nothing is published automatically.](docs/public/images/editorial-flow.en.svg)
 
 ## Architecture
 
-```
-Public sources ─► pipeline (Laya, Python 3.12) ─► verified snapshot + SHA-256
-                                                      │
-                  ┌───────────────────────────────────┤
-                  ▼                                   ▼
-        Firebase Hosting                       Render (FastAPI)
-        static web + data feed                 stateless public API
-                  │                            Firestore: daily Gemini quota only
-                  ▼
-        Browser (Astro + React)  ── IndexedDB: your drafts, reviews and weights
-
-        Windows (Electron) bundles API + pipeline + PyTorch CPU + Laya, SQLite in %LOCALAPPDATA%\Umbral
-```
+![Architecture: public sources feed the Python and Laya pipeline, which publishes verified snapshots to the hosted web/API and the Windows desktop app. Personal workspace data stays in IndexedDB or local SQLite.](docs/public/images/architecture.en.svg)
 
 More detail in [docs/public/ARCHITECTURE.md](docs/public/ARCHITECTURE.md). Contracts: [snapshot schema](docs/contracts/snapshot-schema.md), [API](docs/contracts/api-draft.md) and [public API](docs/contracts/api-public.md), plus `apps/api/openapi.json`.
 
@@ -97,7 +91,8 @@ Only `.env.example` files are versioned; never commit real keys (`apps/api/.env.
 | `UMBRAL_OFFLINE` | `1` = no external calls |
 | `GEMINI_API_KEY`, `GEMINI_MODEL` | Gemini free tier, no billing attached; falls back to a template |
 | `GEMINI_GLOBAL_CALLS_PER_DAY` | Hard global cap (max 20 per UTC day, retries included) |
-| `FIREBASE_PROJECT_ID`, `GOOGLE_APPLICATION_CREDENTIALS` | Server-side only, for the durable quota counter |
+| `FIREBASE_PROJECT_ID`, `GOOGLE_APPLICATION_CREDENTIALS` | Server-side credentials for the quota counter and, when enabled, encrypted connector tokens |
+| `NOTION_OAUTH_*`, `SLACK_OAUTH_*`, `CONNECTOR_ENCRYPTION_KEY` | Optional server-only OAuth connectors; leave unset to keep Notion and Slack unavailable |
 | `UMBRAL_CORS_ORIGINS`, `UMBRAL_CORS_PREVIEW_PROJECT` | Allowed web origins and Firebase preview channels |
 | `PUBLIC_API_URL`, `PUBLIC_API_MODE`, `PUBLIC_AUTH_MODE` | Web build: API origin, error behaviour and auth mode |
 
@@ -118,19 +113,19 @@ What was run, when, and with what result is recorded in [docs/public/VALIDATION.
 
 ## Deployment
 
-Pull requests get a Firebase Hosting preview; merging to `main` deploys the same commit to Render, verifies it and only then publishes Firebase Hosting. Everything runs on free tiers (Firebase Spark, Render Free, Gemini free tier) and stays inside their quotas. See [docs/public/DEPLOYMENT.md](docs/public/DEPLOYMENT.md).
+Pull requests get a Firebase Hosting preview; the deployment workflow deploys the API to Render, verifies it and then publishes the web app to Firebase Hosting. The hosted API is public and stores no user workspace. On **2026-10-09**, the live feed still pointed to provisional snapshot `20261007-cfa338b6`; the latest scheduled daily-data run was skipped, so recurring production refreshes are not claimed. The hosted status, command output and manifest hash are recorded in [validation](docs/public/VALIDATION.md). Hosting and Render use free plans; Gemini stays within its configured free-tier quota. See [deployment details](docs/public/DEPLOYMENT.md).
 
 ## Windows app
 
-`apps/desktop` builds a per-user NSIS installer for Windows 10/11 x64 that bundles the API, the pipeline, PyTorch CPU and the Laya weights, so it needs no Python, Node or model download on the target machine. The installer is unsigned, so Windows may show a warning. See [apps/desktop](apps/desktop) and [docs/public/DEPLOYMENT.md](docs/public/DEPLOYMENT.md#windows-app).
+`apps/desktop` builds a per-user NSIS installer for Windows 10/11 x64 that bundles the API, pipeline, PyTorch CPU and Laya weights; the target machine needs no Python, Node or model download. It stores the workspace in local SQLite and supports offline classification. While open and connected, it can search for and validate news updates every 24 hours, retaining the previous snapshot when a candidate fails. Application updates can be automatic or notification-only, according to the user's setting. The installer is unsigned, so Windows may show a warning. See [apps/desktop](apps/desktop) and [deployment details](docs/public/DEPLOYMENT.md#windows-app).
 
 ## Known limits
 
 - Outputs rely on **headlines and metadata**, not full article text.
-- The classifier's probabilities are not calibrated. Classification quality, claim support and Precision@5 still need **human review** and are not presented as validated editorial quality.
-- The current snapshot is **provisional**: the official frozen news package has not been supplied.
+- Model probabilities are not editorial confidence. Classification, claim support, duplicate grouping and Precision@5 still need **human review**; none is presented as validated editorial quality.
+- The hosted snapshot is **provisional** until the official frozen news package is supplied. The current production feed and refresh status are dated in [validation](docs/public/VALIDATION.md).
 - Independent corroboration is scarce in the collected corpus; sponsored content is flagged and capped.
-- Render Free sleeps after 15 minutes of inactivity, so the first request can take up to about a minute; the interface shows a preparation state and a retry button.
+- Render Free may sleep after inactivity, so the first request can be delayed; the interface shows a preparation state and a retry button.
 - There is no audience, rating or banking-modality data in this MVP.
 
 ## Security
