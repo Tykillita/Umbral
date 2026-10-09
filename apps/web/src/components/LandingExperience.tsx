@@ -559,9 +559,35 @@ export default function LandingExperience() {
       </main>
 
       <footer className="landing-footer">
-        <p>
+        <div className="landing-footer-inner mx-auto max-w-5xl px-4 py-7">
+          <section className="jury-links" aria-labelledby="jury-links-title">
+            <div className="jury-links-heading">
+              <p className="kicker">Para el jurado</p>
+              <h2 id="jury-links-title" className="font-display text-2xl font-bold">Umbral, por dentro y en contexto</h2>
+              <p className="text-sm">Tres lecturas para recorrer la solución, su experiencia y la propuesta.</p>
+            </div>
+            <nav className="jury-links-grid" aria-label="Documentos de Umbral para el jurado">
+              <a className="jury-link-card" href="/jurado/documentacion-tecnica/">
+                <span className="jury-link-number" aria-hidden="true">01</span>
+                <span><strong>Documentación técnica</strong><small>Arquitectura, datos y trazabilidad</small></span>
+                <span className="jury-link-arrow" aria-hidden="true">↗</span>
+              </a>
+              <a className="jury-link-card" href="/jurado/documentacion-funcional/">
+                <span className="jury-link-number" aria-hidden="true">02</span>
+                <span><strong>Documentación funcional</strong><small>Flujo editorial y decisiones humanas</small></span>
+                <span className="jury-link-arrow" aria-hidden="true">↗</span>
+              </a>
+              <a className="jury-link-card" href="/jurado/pitch-day/">
+                <span className="jury-link-number" aria-hidden="true">03</span>
+                <span><strong>Presentación Pitch Day</strong><small>Recorrido, guion y preguntas del jurado</small></span>
+                <span className="jury-link-arrow" aria-hidden="true">↗</span>
+              </a>
+            </nav>
+          </section>
+          <p className="landing-footer-note">
           Prototipo creado para el hackIAthon Panamá 2026, en el reto propuesto por TVN Media. No es un producto oficial de TVN. Licencia MIT. Los resultados son borradores y señales para revisión humana; Umbral no publica nada de forma automática.
-        </p>
+          </p>
+        </div>
       </footer>
     </>
   );

@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Content as Documento } from '../../../../../docs/public/UMBRAL-TECHNICAL.md';
+---
+
+<Base title="Documentación técnica · Umbral" description="Arquitectura, datos y trazabilidad de Umbral para el jurado.">
+  <main class="jury-document">
+    <nav class="jury-document-top" aria-label="Navegación del documento">
+      <a href="/">← Umbral</a>
+      <a href="/app/">Abrir la aplicación</a>
+    </nav>
+    <article class="jury-document-content"><Documento /></article>
+    <footer class="jury-document-footer"><a class="jury-document-back" href="/">Volver a la portada</a><a class="jury-document-back" href="/jurado/documentacion-funcional/">Siguiente: experiencia funcional →</a></footer>
+  </main>
+</Base>
