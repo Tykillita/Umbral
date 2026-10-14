@@ -228,3 +228,32 @@ def test_la_app_abre_sin_conexion_y_nunca_cachea_la_api(browser, stack):
         expect(page.locator("#app-root, [data-testid='session-gate'], [data-testid='app-loading'], [data-testid='app-boot-error']").first).to_be_visible(timeout=15_000)
     finally:
         ctx.close()
+
+
+@pytest.mark.parametrize("width", [320, 328, 360, 390, 430, 600, 767])
+def test_la_cabecera_de_la_app_es_una_sola_linea_en_movil(browser, stack, width: int):
+    """Marca a la izquierda y acciones a la derecha en la misma fila; antes la cabecera ocupaba dos filas en móvil."""
+    ctx = mobile_context(browser, width, 700)
+    try:
+        page = ctx.new_page()
+        open_app(page, stack.url)
+        settle_motion(page)
+        geometry = page.evaluate(
+            """() => {
+              const box = selector => { const r = document.querySelector(selector).getBoundingClientRect(); return {left: r.left, top: r.top, right: r.right, bottom: r.bottom}; };
+              return {header: box('.comic-masthead'), brand: box('.comic-brand'), actions: box('.comic-header-actions'), vw: window.innerWidth};
+            }"""
+        )
+        header, brand, actions = geometry["header"], geometry["brand"], geometry["actions"]
+        assert header["bottom"] - header["top"] <= 64, f"la cabecera debe ser una línea (≤ 64 px), mide {header['bottom'] - header['top']:.0f} px"
+        brand_center = (brand["top"] + brand["bottom"]) / 2
+        actions_center = (actions["top"] + actions["bottom"]) / 2
+        assert abs(brand_center - actions_center) <= 6, f"marca y acciones deben compartir fila: {brand_center:.0f} vs {actions_center:.0f}"
+        assert brand["right"] <= actions["left"] + 0.5, "la marca y las acciones no deben superponerse"
+        assert actions["right"] <= width + 0.5 and brand["left"] >= -0.5, "la cabecera no debe salirse de la pantalla"
+        change = tid(page, "role-change").bounding_box()
+        assert change is not None and change["width"] >= 43.5 and change["height"] >= 43.5, f"«Cambiar de rol» debe medir al menos 44 px: {change}"
+        assert tid(page, "role-change").inner_text().strip() == "Cambiar", "el texto sigue en el DOM para lectores de pantalla"
+        assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    finally:
+        ctx.close()
