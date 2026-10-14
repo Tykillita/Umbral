@@ -6,8 +6,8 @@ import { isServiceUnavailable } from '../../lib/api/client';
 import { BAND_LABEL, CATEGORY_LABEL, EVIDENCE_LABEL, REVIEW_LABEL } from '../../lib/labels';
 import { fmtDateTime, fmtScore } from '../../lib/format';
 import { useDisclosureMotion, useEntrance, useRevealNew } from '../../lib/useMotion';
-import { useApp } from '../context';
-import { BandPill, Button, ErrorBox, EvidencePill, Loading, Notice, Pill, ReviewPill, inputCls } from '../ui';
+import { useApp, useBoot } from '../context';
+import { BandPill, Button, ErrorBox, EvidencePill, Loading, Notice, Pill, ReviewPill, SkeletonCard, inputCls } from '../ui';
 import { ScoreBreakdown } from '../ScoreBreakdown';
 import { EmptyNewsPanel, TodaySection } from './TodaySection';
 import { Disclosure, Select, Tooltip, type SelectOption } from '../ui/controls';
@@ -165,6 +165,7 @@ function TopicCard({ t, onOpen }: { t: TopicSummary; onOpen: (id: string) => voi
 
 export function Agenda() {
   const { go } = useApp();
+  const boot = useBoot();
   const uid = useId();
   const [q, setQ] = useState('');
   const [debounced, setDebounced] = useState('');
@@ -379,8 +380,14 @@ export function Agenda() {
         </div>
       </form>
 
-      {isLoading && <Loading label="Cargando agenda…" />}
-      {error && (apiDown && isServiceUnavailable(error)
+      {isLoading && boot.status !== 'ready' && (
+        <div aria-busy="true" data-testid="agenda-skeleton">
+          <p className="mb-3 text-sm text-ink-3" role="status">Despertando el servidor… los temas aparecerán aquí en cuanto responda.</p>
+          <ol className="comic-agenda">{Array.from({ length: 5 }, (_, i) => <SkeletonCard key={i} />)}</ol>
+        </div>
+      )}
+      {isLoading && boot.status === 'ready' && <Loading label="Cargando agenda…" />}
+      {error && boot.status !== 'error' && (apiDown && isServiceUnavailable(error)
         // El aviso de servicio no disponible ya está arriba: aquí solo se explica qué falta, sin repetir el error.
         ? <section className="comic-panel p-4 text-sm text-ink-2" data-testid="agenda-waiting-service" role="status">La agenda aparecerá aquí en cuanto el servicio responda. Usa «Reintentar» en el aviso de arriba.</section>
         : <ErrorBox error={error} onRetry={() => refetch()} />)}
