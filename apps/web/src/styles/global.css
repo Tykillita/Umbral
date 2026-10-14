@@ -923,12 +923,8 @@ html.landing-shell:not(.desktop-shell) body {
     width: 100%; max-width: none; min-height: 0; flex: 1 1 0; margin: 0 0 var(--mobile-nav-height);
   }
 }
-@media (max-width: 520px) {
-  .comic-app-header > .comic-brand { grid-column: 1 / -1; grid-row: 1; }
-  .comic-app-header .comic-header-actions { grid-column: 1 / -1; grid-row: 2; justify-self: end; }
-}
 @media (max-width: 359px) {
-  .comic-active-role { max-width: 42vw; }
+  .comic-active-role { max-width: 32vw; }
 }
 
 /* ---- Móvil y PWA ---- */
@@ -991,3 +987,22 @@ html.app-shell:not(.desktop-shell) #app-root { overflow: clip !important; }
 .landing-hint-icon { display: inline-block; vertical-align: -1px; }
 .jury-document-top a, .jury-document-back { gap: .4rem; }
 .jury-arrow { flex: 0 0 auto; }
+
+/* ---- Cabecera móvil de la app: UNA sola línea (marca a la izquierda, acciones a la derecha), también a 320 px ---- */
+/* El icono de «Cambiar» solo se muestra en móvil, donde el texto no cabe; en escritorio sigue la palabra. */
+.comic-role-change svg { display: none; }
+@media (max-width: 767px) {
+  .comic-masthead > .comic-app-header { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: .5rem; padding-block: .25rem; }
+  .comic-app-header > .comic-brand { grid-column: 1; grid-row: 1; }
+  .comic-app-header .comic-header-actions { grid-column: 2; grid-row: 1; justify-self: end; max-width: 100%; }
+}
+@media (max-width: 520px) {
+  .comic-masthead .comic-brand { font-size: 1.65rem; }
+  .comic-app-header { padding-left: max(.75rem, env(safe-area-inset-left)); padding-right: max(.75rem, env(safe-area-inset-right)); }
+  .comic-app-header .comic-header-actions { gap: .25rem; }
+  /* El nombre del rol cede espacio con puntos suspensivos; «Cambiar» pasa a un icono de 44 px con su texto para lectores. */
+  .comic-active-role { max-width: none; min-width: 0; gap: 0; padding-left: .4rem; font-size: .75rem; }
+  .comic-role-change { min-width: 2.75rem; padding-inline: 0; }
+  .comic-role-change svg { display: block; }
+  .comic-role-change-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+}
