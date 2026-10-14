@@ -276,6 +276,24 @@ export function Loading({ label = 'Cargando…' }: { label?: string }) {
   );
 }
 
+/** Tarjeta de agenda vacía con el mismo marco que `TopicCard`, para no mover el diseño al llegar los datos. */
+export function SkeletonCard() {
+  return (
+    <li className="comic-panel topic-panel" data-testid="skeleton-card" aria-hidden="true">
+      <div className="topic-panel-content">
+        <div className="topic-rank"><span className="skeleton-bar skeleton-rank" /></div>
+        <div className="topic-copy">
+          <span className="skeleton-bar h-3 w-24" />
+          <span className="skeleton-bar h-6 w-full" />
+          <span className="skeleton-bar h-6 w-3/4" />
+          <span className="skeleton-bar h-4 w-1/2" />
+        </div>
+        <div className="topic-score-box"><span className="skeleton-bar h-8 w-full" /></div>
+      </div>
+    </li>
+  );
+}
+
 export function ErrorBox({ error, onRetry, testId = 'error-box' }: { error: unknown; onRetry?: () => void; testId?: string }) {
   const status = error instanceof ApiError ? error.status : null;
   // Servicio caído o iniciando: no es un fallo de la persona ni de su petición, así que no se pinta como error rojo.

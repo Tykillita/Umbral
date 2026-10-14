@@ -3,6 +3,9 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { Bot, ChevronDown, CircleAlert, CircleCheck, CircleX, Database, Ellipsis, ExternalLink, FileSearch, FlaskConical, ListOrdered, LoaderCircle, PenLine, Repeat, Tags, Users, WifiOff, X } from 'lucide-react';
 import type { BootProgress, UmbralApi } from '../lib/api/client';
 import { resolveApi } from '../lib/api';
+import { createDeferredApi } from '../lib/api/deferredApi';
+import { config } from '../lib/config';
+import { persistQueryCache, restoreQueryCache } from '../lib/queryCache';
 import { initAuth, type AuthState } from '../lib/auth';
 import { useRoute, type Route } from '../lib/router';
 import { canView, chooseRole, defaultRoute, readSession, type DemoRole } from '../lib/session';
@@ -14,7 +17,8 @@ import { installInteractions } from '../lib/interactions';
 import { reducedMotion } from '../lib/motion';
 import { useDisclosureMotion } from '../lib/useMotion';
 import { fmtDateTime } from '../lib/format';
-import { AppContext, useApp, type AppToast } from './context';
+import { AppContext, useApp, useBoot, type AppToast, type BootState } from './context';
+import { BootNotice } from './BootNotice';
 import { Agenda } from './views/Agenda';
 import { Ficha } from './views/Ficha';
 import { Drafts } from './views/Drafts';
@@ -62,13 +66,19 @@ function StatusItem({ label, children, testId }: { label: string; children: Reac
 
 function StatusBar() {
   const { api, mockReason, authMode } = useApp();
-  const { data: h, error } = useHealth();
+  const boot = useBoot();
+  const health = useHealth();
   const queryClient = useQueryClient();
+  // Con el servidor aún despertando, el estado guardado no se presenta como si fuera en vivo.
+  const live = boot.status === 'ready';
+  const h = live ? health.data : undefined;
+  const error = live ? health.error : null;
   const rules = useRules();
   const [statusOpen, setStatusOpen] = useState(false);
   const detailsRef = useDisclosureMotion<HTMLDListElement>(statusOpen);
   return (
     <div className="space-y-2" data-testid="status-bar">
+      <BootNotice />
       {api.kind === 'mock' && (
         <Notice tone="amber" icon={FlaskConical} title="MODO DEMOSTRACIÓN del frontend: datos simulados, no son noticias ni cifras reales" testId="mock-banner" role="status">
           {mockReason} Para usar la API real, arranca el backend (puerto 8000) y define <code className="font-mono">PUBLIC_API_MODE=live</code>.
@@ -424,6 +434,10 @@ function Inner() {
   const [progress, setProgress] = useState<BootProgress | null>(null);
   const [boot, setBoot] = useState<Boot | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
+  // En la publicación pública la API puede tardar un minuto en despertar: la interfaz se pinta ya, con una API
+  // diferida y los datos guardados, y las consultas se resuelven cuando el arranque termina.
+  const instantShell = config.authMode === 'public';
+  const deferred = useMemo(() => (instantShell ? createDeferredApi('browser') : null), [instantShell, bootAttempt]);
   const [requestedRoute, navigate] = useRoute();
   const [session,setSession] = useState(readSession);
   const [choosingRole,setChoosingRole] = useState(false);
@@ -480,9 +494,16 @@ function Inner() {
         const auth = await initAuth();
         if (auth.error) throw new Error(auth.error);
         const r = await resolveApi((next) => { if (live) setProgress(next); }, controller.signal); activeApi = r.api;
-        if (live) setBoot({ api: r.api, reason: r.reason, auth }); else await r.api.close?.();
+        if (live) {
+          setBoot({ api: r.api, reason: r.reason, auth });
+          deferred?.resolve(r.api);
+          void queryClient.invalidateQueries({ predicate: (query) => query.state.status === 'error' });
+        } else await r.api.close?.();
       } catch (e) {
-        if (live) setBootError(e instanceof Error ? e.message : 'Error de arranque');
+        if (live) {
+          setBootError(e instanceof Error ? e.message : 'Error de arranque');
+          deferred?.reject(e);
+        }
       }
     })();
     return () => {
@@ -490,7 +511,7 @@ function Inner() {
       controller.abort();
       void activeApi?.close?.();
     };
-  }, [bootAttempt]);
+  }, [bootAttempt, deferred, queryClient]);
 
   useEffect(() => boot?.api.subscribe?.(() => { void Promise.all(['topics','topic','rules','workspace-cases'].map((key) => queryClient.invalidateQueries({ queryKey: [key] }))); }), [boot, queryClient]);
 
@@ -508,7 +529,13 @@ function Inner() {
     const next=chooseRole(role,session);setSession(next);setChoosingRole(false);setReviewer(next.labeler);
     navigate(canView(role,requestedRoute.view)?requestedRoute:defaultRoute(role));
   };
-  const scopedApi = useMemo(() => boot ? roleApi(boot.api,session,(message,shared) => showToast({tone:shared?'success':'info',title:shared?'Decisión compartida':'Estado de la decisión',description:message})) : null,[boot,session,showToast]);
+  const activeApi = boot?.api ?? deferred?.api ?? null;
+  const retryBoot = useCallback(() => setBootAttempt((value) => value + 1), []);
+  const bootState = useMemo<BootState>(
+    () => ({ status: boot ? 'ready' : bootError ? 'error' : 'connecting', progress, error: bootError, retry: retryBoot }),
+    [boot, bootError, progress, retryBoot],
+  );
+  const scopedApi = useMemo(() => activeApi ? roleApi(activeApi,session,(message,shared) => showToast({tone:shared?'success':'info',title:shared?'Decisión compartida':'Estado de la decisión',description:message})) : null,[activeApi,session,showToast]);
   const openAssistant = useCallback((prompt?: string, topicId?: string, topicTitle?: string) => {
     openAssistantPanel();
     if (prompt) setSeed((s) => ({ text: prompt, topicId: topicId ?? null, topicTitle: topicTitle ?? '', n: s.n + 1 }));
@@ -516,10 +543,11 @@ function Inner() {
 
   const ctx = useMemo(
     () =>
-      boot
+      scopedApi
         ? {
-            api: scopedApi!,
-            mockReason: boot.reason,
+            boot: bootState,
+            api: scopedApi,
+            mockReason: boot?.reason ?? null,
             route,
             go,
             toast,
@@ -528,16 +556,17 @@ function Inner() {
             reviewer,
             setReviewer,
             openAssistant,
-            authMode: boot.auth.mode,
+            authMode: boot?.auth.mode ?? 'public',
             session: session ?? undefined,
             changeRole,
           }
         : null,
-    [boot, scopedApi, route, go, toast, showToast, dismissToast, reviewer, setReviewer, openAssistant,session,changeRole],
+    [boot, bootState, scopedApi, route, go, toast, showToast, dismissToast, reviewer, setReviewer, openAssistant,session,changeRole],
   );
 
   // Estas pantallas viven fuera de `#app-root`: en la web el <body> no se desplaza, así que cada una lleva su propio scroll.
-  if (bootError) return <div className="app-screen"><div className="mx-auto max-w-xl p-6" data-testid="app-boot-error"><ErrorBox error={new Error(bootError)} onRetry={() => setBootAttempt((value) => value + 1)} /></div></div>;
+  // Con sesión y arranque diferido el fallo se muestra dentro de la aplicación (BootNotice), sin ocultar los datos guardados.
+  if (bootError && !(instantShell && session && !choosingRole)) return <div className="app-screen"><div className="mx-auto max-w-xl p-6" data-testid="app-boot-error"><ErrorBox error={new Error(bootError)} onRetry={retryBoot} /></div></div>;
   if(!session||choosingRole)return <div className="app-screen"><SessionGate onChoose={selectRole} onCancel={session?()=>setChoosingRole(false):undefined} status={!boot?<Loading label={progress?.message ?? 'Conectando con la API…'}/>:undefined}/></div>;
   if (!ctx) return <div className="app-screen"><div className="mx-auto max-w-xl p-6" data-testid="app-loading"><Loading label={progress?.message ?? "Iniciando Umbral…"} />{progress && <p className="text-sm text-ink-3" aria-live="polite">Intento {progress.attempt} · {Math.floor(progress.elapsedMs / 1000)} s. El primer inicio puede tardar hasta 90 segundos.</p>}</div></div>;
   return (
@@ -549,6 +578,8 @@ function Inner() {
   );
 }
 
+const CACHE_WAIT_MS = 300;
+
 export default function App() {
   const [client] = useState(
     () =>
@@ -556,6 +587,21 @@ export default function App() {
         defaultOptions: { queries: { staleTime: 15_000, refetchOnWindowFocus: false, retry: 1 } },
       }),
   );
+  // Los datos de la última visita se cargan antes de pintar (máx. 300 ms); si tardan, la app arranca sin ellos.
+  const [cacheChecked, setCacheChecked] = useState(config.authMode !== 'public');
+  useEffect(() => {
+    if (config.authMode !== 'public') return;
+    let stop = () => {};
+    let active = true;
+    const timer = window.setTimeout(() => setCacheChecked(true), CACHE_WAIT_MS);
+    void restoreQueryCache(client).then(() => {
+      if (active) stop = persistQueryCache(client);
+      window.clearTimeout(timer);
+      setCacheChecked(true);
+    });
+    return () => { active = false; window.clearTimeout(timer); stop(); };
+  }, [client]);
+  if (!cacheChecked) return null;
   return (
     <QueryClientProvider client={client}>
       <Inner />

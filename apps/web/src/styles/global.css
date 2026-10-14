@@ -987,6 +987,15 @@ html.app-shell:not(.desktop-shell) #app-root { overflow: clip !important; }
 .landing-hint-icon { display: inline-block; vertical-align: -1px; }
 .jury-document-top a, .jury-document-back { gap: .4rem; }
 .jury-arrow { flex: 0 0 auto; }
+/* Esqueletos de carga: la agenda ya ocupa su sitio mientras el servidor despierta. */
+.skeleton-bar { display: block; border-radius: 2px; background: var(--color-sunk); border: 1px solid var(--color-rule); animation: skeleton-pulse 1.4s ease-in-out infinite; }
+.skeleton-rank { width: 3rem; height: 3.4rem; background: var(--color-amber-100); border-color: var(--color-ink); }
+@keyframes skeleton-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion-preference="full"]) .skeleton-bar { animation: none; }
+}
+html[data-motion-preference="reduced"] .skeleton-bar { animation: none; }
+
 
 /* ---- Cabecera móvil de la app: UNA sola línea (marca a la izquierda, acciones a la derecha), también a 320 px ---- */
 /* El icono de «Cambiar» solo se muestra en móvil, donde el texto no cabe; en escritorio sigue la palabra. */
