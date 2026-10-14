@@ -24,6 +24,7 @@ export class BrowserWorkspaceApi implements UmbralApi {
   snapshot = () => this.remote.snapshot();
   alerts = () => this.remote.alerts();
   today = () => this.remote.today();
+  refreshNews = () => this.remote.refreshNews();
   async rules(): Promise<Rules> {
     const state = await this.workspace.read();
     if (state.rules) return state.rules;

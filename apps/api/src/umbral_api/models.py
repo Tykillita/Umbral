@@ -439,6 +439,32 @@ class TodayResponse(ApiModel):
     note: str | None = Field(None, description="Por qué la lista está vacía o incompleta, en lenguaje llano.")
 
 
+class LiveNewsItem(ApiModel):
+    """Titular recién consultado en vivo. NO está clasificado: no entra en la agenda, el puntaje ni la evidencia."""
+
+    id: str
+    title: str
+    outlet: str
+    url: str
+    published_at: datetime
+    classified: bool = Field(False, description="Siempre falso: la clasificación con Laya la hace el workflow, no esta consulta.")
+
+
+class NewsRefreshClassification(ApiModel):
+    status: str = Field(description="solicitada | en_curso | enfriamiento | no_disponible | error")
+    message: str
+    next_allowed_at: datetime | None = None
+    run_url: str | None = None
+
+
+class NewsRefreshResponse(ApiModel):
+    checked_at: datetime
+    window_hours: int
+    items: list[LiveNewsItem]
+    warnings: list[str] = Field(default_factory=list)
+    classification: NewsRefreshClassification
+
+
 class TopicDetail(ApiModel):
     summary: TopicSummary
     snapshot_id: str

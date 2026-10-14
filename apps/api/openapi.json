@@ -4026,6 +4026,48 @@
         "title": "IntegrityReport",
         "type": "object"
       },
+      "LiveNewsItem": {
+        "description": "Titular recién consultado en vivo. NO está clasificado: no entra en la agenda, el puntaje ni la evidencia.",
+        "properties": {
+          "classified": {
+            "default": false,
+            "description": "Siempre falso: la clasificación con Laya la hace el workflow, no esta consulta.",
+            "title": "Classified",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "outlet": {
+            "title": "Outlet",
+            "type": "string"
+          },
+          "publishedAt": {
+            "format": "date-time",
+            "title": "Publishedat",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "outlet",
+          "url",
+          "publishedAt",
+          "classified"
+        ],
+        "title": "LiveNewsItem",
+        "type": "object"
+      },
       "ModelChoice": {
         "properties": {
           "model": {
@@ -4072,6 +4114,89 @@
           "selectedModel"
         ],
         "title": "ModelsResponse",
+        "type": "object"
+      },
+      "NewsRefreshClassification": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "nextAllowedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextallowedat"
+          },
+          "runUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runurl"
+          },
+          "status": {
+            "description": "solicitada | en_curso | enfriamiento | no_disponible | error",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "nextAllowedAt",
+          "runUrl"
+        ],
+        "title": "NewsRefreshClassification",
+        "type": "object"
+      },
+      "NewsRefreshResponse": {
+        "properties": {
+          "checkedAt": {
+            "format": "date-time",
+            "title": "Checkedat",
+            "type": "string"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/NewsRefreshClassification"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/LiveNewsItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          },
+          "windowHours": {
+            "title": "Windowhours",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "checkedAt",
+          "windowHours",
+          "items",
+          "warnings",
+          "classification"
+        ],
+        "title": "NewsRefreshResponse",
         "type": "object"
       },
       "NotionExportResponse": {
@@ -10409,6 +10534,87 @@
           }
         },
         "summary": "Public Draft",
+        "tags": [
+          "publico"
+        ]
+      }
+    },
+    "/api/v1/public/news/refresh": {
+      "post": {
+        "operationId": "refresh_news_api_v1_public_news_refresh_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsRefreshResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Actualizar noticias: titulares recientes sin clasificar y solicitud de clasificación",
         "tags": [
           "publico"
         ]

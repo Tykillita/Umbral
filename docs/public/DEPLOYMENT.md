@@ -101,6 +101,17 @@ El workflow está **desactivado** hasta que se defina `UMBRAL_DAILY_ENABLED=true
 
 Extrae con 48 horas de solape y una ventana móvil de 30 días, clasifica con Laya CPU (revisión fijada), verifica el candidato y lo publica en Hosting sin activar el anterior hasta validar hashes y referencias. Un fallo de fuente, de Laya o de integridad aborta el candidato: nunca se sustituye por un clasificador de referencia ni por datos parciales. Se recomienda comprobar dos ciclos completos antes de darlo por estable.
 
+### Botón «Actualizar noticias»
+
+En la agenda, «Hoy» trae al instante los titulares de TVN y Bing News de las últimas 24 horas, **sin clasificar** (rotulados así, fuera de la agenda y del puntaje), y pide al workflow `daily-data.yml` que clasifique un corte nuevo. La web dice con claridad que la clasificación puede tardar entre 15 y 25 minutos y la agenda se actualiza sola cuando llega el corte.
+
+Para que pueda **pedir la clasificación** hace falta un token de GitHub; crearlo y guardarlo es una acción tuya y nunca va al repositorio:
+
+1. GitHub → *Settings → Developer settings → Fine-grained personal access tokens → Generate*: repositorio `Tykillita/Umbral` únicamente, permiso **Actions: Read and write**, sin ningún otro, con caducidad.
+2. Render → servicio de la API → *Environment* → `UMBRAL_GITHUB_DISPATCH_TOKEN` = el token (secreto; `render.yaml` solo declara `sync: false`).
+
+Salvaguardas: máximo 3 pulsaciones por minuto y usuario, un enfriamiento de 30 minutos entre solicitudes de clasificación (`UMBRAL_NEWS_REFRESH_MIN_INTERVAL_S`), no lanza otra si ya hay una ejecución en curso o en cola, solo habla con `api.github.com` y el token no se registra ni se devuelve. Sin token, el botón sigue mostrando los titulares sin clasificar y avisa de que no puede clasificar.
+
 ## Cuotas
 
 Todo se mantiene dentro de los planes gratuitos: Hosting Spark, minutos de Actions de un repositorio público, Render Free, Firestore Spark (un documento de contador por día) y Gemini Free Tier. Si una cuota se agota, la consecuencia es degradar a plantilla o esperar, nunca un cobro.

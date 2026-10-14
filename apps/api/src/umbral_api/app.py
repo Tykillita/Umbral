@@ -46,6 +46,7 @@ from .models import (
     ExportResponse,
     HealthResponse,
     ImpactRequest,
+    NewsRefreshResponse,
     NotionExportResponse,
     NotionMarkdownRequest,
     NotionStatusResponse,
@@ -369,6 +370,17 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         svc.limiter.check(user, "queries", min(30, svc.settings.queries_per_minute))
         result = svc.live_sources.alerts()
         return PublicAlertFeed(checked_at=result.checked_at, items=[item.as_dict() for item in result.items], warnings=list(result.warnings))
+
+    @api.post(
+        "/public/news/refresh",
+        response_model=NewsRefreshResponse,
+        tags=["publico"],
+        summary="Actualizar noticias: titulares recientes sin clasificar y solicitud de clasificación",
+        responses=_ERRORS,
+    )
+    def refresh_news(user: User, svc=Depends(get_services)) -> NewsRefreshResponse:
+        svc.limiter.check(user, "news_refresh", 3)
+        return svc.refresh_news()
 
     @api.post("/public/agenda", response_model=TopicsResponse, tags=["publico"], responses=_ERRORS)
     def public_agenda(body: PublicAgendaRequest, user: User, svc=Depends(get_services)) -> TopicsResponse:

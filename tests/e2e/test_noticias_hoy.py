@@ -119,3 +119,78 @@ def test_hoy_sin_noticias_recientes_explica_por_que(page: Page, stack):
     page.route("**/api/v1/today**", lambda route: route.fulfill(status=200, content_type="application/json", body=_today([], note)))
     open_app(page, stack.url)
     expect(tid(page, "today-empty")).to_contain_text("No hay noticias con fecha de publicación", timeout=30_000)
+
+
+# ------------------------------------------------------------------------------------------------ Actualizar noticias
+
+
+def _refresh(status: str, message: str, items: list[dict], **extra) -> str:
+    return json.dumps({
+        "checkedAt": "2026-10-14T20:05:00Z", "windowHours": 24, "items": items, "warnings": [],
+        "classification": {"status": status, "message": message, "nextAllowedAt": None, "runUrl": extra.get("runUrl")},
+    })
+
+
+def _live(index: int, minutes: int) -> dict:
+    from datetime import UTC, datetime, timedelta
+
+    published = (datetime.now(UTC) - timedelta(minutes=minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return {"id": f"live_{index}", "title": f"Titular en vivo {index}", "outlet": "TVN Panamá", "url": f"https://www.tvn-2.com/nacionales/vivo-{index}.html", "publishedAt": published, "classified": False}
+
+
+@pytest.mark.parametrize("ancho,alto,tactil", [(1366, 900, False), (390, 844, True)])
+def test_actualizar_noticias_muestra_lo_nuevo_sin_clasificar_y_avisa_que_la_clasificacion_tarda(browser: Browser, stack, ancho: int, alto: int, tactil: bool):
+    ctx = browser.new_context(viewport={"width": ancho, "height": alto}, has_touch=tactil, is_mobile=tactil, locale="es-PA", timezone_id="America/Panama")
+    try:
+        page = ctx.new_page()
+        calls = {"n": 0}
+        message = "Clasificación solicitada. Puede tardar entre 15 y 25 minutos; mientras tanto se muestran las noticias recién consultadas SIN clasificar."
+
+        def handler(route):
+            calls["n"] += 1
+            route.fulfill(status=200, content_type="application/json", body=_refresh("solicitada", message, [_live(1, 4), _live(2, 30)]))
+
+        page.route("**/api/v1/public/news/refresh", handler)
+        open_app(page, stack.url)
+        button = tid(page, "today-refresh")
+        expect(button).to_be_visible(timeout=30_000)
+        box = button.bounding_box()
+        assert box is not None and box["height"] >= 43.5, "el botón debe medir al menos 44 px"
+        button.click()
+        result = tid(page, "today-refresh-result")
+        expect(result).to_be_visible(timeout=15_000)
+        expect(tid(page, "today-classification")).to_contain_text("Clasificación en curso")
+        expect(tid(page, "today-classification")).to_contain_text("entre 15 y 25 minutos")
+        items = tid(page, "today-live-item")
+        expect(items).to_have_count(2)
+        for index in range(2):
+            expect(items.nth(index)).to_contain_text("Sin clasificar")
+            link = items.nth(index).get_by_role("link")
+            assert link.get_attribute("target") == "_blank" and "noopener" in (link.get_attribute("rel") or "")
+        expect(result).to_contain_text("Aún no están en la agenda ni en el puntaje")
+        assert calls["n"] == 1
+        assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), f"desborda a {ancho}px"
+        # El resultado sobrevive a cambiar de vista y volver (se guarda en la sesión del navegador).
+        tid(page, "nav-fuentes").click()
+        tid(page, "nav-agenda").click()
+        expect(tid(page, "today-live-item")).to_have_count(2, timeout=15_000)
+    finally:
+        ctx.close()
+
+
+def test_actualizar_noticias_sin_token_explica_que_no_puede_clasificar(page: Page, stack):
+    msg = "La clasificación automática no está configurada en este servicio. Las noticias recién consultadas se muestran sin clasificar."
+    page.route("**/api/v1/public/news/refresh", lambda route: route.fulfill(status=200, content_type="application/json", body=_refresh("no_disponible", msg, [_live(1, 2)])))
+    open_app(page, stack.url)
+    tid(page, "today-refresh").click()
+    expect(tid(page, "today-classification")).to_contain_text("Clasificación no disponible por ahora", timeout=15_000)
+    expect(tid(page, "today-classification")).to_contain_text("no está configurada")
+    expect(tid(page, "today-live-item")).to_have_count(1)
+
+
+def test_actualizar_noticias_con_el_servicio_caido_muestra_un_aviso_claro_y_sin_ruido(page: Page, stack):
+    open_app(page, stack.url)
+    page.route("**/api/v1/public/news/refresh", lambda route: route.fulfill(status=404, content_type="text/html", body="<h1>Not Found</h1>"))
+    tid(page, "today-refresh").click()
+    expect(tid(page, "today-refresh-error")).to_contain_text("no está disponible", timeout=15_000)
+    assert "Error HTTP" not in page.inner_text("body")

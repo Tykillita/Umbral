@@ -56,6 +56,16 @@ export function useToday() {
   return useQuery({ queryKey: [...qk.today, api.kind], queryFn: () => api.today(), refetchInterval: 300_000, refetchIntervalInBackground: false, staleTime: 120_000, retry: 1 });
 }
 
+/** «Actualizar noticias»: trae titulares sin clasificar y pide la clasificación; «Hoy» se revalida al terminar. */
+export function useRefreshNews() {
+  const { api } = useApp();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.refreshNews(),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: qk.today }),
+  });
+}
+
 export function useTopic(topicId: string | null) {
   const { api } = useApp();
   return useQuery({

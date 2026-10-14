@@ -68,6 +68,9 @@ from .models import (
     HealthResponse,
     ImpactAssignment,
     ImpactRequest,
+    LiveNewsItem,
+    NewsRefreshClassification,
+    NewsRefreshResponse,
     ProviderStatus,
     QueryCitation,
     QueryHit,
@@ -88,6 +91,7 @@ from .models import (
     TopicsResponse,
     TopicSummary,
 )
+from .news_refresh import NewsRefreshDispatcher
 from .providers import (
     SYSTEM_INSTRUCTIONS,
     DraftProvider,
@@ -217,6 +221,7 @@ class Services:
         self.public = PublicApi(self)
         self.snapshot_feed = SnapshotFeed(self)
         self.live_sources = LiveSources(offline=settings.offline)
+        self.news_refresh = NewsRefreshDispatcher(settings)
 
     @property
     def corpus(self) -> Corpus:
@@ -473,6 +478,29 @@ class Services:
             sources=c.sources,
             metrics=c.metrics,
             integrity=c.integrity,
+        )
+
+    # ------------------------------------------------------------------ refresco manual de noticias
+    def refresh_news(self) -> NewsRefreshResponse:
+        """Botón «Actualizar noticias»: titulares recientes SIN clasificar al instante + solicitud de clasificación.
+
+        Lo recién consultado no entra en la agenda ni en el puntaje: solo la clasificación con Laya (workflow de GitHub)
+        puede producir un corte nuevo. La respuesta dice con claridad en qué estado está esa solicitud.
+        """
+        live = self.live_sources.latest(limit=10, window_hours=24)
+        outcome = self.news_refresh.request()
+        return NewsRefreshResponse(
+            checked_at=live.checked_at,
+            window_hours=24,
+            items=[
+                LiveNewsItem(id=item.id, title=item.title, outlet=item.source, url=item.url, published_at=item.published_at, classified=False)  # type: ignore[arg-type]
+                for item in live.items
+                if item.published_at
+            ],
+            warnings=list(live.warnings),
+            classification=NewsRefreshClassification(
+                status=outcome.status, message=outcome.message, next_allowed_at=outcome.next_allowed_at, run_url=outcome.run_url
+            ),
         )
 
     # ------------------------------------------------------------------ hoy
