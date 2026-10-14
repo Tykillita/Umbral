@@ -208,7 +208,33 @@ function requestValue<T>(request: IDBRequest<T>): Promise<T> {
   });
 }
 
+const HISTORY_LOAD_TIMEOUT_MS = 1500;
+
+/**
+ * Carga el historial local. Si IndexedDB tarda más de lo razonable (Safari tras volver del segundo plano, modo privado),
+ * se continúa con la memoria de esta sesión: el asistente nunca debe quedarse esperando sin mostrar nada.
+ */
 export async function loadAssistantHistory(namespace: string): Promise<AssistantHistorySnapshot> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<AssistantHistorySnapshot>((resolve) => {
+    timer = setTimeout(() => resolve(memorySnapshot(namespace)), HISTORY_LOAD_TIMEOUT_MS);
+  });
+  try {
+    return await Promise.race([loadAssistantHistoryFromDatabase(namespace), timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function memorySnapshot(namespace: string): AssistantHistorySnapshot {
+  return {
+    conversations: [...memory.values()].filter((item) => item.namespace === namespace && !memoryTombstones.has(key(item.namespace, item.id))).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
+    lastConversationId: lastByNamespace.get(namespace) ?? null,
+    persistent: false,
+  };
+}
+
+async function loadAssistantHistoryFromDatabase(namespace: string): Promise<AssistantHistorySnapshot> {
   try {
     const db = await openDatabase();
     const tx = db.transaction([CONVERSATIONS, SETTINGS], 'readonly');
@@ -225,11 +251,7 @@ export async function loadAssistantHistory(namespace: string): Promise<Assistant
     if (lastConversationId) lastByNamespace.set(namespace, lastConversationId);
     return { conversations, lastConversationId, persistent: true };
   } catch {
-    return {
-      conversations: [...memory.values()].filter((item) => item.namespace === namespace && !memoryTombstones.has(key(item.namespace, item.id))).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)),
-      lastConversationId: lastByNamespace.get(namespace) ?? null,
-      persistent: false,
-    };
+    return memorySnapshot(namespace);
   }
 }
 

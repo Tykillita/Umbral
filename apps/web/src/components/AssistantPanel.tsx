@@ -23,6 +23,8 @@ import {
 } from './assistant/shared';
 import { useAssistantHistory } from './assistant/useAssistantHistory';
 import { useAssistantQuery } from './assistant/useAssistantQuery';
+import { lockScroll } from '../lib/scrollLock';
+import { useBackToClose } from '../lib/useBackToClose';
 
 const COMPOSE_PROVIDERS: ComposeProvider[] = ['gemini', 'chatgpt', 'claude'];
 
@@ -209,8 +211,10 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, view, activeId, turnStateStamp]);
 
+  // En pantalla estrecha no hay dock donde minimizar. Si el panel estaba minimizado y la ventana se estrecha (giro,
+  // pantalla dividida), se cierra: abrirlo solo bloquearía la página con un panel que nadie pidió.
   useEffect(() => {
-    if (modal && state === 'minimized') onStateChange('open');
+    if (modal && state === 'minimized') onStateChange('closed');
   }, [modal, state, onStateChange]);
 
   useEffect(() => { setContinueContext(true); }, [activeId]);
@@ -234,7 +238,9 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
   useEffect(() => {
     if (!isOpen || !loaded) return;
     openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
+    // Con pantalla táctil enfocar el campo abre el teclado al instante, encoge el panel y en iOS desplaza la vista:
+    // el panel debe abrirse completo y que la persona toque el campo cuando quiera escribir.
+    if (!hasCoarsePointer()) requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
     return () => {
       const opener = openerRef.current;
       const target = opener?.isConnected && opener !== document.body ? opener : document.querySelector<HTMLElement>('[data-testid="assistant-toggle"]');
@@ -244,23 +250,41 @@ export function AssistantPanel({ state, modal = false, closing = false, onFullsc
 
   useEffect(() => {
     if (!isOpen || !isFullscreen) return;
-    const previousBody = document.body.style.overflow;
-    const previousRoot = document.documentElement.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    const unlock = lockScroll();
+    const root = document.documentElement;
     const viewport = window.visualViewport;
-    const updateHeight = () => document.documentElement.style.setProperty('--assistant-viewport-height', `${viewport?.height ?? window.innerHeight}px`);
-    updateHeight();
-    viewport?.addEventListener('resize', updateHeight);
-    viewport?.addEventListener('scroll', updateHeight);
+    // Con el teclado abierto, iOS desplaza la vista visual (offsetTop) y reduce su altura sin tocar el viewport de
+    // diseño: el panel sigue a la vista visual. Con zoom de pellizco se usa el viewport completo para no encogerlo.
+    let baseline = 0;
+    let lastWidth = window.innerWidth;
+    const update = () => {
+      const zoomed = !!viewport && viewport.scale > 1.01;
+      const height = !viewport || zoomed ? window.innerHeight : viewport.height;
+      const top = !viewport || zoomed ? 0 : Math.max(0, viewport.offsetTop);
+      if (window.innerWidth !== lastWidth) { lastWidth = window.innerWidth; baseline = 0; }
+      baseline = Math.max(baseline, height + top);
+      root.style.setProperty('--assistant-viewport-height', `${height}px`);
+      root.style.setProperty('--assistant-viewport-top', `${top}px`);
+      if (height + top < baseline - 120) root.dataset.assistantKeyboard = 'open';
+      else delete root.dataset.assistantKeyboard;
+    };
+    update();
+    viewport?.addEventListener('resize', update);
+    viewport?.addEventListener('scroll', update);
+    window.addEventListener('orientationchange', update);
     return () => {
-      document.body.style.overflow = previousBody;
-      document.documentElement.style.overflow = previousRoot;
-      document.documentElement.style.removeProperty('--assistant-viewport-height');
-      viewport?.removeEventListener('resize', updateHeight);
-      viewport?.removeEventListener('scroll', updateHeight);
+      unlock();
+      root.style.removeProperty('--assistant-viewport-height');
+      root.style.removeProperty('--assistant-viewport-top');
+      delete root.dataset.assistantKeyboard;
+      viewport?.removeEventListener('resize', update);
+      viewport?.removeEventListener('scroll', update);
+      window.removeEventListener('orientationchange', update);
     };
   }, [isOpen, isFullscreen]);
+
+  // Atrás (Android) y el gesto de retroceso (iOS) cierran el panel a pantalla completa en lugar de salir de la vista.
+  useBackToClose(isOpen && isFullscreen, onClose);
 
   useLayoutEffect(() => {
     const input = inputRef.current;

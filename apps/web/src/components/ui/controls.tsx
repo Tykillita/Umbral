@@ -16,6 +16,11 @@ import {
 import { createPortal } from 'react-dom';
 import { Check, ChevronDown, ChevronRight, Minus, Monitor, Pause, Play, Plus, X } from 'lucide-react';
 import { getMotionPreference, setMotionPreference, type MotionPreference } from '../../lib/motion';
+import { lockScroll } from '../../lib/scrollLock';
+import { useBackToClose } from '../../lib/useBackToClose';
+
+/** Misma frontera que la barra de navegación inferior (global.css): por debajo, los menús se abren como hoja inferior. */
+export const MOBILE_QUERY = '(max-width: 767px)';
 
 /** Apariencia común de los campos propios (misma que `inputCls` de ui/index.tsx; se repite para evitar una importación circular). */
 const FIELD =
@@ -104,7 +109,7 @@ export function Select<T extends string>({
   const popRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const typed = useRef({ text: '', at: 0 });
-  const narrowViewport = useMediaQuery('(max-width: 639px)');
+  const narrowViewport = useMediaQuery(MOBILE_QUERY);
   const sheet = narrowViewport && mobilePresentation === 'sheet';
   const selectedIndex = options.findIndex((o) => o.value === value);
   const selected = selectedIndex >= 0 ? options[selectedIndex] : null;
@@ -122,7 +127,7 @@ export function Select<T extends string>({
   };
   const close = (refocus = true) => {
     setOpen(false);
-    if (refocus) triggerRef.current?.focus();
+    if (refocus) triggerRef.current?.focus({ preventScroll: true });
   };
   const choose = (index: number) => {
     const option = options[index];
@@ -143,50 +148,73 @@ export function Select<T extends string>({
     const width = Math.min(Math.max(r.width, popoverMinWidth), Math.max(0, window.innerWidth - 16));
     const alignedLeft = popoverAlign === 'center' ? r.left + (r.width - width) / 2 : popoverAlign === 'end' ? r.right - width : r.left;
     const left = Math.max(8, Math.min(alignedLeft, window.innerWidth - width - 8));
-    setPos({ left, width, maxHeight, ...(useBelow ? { top: r.bottom + 4 } : { bottom: vh - r.top + 4 }) });
+    // Sin cambios no se vuelve a renderizar: así el desplazamiento de la lista no se reinicia en cada evento de scroll.
+    setPos((prev) => {
+      const next: PopoverPos = { left, width, maxHeight, ...(useBelow ? { top: r.bottom + 4 } : { bottom: vh - r.top + 4 }) };
+      return prev && prev.left === next.left && prev.width === next.width && prev.maxHeight === next.maxHeight && prev.top === next.top && prev.bottom === next.bottom ? prev : next;
+    });
   }, [popoverAlign, popoverMinWidth]);
 
   useLayoutEffect(() => {
     if (!open || sheet) return;
     place();
+    // El desplazamiento de la propia lista no mueve el disparador: no hay que reposicionar.
+    const onScroll = (event: Event) => {
+      if (event.target instanceof Node && popRef.current?.contains(event.target)) return;
+      place();
+    };
     window.addEventListener('resize', place);
-    window.addEventListener('scroll', place, true);
+    window.addEventListener('scroll', onScroll, true);
     return () => {
       window.removeEventListener('resize', place);
-      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('scroll', onScroll, true);
     };
   }, [open, sheet, place]);
 
-  // Cierre al pulsar fuera del control y de su lista.
+  // Cierre al pulsar fuera de la lista (solo menú flotante; la hoja inferior cierra con su fondo).
+  // Con ratón se cierra al pulsar; con el dedo se cierra en el `click` y se absorbe, para que ese mismo toque
+  // no active lo que haya debajo ("toque fantasma").
   useEffect(() => {
-    if (!open) return;
-    const down = (event: PointerEvent) => {
+    if (!open || sheet) return;
+    const outside = (event: Event) => {
       const target = event.target as Node;
-      if (triggerRef.current?.contains(target) || popRef.current?.contains(target)) return;
+      return !(triggerRef.current?.contains(target) || popRef.current?.contains(target));
+    };
+    const down = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse' && outside(event)) setOpen(false);
+    };
+    const click = (event: MouseEvent) => {
+      if (!outside(event)) return;
+      event.preventDefault();
+      event.stopPropagation();
       setOpen(false);
     };
     document.addEventListener('pointerdown', down, true);
-    return () => document.removeEventListener('pointerdown', down, true);
-  }, [open]);
-
-  // La hoja inferior bloquea el desplazamiento de la página mientras está abierta.
-  useEffect(() => {
-    if (!open || !sheet) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.addEventListener('click', click, true);
     return () => {
-      document.body.style.overflow = previous;
+      document.removeEventListener('pointerdown', down, true);
+      document.removeEventListener('click', click, true);
     };
   }, [open, sheet]);
 
+  // La hoja inferior bloquea el desplazamiento de la página y se cierra con Atrás.
+  useEffect(() => {
+    if (!open || !sheet) return;
+    return lockScroll();
+  }, [open, sheet]);
+  useBackToClose(open && sheet, () => setOpen(false));
+
   // Mantiene visible la opción activa dentro de la lista, sin mover la página.
+  // Se mide con rectángulos: `offsetTop` cuenta desde el ancestro posicionado (la hoja), no desde la lista.
   useEffect(() => {
     if (!open) return;
     const list = listRef.current;
     const item = document.getElementById(`${listId}-opt-${active}`);
     if (!list || !item) return;
-    if (item.offsetTop < list.scrollTop) list.scrollTop = item.offsetTop;
-    else if (item.offsetTop + item.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = item.offsetTop + item.offsetHeight - list.clientHeight;
+    const listRect = list.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    if (itemRect.top < listRect.top) list.scrollTop -= listRect.top - itemRect.top;
+    else if (itemRect.bottom > listRect.bottom) list.scrollTop += itemRect.bottom - listRect.bottom;
   }, [open, active, listId, pos]);
 
   const typeahead = (key: string) => {
@@ -352,8 +380,27 @@ export function Select<T extends string>({
       {open &&
         createPortal(
           sheet ? (
-            <div className="select-layer" data-testid="select-sheet">
-              <div className="select-backdrop" aria-hidden="true" onPointerDown={() => close()} />
+            <div
+              className="select-layer"
+              data-testid="select-sheet"
+              onKeyDown={(event) => {
+                // El portal sube por el árbol de React: sin esto, Escape cerraría también el panel que contiene al Select.
+                if (event.key !== 'Escape') return;
+                event.preventDefault();
+                event.stopPropagation();
+                close();
+              }}
+            >
+              <div
+                className="select-backdrop"
+                aria-hidden="true"
+                onClick={(event) => {
+                  // Se cierra al soltar el toque sobre el fondo, no al apoyarlo: así el toque no atraviesa la hoja.
+                  event.preventDefault();
+                  event.stopPropagation();
+                  close();
+                }}
+              />
               <div ref={popRef} className="select-sheet">
                 <div className="select-sheet-head">
                   <span className="kicker">{sheetTitle}</span>
@@ -558,6 +605,17 @@ export function Disclosure({
 
 type TipPos = { left: number; top?: number; bottom?: number };
 
+// Última modalidad de entrada: con el dedo, el foco que sigue al toque (o que devuelve un Modal al cerrarse) no debe
+// abrir el globo; con teclado sí. Se instala una sola vez para toda la aplicación.
+let lastInputTouch = false;
+let modalityTracked = false;
+function trackInputModality() {
+  if (modalityTracked || typeof document === 'undefined') return;
+  modalityTracked = true;
+  document.addEventListener('pointerdown', (event) => { lastInputTouch = event.pointerType !== 'mouse'; }, true);
+  document.addEventListener('keydown', () => { lastInputTouch = false; }, true);
+}
+
 /** Globo de ayuda propio (hover, foco y toque). Sustituye al atributo `title`. El texto también está para lectores de pantalla. */
 export function Tooltip({ content, children, block = false, className = '' }: { content: ReactNode; children: ReactNode; block?: boolean; className?: string }) {
   const id = useId();
@@ -566,6 +624,7 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
   const dismissTimer = useRef<number | undefined>(undefined);
   const [show, setShow] = useState(false);
   const [pos, setPos] = useState<TipPos | null>(null);
+  useEffect(() => trackInputModality(), []);
 
   const open = (delay: number) => {
     window.clearTimeout(timer.current);
@@ -641,7 +700,9 @@ export function Tooltip({ content, children, block = false, className = '' }: { 
           }
         }
       }}
-      onFocusCapture={() => open(0)}
+      onFocusCapture={() => {
+        if (!lastInputTouch) open(0);
+      }}
       onBlurCapture={hide}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
@@ -752,26 +813,25 @@ export function Modal({
   const id = useId();
   const dialogRef = useRef<HTMLElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
+  const downOnLayer = useRef(false);
   const titleId = `${id}-title`;
 
   useEffect(() => {
     if (!open) return;
     const active = document.activeElement;
     openerRef.current = active instanceof HTMLElement ? active : null;
-    const previousBodyOverflow = document.body.style.overflow;
-    const previousDocumentOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    const unlock = lockScroll();
     dialogRef.current?.querySelector<HTMLElement>('[data-modal-autofocus]')?.focus({ preventScroll: true });
     if (!dialogRef.current?.contains(document.activeElement)) dialogRef.current?.focus({ preventScroll: true });
 
     return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.documentElement.style.overflow = previousDocumentOverflow;
+      unlock();
       const target = returnFocus?.() ?? openerRef.current;
       if (target?.isConnected) target.focus({ preventScroll: true });
     };
   }, [open, returnFocus]);
+
+  useBackToClose(open, onClose);
 
   if (!open || typeof document === 'undefined') return null;
 
@@ -780,11 +840,16 @@ export function Modal({
       className="comic-modal-layer"
       data-placement={placement}
       data-testid={testId ? `${testId}-layer` : undefined}
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
+      onPointerDown={(event) => {
+        downOnLayer.current = event.target === event.currentTarget;
+      }}
+      onClick={(event) => {
+        // Cierra al soltar sobre el fondo (si el toque empezó también ahí), no al apoyarlo: el toque no atraviesa la ventana.
+        if (event.target === event.currentTarget && downOnLayer.current) {
           event.preventDefault();
           onClose();
         }
+        downOnLayer.current = false;
       }}
     >
       <section
