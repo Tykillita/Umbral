@@ -64,3 +64,5 @@ foreach ($language in @('es','en')) {
 [verification.json](../video/verification.json) guarda la ejecución real del verificador, con fecha UTC, hashes, duración, fotogramas, resolución, audio y procedencia de las capturas. La revisión de imágenes y el verificador cubren el medio; no constituyen evaluación humana de la calidad editorial del producto.
 
 Los reproductores de los README usan adjuntos de GitHub. Para sustituir una edición, sube su MP4 terminado sin recomprimirlo y actualiza su URL `github.com/user-attachments/assets/…` en el README correspondiente. Conserva las ediciones descargables del repositorio y los subtítulos equivalentes.
+
+La app móvil de GitHub no incrusta el reproductor de los adjuntos, así que cada README añade debajo una vista previa pulsable (`umbral-tour-en-poster.jpg` y `umbral-tour-es-poster.jpg`, el fotograma del segundo 3 de cada recorrido, extraído con `ffmpeg -ss 3 -i <mp4> -frames:v 1 -vf scale=1280:-1`). Si cambias un recorrido, regenera su miniatura.
