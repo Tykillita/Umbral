@@ -30,6 +30,8 @@ import type {
   TopicsResponse,
   TopicSummary,
   PublicAlertFeed,
+  TodayResponse,
+  NewsRefreshResponse,
 } from '../api/types';
 import {
   MOCK_CUTOFF,
@@ -146,6 +148,15 @@ export class MockApi implements UmbralApi {
   }
   async snapshot() {
     return MOCK_SNAPSHOT;
+  }
+  async refreshNews(): Promise<NewsRefreshResponse> {
+    return {
+      checkedAt: now(), windowHours: 24, items: [], warnings: [],
+      classification: { status: 'no_disponible', message: 'La demostración no consulta noticias en vivo ni clasifica.', nextAllowedAt: null, runUrl: null },
+    };
+  }
+  async today(): Promise<TodayResponse> {
+    return { checkedAt: now(), windowHours: 24, snapshotId: MOCK_HEALTH.snapshotId, dataMode: MOCK_HEALTH.dataMode, cutoffUtc: MOCK_HEALTH.cutoffUtc, items: [], note: 'La demostración no tiene noticias del día.' };
   }
   async alerts(): Promise<PublicAlertFeed> {
     return { checkedAt: now(), items: [], warnings: ['La demostración no consulta fuentes de alertas en vivo.'] };

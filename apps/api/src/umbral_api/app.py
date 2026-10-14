@@ -46,6 +46,7 @@ from .models import (
     ExportResponse,
     HealthResponse,
     ImpactRequest,
+    NewsRefreshResponse,
     NotionExportResponse,
     NotionMarkdownRequest,
     NotionStatusResponse,
@@ -62,6 +63,7 @@ from .models import (
     SlackNotificationResult,
     SlackShareRequest,
     SnapshotInfoResponse,
+    TodayResponse,
     TopicDetail,
     TopicsResponse,
 )
@@ -369,6 +371,17 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
         result = svc.live_sources.alerts()
         return PublicAlertFeed(checked_at=result.checked_at, items=[item.as_dict() for item in result.items], warnings=list(result.warnings))
 
+    @api.post(
+        "/public/news/refresh",
+        response_model=NewsRefreshResponse,
+        tags=["publico"],
+        summary="Actualizar noticias: titulares recientes sin clasificar y solicitud de clasificación",
+        responses=_ERRORS,
+    )
+    def refresh_news(user: User, svc=Depends(get_services)) -> NewsRefreshResponse:
+        svc.limiter.check(user, "news_refresh", 3)
+        return svc.refresh_news()
+
     @api.post("/public/agenda", response_model=TopicsResponse, tags=["publico"], responses=_ERRORS)
     def public_agenda(body: PublicAgendaRequest, user: User, svc=Depends(get_services)) -> TopicsResponse:
         contextual = svc.public.context(body.context, user)
@@ -463,6 +476,22 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
             scope=scope,
             tvn_gap=tvn_gap,
         )
+
+    @api.get(
+        "/today",
+        response_model=TodayResponse,
+        tags=["agenda"],
+        summary="Hoy: los titulares más recientes de las últimas 24 horas",
+        responses=_ERRORS,
+    )
+    def today(
+        user: User,
+        svc=Depends(get_services),
+        limit: int = Query(5, ge=1, le=20),
+        window_hours: int = Query(24, ge=1, le=72, alias="windowHours"),
+    ) -> TodayResponse:
+        svc.limiter.check(user, "queries", svc.settings.queries_per_minute)
+        return svc.today(limit=limit, window_hours=window_hours)
 
     @api.get(
         "/topics/{topic_id}",

@@ -57,7 +57,9 @@ class SnapshotFeed:
                     sid = descriptor.get("snapshotId", "")
                     if descriptor.get("schemaVersion") != 1 or not _SID.fullmatch(sid):
                         raise ValueError("Descriptor de snapshot inválido.")
-                    if sid == self.services.corpus.snapshot_id:
+                    hidden = self.services.hidden_snapshot
+                    if sid == self.services.corpus.snapshot_id or (hidden and sid == hidden[0]):
+                        # Ya activo, u oculto por antigüedad: volver a descargarlo no cambiaría nada.
                         self.last_error = None
                         return False
                     published = descriptor.get("publishedAt")
@@ -136,6 +138,7 @@ class SnapshotFeed:
                     raise ValueError("El snapshot remoto es vacío o contiene fixtures.")
                 if corpus.classifier != "laya":
                     raise ValueError("El feed no puede sustituir Laya por otro clasificador.")
+                corpus = self.services.fresh_or_empty(corpus)
                 state = build_snapshot_state(corpus)
                 target = root / sid
                 if target.exists():

@@ -104,7 +104,7 @@ def test_preflight_respeta_gitignore_y_no_toca_el_git_original(tmp_path):
     (tmp_path / ".gitignore").write_text(".env\n", encoding="utf-8")
     (tmp_path / "README.md").write_text("# Proyecto de control", encoding="utf-8")
     (tmp_path / ".env").write_text("SECRETO_LOCAL_DE_CONTROL=sentinela", encoding="utf-8")
-    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, check=False)
+    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, encoding="utf-8", check=False)
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Archivos que Git" in result.stdout
     assert "sentinela" not in result.stdout
@@ -114,7 +114,7 @@ def test_preflight_respeta_gitignore_y_no_toca_el_git_original(tmp_path):
 def test_preflight_rechaza_nombre_reservado_sin_abrir_contenido(tmp_path):
     # Carpeta sintética vacía: ninguna consulta real se crea ni se lee.
     (tmp_path / "eval/held-out").mkdir(parents=True)
-    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, check=False)
+    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, encoding="utf-8", check=False)
     assert result.returncode == 1
     assert "contenido no leído" in result.stdout
     assert not (tmp_path / ".git").exists()

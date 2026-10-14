@@ -1758,7 +1758,8 @@
         "enum": [
           "fixture",
           "provisional",
-          "congelado"
+          "congelado",
+          "empty"
         ],
         "title": "DataMode",
         "type": "string"
@@ -3384,6 +3385,30 @@
             ],
             "title": "Deploycommit"
           },
+          "hiddenSnapshotCutoffUtc": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hiddensnapshotcutoffutc"
+          },
+          "hiddenSnapshotId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Corte oculto por antigüedad (UMBRAL_HIDE_STALE_SNAPSHOT_HOURS); la agenda queda vacía hasta que llegue uno vigente.",
+            "title": "Hiddensnapshotid"
+          },
           "integrity": {
             "$ref": "#/components/schemas/IntegrityReport"
           },
@@ -3483,6 +3508,8 @@
           "serverTimeUtc",
           "notes",
           "snapshotStale",
+          "hiddenSnapshotId",
+          "hiddenSnapshotCutoffUtc",
           "snapshotRefreshError",
           "snapshotLastCheckedAt",
           "deployCommit"
@@ -3999,6 +4026,48 @@
         "title": "IntegrityReport",
         "type": "object"
       },
+      "LiveNewsItem": {
+        "description": "Titular recién consultado en vivo. NO está clasificado: no entra en la agenda, el puntaje ni la evidencia.",
+        "properties": {
+          "classified": {
+            "default": false,
+            "description": "Siempre falso: la clasificación con Laya la hace el workflow, no esta consulta.",
+            "title": "Classified",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "outlet": {
+            "title": "Outlet",
+            "type": "string"
+          },
+          "publishedAt": {
+            "format": "date-time",
+            "title": "Publishedat",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "outlet",
+          "url",
+          "publishedAt",
+          "classified"
+        ],
+        "title": "LiveNewsItem",
+        "type": "object"
+      },
       "ModelChoice": {
         "properties": {
           "model": {
@@ -4045,6 +4114,89 @@
           "selectedModel"
         ],
         "title": "ModelsResponse",
+        "type": "object"
+      },
+      "NewsRefreshClassification": {
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "nextAllowedAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nextallowedat"
+          },
+          "runUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runurl"
+          },
+          "status": {
+            "description": "solicitada | en_curso | enfriamiento | no_disponible | error",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "nextAllowedAt",
+          "runUrl"
+        ],
+        "title": "NewsRefreshClassification",
+        "type": "object"
+      },
+      "NewsRefreshResponse": {
+        "properties": {
+          "checkedAt": {
+            "format": "date-time",
+            "title": "Checkedat",
+            "type": "string"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/NewsRefreshClassification"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/LiveNewsItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          },
+          "windowHours": {
+            "title": "Windowhours",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "checkedAt",
+          "windowHours",
+          "items",
+          "warnings",
+          "classification"
+        ],
+        "title": "NewsRefreshResponse",
         "type": "object"
       },
       "NotionExportResponse": {
@@ -6261,6 +6413,128 @@
           "integrity"
         ],
         "title": "SnapshotInfoResponse",
+        "type": "object"
+      },
+      "TodayItem": {
+        "properties": {
+          "articleCount": {
+            "title": "Articlecount",
+            "type": "integer"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "categoryLabel": {
+            "title": "Categorylabel",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "independentProvenances": {
+            "title": "Independentprovenances",
+            "type": "integer"
+          },
+          "outlet": {
+            "title": "Outlet",
+            "type": "string"
+          },
+          "publishedAt": {
+            "description": "Publicación más reciente del tema (UTC). Solo entran temas con fecha de publicación conocida.",
+            "format": "date-time",
+            "title": "Publishedat",
+            "type": "string"
+          },
+          "publishedAtBasis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publishedatbasis"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "category",
+          "categoryLabel",
+          "outlet",
+          "url",
+          "publishedAt",
+          "publishedAtBasis",
+          "articleCount",
+          "independentProvenances"
+        ],
+        "title": "TodayItem",
+        "type": "object"
+      },
+      "TodayResponse": {
+        "description": "Los titulares más recientes de las últimas horas, fuera del puntaje: no altera el ranking `scoring-v1`.",
+        "properties": {
+          "checkedAt": {
+            "format": "date-time",
+            "title": "Checkedat",
+            "type": "string"
+          },
+          "cutoffUtc": {
+            "format": "date-time",
+            "title": "Cutoffutc",
+            "type": "string"
+          },
+          "dataMode": {
+            "$ref": "#/components/schemas/DataMode"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TodayItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Por qué la lista está vacía o incompleta, en lenguaje llano.",
+            "title": "Note"
+          },
+          "snapshotId": {
+            "title": "Snapshotid",
+            "type": "string"
+          },
+          "windowHours": {
+            "title": "Windowhours",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "checkedAt",
+          "windowHours",
+          "snapshotId",
+          "dataMode",
+          "cutoffUtc",
+          "items",
+          "note"
+        ],
+        "title": "TodayResponse",
         "type": "object"
       },
       "TopicDetail-Input": {
@@ -10265,6 +10539,87 @@
         ]
       }
     },
+    "/api/v1/public/news/refresh": {
+      "post": {
+        "operationId": "refresh_news_api_v1_public_news_refresh_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsRefreshResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Actualizar noticias: titulares recientes sin clasificar y solicitud de clasificación",
+        "tags": [
+          "publico"
+        ]
+      }
+    },
     "/api/v1/public/queries": {
       "post": {
         "operationId": "public_query_api_v1_public_queries_post",
@@ -10950,6 +11305,113 @@
         "summary": "Fuentes y evaluación: manifest, reporte de calidad, catálogo y métricas reales",
         "tags": [
           "estado"
+        ]
+      }
+    },
+    "/api/v1/today": {
+      "get": {
+        "operationId": "today_api_v1_today_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 5,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "windowHours",
+            "required": false,
+            "schema": {
+              "default": 24,
+              "maximum": 72,
+              "minimum": 1,
+              "title": "Windowhours",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TodayResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No autenticado"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Prohibido (p. ej. adaptador solo localhost)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No encontrado"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflicto de versión (control optimista)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No procesable / transición inválida"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Límite por usuario excedido"
+          }
+        },
+        "summary": "Hoy: los titulares más recientes de las últimas 24 horas",
+        "tags": [
+          "agenda"
         ]
       }
     },

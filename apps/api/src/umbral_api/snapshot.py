@@ -226,6 +226,37 @@ def resolve_snapshot_dir(settings: Settings) -> Path:
     )
 
 
+EMPTY_SNAPSHOT_ID = "sin-datos"
+
+
+def empty_corpus(cutoff: datetime | None = None, note: str | None = None) -> Corpus:
+    """Corte vacío: la agenda no muestra noticias hasta que llegue un snapshot vigente.
+
+    `cutoff` conserva el del corte oculto para que el feed no acepte uno más antiguo que el ya descartado.
+    """
+    from .models import IntegrityReport
+
+    now = datetime.now(UTC)
+    return Corpus(
+        path=Path("."),
+        snapshot_id=EMPTY_SNAPSHOT_ID,
+        data_mode=DataMode.empty,
+        provisional=False,
+        contains_fixtures=False,
+        classifier=None,
+        cutoff=cutoff or now,
+        manifest={},
+        quality_report=None,
+        metrics=None,
+        sources=[],
+        articles={},
+        indicators={},
+        clusters={},
+        integrity=IntegrityReport(manifest_verified=True, files_checked=0, checked_at=now),
+        notes=[note] if note else [],
+    )
+
+
 def _find_metrics(path: Path, snapshot_id: str) -> dict[str, Any] | None:
     for cand in (path / "metrics.json", repo_root() / "eval" / "results" / "latest.json", repo_root() / "eval" / "metrics.json"):
         if cand.exists():

@@ -140,6 +140,8 @@ def server_factory(snapshot, tmp_path_factory) -> Iterator[Callable[..., ApiServ
             "UMBRAL_ALLOW_FIXTURE": "0",
             "UMBRAL_WEB_DIST": str(web_dist or (work / "sin-web")),
             "UMBRAL_QUERIES_PER_MINUTE": "1000",
+            # Hermético: nunca usar la conexión personal de ChatGPT que la persona tenga en ~/.umbral-connections.
+            "CHATGPT_CREDENTIALS_FILE": str(work / "chatgpt.dat"),
             "UMBRAL_DRAFTS_PER_MINUTE": "1000",
             "GEMINI_API_KEY": "",
             "UMBRAL_GEMINI_STUB": "",

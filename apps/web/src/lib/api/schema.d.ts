@@ -552,6 +552,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/news/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Actualizar noticias: titulares recientes sin clasificar y solicitud de clasificación */
+        post: operations["refresh_news_api_v1_public_news_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/public/queries": {
         parameters: {
             query?: never;
@@ -681,6 +698,23 @@ export interface paths {
         };
         /** Fuentes y evaluación: manifest, reporte de calidad, catálogo y métricas reales */
         get: operations["snapshot_api_v1_snapshot_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Hoy: los titulares más recientes de las últimas 24 horas */
+        get: operations["today_api_v1_today_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1350,7 +1384,7 @@ export interface components {
          * DataMode
          * @enum {string}
          */
-        DataMode: "fixture" | "provisional" | "congelado";
+        DataMode: "fixture" | "provisional" | "congelado" | "empty";
         /** DisconnectResponse */
         DisconnectResponse: {
             /** Note */
@@ -1968,6 +2002,13 @@ export interface components {
             dataMode: components["schemas"]["DataMode"];
             /** Deploycommit */
             deployCommit: string | null;
+            /** Hiddensnapshotcutoffutc */
+            hiddenSnapshotCutoffUtc: string | null;
+            /**
+             * Hiddensnapshotid
+             * @description Corte oculto por antigüedad (UMBRAL_HIDE_STALE_SNAPSHOT_HOURS); la agenda queda vacía hasta que llegue uno vigente.
+             */
+            hiddenSnapshotId: string | null;
             integrity: components["schemas"]["IntegrityReport"];
             /** Localmode */
             localMode: boolean;
@@ -2182,6 +2223,31 @@ export interface components {
             /** Predictionssha256 */
             predictionsSha256: string | null;
         };
+        /**
+         * LiveNewsItem
+         * @description Titular recién consultado en vivo. NO está clasificado: no entra en la agenda, el puntaje ni la evidencia.
+         */
+        LiveNewsItem: {
+            /**
+             * Classified
+             * @description Siempre falso: la clasificación con Laya la hace el workflow, no esta consulta.
+             * @default false
+             */
+            classified: boolean;
+            /** Id */
+            id: string;
+            /** Outlet */
+            outlet: string;
+            /**
+             * Publishedat
+             * Format: date-time
+             */
+            publishedAt: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
         /** ModelChoice */
         ModelChoice: {
             /** Model */
@@ -2195,6 +2261,35 @@ export interface components {
             profileId: string;
             /** Selectedmodel */
             selectedModel: string | null;
+        };
+        /** NewsRefreshClassification */
+        NewsRefreshClassification: {
+            /** Message */
+            message: string;
+            /** Nextallowedat */
+            nextAllowedAt: string | null;
+            /** Runurl */
+            runUrl: string | null;
+            /**
+             * Status
+             * @description solicitada | en_curso | enfriamiento | no_disponible | error
+             */
+            status: string;
+        };
+        /** NewsRefreshResponse */
+        NewsRefreshResponse: {
+            /**
+             * Checkedat
+             * Format: date-time
+             */
+            checkedAt: string;
+            classification: components["schemas"]["NewsRefreshClassification"];
+            /** Items */
+            items: components["schemas"]["LiveNewsItem"][];
+            /** Warnings */
+            warnings: string[];
+            /** Windowhours */
+            windowHours: number;
         };
         /** NotionExportResponse */
         NotionExportResponse: {
@@ -2988,6 +3083,60 @@ export interface components {
             sources: {
                 [key: string]: unknown;
             }[];
+        };
+        /** TodayItem */
+        TodayItem: {
+            /** Articlecount */
+            articleCount: number;
+            category: components["schemas"]["Category"];
+            /** Categorylabel */
+            categoryLabel: string;
+            /** Id */
+            id: string;
+            /** Independentprovenances */
+            independentProvenances: number;
+            /** Outlet */
+            outlet: string;
+            /**
+             * Publishedat
+             * Format: date-time
+             * @description Publicación más reciente del tema (UTC). Solo entran temas con fecha de publicación conocida.
+             */
+            publishedAt: string;
+            /** Publishedatbasis */
+            publishedAtBasis: string | null;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /**
+         * TodayResponse
+         * @description Los titulares más recientes de las últimas horas, fuera del puntaje: no altera el ranking `scoring-v1`.
+         */
+        TodayResponse: {
+            /**
+             * Checkedat
+             * Format: date-time
+             */
+            checkedAt: string;
+            /**
+             * Cutoffutc
+             * Format: date-time
+             */
+            cutoffUtc: string;
+            dataMode: components["schemas"]["DataMode"];
+            /** Items */
+            items: components["schemas"]["TodayItem"][];
+            /**
+             * Note
+             * @description Por qué la lista está vacía o incompleta, en lenguaje llano.
+             */
+            note: string | null;
+            /** Snapshotid */
+            snapshotId: string;
+            /** Windowhours */
+            windowHours: number;
         };
         /** TopicDetail */
         "TopicDetail-Input": {
@@ -5861,6 +6010,80 @@ export interface operations {
             };
         };
     };
+    refresh_news_api_v1_public_news_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewsRefreshResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     public_query_api_v1_public_queries_post: {
         parameters: {
             query?: never;
@@ -6445,6 +6668,83 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SnapshotInfoResponse"];
+                };
+            };
+        };
+    };
+    today_api_v1_today_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                windowHours?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TodayResponse"];
+                };
+            };
+            /** @description No autenticado */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Prohibido (p. ej. adaptador solo localhost) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No encontrado */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Conflicto de versión (control optimista) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No procesable / transición inválida */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Límite por usuario excedido */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

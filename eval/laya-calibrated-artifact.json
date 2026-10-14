@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "modelVersion": "laya-ft-ccb4ea2758e5e524",
+  "weightsSha256": "ccb4ea2758e5e5245a3aec001d534462b924d7a6b42f96a86324f736c28fd447",
+  "asset": {
+    "name": "laya-calibrated.tar",
+    "url": "https://github.com/Tykillita/Umbral/releases/download/laya-calibrated-v1/laya-calibrated.tar",
+    "sha256": "2d8000e404f1facfb70385f7ffa218108fc70b32da0881407a922f6a3a97978a",
+    "sizeBytes": 678236160
+  }
+}

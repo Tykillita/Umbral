@@ -150,6 +150,7 @@ class DataMode(StrEnum):
     fixture = "fixture"
     provisional = "provisional"
     congelado = "congelado"
+    empty = "empty"  # sin noticias vigentes: el corte disponible es demasiado antiguo o no existe
 
 
 class AnswerStatus(StrEnum):
@@ -411,6 +412,57 @@ class TopicsResponse(ApiModel):
     items: list[TopicSummary]
     applied: dict[str, Any] = Field(default_factory=dict)
     facets: dict[str, dict[str, int]] = Field(default_factory=dict)
+
+
+class TodayItem(ApiModel):
+    id: str
+    title: str
+    category: Category
+    category_label: str
+    outlet: str
+    url: str
+    published_at: datetime = Field(description="Publicación más reciente del tema (UTC). Solo entran temas con fecha de publicación conocida.")
+    published_at_basis: str | None = None
+    article_count: int
+    independent_provenances: int
+
+
+class TodayResponse(ApiModel):
+    """Los titulares más recientes de las últimas horas, fuera del puntaje: no altera el ranking `scoring-v1`."""
+
+    checked_at: datetime
+    window_hours: int
+    snapshot_id: str
+    data_mode: DataMode
+    cutoff_utc: datetime
+    items: list[TodayItem]
+    note: str | None = Field(None, description="Por qué la lista está vacía o incompleta, en lenguaje llano.")
+
+
+class LiveNewsItem(ApiModel):
+    """Titular recién consultado en vivo. NO está clasificado: no entra en la agenda, el puntaje ni la evidencia."""
+
+    id: str
+    title: str
+    outlet: str
+    url: str
+    published_at: datetime
+    classified: bool = Field(False, description="Siempre falso: la clasificación con Laya la hace el workflow, no esta consulta.")
+
+
+class NewsRefreshClassification(ApiModel):
+    status: str = Field(description="solicitada | en_curso | enfriamiento | no_disponible | error")
+    message: str
+    next_allowed_at: datetime | None = None
+    run_url: str | None = None
+
+
+class NewsRefreshResponse(ApiModel):
+    checked_at: datetime
+    window_hours: int
+    items: list[LiveNewsItem]
+    warnings: list[str] = Field(default_factory=list)
+    classification: NewsRefreshClassification
 
 
 class TopicDetail(ApiModel):
@@ -888,6 +940,10 @@ class HealthResponse(ApiModel):
     server_time_utc: datetime
     notes: list[str] = Field(default_factory=list)
     snapshot_stale: bool = False
+    hidden_snapshot_id: str | None = Field(
+        None, description="Corte oculto por antigüedad (UMBRAL_HIDE_STALE_SNAPSHOT_HOURS); la agenda queda vacía hasta que llegue uno vigente."
+    )
+    hidden_snapshot_cutoff_utc: datetime | None = None
     snapshot_refresh_error: str | None = None
     snapshot_last_checked_at: datetime | None = None
     deploy_commit: str | None = None  # SHA desplegado; permite verificar qué versión atiende antes de publicar Hosting

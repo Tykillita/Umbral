@@ -78,11 +78,39 @@ Render Free se duerme tras 15 minutos sin tráfico y su disco es efímero. La pr
 - **Solo la API:** en Render, vuelve a desplegar un deploy anterior desde su historial.
 - **Datos:** el feed conserva los últimos siete snapshots válidos; la API y el escritorio conservan el último válido si una actualización falla.
 
-## Actualización diaria de datos
+## Actualización de datos cada 6 horas
 
-El workflow `daily-data.yml` se ejecuta a las **06:17 de Panamá** (11:17 UTC) y también a demanda. Está **desactivado** hasta que se defina `UMBRAL_DAILY_ENABLED=true` tras verificar el primer despliegue. Necesita además `PRODUCTION_RELEASE_REF` (SHA o tag verificado) y `PUBLIC_API_URL`.
+El workflow `daily-data.yml` («Datos de Umbral (cada 6 horas)») se ejecuta a las **00:17, 06:17, 12:17 y 18:17 UTC** (19:17, 01:17, 07:17 y 13:17 en Panamá) y también a demanda. GitHub puede retrasar los cron programados varias horas; el botón «Actualizar noticias» de la web y «Run workflow» lo compensan. Con el artefacto Laya publicado (abajo) una ejecución tarda unos 10–25 minutos y el límite del job es de 60.
+
+Mientras no haya un corte de menos de 36 horas, la API (`UMBRAL_HIDE_STALE_SNAPSHOT_HOURS=36` en `render.yaml`) no muestra noticias viejas: la agenda queda vacía con un mensaje claro hasta que llegue uno vigente.
+
+### Modelo Laya calibrado
+
+El job ya no reentrena Laya en cada ejecución (eran ~2 h y fallaba la compuerta de calibración o el límite de tiempo). Descarga el **artefacto exacto** publicado como asset de una release de GitHub (gratis en un repositorio público), comprueba su SHA-256 y sus pesos con `scripts/laya_artifact.py fetch`, y `eval/prepare_laya_production_model.py` lo verifica sin entrenar. Se declara en `eval/laya-calibrated-artifact.json`.
+
+Publicarlo es una acción de una sola vez, tuya (el script no sube nada):
+
+```powershell
+uv run --no-project python scripts/laya_artifact.py package --model-dir .production/laya-model --out .production/laya-calibrated.tar
+gh release create laya-calibrated-v1 .production/laya-calibrated.tar --repo Tykillita/Umbral --title "Laya calibrada" --notes "Artefacto calibrado del job de datos."
+```
+
+El script y el descriptor se toman del commit del propio workflow (checkout parcial en `.workflow-tools`), mientras el código de producción sigue anclado a `PRODUCTION_RELEASE_REF`; la release `laya-calibrated-v1` es un *pre-release* para que el actualizador de escritorio no la confunda con una versión de la app. Después haz commit de `eval/laya-calibrated-artifact.json` (pasa a `status: published` con su SHA-256). Mientras diga `pending`, el job falla en segundos con un mensaje claro; se puede lanzar a mano con `train=true` para reentrenar dentro del job (~2 h, límite de 150 min).
+
+El workflow está **desactivado** hasta que se defina `UMBRAL_DAILY_ENABLED=true` tras verificar el primer despliegue. Necesita además `PRODUCTION_RELEASE_REF` (SHA o tag verificado) y `PUBLIC_API_URL`.
 
 Extrae con 48 horas de solape y una ventana móvil de 30 días, clasifica con Laya CPU (revisión fijada), verifica el candidato y lo publica en Hosting sin activar el anterior hasta validar hashes y referencias. Un fallo de fuente, de Laya o de integridad aborta el candidato: nunca se sustituye por un clasificador de referencia ni por datos parciales. Se recomienda comprobar dos ciclos completos antes de darlo por estable.
+
+### Botón «Actualizar noticias»
+
+En la agenda, «Hoy» trae al instante los titulares de TVN y Bing News de las últimas 24 horas, **sin clasificar** (rotulados así, fuera de la agenda y del puntaje), y pide al workflow `daily-data.yml` que clasifique un corte nuevo. La web dice con claridad que la clasificación puede tardar entre 15 y 25 minutos y la agenda se actualiza sola cuando llega el corte.
+
+Para que pueda **pedir la clasificación** hace falta un token de GitHub; crearlo y guardarlo es una acción tuya y nunca va al repositorio:
+
+1. GitHub → *Settings → Developer settings → Fine-grained personal access tokens → Generate*: repositorio `Tykillita/Umbral` únicamente, permiso **Actions: Read and write**, sin ningún otro, con caducidad.
+2. Render → servicio de la API → *Environment* → `UMBRAL_GITHUB_DISPATCH_TOKEN` = el token (secreto; `render.yaml` solo declara `sync: false`).
+
+Salvaguardas: máximo 3 pulsaciones por minuto y usuario, un enfriamiento de 30 minutos entre solicitudes de clasificación (`UMBRAL_NEWS_REFRESH_MIN_INTERVAL_S`), no lanza otra si ya hay una ejecución en curso o en cola, solo habla con `api.github.com` y el token no se registra ni se devuelve. Sin token, el botón sigue mostrando los titulares sin clasificar y avisa de que no puede clasificar.
 
 ## Cuotas
 

@@ -197,6 +197,7 @@ class LiveSources:
         self._client_factory = client_factory
         self._lock = threading.Lock()
         self._alert_cache: tuple[float, LiveResult] | None = None
+        self._latest_cache: tuple[float, LiveResult] | None = None
         self._search_cache: dict[str, tuple[float, LiveResult]] = {}
 
     def _client(self, timeout: float = 8) -> httpx.Client:
@@ -288,6 +289,43 @@ class LiveSources:
             result = LiveResult(selected_items, checked, tuple(warnings))
             self._alert_cache = (now, result)
             return result
+
+    def latest(self, *, limit: int = 10, window_hours: int = 24, min_age_s: float = 20) -> LiveResult:
+        """Titulares recientes de TVN y Bing News, SIN clasificar y solo con fecha de publicación conocida.
+
+        Alimenta el botón «Actualizar noticias»: es lo que se puede mostrar al instante mientras el workflow clasifica el
+        corte nuevo. No entra en la agenda. `min_age_s` protege a las fuentes de consultas repetidas.
+        """
+        now = time.monotonic()
+        if self.offline:
+            return LiveResult((), datetime.now(UTC), ("Búsqueda en vivo desactivada en modo sin conexión.",))
+        with self._lock:
+            if self._latest_cache and now - self._latest_cache[0] < min_age_s:
+                return self._latest_cache[1]
+        checked = datetime.now(UTC)
+        since = checked - timedelta(hours=window_hours)
+        items: list[LiveItem] = []
+        warnings: list[str] = []
+        try:
+            with self._client(timeout=10) as client:
+                response = client.get(TVN_URL)
+                self._response_url(response, {"www.tvn-2.com"})
+                items.extend(_rss_items(response.text[:2_000_000], "TVN"))
+        except Exception:
+            warnings.append("No se pudo consultar el feed reciente de TVN.")
+        try:
+            with self._client(timeout=10) as client:
+                response = client.get(BING_URL, params={"q": "Panamá noticias", "format": "rss", "mkt": "es-PA"})
+                self._response_url(response, {"www.bing.com"})
+                items.extend(_rss_items(response.text[:2_000_000], "Bing News"))
+        except Exception:
+            warnings.append("La búsqueda web secundaria no respondió.")
+        unique = {item.id: item for item in items if item.published_at and since <= item.published_at <= checked + timedelta(minutes=10)}
+        ranked = sorted(unique.values(), key=lambda item: item.published_at or datetime.min.replace(tzinfo=UTC), reverse=True)
+        result = LiveResult(_diverse(ranked, limit=limit, per_source=max(1, limit // 2)), checked, tuple(warnings))
+        with self._lock:
+            self._latest_cache = (now, result)
+        return result
 
     def search(self, question: str, *, mode: str = "auto", force: bool = False) -> LiveResult:
         query = re.sub(r"\s+", " ", question).strip()[:500]

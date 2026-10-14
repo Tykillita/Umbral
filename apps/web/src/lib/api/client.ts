@@ -38,6 +38,8 @@ import type {
   TopicFilters,
   TopicsResponse,
   PublicAlertFeed,
+  TodayResponse,
+  NewsRefreshResponse,
 } from './types';
 
 export interface BootProgress { attempt: number; elapsedMs: number; message: string }
@@ -65,6 +67,10 @@ export interface UmbralApi {
   claudeLogout(): Promise<ClaudeConnection>;
   snapshot(): Promise<SnapshotInfo>;
   alerts(): Promise<PublicAlertFeed>;
+  /** Los titulares más recientes de las últimas 24 h (fuera del puntaje). */
+  today(): Promise<TodayResponse>;
+  /** «Actualizar noticias»: titulares recientes SIN clasificar al instante + solicitud de clasificación al workflow. */
+  refreshNews(): Promise<NewsRefreshResponse>;
   topics(filters: TopicFilters): Promise<TopicsResponse>;
   topic(topicId: string): Promise<TopicDetail>;
   query(req: QueryRequestBody, opts?: { signal?: AbortSignal }): Promise<QueryResponse>;
@@ -270,6 +276,8 @@ export class HttpApi implements UmbralApi {
   claudeLogout = () => this.request<ClaudeConnection>('POST', '/connections/claude/logout');
   snapshot = () => this.request<SnapshotInfo>('GET', '/snapshot');
   alerts = () => this.request<PublicAlertFeed>('GET', '/public/alerts');
+  today = () => this.request<TodayResponse>('GET', '/today', { params: { limit: 5, windowHours: 24 } });
+  refreshNews = () => this.request<NewsRefreshResponse>('POST', '/public/news/refresh');
   topics = (f: TopicFilters) =>
     this.request<TopicsResponse>('GET', '/topics', {
       params: {
