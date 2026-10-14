@@ -63,6 +63,7 @@ function StatusItem({ label, children, testId }: { label: string; children: Reac
 function StatusBar() {
   const { api, mockReason, authMode } = useApp();
   const { data: h, error } = useHealth();
+  const queryClient = useQueryClient();
   const rules = useRules();
   const [statusOpen, setStatusOpen] = useState(false);
   const detailsRef = useDisclosureMotion<HTMLDListElement>(statusOpen);
@@ -75,7 +76,8 @@ function StatusBar() {
       )}
       {error && api.kind === 'live' && (
         <div data-testid="api-down">
-          <ErrorBox error={error} />
+          {/* Único aviso de servicio caído: la agenda y las alertas no repiten el error. Reintentar recarga todos los datos. */}
+          <ErrorBox error={error} onRetry={() => void queryClient.invalidateQueries()} />
         </div>
       )}
       {h && (

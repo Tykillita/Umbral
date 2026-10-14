@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowRight, ChevronDown, FileSearch, GitCompare, Newspaper, Radio, Repeat, Search, ShieldAlert, SlidersHorizontal, TriangleAlert, X } from 'lucide-react';
 import type { Category, EvidenceStatus, ReviewStatus, ScoreBand, TopicFilters, TopicSummary } from '../../lib/api/types';
-import { useAlerts, useRules, useTopics } from '../../lib/hooks';
+import { useAlerts, useHealth, useRules, useTopics } from '../../lib/hooks';
+import { isServiceUnavailable } from '../../lib/api/client';
 import { BAND_LABEL, CATEGORY_LABEL, EVIDENCE_LABEL, REVIEW_LABEL } from '../../lib/labels';
 import { fmtDateTime, fmtScore } from '../../lib/format';
 import { useDisclosureMotion, useEntrance, useRevealNew } from '../../lib/useMotion';
@@ -176,6 +177,7 @@ export function Agenda() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const rules = useRules();
   const alerts = useAlerts();
+  const apiDown = isServiceUnavailable(useHealth().error);
   const rootRef = useRef<HTMLDivElement>(null);
   const filtersRef = useDisclosureMotion<HTMLDivElement>(filtersOpen);
 
@@ -219,7 +221,9 @@ export function Agenda() {
           {alerts.data && <p className="text-xs text-ink-3">Consulta: {fmtDateTime(alerts.data.checkedAt)}</p>}
         </div>
         {alerts.isLoading && <p aria-live="polite" className="py-4 text-sm text-ink-3">Consultando alertas recientes…</p>}
-        {alerts.error && <ErrorBox error={alerts.error} onRetry={() => void alerts.refetch()} />}
+        {alerts.error && (isServiceUnavailable(alerts.error)
+          ? <p className="py-2 text-sm text-ink-3" role="status" data-testid="alerts-unavailable">Las alertas no están disponibles ahora; se mostrarán cuando el servicio vuelva a responder.</p>
+          : <ErrorBox error={alerts.error} onRetry={() => void alerts.refetch()} />)}
         {alerts.data?.warnings.map((warning) => <p key={warning} className="mb-2 text-xs text-amber-800" role="status">{warning}</p>)}
         {alerts.data && alerts.data.items.length === 0 && !alerts.isLoading && (
           <p className="text-sm text-ink-2">No hay sismos ni avisos recientes disponibles en las fuentes consultadas.</p>
@@ -373,7 +377,10 @@ export function Agenda() {
       </form>
 
       {isLoading && <Loading label="Cargando agenda…" />}
-      {error && <ErrorBox error={error} onRetry={() => refetch()} />}
+      {error && (apiDown && isServiceUnavailable(error)
+        // El aviso de servicio no disponible ya está arriba: aquí solo se explica qué falta, sin repetir el error.
+        ? <section className="comic-panel p-4 text-sm text-ink-2" data-testid="agenda-waiting-service" role="status">La agenda aparecerá aquí en cuanto el servicio responda. Usa «Reintentar» en el aviso de arriba.</section>
+        : <ErrorBox error={error} onRetry={() => refetch()} />)}
 
       {data && (
         <div aria-live="polite" aria-busy={isFetching}>

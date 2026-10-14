@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import type { EvidenceStatus, GenerationMode, ReviewStatus, ScoreBand } from '../../lib/api/types';
 import { BAND_SHORT, EVIDENCE_LABEL, GENERATION_LABEL, REVIEW_LABEL } from '../../lib/labels';
-import { ApiError, describeError } from '../../lib/api/client';
+import { ApiError, describeError, isServiceUnavailable } from '../../lib/api/client';
 import { Tooltip } from './controls';
 import { cancelMotion, scheduleNotice } from '../../lib/motion';
 import { useWarningRegistry } from './warnings';
@@ -278,10 +278,17 @@ export function Loading({ label = 'Cargando…' }: { label?: string }) {
 
 export function ErrorBox({ error, onRetry, testId = 'error-box' }: { error: unknown; onRetry?: () => void; testId?: string }) {
   const status = error instanceof ApiError ? error.status : null;
+  // Servicio caído o iniciando: no es un fallo de la persona ni de su petición, así que no se pinta como error rojo.
+  const unavailable = isServiceUnavailable(error);
   return (
-    <Notice tone="bad" title="No se pudo completar la operación" testId={testId} role="alert">
+    <Notice
+      tone={unavailable ? 'info' : 'bad'}
+      title={unavailable ? 'Datos no disponibles por ahora' : 'No se pudo completar la operación'}
+      testId={testId}
+      role="alert"
+    >
       <p>{describeError(error)}</p>
-      {status !== null && status > 0 && <p className="mt-1 text-xs text-ink-3">HTTP {status}{error instanceof ApiError ? ` · ${error.code}` : ''}</p>}
+      {status !== null && status > 0 && <p className="mt-1 text-xs text-ink-3">Detalle técnico: HTTP {status}{error instanceof ApiError ? ` · ${error.code}` : ''}</p>}
       {onRetry && (
         <Button className="mt-2" onClick={onRetry} variant="secondary">
           Reintentar
