@@ -116,10 +116,23 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * El servicio no está disponible (sin conexión, caído, sin despliegue activo o iniciando), a diferencia de una petición
+ * rechazada por la API. Un 404 solo cuenta si no trae el cuerpo de error de Umbral (`error_http`): lo devuelve el proxy,
+ * no la API, p. ej. cuando el servicio alojado no tiene ningún despliegue activo.
+ */
+export function isServiceUnavailable(e: unknown): boolean {
+  if (!(e instanceof ApiError)) return false;
+  if (e.code.startsWith('almacenamiento_')) return false;
+  return e.status === 0 || e.status >= 500 || (e.status === 404 && e.code === 'error_http');
+}
+
 export function describeError(e: unknown): string {
   if (e instanceof ApiError) {
     if (e.status === 0 && e.code.startsWith('almacenamiento_')) return e.message;
-    if (e.status === 0) return 'No se pudo contactar con la API. Revisa la conexión o que el backend esté en marcha.';
+    if (e.status === 0) return 'No se pudo contactar con la API. Revisa tu conexión; si el servicio está iniciando, reintenta en un minuto. Tu trabajo guardado sigue en este dispositivo.';
+    // Respuesta del proxy o de una página HTML (404/5xx sin cuerpo de error de Umbral): nunca se muestra «Error HTTP …» crudo.
+    if (isServiceUnavailable(e) && e.code === 'error_http') return 'El servicio no está disponible en este momento. Puede estar iniciando o en mantenimiento: reintenta en un minuto. Tu trabajo guardado sigue en este dispositivo.';
     if (e.status === 429) return `Límite de consultas alcanzado.${e.retryAfter ? ` Reintenta en ${e.retryAfter} s.` : ''}`;
     if (e.status === 503) return `Servicio no disponible: ${e.message}`;
     return e.message;
