@@ -233,3 +233,31 @@ def test_movimiento_reducido_mantiene_la_cinta_y_detiene_el_desplazamiento_suave
         )
     finally:
         context.close()
+
+
+@pytest.mark.parametrize("estado", ["con_datos", "sin_datos"])
+@pytest.mark.parametrize("width", [320, 360, 390, 430, 600, 900])
+def test_textos_de_las_tarjetas_de_cifras_caben_en_su_tarjeta(page: Page, stack, width: int, estado: str):
+    """«Cargando…» y «No disponible» se dibujaban con el tamaño de cifra y se salían de la tarjeta en el móvil."""
+    page.set_viewport_size({"width": width, "height": 844})
+    if estado == "sin_datos":
+        page.route("**/api/**", lambda route: route.abort())
+    page.goto(stack.url + "/")
+    expect(page.locator(".landing-stat strong").first).to_be_visible()
+    if estado == "sin_datos":
+        expect(page.locator(".landing-stat strong").first).to_have_text("No disponible", timeout=15_000)
+    else:
+        expect(page.get_by_test_id("landing-snapshot-status")).to_contain_text("Corte", timeout=15_000)
+    outside = page.evaluate(
+        """() => [...document.querySelectorAll('.landing-stat')].flatMap((card, index) => {
+          const box = card.getBoundingClientRect();
+          return [...card.children].flatMap(child => {
+            const r = child.getBoundingClientRect();
+            const problems = [];
+            if (r.left < box.left - 0.5 || r.right > box.right + 0.5) problems.push('fuera de la tarjeta');
+            if (child.scrollWidth > child.clientWidth + 1) problems.push('desborda su propia caja');
+            return problems.map(problem => ({card: index, text: child.textContent, problem, child: [r.left, r.right], box: [box.left, box.right]}));
+          });
+        })"""
+    )
+    assert not outside, f"textos que se salen de su tarjeta a {width}px ({estado}): {outside}"

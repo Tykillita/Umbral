@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { PlugZap, Settings, Unplug } from 'lucide-react';
+import { ArrowUpRight, PlugZap, Settings, Unplug } from 'lucide-react';
 import type { ConnectorProvider, ReviewStatus, SlackNotificationPreferences } from '../lib/api/types';
 import { REVIEW_LABEL } from '../lib/labels';
 import { getThemePreference, persistThemePreference, type ThemePreference } from '../lib/themePreference';
@@ -114,7 +114,7 @@ function PublicConnectors() {
           {!isPublic ? <span className="text-xs text-ink-3">Web pública</span> : state?.connected ? (
             <Button variant="ghost" icon={Unplug} disabled={disconnect.isPending} onClick={() => disconnect.mutate(provider)}>Desconectar</Button>
           ) : (
-            authorizationUrls[provider] ? <a className="comic-button inline-flex min-h-11 items-center gap-2 border border-ink bg-amber-300 px-3.5 py-2 text-sm font-semibold text-ink" href={authorizationUrls[provider]} target="_blank" rel="noopener noreferrer" onClick={() => setAuthorizationUrls((current) => ({ ...current, [provider]: undefined }))}>Autorizar en {title} ↗</a> :
+            authorizationUrls[provider] ? <a className="comic-button inline-flex min-h-11 items-center gap-2 border border-ink bg-amber-300 px-3.5 py-2 text-sm font-semibold text-ink" href={authorizationUrls[provider]} target="_blank" rel="noopener noreferrer" onClick={() => setAuthorizationUrls((current) => ({ ...current, [provider]: undefined }))}>Autorizar en {title} <ArrowUpRight size={16} strokeWidth={2.6} aria-hidden="true" /></a> :
               <Button icon={PlugZap} disabled={!state?.available || start.isPending} busy={start.isPending && start.variables === provider} onClick={() => start.mutate(provider)}>Conectar</Button>
           )}
         </div>
