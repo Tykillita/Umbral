@@ -95,7 +95,7 @@ uv run --no-project python scripts/laya_artifact.py package --model-dir .product
 gh release create laya-calibrated-v1 .production/laya-calibrated.tar --repo Tykillita/Umbral --title "Laya calibrada" --notes "Artefacto calibrado del job de datos."
 ```
 
-Después haz commit de `eval/laya-calibrated-artifact.json` (pasa a `status: published` con su SHA-256). Mientras diga `pending`, el job falla en segundos con un mensaje claro; se puede lanzar a mano con `train=true` para reentrenar dentro del job (~2 h, límite de 150 min).
+El script y el descriptor se toman del commit del propio workflow (checkout parcial en `.workflow-tools`), mientras el código de producción sigue anclado a `PRODUCTION_RELEASE_REF`; la release `laya-calibrated-v1` es un *pre-release* para que el actualizador de escritorio no la confunda con una versión de la app. Después haz commit de `eval/laya-calibrated-artifact.json` (pasa a `status: published` con su SHA-256). Mientras diga `pending`, el job falla en segundos con un mensaje claro; se puede lanzar a mano con `train=true` para reentrenar dentro del job (~2 h, límite de 150 min).
 
 El workflow está **desactivado** hasta que se defina `UMBRAL_DAILY_ENABLED=true` tras verificar el primer despliegue. Necesita además `PRODUCTION_RELEASE_REF` (SHA o tag verificado) y `PUBLIC_API_URL`.
 

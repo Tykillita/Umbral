@@ -47,6 +47,18 @@ jobs:
         with:
           ref: ${{ vars.PRODUCTION_RELEASE_REF }}
           persist-credentials: false
+      - name: Traer la herramienta y el descriptor del modelo desde el commit de este workflow
+        # El código de producción sigue anclado a PRODUCTION_RELEASE_REF; el script que descarga el modelo calibrado y su
+        # descriptor vienen del commit del workflow, así no dependen de qué tan antiguo sea el ref anclado.
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: .workflow-tools
+          sparse-checkout: |
+            scripts/laya_artifact.py
+            eval/laya-calibrated-artifact.json
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
@@ -69,7 +81,7 @@ jobs:
         if: ${{ !inputs.train }}
         with:
           path: .production/laya-model
-          key: laya-calibrated-artifact-${{ hashFiles('eval/laya-calibrated-artifact.json') }}
+          key: laya-calibrated-artifact-${{ hashFiles('.workflow-tools/eval/laya-calibrated-artifact.json') }}
       - uses: actions/cache@v4
         if: ${{ inputs.train }}
         with:
@@ -77,7 +89,7 @@ jobs:
           key: laya-calibrated-${{ hashFiles('eval/prepare_laya_production_model.py', 'eval/finetune_laya.py', 'eval/fit_calibration.py', 'eval/apply_laya_calibration_to_snapshot.py', 'eval/reclassify_laya_snapshot.py', 'eval/run_classification.py', 'eval/aggregate_metrics.py', 'eval/label_provenance.py', 'eval/labels/laya-agent-review-20261007-split.jsonl', 'eval/labels/laya-agent-review-20261007-split.manifest.json', 'data/snapshots/20261007-cfa338b6/manifest.json', 'pipeline/uv.lock', 'pipeline/umbral_pipeline/classify/calibration.py', 'pipeline/umbral_pipeline/classify/laya_clf.py', 'pipeline/umbral_pipeline/refresh.py') }}
       - name: Descargar el artefacto Laya calibrado publicado (verificado por SHA-256)
         if: ${{ !inputs.train }}
-        run: python3 scripts/laya_artifact.py fetch --dest "$UMBRAL_LAYA_MODEL_DIR"
+        run: python3 .workflow-tools/scripts/laya_artifact.py fetch --descriptor .workflow-tools/eval/laya-calibrated-artifact.json --dest "$UMBRAL_LAYA_MODEL_DIR"
       - name: Preparar o verificar el artefacto Laya calibrado
         shell: bash
         run: |
