@@ -78,6 +78,7 @@ from .public_models import (
     WorkspaceImportResponse,
 )
 
+
 class _WebStaticFiles(StaticFiles):
     """Sirve el build de la web con las cabeceras de caché que necesita la PWA (las mismas que firebase.json).
 
