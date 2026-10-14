@@ -8,6 +8,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Added
 
+- Vista previa animada y pulsable del video en ambos README (GIF silencioso de los primeros 30 s): la app móvil de GitHub no incrusta el reproductor de los adjuntos; el GIF se reproduce solo y al tocarlo abre el video completo.
 - Presentación audiovisual de 77 segundos en español e inglés: recorrido horizontal y reel vertical de la app real, con animaciones de cómic, voz local, subtítulos incrustados/WebVTT, clics sincronizados y fuentes reproducibles.
 - Alertas de sismos USGS, avisos públicos IMHPA/SINAPROC y titulares de TVN en un bloque separado sobre la Agenda; el asistente puede buscar titulares en vivo con fuentes y enlaces, automáticamente para preguntas actuales o cuando se solicita.
 - Aviso flotante y preferencia de actualizaciones de escritorio: un interruptor en Configuración permite desactivar la descarga e instalación automáticas; con las automáticas apagadas Umbral solo avisa de la versión disponible y ofrece «Actualizar ahora» para descargarla e instalarla.

@@ -38,6 +38,8 @@ The interface is in Spanish. Code and identifiers are in English; [the Spanish R
 
 https://github.com/user-attachments/assets/b11e44dc-640f-4a29-a3c2-50afb65d22c4
 
+<p><a href="https://github.com/user-attachments/assets/b11e44dc-640f-4a29-a3c2-50afb65d22c4"><img src="docs/video/umbral-tour-en-preview.gif" alt="Animated preview of the Umbral tour (first 30 seconds, no sound)" width="480"></a><br><sub>Silent 30-second preview that plays on its own, including in the GitHub mobile app (which does not embed the player above). Tap it to watch the full 77-second video with sound.</sub></p>
+
 A **77-second** tour of the real app: Agenda, Case Sheet, Assistant, Drafts, review and export. Includes comic animations, English narration, subtitles and visible, audible clicks. **Unmute** to hear the narration, music and clicks. The UI remains in Spanish and uses the real provisional snapshot `20261007-e704e952` in offline local mode; the demonstrated draft is a cited template.
 
 [Open the video](https://github.com/user-attachments/assets/b11e44dc-640f-4a29-a3c2-50afb65d22c4) · [Repository MP4](docs/video/umbral-tour-en.mp4) · [WebVTT subtitles](docs/video/umbral-en.vtt) · [en español](README.es.md#video)
