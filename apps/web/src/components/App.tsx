@@ -217,7 +217,8 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
         ...mobileOverflow.map((item) => ({ kind: 'view' as const, item })),
       ]
     : navigation.map((item) => ({ kind: 'view' as const, item }));
-  const [mobile, setMobile] = useState(false);
+  // Valor inicial síncrono: con `false` el primer pintado en un teléfono usaba el diseño de escritorio y saltaba al corregirse.
+  const [mobile, setMobile] = useState(() => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 1023px)').matches);
   const [assistantExpanded, setAssistantExpanded] = useState(() => readAssistantSize() === 'expanded');
   const [warningCenterOpen, setWarningCenterOpen] = useState(false);
   const { data: health } = useHealth();
@@ -270,7 +271,9 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
     observer.observe(header);
     window.addEventListener('resize', measure);
     let frame = 0;
-    const onScroll = () => {
+    const onScroll = (event: Event) => {
+      // Solo importa el desplazamiento de la página; el de listas y paneles internos no mueve la cabecera.
+      if (event.target !== document && event.target !== document.documentElement && event.target !== document.body) return;
       if (frame) return;
       frame = window.requestAnimationFrame(() => { frame = 0; measure(); });
     };
@@ -284,7 +287,9 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   }, []);
 
   const assistantOpen = assistantState === 'open' && !assistantClosing;
-  const assistantFullscreen = assistantState === 'open' && (mobile || assistantExpanded);
+  // Al empezar a cerrarse el panel, la página deja de estar inerte: el foco vuelve ya al botón que lo abrió
+  // (con la cabecera inerte durante los 120 ms de la animación de salida, ese foco se perdía).
+  const assistantFullscreen = assistantState === 'open' && !assistantClosing && (mobile || assistantExpanded);
 
   // Mover el foco al contenido principal al cambiar de vista (accesibilidad de SPA).
   useEffect(() => {
@@ -529,9 +534,10 @@ function Inner() {
     [boot, scopedApi, route, go, toast, showToast, dismissToast, reviewer, setReviewer, openAssistant,session,changeRole],
   );
 
-  if (bootError) return <div className="mx-auto max-w-xl p-6" data-testid="app-boot-error"><ErrorBox error={new Error(bootError)} onRetry={() => setBootAttempt((value) => value + 1)} /></div>;
-  if(!session||choosingRole)return <SessionGate onChoose={selectRole} onCancel={session?()=>setChoosingRole(false):undefined} status={!boot?<Loading label={progress?.message ?? 'Conectando con la API…'}/>:undefined}/>;
-  if (!ctx) return <div className="mx-auto max-w-xl p-6" data-testid="app-loading"><Loading label={progress?.message ?? "Iniciando Umbral…"} />{progress && <p className="text-sm text-ink-3" aria-live="polite">Intento {progress.attempt} · {Math.floor(progress.elapsedMs / 1000)} s. El primer inicio puede tardar hasta 90 segundos.</p>}</div>;
+  // Estas pantallas viven fuera de `#app-root`: en la web el <body> no se desplaza, así que cada una lleva su propio scroll.
+  if (bootError) return <div className="app-screen"><div className="mx-auto max-w-xl p-6" data-testid="app-boot-error"><ErrorBox error={new Error(bootError)} onRetry={() => setBootAttempt((value) => value + 1)} /></div></div>;
+  if(!session||choosingRole)return <div className="app-screen"><SessionGate onChoose={selectRole} onCancel={session?()=>setChoosingRole(false):undefined} status={!boot?<Loading label={progress?.message ?? 'Conectando con la API…'}/>:undefined}/></div>;
+  if (!ctx) return <div className="app-screen"><div className="mx-auto max-w-xl p-6" data-testid="app-loading"><Loading label={progress?.message ?? "Iniciando Umbral…"} />{progress && <p className="text-sm text-ink-3" aria-live="polite">Intento {progress.attempt} · {Math.floor(progress.elapsedMs / 1000)} s. El primer inicio puede tardar hasta 90 segundos.</p>}</div></div>;
   return (
     <AppContext.Provider value={ctx}>
       <WarningCenterProvider>

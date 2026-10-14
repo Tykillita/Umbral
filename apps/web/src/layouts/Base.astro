@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import DesktopWindowControls from '../components/DesktopWindowControls';
 import DesktopUpdateNotice from '../components/DesktopUpdateNotice';
+import PwaUpdateNotice from '../components/PwaUpdateNotice';
 import '@fontsource/barlow-condensed/latin-700.css';
 import '@fontsource/barlow-condensed/latin-800.css';
 import '@fontsource/atkinson-hyperlegible/latin-400.css';
@@ -20,9 +21,16 @@ const shellClass = [appShell ? 'app-shell' : '', landingShell ? 'landing-shell' 
 <html lang="es" class={shellClass}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- viewport-fit=cover: sin él las zonas seguras (env(safe-area-inset-*)) valen 0 en iPhone. interactive-widget: en Chrome Android el teclado reduce el área de diseño. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#fff7df" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Umbral" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="icon" type="image/png" href="/brand/favicon-32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="/brand/favicon-16.png" sizes="16x16" />
@@ -50,6 +58,7 @@ const shellClass = [appShell ? 'app-shell' : '', landingShell ? 'landing-shell' 
   <body>
     <DesktopWindowControls client:only="react" />
     <DesktopUpdateNotice client:only="react" />
+    <PwaUpdateNotice client:only="react" />
     <slot />
   </body>
 </html>

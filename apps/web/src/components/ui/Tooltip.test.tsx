@@ -47,3 +47,39 @@ it('oculta el tooltip al salir del botón y cancela su temporizador', async () =
 
   expect(document.querySelector('.tooltip')).toBeNull();
 });
+
+it('con el dedo, el foco que sigue al toque no reinicia el temporizador ni reabre el globo', async () => {
+  vi.useFakeTimers();
+  const { container } = render(
+    <Tooltip content="Ayuda">
+      <button type="button" aria-label="Acción">·</button>
+    </Tooltip>,
+  );
+  const host = container.querySelector('[aria-describedby]');
+  const button = container.querySelector('button');
+  if (!host || !button) throw new Error('Falta el contenedor del tooltip.');
+
+  // Android: el toque abre el globo (pointerdown) y después el botón recibe el foco.
+  fireEvent.pointerDown(host, { pointerType: 'touch' });
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  expect(document.querySelector('.tooltip')).not.toBeNull();
+  await act(async () => { button.focus(); });
+  // El globo debe desaparecer a los 3,5 s aunque el botón siga enfocado.
+  await act(async () => { await vi.advanceTimersByTimeAsync(3600); });
+  expect(document.querySelector('.tooltip')).toBeNull();
+});
+
+it('con teclado, enfocar el botón sí muestra el globo', async () => {
+  vi.useFakeTimers();
+  const { container } = render(
+    <Tooltip content="Ayuda">
+      <button type="button" aria-label="Acción">·</button>
+    </Tooltip>,
+  );
+  const button = container.querySelector('button');
+  if (!button) throw new Error('Falta el botón.');
+  fireEvent.keyDown(document.body, { key: 'Tab' });
+  await act(async () => { button.focus(); });
+  await act(async () => { await vi.advanceTimersByTimeAsync(0); });
+  expect(document.querySelector('.tooltip')).not.toBeNull();
+});

@@ -65,9 +65,21 @@ describe('panel flotante de configuración', () => {
     const trigger = screen.getByTestId('settings-toggle');
     fireEvent.click(trigger);
     const layer = screen.getByTestId('settings-dialog-layer');
-    fireEvent.mouseDown(layer);
+    // Un toque real: apoyar y soltar sobre el fondo. Cierra al soltar para que el toque no atraviese la ventana.
+    fireEvent.pointerDown(layer);
+    expect(screen.queryByRole('dialog')).not.toBeNull();
+    fireEvent.click(layer);
     expect(screen.queryByRole('dialog')).toBeNull();
     await waitFor(() => expect(document.activeElement).toBe(trigger));
+  });
+
+  it('no cierra si el toque empieza dentro del panel y termina sobre el fondo', () => {
+    mountSettings();
+    fireEvent.click(screen.getByTestId('settings-toggle'));
+    const layer = screen.getByTestId('settings-dialog-layer');
+    fireEvent.pointerDown(screen.getByRole('dialog'));
+    fireEvent.click(layer);
+    expect(screen.queryByRole('dialog')).not.toBeNull();
   });
 
   it('integra Preferencias y Conexiones en el encabezado y conserva los saltos', () => {

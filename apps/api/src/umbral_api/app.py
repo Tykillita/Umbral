@@ -78,6 +78,28 @@ from .public_models import (
     WorkspaceImportResponse,
 )
 
+class _WebStaticFiles(StaticFiles):
+    """Sirve el build de la web con las cabeceras de caché que necesita la PWA (las mismas que firebase.json).
+
+    El HTML, el service worker, el manifest y los datos no se reutilizan sin revalidar: así una versión nueva se ve al
+    recargar. Los recursos `/_astro/*` llevan hash en el nombre y son inmutables.
+    """
+
+    def file_response(self, full_path: Any, stat_result: Any, scope: Any, status_code: int = 200) -> Any:
+        response = super().file_response(full_path, stat_result, scope, status_code)
+        path = str(scope.get("path", ""))
+        if path.endswith(".webmanifest"):
+            response.media_type = "application/manifest+json"
+            response.headers["content-type"] = "application/manifest+json"
+        if path.startswith("/_astro/"):
+            response.headers["cache-control"] = "public, max-age=31536000, immutable"
+        elif path == "/sw.js":
+            response.headers["cache-control"] = "no-cache, no-store, must-revalidate"
+        elif path.endswith((".html", ".webmanifest", ".json")) or not path.rsplit("/", 1)[-1].count("."):
+            response.headers["cache-control"] = "no-cache"
+        return response
+
+
 _ERRORS: dict[int | str, dict[str, Any]] = {
     401: {"model": ErrorResponse, "description": "No autenticado"},
     403: {"model": ErrorResponse, "description": "Prohibido (p. ej. adaptador solo localhost)"},
@@ -680,6 +702,6 @@ def create_app(settings: Settings | None = None, *, build_services: bool = True,
     dist = settings.web_dist
     if (build_services or services is not None) and dist.is_dir() and (dist / "index.html").exists():
         # El build de Astro se sirve desde FastAPI (arranque local). Las rutas /api/* ya están registradas.
-        app.mount("/", StaticFiles(directory=str(dist), html=True), name="web")
+        app.mount("/", _WebStaticFiles(directory=str(dist), html=True), name="web")
 
     return app

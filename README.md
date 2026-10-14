@@ -127,6 +127,10 @@ What was run, when, and with what result is recorded in [docs/public/VALIDATION.
 
 Pull requests get a Firebase Hosting preview; the deployment workflow deploys the API to Render, verifies it and then publishes the web app to Firebase Hosting. The hosted API is public and stores no user workspace. On **2026-10-09**, the live feed still pointed to provisional snapshot `20261007-cfa338b6`; the latest scheduled daily-data run was skipped, so recurring production refreshes are not claimed. The hosted status, command output and manifest hash are recorded in [validation](docs/public/VALIDATION.md). Hosting and Render use free plans; Gemini stays within its configured free-tier quota. See [deployment details](docs/public/DEPLOYMENT.md).
 
+## Mobile and installable web app
+
+The web app is designed for phones: bottom navigation, bottom-sheet menus, a full-screen assistant that follows the on-screen keyboard, 44 px touch targets and safe-area padding. It is also an installable PWA: open `/app` in Chrome/Android and choose *Install app*, or in Safari/iOS use *Share → Add to Home Screen*. A service worker keeps the app shell and the last static data it loaded so it opens offline; it never caches the API, and a new version is only applied when you tap *Update now*. The desktop app does not register it. Checked with Chromium touch emulation (`tests/e2e/test_movil_estable.py`); behaviour on real Safari/iOS (virtual keyboard, installed app, notch) is still pending manual verification.
+
 ## Windows app
 
 `apps/desktop` builds a per-user NSIS installer for Windows 10/11 x64 that bundles the API, pipeline, PyTorch CPU and Laya weights; the target machine needs no Python, Node or model download. It stores the workspace in local SQLite and supports offline classification. While open and connected, it can search for and validate news updates every 24 hours, retaining the previous snapshot when a candidate fails. Application updates can be automatic or notification-only, according to the user's setting. The installer is unsigned, so Windows may show a warning. See [apps/desktop](apps/desktop) and [deployment details](docs/public/DEPLOYMENT.md#windows-app).

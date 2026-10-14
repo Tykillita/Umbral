@@ -27,8 +27,14 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 - Borradores ajusta preguntas a la categoría y las brechas de evidencia, separa `GUION` de `NOTAS DE PRODUCCIÓN` y genera variantes derivadas para X, Instagram y TikTok.
 - El asistente valida tipo de evidencia y periodos contra el corte del snapshot, limita correcciones difusas a errores de tipeo, rechaza inyecciones/perfilamiento y atribuye consultas de culpabilidad; Jurado conserva sus sugerencias y suma cuatro demos.
 
+- PWA instalable (manifest, iconos «any» y «maskable», metas de iOS/Android) con service worker: la app abre sin conexión con lo último que se cargó y avisa «Hay una versión nueva de Umbral» sin activarla sola. La API y cualquier otro origen nunca se guardan en caché; `sw.js` y el manifest se sirven sin caché en Firebase Hosting y en el servidor local. No se registra en la app de escritorio.
+- Botón Atrás (Android) y gesto de retroceso (iOS) cierran el asistente a pantalla completa, las hojas de selección y las ventanas, en lugar de salir de la vista.
+
 ### Fixed
 
+- Móvil: la pantalla de elegir rol, la de carga y la de error vuelven a poder desplazarse (el final quedaba inalcanzable); el panel de Configuración ocupa toda la pantalla entre 497 y 767 px en lugar de quedar a medias; tocar el fondo de una hoja de selección o de una ventana ya no activa lo que había debajo; la lista de un menú flotante se puede desplazar sin que vuelva a la opción activa; el globo de ayuda no reaparece tras el foco que sigue a un toque y se muestra por encima de las ventanas.
+- Móvil: los contenedores fijos de la web ya no se desplazan por programa (al enfocar un campo o llevar un elemento a la vista la cabecera salía por arriba); el asistente a pantalla completa sigue a la vista visual con el teclado abierto, no enfoca el campo solo en pantallas táctiles y no se abre solo al girar el dispositivo; los campos de texto miden 16 px en táctil (iOS ya no amplía la página); `viewport-fit=cover` activa las zonas seguras; el aviso flotante no tapa la barra inferior ni el compositor; el historial local del asistente no deja la app esperando si IndexedDB tarda más de 1,5 s.
+- Un único bloqueo de scroll con contador para hojas, ventanas y asistente: ya no puede quedar la página bloqueada por cerrarse en otro orden.
 - La portada mantiene el desplazamiento vertical en todos los anchos, incluso después de navegar desde la aplicación; la barra lateral no estrecha el encabezado ni el pie.
 - En `/app`, el desplazamiento queda confinado al contenido en todos los tamaños; la portada y las páginas del jurado conservan el scroll normal del navegador.
 - Tipos de filtros públicos y respuestas OAuth de Notion y Slack, para que la API pase la comprobación estática de mypy sin cambiar sus valores por defecto ni el manejo de respuestas incompletas.
