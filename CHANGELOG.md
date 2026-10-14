@@ -37,6 +37,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- El job de datos ya no falla si Hosting no tiene feed publicado (404, p. ej. tras un despliegue manual incompleto): parte del snapshot versionado, como `online-build`; cualquier otro error HTTP sigue sin publicar con datos inciertos.
 - Con el backend caído (sin despliegue activo, iniciando o sin conexión) la web ya no muestra «Error HTTP 404» ni varios avisos rojos repetidos: un solo aviso informativo «Datos no disponibles por ahora» con «Reintentar» que recarga todo, un texto claro en la agenda y las alertas, y la maquetación intacta. Un 404 solo cuenta como servicio caído si no trae el cuerpo de error de Umbral.
 - Portada en móvil: «Cargando…» y «No disponible» ya no se salen de las tarjetas de cifras (se dibujan como estado, más pequeños y con salto de línea) y las cifras escalan con el ancho.
 - Los iconos de flecha de la portada, los ajustes y las páginas del jurado son SVG en lugar de caracteres (`↗`, `↻`, `←`, `→`), que iOS pintaba como emoji; una prueba impide que vuelvan a colarse emojis en la interfaz.
