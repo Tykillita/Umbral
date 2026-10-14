@@ -5,11 +5,13 @@ import { dehydrate, hydrate, type DehydratedState, type QueryClient } from '@tan
  * muestre algo útil mientras el backend despierta. No guarda fichas, casos, borradores ni reglas (llevan el
  * trabajo editorial del navegador, que debe leerse siempre en vivo) y solo guarda respuestas de la API real.
  * Todo lo restaurado se marca como obsoleto: se muestra de inmediato pero siempre se vuelve a pedir.
+ * Caduca a las 36 h (como la regla de la API que oculta cortes viejos) y descarta cortes viejos o vacíos.
  * Subir `CACHE_SCHEMA` al cambiar la forma de esas respuestas descarta las copias antiguas.
  */
 export const CACHE_SCHEMA = 1;
 export const CACHE_DB = 'umbral-cache-v1';
-export const CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+/** Misma ventana que `UMBRAL_HIDE_STALE_SNAPSHOT_HOURS` en la API: pasado ese tiempo la agenda se ve en blanco, no con noticias viejas. */
+export const CACHE_MAX_AGE_MS = 36 * 60 * 60 * 1000;
 const ROOTS = ['topics', 'health', 'snapshot'] as const;
 const LIMITS: Record<string, number> = { topics: 12, health: 1, snapshot: 1 };
 const SAVE_DELAY_MS = 1000;
@@ -52,6 +54,16 @@ export function indexedDbStore(factory: IDBFactory | undefined = globalThis.inde
   };
 }
 
+/** Una respuesta guardada solo sirve si su corte no es más viejo que la ventana y no era ya el estado vacío. */
+function freshData(data: unknown, now: number): boolean {
+  if (!data || typeof data !== 'object') return true;
+  const { cutoffUtc, dataMode } = data as { cutoffUtc?: unknown; dataMode?: unknown };
+  if (dataMode === 'empty') return false;
+  if (typeof cutoffUtc !== 'string') return true;
+  const cutoff = Date.parse(cutoffUtc);
+  return Number.isNaN(cutoff) || now - cutoff <= CACHE_MAX_AGE_MS;
+}
+
 const root = (key: readonly unknown[]) => String(key[0]);
 const cacheable = (key: readonly unknown[]) =>
   (ROOTS as readonly string[]).includes(root(key)) && key[key.length - 1] === 'live';
@@ -78,7 +90,7 @@ export async function restoreQueryCache(client: QueryClient, store: CacheStore =
     if (stored.schema !== CACHE_SCHEMA || typeof stored.savedAt !== 'number' || !stored.state || !Array.isArray(stored.state.queries)) return false;
     if (now - stored.savedAt > CACHE_MAX_AGE_MS || stored.savedAt > now + 60_000) return false;
     const queries = stored.state.queries.filter((query) => Array.isArray(query.queryKey) && cacheable(query.queryKey)
-      && query.state?.status === 'success' && typeof query.state.dataUpdatedAt === 'number' && now - query.state.dataUpdatedAt <= CACHE_MAX_AGE_MS);
+      && query.state?.status === 'success' && typeof query.state.dataUpdatedAt === 'number' && now - query.state.dataUpdatedAt <= CACHE_MAX_AGE_MS && freshData(query.state.data, now));
     if (!queries.length) return false;
     hydrate(client, { mutations: [], queries: queries.map((query) => ({ ...query, state: { ...query.state, isInvalidated: true } })) });
     return true;

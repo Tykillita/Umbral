@@ -34,7 +34,8 @@ function liveApi() {
 async function seedPreviousVisit() {
   const client = new QueryClient();
   const stop = persistQueryCache(client, indexedDbStore(), 0);
-  client.setQueryData(['topics', DEFAULT_FILTERS, 'live'], await liveApi().topics(DEFAULT_FILTERS));
+  // El corte del mock es una fecha fija; la copia local descarta cortes de más de 36 h, así que se simula uno reciente.
+  client.setQueryData(['topics', DEFAULT_FILTERS, 'live'], { ...(await liveApi().topics(DEFAULT_FILTERS)), cutoffUtc: new Date().toISOString() });
   await new Promise((resolve) => setTimeout(resolve, 30));
   stop();
   expect(CACHE_SCHEMA).toBeGreaterThan(0);

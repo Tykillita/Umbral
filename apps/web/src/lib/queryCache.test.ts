@@ -63,6 +63,21 @@ it('descarta la copia si cambió el esquema, caducó o está dañada', async () 
   expect(await restoreQueryCache(client(), memory(null), now)).toBe(false);
 });
 
+it('no restaura un corte más viejo que la ventana ni el estado vacío, aunque se guardara hace poco', async () => {
+  const now = Date.now();
+  const entry = (data: unknown) => JSON.stringify({ schema: CACHE_SCHEMA, savedAt: now, state: { mutations: [], queries: [
+    { queryKey: agenda({ limit: 5 }), queryHash: 'h', state: { data, dataUpdatedAt: now, status: 'success', dataUpdateCount: 1, errorUpdateCount: 0, error: null, errorUpdatedAt: 0, fetchFailureCount: 0, fetchStatus: 'idle', isInvalidated: false } },
+  ] } });
+  const ago = (ms: number) => new Date(now - ms).toISOString();
+  expect(await restoreQueryCache(client(), memory(entry({ items: [], cutoffUtc: ago(CACHE_MAX_AGE_MS - 60_000), dataMode: 'live' })), now)).toBe(true);
+  expect(await restoreQueryCache(client(), memory(entry({ items: [], cutoffUtc: ago(CACHE_MAX_AGE_MS + 60_000), dataMode: 'live' })), now)).toBe(false);
+  expect(await restoreQueryCache(client(), memory(entry({ items: [], cutoffUtc: ago(0), dataMode: 'empty' })), now)).toBe(false);
+});
+
+it('la caducidad local coincide con la ventana de 36 h de la API', () => {
+  expect(CACHE_MAX_AGE_MS).toBe(36 * 60 * 60 * 1000);
+});
+
 it('conserva solo las agendas más recientes', async () => {
   const a = client();
   const { store, stop } = await saved(a);
