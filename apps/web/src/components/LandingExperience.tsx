@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
-import { ArrowLeft, ArrowRight, Database, GripVertical } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Database, GripVertical, RotateCw } from 'lucide-react';
 import { Disclosure } from './ui/controls';
 import { getAuthToken } from '../lib/auth';
 import { HttpApi } from '../lib/api/client';
@@ -103,6 +103,11 @@ const FAQ = [
 ];
 
 type LandingData = { health: Health; articles: number | null; topics: number };
+
+/** Una cifra se dibuja grande; «Cargando…» y «No disponible» son estado y se dibujan más pequeños para caber en la tarjeta. */
+function statKind(value: number | null | undefined, loading: boolean): 'number' | 'status' {
+  return !loading && typeof value === 'number' && Number.isFinite(value) ? 'number' : 'status';
+}
 
 function countLabel(value: number | null | undefined, loading: boolean): string {
   if (loading) return 'Cargando…';
@@ -393,11 +398,11 @@ export default function LandingExperience() {
 
           <aside className="landing-stats" aria-label="Resumen del snapshot actual" aria-live="polite" aria-busy={loadingStats}>
             <div className="landing-stat">
-              <strong>{countLabel(data?.articles, loadingStats)}</strong>
+              <strong data-kind={statKind(data?.articles, loadingStats)}>{countLabel(data?.articles, loadingStats)}</strong>
               <span>titulares y metadatos</span>
             </div>
             <div className="landing-stat landing-stat-offset">
-              <strong>{countLabel(data?.topics, loadingStats)}</strong>
+              <strong data-kind={statKind(data?.topics, loadingStats)}>{countLabel(data?.topics, loadingStats)}</strong>
               <span>temas en las 6 categorías</span>
             </div>
             <div className="landing-stat landing-stat-featured">
@@ -503,13 +508,13 @@ export default function LandingExperience() {
                           <span className="landing-promise-label">Sí</span>
                           <strong className="font-display">{promise.title}</strong>
                           <span className="landing-promise-copy">{promise.yes}</span>
-                          <span className="landing-promise-hint">Voltea para ver el límite ↻</span>
+                          <span className="landing-promise-hint">Voltea para ver el límite <RotateCw size={12} strokeWidth={2.6} aria-hidden="true" className="landing-hint-icon" /></span>
                         </span>
                         <span className="landing-promise-face landing-promise-back" aria-hidden={!isFlipped}>
                           <span className="landing-promise-label">Hasta aquí</span>
                           <strong className="font-display">{promise.title}</strong>
                           <span className="landing-promise-copy">{promise.limit}</span>
-                          <span className="landing-promise-hint">Voltea para ver la promesa ↻</span>
+                          <span className="landing-promise-hint">Voltea para ver la promesa <RotateCw size={12} strokeWidth={2.6} aria-hidden="true" className="landing-hint-icon" /></span>
                         </span>
                       </button>
                       {(['front', 'back'] as const).map((side) => {
@@ -579,17 +584,17 @@ export default function LandingExperience() {
               <a className="jury-link-card" href="/jurado/documentacion-tecnica/">
                 <span className="jury-link-number" aria-hidden="true">01</span>
                 <span><strong>Documentación técnica</strong><small>Arquitectura, datos y trazabilidad</small></span>
-                <span className="jury-link-arrow" aria-hidden="true">↗</span>
+                <span className="jury-link-arrow" aria-hidden="true"><ArrowUpRight size={24} strokeWidth={2.6} /></span>
               </a>
               <a className="jury-link-card" href="/jurado/documentacion-funcional/">
                 <span className="jury-link-number" aria-hidden="true">02</span>
                 <span><strong>Documentación funcional</strong><small>Flujo editorial y decisiones humanas</small></span>
-                <span className="jury-link-arrow" aria-hidden="true">↗</span>
+                <span className="jury-link-arrow" aria-hidden="true"><ArrowUpRight size={24} strokeWidth={2.6} /></span>
               </a>
               <a className="jury-link-card" href="/jurado/pitch-day/">
                 <span className="jury-link-number" aria-hidden="true">03</span>
                 <span><strong>Presentación Pitch Day</strong><small>Recorrido, guion y preguntas del jurado</small></span>
-                <span className="jury-link-arrow" aria-hidden="true">↗</span>
+                <span className="jury-link-arrow" aria-hidden="true"><ArrowUpRight size={24} strokeWidth={2.6} /></span>
               </a>
             </nav>
           </section>

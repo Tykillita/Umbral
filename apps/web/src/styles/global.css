@@ -182,7 +182,7 @@ body {
 .jury-link-card strong { font-family: var(--font-serif); font-size: 1.05rem; line-height: 1.15; }
 .jury-link-card small { color: var(--color-ink-2); font-size: .8rem; line-height: 1.25; }
 .jury-link-number { display: grid; width: 2.25rem; height: 2.25rem; place-items: center; border: 2px solid var(--color-ink); background: var(--color-amber-300); font-family: var(--font-serif); font-size: 1.1rem; font-weight: 800; }
-.jury-link-arrow { justify-self: end; font-size: 1.35rem; font-weight: 800; }
+.jury-link-arrow { display: grid; place-items: center; justify-self: end; }
 .landing-footer-note { margin: 0; border-top: 1px solid var(--color-rule); padding-top: 1rem; color: var(--color-ink-3); font-size: .875rem; line-height: 1.5; }
 .jury-document { width: min(100% - 2rem, 68rem); margin: 0 auto; padding-block: 1.5rem 4rem; }
 .jury-document-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; border-bottom: 2px solid var(--color-ink); padding: .85rem 0; }
@@ -437,7 +437,9 @@ html[data-motion-preference="reduced"] *:not(.landing-ticker-track)::after {
 .landing-stats { display: grid; min-width: 0; gap: .7rem; }
 .landing-stat { display: flex; min-height: 4.5rem; align-items: center; justify-content: center; gap: .7rem; border: 2px solid var(--color-ink); padding: .65rem 1rem; background: var(--color-card); box-shadow: 3px 3px 0 var(--color-ink); }
 .landing-stat-featured { background: var(--color-amber-100); }
-.landing-stat > strong { flex: 0 0 auto; font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1; }
+.landing-stat > strong { flex: 0 1 auto; min-width: 0; max-width: 100%; overflow-wrap: anywhere; font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1; }
+/* «Cargando…» y «No disponible» son estado, no una cifra: más pequeños y con salto de línea para que quepan en la tarjeta. */
+.landing-stat > strong[data-kind="status"] { font-size: 1.15rem; line-height: 1.15; }
 .landing-stat > span { max-width: 13rem; font-size: .9rem; font-weight: 700; line-height: 1.35; }
 .landing-snapshot { display: flex; min-width: 0; align-items: flex-start; gap: .45rem; margin-top: .25rem; font-size: .74rem; line-height: 1.45; overflow-wrap: anywhere; }
 .landing-snapshot svg { flex: 0 0 auto; margin-top: .08rem; }
@@ -514,8 +516,9 @@ html[data-motion-preference="reduced"] *:not(.landing-ticker-track)::after {
   .landing-hero h1 { max-width: 24ch; }
   .landing-stats { grid-template-columns: repeat(3, minmax(0,1fr)); align-items: stretch; gap: .6rem; }
   .landing-stat, .landing-stat-offset, .landing-stat-featured { width: auto; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: .25rem; padding: .65rem; }
-  .landing-stat > strong { font-size: 2rem; }
-  .landing-stat > span { font-size: .77rem; }
+  .landing-stat > strong { font-size: clamp(1.55rem, 7.5vw, 2rem); }
+  .landing-stat > strong[data-kind="status"] { font-size: clamp(.95rem, 4vw, 1.1rem); }
+  .landing-stat > span { font-size: .77rem; overflow-wrap: anywhere; }
   .landing-snapshot { grid-column: 1 / -1; }
   .landing-promise-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
@@ -933,7 +936,12 @@ html.landing-shell:not(.desktop-shell) body {
    cada una tiene su propio contenedor con scroll. En la app de escritorio el <body> sí se desplaza y esto no aplica. */
 html.app-shell:not(.desktop-shell) .app-screen {
   position: fixed; inset: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain;
-  padding-bottom: env(safe-area-inset-bottom);
+  /* En Safari de iOS la barra de direcciones flota sobre el borde inferior (la página se dibuja debajo gracias a
+     viewport-fit=cover): sin este margen lo último de la pantalla quedaría tapado por la barra. */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
+}
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  html.app-shell:not(.desktop-shell) .app-screen { padding-bottom: calc(env(safe-area-inset-bottom) + 1rem); }
 }
 /* Con viewport-fit=cover el contenido llega al borde físico: en horizontal se respetan la muesca y las esquinas. */
 @media (max-width: 767px) {
@@ -978,3 +986,8 @@ html.app-shell:not(.desktop-shell) .app-screen {
 html.app-shell:not(.desktop-shell),
 html.app-shell:not(.desktop-shell) body,
 html.app-shell:not(.desktop-shell) #app-root { overflow: clip !important; }
+
+/* Iconos SVG en lugar de caracteres de flecha, que iOS pinta como emoji. */
+.landing-hint-icon { display: inline-block; vertical-align: -1px; }
+.jury-document-top a, .jury-document-back { gap: .4rem; }
+.jury-arrow { flex: 0 0 auto; }
