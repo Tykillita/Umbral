@@ -37,6 +37,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- La cabecera de la app en móvil es una sola línea de 56 px (marca a la izquierda; rol, avisos y asistente a la derecha), también a 320 px: «Cambiar» pasa a un icono de 44 px con su texto para lectores de pantalla y el nombre del rol cede espacio con puntos suspensivos. Antes ocupaba dos filas.
 - El job de datos ya no falla si Hosting no tiene feed publicado (404, p. ej. tras un despliegue manual incompleto): parte del snapshot versionado, como `online-build`; cualquier otro error HTTP sigue sin publicar con datos inciertos.
 - Con el backend caído (sin despliegue activo, iniciando o sin conexión) la web ya no muestra «Error HTTP 404» ni varios avisos rojos repetidos: un solo aviso informativo «Datos no disponibles por ahora» con «Reintentar» que recarga todo, un texto claro en la agenda y las alertas, y la maquetación intacta. Un 404 solo cuenta como servicio caído si no trae el cuerpo de error de Umbral.
 - Portada en móvil: «Cargando…» y «No disponible» ya no se salen de las tarjetas de cifras (se dibujan como estado, más pequeños y con salto de línea) y las cifras escalan con el ancho.

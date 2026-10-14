@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
-import { Bot, ChevronDown, CircleAlert, CircleCheck, CircleX, Database, Ellipsis, ExternalLink, FileSearch, FlaskConical, ListOrdered, LoaderCircle, PenLine, Tags, Users, WifiOff, X } from 'lucide-react';
+import { Bot, ChevronDown, CircleAlert, CircleCheck, CircleX, Database, Ellipsis, ExternalLink, FileSearch, FlaskConical, ListOrdered, LoaderCircle, PenLine, Repeat, Tags, Users, WifiOff, X } from 'lucide-react';
 import type { BootProgress, UmbralApi } from '../lib/api/client';
 import { resolveApi } from '../lib/api';
 import { initAuth, type AuthState } from '../lib/auth';
@@ -373,7 +373,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
             })}
           </nav>
           <div className="comic-header-actions ml-auto flex shrink-0 items-center gap-2 md:ml-0 md:justify-self-end">
-            {session && <div className="comic-active-role"><span data-testid="active-role">{session.labeler}</span><Button variant="ghost" onClick={changeRole} data-testid="role-change">Cambiar</Button></div>}
+            {session && <div className="comic-active-role"><span data-testid="active-role">{session.labeler}</span><Button variant="ghost" icon={Repeat} onClick={changeRole} data-testid="role-change" className="comic-role-change"><span className="comic-role-change-label">Cambiar</span></Button></div>}
             <WarningCenter open={warningCenterOpen} onOpenChange={setWarningCenterOpen} layaActive={health?.classifier === 'laya'} />
             <Button
               variant={assistantOpen ? 'primary' : 'secondary'}
