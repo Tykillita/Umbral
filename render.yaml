@@ -46,6 +46,8 @@ services:
         value: "2"
       - key: UMBRAL_SNAPSHOT_FEED_URL
         value: https://site-umbral.web.app/data/current.json
+      - key: UMBRAL_HIDE_STALE_SNAPSHOT_HOURS
+        value: "36" # un corte más viejo no se muestra: la agenda queda vacía hasta que llegue uno vigente
       - key: FIREBASE_PROJECT_ID
         value: site-umbral
       - key: UMBRAL_CORS_ORIGINS

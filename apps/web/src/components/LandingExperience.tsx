@@ -411,7 +411,9 @@ export default function LandingExperience() {
             </div>
             <p className="landing-snapshot" data-testid="landing-snapshot-status">
               <Database size={16} aria-hidden="true" />
-              {data ? (
+              {data?.health.dataMode === 'empty' ? (
+                <span>Sin noticias vigentes por ahora · se actualizan cada 6 horas.</span>
+              ) : data ? (
                 <span>
                   Corte <strong>{data.health.snapshotId}</strong> · {cutoffLabel(data.health.cutoffUtc)} · {snapshotStatus(data.health)}
                 </span>

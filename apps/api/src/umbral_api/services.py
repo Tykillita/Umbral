@@ -8,7 +8,7 @@ import uuid
 from collections import defaultdict, deque
 from copy import copy
 from dataclasses import dataclass, replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from . import __version__
@@ -60,6 +60,7 @@ from .models import (
     DraftRequest,
     DraftResponse,
     EditorialPackage,
+    EvidenceArticle,
     EvidenceStatus,
     ExportResponse,
     FallbackReason,
@@ -81,6 +82,8 @@ from .models import (
     ScoreBand,
     ScoreDetail,
     SnapshotInfoResponse,
+    TodayItem,
+    TodayResponse,
     TopicDetail,
     TopicsResponse,
     TopicSummary,
@@ -98,7 +101,7 @@ from .retrieval import Doc, SearchIndex
 from .scoring import BANDS, CHANGELOG, RULE_TEXT, RULES_VERSION, WEIGHTS, ScoreInputs, score_topic, sort_key
 from .security import looks_like_instruction
 from .seismology import SEISMIC_BOX_NOTE, SEISMIC_DAMAGE_NOTE
-from .snapshot import Corpus, load_corpus
+from .snapshot import EMPTY_SNAPSHOT_ID, Corpus, empty_corpus, load_corpus
 from .storage import CaseRecord, PublicGeminiCounter, Repository, build_repository
 from .topics import (
     HEADLINE_NOTICE,
@@ -186,7 +189,8 @@ class Services:
     ) -> None:
         settings.validate()
         self.settings = settings
-        current_corpus = corpus or load_corpus(settings)
+        self.hidden_snapshot: tuple[str, datetime] | None = None
+        current_corpus = self.fresh_or_empty(corpus or load_corpus(settings))
         if settings.now_override:
             from .snapshot import parse_dt
 
@@ -242,8 +246,27 @@ class Services:
             raise RuntimeError("No se activará un snapshot que sustituya Laya por otro clasificador.")
         if not corpus.articles or not corpus.clusters:
             raise RuntimeError("El snapshot debe contener artículos y grupos.")
-        self._state = build_snapshot_state(corpus)
+        self._state = build_snapshot_state(self.fresh_or_empty(corpus))
         return corpus.snapshot_id
+
+    def fresh_or_empty(self, corpus: Corpus) -> Corpus:
+        """Aplica la política de antigüedad: un corte más viejo que `hide_stale_snapshot_hours` no se muestra.
+
+        Devuelve un corte vacío (modo `empty`) y recuerda cuál se ocultó, para que el estado diga la verdad y el feed no
+        vuelva a descargarlo cada 15 minutos. Con la política desactivada (local, escritorio, pruebas) no cambia nada.
+        """
+        limit = self.settings.hide_stale_snapshot_hours
+        if limit is None or corpus.snapshot_id == EMPTY_SNAPSHOT_ID:
+            self.hidden_snapshot = None
+            return corpus
+        if (datetime.now(UTC) - corpus.cutoff).total_seconds() <= limit * 3600:
+            self.hidden_snapshot = None
+            return corpus
+        self.hidden_snapshot = (corpus.snapshot_id, corpus.cutoff)
+        return empty_corpus(
+            corpus.cutoff,
+            f"El corte {corpus.snapshot_id} supera {limit} horas y se oculta: la agenda queda vacía hasta que llegue uno vigente.",
+        )
 
     # ------------------------------------------------------------------ puntaje y resúmenes
     def _impact_for(self, base: TopicBase, rec: CaseRecord | None) -> ImpactAssignment:
@@ -378,7 +401,8 @@ class Services:
         if self.settings.offline:
             notes.append("Modo sin conexión: se bloquean las llamadas externas (Gemini, ChatGPT, Claude).")
         stale = (datetime.now(UTC) - c.cutoff).total_seconds() > self.settings.snapshot_stale_hours * 3600
-        if stale:
+        hidden = self.hidden_snapshot
+        if stale and not hidden:
             notes.append(f"El corte de datos supera {self.settings.snapshot_stale_hours} horas; se conserva el último snapshot válido.")
         if self.snapshot_feed.last_error:
             notes.append(self.snapshot_feed.last_error)
@@ -402,6 +426,8 @@ class Services:
             server_time_utc=now_utc(),
             notes=notes,
             snapshot_stale=stale,
+            hidden_snapshot_id=hidden[0] if hidden else None,
+            hidden_snapshot_cutoff_utc=hidden[1] if hidden else None,
             snapshot_refresh_error=self.snapshot_feed.last_error,
             snapshot_last_checked_at=self.snapshot_feed.last_checked_at,
             deploy_commit=self.settings.deploy_commit,
@@ -447,6 +473,61 @@ class Services:
             sources=c.sources,
             metrics=c.metrics,
             integrity=c.integrity,
+        )
+
+    # ------------------------------------------------------------------ hoy
+    def today(self, *, limit: int = 5, window_hours: int = 24, now: datetime | None = None) -> TodayResponse:
+        """Los titulares más recientes de las últimas `window_hours` horas reales, ordenados por publicación.
+
+        Va aparte del puntaje (`scoring-v1`): no cambia el ranking de la agenda ni sus pruebas. Solo cuentan los temas con
+        fecha de publicación conocida; una fecha de detección (GDELT) no es una publicación y no entra.
+        """
+        now = now or datetime.now(UTC)
+        since = now - timedelta(hours=window_hours)
+        found: list[tuple[datetime, TopicBase, EvidenceArticle]] = []
+        for base in self.bases.values():
+            if base.category == Category.indeterminado:
+                continue
+            dated = [a for a in base.usable_articles if a.published_at and since <= a.published_at <= now + timedelta(minutes=10)]
+            if dated:
+                latest = max(dated, key=lambda a: a.published_at)  # type: ignore[arg-type, return-value]
+                found.append((latest.published_at, base, latest))  # type: ignore[arg-type]
+        found.sort(key=lambda row: (row[0], row[1].id), reverse=True)
+        items = [
+            TodayItem(
+                id=base.id,
+                title=base.display_title,
+                category=base.category,
+                category_label=CATEGORY_LABELS[base.category],
+                outlet=article.outlet,
+                url=article.url,
+                published_at=published,
+                published_at_basis=article.published_at_basis,
+                article_count=len(base.usable_articles),
+                independent_provenances=base.independent,
+            )
+            for published, base, article in found[:limit]
+        ]
+        c = self.corpus
+        note: str | None = None
+        hidden = self.hidden_snapshot
+        if hidden:
+            note = (
+                f"Aún no hay noticias vigentes: el último corte ({hidden[0]}) es del {hidden[1]:%Y-%m-%d} y se oculta por "
+                "antigüedad. Las noticias se actualizan cada 6 horas."
+            )
+        elif not items:
+            note = f"No hay noticias con fecha de publicación en las últimas {window_hours} horas en el corte actual ({c.cutoff:%Y-%m-%d %H:%M} UTC)."
+        elif (now - c.cutoff).total_seconds() > window_hours * 3600:
+            note = f"El corte de datos es del {c.cutoff:%Y-%m-%d %H:%M} UTC: puede haber noticias más recientes por clasificar."
+        return TodayResponse(
+            checked_at=now,
+            window_hours=window_hours,
+            snapshot_id=c.snapshot_id,
+            data_mode=c.data_mode,
+            cutoff_utc=c.cutoff,
+            items=items,
+            note=note,
         )
 
     # ------------------------------------------------------------------ agenda / ficha

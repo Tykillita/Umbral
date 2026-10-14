@@ -398,7 +398,7 @@ export function buildDetail(spec: Spec, caseView: TopicDetail['case']): TopicDet
 export const MOCK_SPECS = SPECS;
 
 export const MOCK_HEALTH: Health = {
-  snapshotStale: false, snapshotRefreshError: null, snapshotLastCheckedAt: null, deployCommit: null,
+  snapshotStale: false, snapshotRefreshError: null, snapshotLastCheckedAt: null, deployCommit: null, hiddenSnapshotId: null, hiddenSnapshotCutoffUtc: null,
   apiVersion: 'mock-frontend',
   authMode: 'local',
   classifier: 'mock (sin Laya)',

@@ -9,6 +9,7 @@ import { useDisclosureMotion, useEntrance, useRevealNew } from '../../lib/useMot
 import { useApp } from '../context';
 import { BandPill, Button, ErrorBox, EvidencePill, Loading, Notice, Pill, ReviewPill, inputCls } from '../ui';
 import { ScoreBreakdown } from '../ScoreBreakdown';
+import { EmptyNewsPanel, TodaySection } from './TodaySection';
 import { Disclosure, Select, Tooltip, type SelectOption } from '../ui/controls';
 
 function FilterSelect<T extends string>({
@@ -212,6 +213,8 @@ export function Agenda() {
         </p>
       </header>
 
+      <TodaySection onOpen={(id) => go({ view: 'ficha', topicId: id })} />
+
       <section className="comic-panel p-4" aria-labelledby={`${uid}-alerts-title`} data-testid="agenda-live-alerts" aria-busy={alerts.isFetching}>
         <div className="mb-3 flex flex-wrap items-start justify-between gap-2 border-b-2 border-ink pb-3">
           <div className="flex items-center gap-2">
@@ -382,7 +385,9 @@ export function Agenda() {
         ? <section className="comic-panel p-4 text-sm text-ink-2" data-testid="agenda-waiting-service" role="status">La agenda aparecerá aquí en cuanto el servicio responda. Usa «Reintentar» en el aviso de arriba.</section>
         : <ErrorBox error={error} onRetry={() => refetch()} />)}
 
-      {data && (
+      {data?.dataMode === 'empty' && <EmptyNewsPanel />}
+
+      {data && data.dataMode !== 'empty' && (
         <div aria-live="polite" aria-busy={isFetching}>
           <p className="mb-2 text-sm text-ink-3" data-testid="agenda-count">
             {data.items.length === 0

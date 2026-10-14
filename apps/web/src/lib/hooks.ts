@@ -9,6 +9,7 @@ export const qk = {
   snapshot: ['snapshot'] as const,
   topics: (f: TopicFilters) => ['topics', f] as const,
   alerts: ['alerts'] as const,
+  today: ['today'] as const,
   topic: (id: string) => ['topic', id] as const,
 };
 
@@ -47,6 +48,12 @@ export function useTopics(filters: TopicFilters) {
 export function useAlerts() {
   const { api } = useApp();
   return useQuery({ queryKey: [...qk.alerts, api.kind], queryFn: () => api.alerts(), refetchInterval: 60_000, refetchIntervalInBackground: false, staleTime: 30_000, retry: 1 });
+}
+
+/** «Hoy»: los 5 titulares más recientes. La ventana de 24 h se mueve con el reloj, así que se revalida cada 5 minutos. */
+export function useToday() {
+  const { api } = useApp();
+  return useQuery({ queryKey: [...qk.today, api.kind], queryFn: () => api.today(), refetchInterval: 300_000, refetchIntervalInBackground: false, staleTime: 120_000, retry: 1 });
 }
 
 export function useTopic(topicId: string | null) {

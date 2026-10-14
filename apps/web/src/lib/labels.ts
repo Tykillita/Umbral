@@ -82,6 +82,7 @@ export const DATA_MODE_LABEL: Record<DataMode, string> = {
   fixture: 'Datos de fixture (no reales)',
   provisional: 'Snapshot provisional',
   congelado: 'Snapshot congelado',
+  empty: 'Sin noticias vigentes',
 };
 
 export const FALLBACK_LABEL: Record<FallbackReason, string> = {

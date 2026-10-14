@@ -107,6 +107,9 @@ class Settings:
     snapshot_feed_url: str | None = None
     snapshot_refresh_s: int = 900
     snapshot_stale_hours: int = 36
+    # Si el corte activo es más antiguo que estas horas, la agenda queda vacía (modo `empty`) en lugar de mostrar noticias
+    # viejas. None = desactivado (local, escritorio, pruebas): se sirve siempre el último snapshot válido.
+    hide_stale_snapshot_hours: int | None = None
     public_api_url: str | None = None  # escritorio: usa generación pública, sin clave en el instalador
     deploy_commit: str | None = None  # SHA del commit desplegado (trazabilidad); None si no se conoce
     # --- estáticos
@@ -146,6 +149,8 @@ class Settings:
             raise RuntimeError("La cuota pública global de Gemini debe estar entre 0 y 20 llamadas diarias.")
         if self.snapshot_refresh_s < 1 or self.snapshot_stale_hours < 1:
             raise RuntimeError("La actualización y antigüedad de snapshots deben ser positivas.")
+        if self.hide_stale_snapshot_hours is not None and self.hide_stale_snapshot_hours < 1:
+            raise RuntimeError("Las horas para ocultar un snapshot antiguo deben ser positivas.")
         if self.snapshot_feed_url:
             from urllib.parse import urlparse
 
@@ -225,6 +230,7 @@ class Settings:
             snapshot_feed_url=os.environ.get("UMBRAL_SNAPSHOT_FEED_URL") or None,
             snapshot_refresh_s=_int("UMBRAL_SNAPSHOT_REFRESH_S", d.snapshot_refresh_s),
             snapshot_stale_hours=_int("UMBRAL_SNAPSHOT_STALE_HOURS", d.snapshot_stale_hours),
+            hide_stale_snapshot_hours=_int("UMBRAL_HIDE_STALE_SNAPSHOT_HOURS", 0) or None,
             public_api_url=os.environ.get("UMBRAL_PUBLIC_API_URL") or None,
             deploy_commit=_deploy_commit(),
             web_dist=Path(web) if web else d.web_dist,
