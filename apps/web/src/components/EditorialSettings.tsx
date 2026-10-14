@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useApp } from './context';
 import { useHealth, useRules, useUpdateRules } from '../lib/hooks';
@@ -140,7 +141,7 @@ function LocalConnections({ offline, startOnMount = false, onConnected }: { offl
       <Button onClick={refresh} disabled={change.isPending}>Actualizar conexión</Button>
     </div>
     {oauthPending && <p role="status" className="text-sm text-ink-2">Esperando la confirmación OAuth de ChatGPT…</p>}
-    {authorizationUrl && <a href={authorizationUrl} target="_blank" rel="noreferrer noopener" className="inline-block font-semibold underline underline-offset-4" data-testid="chatgpt-login-link">Abrir inicio de sesión de ChatGPT ↗</a>}
+    {authorizationUrl && <a href={authorizationUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1 font-semibold underline underline-offset-4" data-testid="chatgpt-login-link">Abrir inicio de sesión de ChatGPT <ArrowUpRight size={16} strokeWidth={2.6} aria-hidden="true" /></a>}
     <ul className="space-y-2">
       {status.data?.profiles.map((profile) => <li key={profile.profileId} className="flex flex-wrap items-center justify-between gap-2 border border-rule p-3 text-sm"><div><strong>{profile.label}</strong> {profile.active ? '· activo' : ''}<p>{profile.email ?? 'Cuenta sin correo disponible'} · {profile.connected ? 'Credenciales guardadas' : 'Desconectado'}</p>{profile.model && <p>Modelo: {profile.model}</p>}{profile.active && profile.connected && !profile.planUsageEnabled && <p className="mt-1 text-warn" data-testid="chatgpt-plan-permission-needed">La cuenta inició sesión, pero falta el permiso para usar tu plan de ChatGPT. Inicia sesión otra vez y acepta ese permiso.</p>}</div><div className="flex flex-wrap gap-2"><Button disabled={offline || change.isPending || profile.active || !profile.connected} onClick={() => change.mutate({ kind: 'select', value: profile.profileId })}>Seleccionar</Button><Button disabled={offline || change.isPending || !profile.connected} onClick={() => change.mutate({ kind: 'disconnect', value: profile.profileId })}>Cerrar sesión</Button></div></li>)}
     </ul>

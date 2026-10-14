@@ -32,6 +32,9 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- Portada en móvil: «Cargando…» y «No disponible» ya no se salen de las tarjetas de cifras (se dibujan como estado, más pequeños y con salto de línea) y las cifras escalan con el ancho.
+- Los iconos de flecha de la portada, los ajustes y las páginas del jurado son SVG en lugar de caracteres (`↗`, `↻`, `←`, `→`), que iOS pintaba como emoji; una prueba impide que vuelvan a colarse emojis en la interfaz.
+- Las pantallas de elegir rol, carga y error dejan margen inferior para la barra flotante de Safari de iOS, así que lo último puede subir por encima de ella.
 - Móvil: la pantalla de elegir rol, la de carga y la de error vuelven a poder desplazarse (el final quedaba inalcanzable); el panel de Configuración ocupa toda la pantalla entre 497 y 767 px en lugar de quedar a medias; tocar el fondo de una hoja de selección o de una ventana ya no activa lo que había debajo; la lista de un menú flotante se puede desplazar sin que vuelva a la opción activa; el globo de ayuda no reaparece tras el foco que sigue a un toque y se muestra por encima de las ventanas.
 - Móvil: los contenedores fijos de la web ya no se desplazan por programa (al enfocar un campo o llevar un elemento a la vista la cabecera salía por arriba); el asistente a pantalla completa sigue a la vista visual con el teclado abierto, no enfoca el campo solo en pantallas táctiles y no se abre solo al girar el dispositivo; los campos de texto miden 16 px en táctil (iOS ya no amplía la página); `viewport-fit=cover` activa las zonas seguras; el aviso flotante no tapa la barra inferior ni el compositor; el historial local del asistente no deja la app esperando si IndexedDB tarda más de 1,5 s.
 - Un único bloqueo de scroll con contador para hojas, ventanas y asistente: ya no puede quedar la página bloqueada por cerrarse en otro orden.
