@@ -605,7 +605,7 @@ h1, h2, h3, .comic-page-heading, .topic-copy h3 {
   .comic-tabbar-more { display: block; }
   .comic-tabbar .comic-nav {
     flex-direction: column; justify-content: center; gap: .2rem; min-height: 3.5rem;
-    padding: .35rem .15rem; font-size: .72rem; line-height: 1.1; text-align: center; border-radius: 0;
+    padding: .35rem .15rem; font-size: clamp(.64rem, 3.1vw, .75rem); line-height: 1.1; text-align: center; border-radius: 0;
   }
   .comic-mobile-more-trigger { width: 100%; height: 100%; min-height: 3.5rem; flex-direction: column; justify-content: center; gap: .15rem; border-color: transparent; padding: .35rem .15rem; background: var(--color-card); color: var(--color-ink-2); font-size: .72rem; line-height: 1.1; text-align: center; }
   .comic-mobile-more-trigger:hover { background: var(--color-sunk); }

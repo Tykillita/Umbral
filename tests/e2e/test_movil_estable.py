@@ -191,6 +191,22 @@ def test_el_puntaje_de_las_tarjetas_pasa_a_tres_columnas_en_pantallas_estrechas(
         ctx.close()
 
 
+@pytest.mark.parametrize("width", [320, 390, 430])
+def test_la_altura_de_la_barra_inferior_se_mide_y_la_fuente_se_adapta(browser, stack, width: int):
+    ctx = mobile_context(browser, width)
+    try:
+        page = ctx.new_page()
+        open_app(page, stack.url)
+        settle_motion(page)
+        bar = page.locator(".comic-tabbar").bounding_box()
+        measured = page.evaluate("parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mobile-nav-height'))")
+        assert bar is not None and abs(measured - bar["height"]) <= 1, f"--mobile-nav-height={measured} y la barra mide {bar}"
+        size = page.locator(".comic-tabbar .comic-nav:visible").first.evaluate("el => parseFloat(getComputedStyle(el).fontSize)")
+        assert 10 <= size <= 12.01, f"a {width}px la etiqueta mide {size}px"
+    finally:
+        ctx.close()
+
+
 # ----------------------------------------------------------------------------------------------------- PWA
 
 def test_el_manifest_cumple_los_requisitos_de_instalacion(page, stack):
