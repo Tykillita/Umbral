@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -11,6 +12,8 @@ from pathlib import Path
 import pytest
 
 REPO = Path(__file__).resolve().parents[2]
+# En Windows un Python hijo escribe en la página de códigos local por la tubería; la prueba lo decodifica como UTF-8.
+UTF8_ENV = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
 spec = importlib.util.spec_from_file_location("stage_hosting_data", REPO / "scripts/stage_hosting_data.py")
 assert spec and spec.loader
 hosting_data = importlib.util.module_from_spec(spec)
@@ -104,7 +107,7 @@ def test_preflight_respeta_gitignore_y_no_toca_el_git_original(tmp_path):
     (tmp_path / ".gitignore").write_text(".env\n", encoding="utf-8")
     (tmp_path / "README.md").write_text("# Proyecto de control", encoding="utf-8")
     (tmp_path / ".env").write_text("SECRETO_LOCAL_DE_CONTROL=sentinela", encoding="utf-8")
-    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, encoding="utf-8", check=False)
+    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, encoding="utf-8", env=UTF8_ENV, check=False)
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Archivos que Git" in result.stdout
     assert "sentinela" not in result.stdout
@@ -114,7 +117,7 @@ def test_preflight_respeta_gitignore_y_no_toca_el_git_original(tmp_path):
 def test_preflight_rechaza_nombre_reservado_sin_abrir_contenido(tmp_path):
     # Carpeta sintética vacía: ninguna consulta real se crea ni se lee.
     (tmp_path / "eval/held-out").mkdir(parents=True)
-    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, encoding="utf-8", check=False)
+    result = subprocess.run([sys.executable, str(REPO / "scripts/preflight_publish.py"), str(tmp_path)], capture_output=True, text=True, encoding="utf-8", env=UTF8_ENV, check=False)
     assert result.returncode == 1
     assert "contenido no leído" in result.stdout
     assert not (tmp_path / ".git").exists()
