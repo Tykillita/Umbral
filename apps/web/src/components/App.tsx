@@ -281,20 +281,11 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(header);
+    // La cabecera es fija o pegajosa y no se mueve con el scroll: solo cambia su tamaño (ResizeObserver) o la ventana (resize).
     window.addEventListener('resize', measure);
-    let frame = 0;
-    const onScroll = (event: Event) => {
-      // Solo importa el desplazamiento de la página; el de listas y paneles internos no mueve la cabecera.
-      if (event.target !== document && event.target !== document.documentElement && event.target !== document.body) return;
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => { frame = 0; measure(); });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
     return () => {
       observer.disconnect();
       window.removeEventListener('resize', measure);
-      window.removeEventListener('scroll', onScroll, { capture: true });
-      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 

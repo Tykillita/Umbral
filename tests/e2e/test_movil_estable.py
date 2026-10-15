@@ -176,6 +176,21 @@ def test_sin_desbordamiento_y_barra_inferior_pegada_al_borde(browser, stack, wid
         ctx.close()
 
 
+@pytest.mark.parametrize(("width", "columns"), [(320, 3), (400, 3), (430, 5)])
+def test_el_puntaje_de_las_tarjetas_pasa_a_tres_columnas_en_pantallas_estrechas(browser, stack, width: int, columns: int):
+    ctx = mobile_context(browser, width)
+    try:
+        page = ctx.new_page()
+        open_app(page, stack.url)
+        grid = page.locator(".comic-score-grid").first
+        expect(grid).to_be_visible()
+        tracks = grid.evaluate("el => getComputedStyle(el).gridTemplateColumns.split(' ').length")
+        assert tracks == columns, f"a {width}px el puntaje tiene {tracks} columnas, se esperaban {columns}"
+        assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    finally:
+        ctx.close()
+
+
 # ----------------------------------------------------------------------------------------------------- PWA
 
 def test_el_manifest_cumple_los_requisitos_de_instalacion(page, stack):
