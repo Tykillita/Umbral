@@ -51,6 +51,8 @@ export function registerServiceWorker(): void {
       if (!worker) return;
       const onState = () => {
         if (worker.state === 'installed' && navigator.serviceWorker.controller) setWaiting(worker);
+        // Un worker que ya se activó (o quedó obsoleto) deja de estar «esperando»: sin esto el aviso se quedaba fijo en WebKit.
+        else if (worker === waitingWorker && worker.state !== 'installed') setWaiting(null);
       };
       worker.addEventListener('statechange', onState);
       onState();
