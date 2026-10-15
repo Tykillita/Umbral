@@ -236,6 +236,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
   const { data: health } = useHealth();
   const mainRef = useRef<HTMLElement>(null);
   const mastheadRef = useRef<HTMLElement>(null);
+  const tabbarRef = useRef<HTMLElement>(null);
   const lastTopic = useRef<string | null>(null);
   if ('topicId' in route && route.topicId) lastTopic.current = route.topicId;
   const navigateToView = (view: Route['view']) => {
@@ -289,6 +290,26 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
     };
   }, []);
 
+  useEffect(() => {
+    // La barra inferior móvil cambia de altura (etiquetas más grandes, zona segura, rotación): se mide en vez de fijar 3,625 rem.
+    const bar = tabbarRef.current;
+    if (!bar) return;
+    const root = document.documentElement;
+    const measure = () => {
+      if (getComputedStyle(bar).position === 'fixed') root.style.setProperty('--mobile-nav-height', `${Math.ceil(bar.getBoundingClientRect().height)}px`);
+      else root.style.removeProperty('--mobile-nav-height');
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(bar);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+      root.style.removeProperty('--mobile-nav-height');
+    };
+  }, []);
+
   const assistantOpen = assistantState === 'open' && !assistantClosing;
   // Al empezar a cerrarse el panel, la página deja de estar inerte: el foco vuelve ya al botón que lo abrió
   // (con la cabecera inerte durante los 120 ms de la animación de salida, ese foco se perdía).
@@ -319,7 +340,7 @@ function Shell({ assistantState, setAssistantState, assistantClosing, openAssist
           <a href="/" className="comic-brand md:justify-self-start" aria-label="Umbral, inicio">
             Umbral<span className="text-amber-600">.</span>
           </a>
-          <nav aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center" style={{'--nav-count':navigation.length, '--mobile-nav-count':mobileNavColumns} as CSSProperties}>
+          <nav ref={tabbarRef} aria-label="Vistas principales" className="comic-tabbar flex gap-1 md:justify-center" style={{'--nav-count':navigation.length, '--mobile-nav-count':mobileNavColumns} as CSSProperties}>
             {headerNavigationItems.map((navItem) => {
               if (navItem.kind === 'more') {
                 return (
