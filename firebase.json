@@ -59,6 +59,12 @@
         ]
       },
       {
+        "source": "{/,/app,/app/**,/jurado/**}",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
         "source": "**",
         "headers": [
           {
