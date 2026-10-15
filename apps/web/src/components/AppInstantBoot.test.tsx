@@ -36,7 +36,8 @@ async function seedPreviousVisit() {
   const stop = persistQueryCache(client, indexedDbStore(), 0);
   // El corte del mock es una fecha fija; la copia local descarta cortes de más de 36 h, así que se simula uno reciente.
   client.setQueryData(['topics', DEFAULT_FILTERS, 'live'], { ...(await liveApi().topics(DEFAULT_FILTERS)), cutoffUtc: new Date().toISOString() });
-  await new Promise((resolve) => setTimeout(resolve, 30));
+  // Espera a que la copia esté realmente en IndexedDB en lugar de un retardo fijo (con la máquina cargada 30 ms no bastan).
+  await waitFor(async () => expect(await indexedDbStore().read()).not.toBeNull());
   stop();
   expect(CACHE_SCHEMA).toBeGreaterThan(0);
 }
@@ -66,6 +67,7 @@ it('con datos de la última visita pinta la agenda guardada mientras el servidor
   render(<App />);
 
   expect((await screen.findAllByTestId('topic-card')).length).toBeGreaterThan(0);
+  await waitFor(() => expect(resolveApi).toHaveBeenCalled()); // `finish` se asigna cuando el arranque pide la API
   expect(screen.getByTestId('nav-agenda')).toBeTruthy();
   expect(screen.getByTestId('boot-notice').textContent).toContain('datos guardados');
   expect(screen.queryByTestId('app-loading')).toBeNull();

@@ -16,7 +16,7 @@ export function ScoreBreakdown({
 }) {
   if (variant === 'compact') {
     return (
-      <ul className="comic-score-grid grid grid-cols-5 gap-1.5" aria-label="Componentes del puntaje">
+      <ul className="comic-score-grid grid grid-cols-3 gap-1.5 min-[401px]:grid-cols-5" aria-label="Componentes del puntaje">
         {components.map((c) => (
           <li
             key={c.key}
