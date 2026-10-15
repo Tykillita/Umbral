@@ -38,6 +38,7 @@ rules and the data snapshots are versioned independently (see `/api/v1/health` a
 
 ### Fixed
 
+- Firebase Hosting servía `/`, `/app` y `/jurado/*` con `Cache-Control: max-age=3600` (la regla `**/*.html` no cubre las URL sin extensión de `cleanUrls`): tras un despliegue un navegador sin service worker podía abrir un HTML viejo que apuntaba a ficheros ya retirados. Ahora llevan `no-cache`, con una prueba que lo exige. El asistente expandido usa `width: 100%` en lugar de `100vw`, que desbordaba cuando hay barra de desplazamiento.
 - En móviles de hasta 400 px el desglose del puntaje de cada tarjeta se reparte en tres columnas en lugar de cinco, y la cabecera de la app deja de escuchar el scroll de la página (es fija y solo cambia de tamaño o de ventana). Las pruebas del arranque instantáneo esperan a que la copia local esté escrita en vez de un retardo fijo.
 - La cabecera de la app en móvil es una sola línea de 56 px (marca a la izquierda; rol, avisos y asistente a la derecha), también a 320 px: «Cambiar» pasa a un icono de 44 px con su texto para lectores de pantalla y el nombre del rol cede espacio con puntos suspensivos. Antes ocupaba dos filas.
 - El job de datos ya no falla si Hosting no tiene feed publicado (404, p. ej. tras un despliegue manual incompleto): parte del snapshot versionado, como `online-build`; cualquier otro error HTTP sigue sin publicar con datos inciertos.
