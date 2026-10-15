@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import re
+from datetime import UTC, datetime
 
 import pytest
 from e2e.helpers import open_app, tid
@@ -23,7 +25,19 @@ def sleeping_backend(page) -> None:
     )
 
 
+def fresh_cutoff(page) -> None:
+    """El corte de la pila de pruebas está congelado; la copia local descarta cortes de más de 36 h, así que se simula uno de hoy."""
+    def patch(route) -> None:
+        response = route.fetch()
+        body = response.json()
+        body["cutoffUtc"] = datetime.now(UTC).isoformat()
+        route.fulfill(response=response, json=body)
+
+    page.route(re.compile(r"/api/v1/(public/agenda|health)(\?.*)?$"), patch)
+
+
 def test_segunda_visita_muestra_la_agenda_guardada_mientras_el_servidor_despierta(page, public_stack):
+    fresh_cutoff(page)
     open_app(page, public_stack.url, role="editor")
     first_titles = tid(page, "topic-card").locator("h3").all_inner_texts()
     assert first_titles

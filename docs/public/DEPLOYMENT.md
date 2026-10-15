@@ -69,7 +69,7 @@ python3 scripts/verify_hosted.py --web-url https://site-umbral.web.app --api-url
 
 ## Arranque en frío de Render Free
 
-Render Free se duerme tras 15 minutos sin tráfico y su disco es efímero. La primera petición puede tardar cerca de un minuto: la interfaz se abre de inmediato, muestra los datos guardados de la última visita (copia local en IndexedDB de la agenda y el estado de la API real; las fichas y el trabajo editorial se leen siempre en vivo, con caducidad de 7 días) o esqueletos si es la primera vez, reintenta durante hasta 90 segundos y ofrece un reintento manual. El trabajo del usuario no se pierde porque vive en el navegador.
+Render Free se duerme tras 15 minutos sin tráfico y su disco es efímero. La primera petición puede tardar cerca de un minuto: la interfaz se abre de inmediato, muestra los datos guardados de la última visita (copia local en IndexedDB de la agenda y el estado de la API real; las fichas y el trabajo editorial se leen siempre en vivo; la copia caduca a las 36 h, como la ventana `UMBRAL_HIDE_STALE_SNAPSHOT_HOURS`, y no se restaura un corte más viejo ni vacío) o esqueletos si es la primera vez, reintenta durante hasta 90 segundos y ofrece un reintento manual. El trabajo del usuario no se pierde porque vive en el navegador.
 
 ## Recuperar el último despliegue válido
 
