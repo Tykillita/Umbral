@@ -94,7 +94,7 @@ def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wai
     if status != 200 or config != {"schemaVersion": 1, "apiUrl": api_url}:
         raise ValueError("Configuración pública de escritorio no coincide con la API publicada.")
     checks.append("Descubrimiento público de API coherente")
-    descriptor_deadline = time.monotonic() + min(wait_seconds, 120)
+    descriptor_deadline = time.monotonic() + min(wait_seconds, 300)
     last_descriptor: dict | None = None
     descriptor: dict | None = None
     while True:
@@ -119,7 +119,7 @@ def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wai
             raise ValueError(
                 f"Hosting sigue sirviendo el snapshot {last_descriptor.get('snapshotId')} "
                 f"en vez del candidato {expected_snapshot} después de "
-                f"{min(wait_seconds, 120):g} s."
+                f"{min(wait_seconds, 300):g} s."
             )
         raise ValueError("El descriptor de datos alojado no estuvo disponible.")
     checks.append("Descriptor de datos corresponde al candidato")
