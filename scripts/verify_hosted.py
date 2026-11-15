@@ -23,7 +23,12 @@ def origin(value: str, allow_loopback: bool = False) -> str:
 
 
 def request(url: str, method: str = "GET", body: dict | None = None, web_origin: str | None = None) -> tuple[int, dict, bytes]:
-    headers = {"Accept": "application/json", "User-Agent": "Umbral-hosted-verifier/1"}
+    headers = {
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "User-Agent": "Umbral-hosted-verifier/1",
+    }
     if web_origin:
         headers["Origin"] = web_origin
     data = json.dumps(body).encode() if body is not None else None
@@ -89,12 +94,34 @@ def verify(web_url: str, api_url: str, expected_snapshot: str | None = None, wai
     if status != 200 or config != {"schemaVersion": 1, "apiUrl": api_url}:
         raise ValueError("Configuración pública de escritorio no coincide con la API publicada.")
     checks.append("Descubrimiento público de API coherente")
-    status, _, descriptor = json_response(web_url + "/data/current.json")
-    if status != 200 or descriptor.get("schemaVersion") != 1:
-        raise ValueError("Descriptor de datos no válido.")
-    expected_snapshot = expected_snapshot or descriptor.get("snapshotId")
-    if descriptor.get("snapshotId") != expected_snapshot:
-        raise ValueError("Snapshot alojado distinto del candidato verificado.")
+    descriptor_deadline = time.monotonic() + min(wait_seconds, 300)
+    last_descriptor: dict | None = None
+    descriptor: dict | None = None
+    while True:
+        try:
+            status, _, candidate_descriptor = json_response(web_url + "/data/current.json")
+            candidate_id = candidate_descriptor.get("snapshotId")
+            if (status == 200 and candidate_descriptor.get("schemaVersion") == 1
+                and isinstance(candidate_id, str) and candidate_id):
+                last_descriptor = candidate_descriptor
+                expected_snapshot = expected_snapshot or candidate_id
+                if candidate_id == expected_snapshot:
+                    descriptor = candidate_descriptor
+                    break
+        except (OSError, URLError, TypeError, ValueError):
+            pass
+        remaining = descriptor_deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        time.sleep(min(5, remaining))
+    if descriptor is None:
+        if last_descriptor is not None:
+            raise ValueError(
+                f"Hosting sigue sirviendo el snapshot {last_descriptor.get('snapshotId')} "
+                f"en vez del candidato {expected_snapshot} después de "
+                f"{min(wait_seconds, 300):g} s."
+            )
+        raise ValueError("El descriptor de datos alojado no estuvo disponible.")
     checks.append("Descriptor de datos corresponde al candidato")
     deadline = time.monotonic() + wait_seconds
     health = None
