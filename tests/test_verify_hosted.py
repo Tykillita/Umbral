@@ -11,6 +11,87 @@ _SPEC.loader.exec_module(_MODULE)
 verify_model_identity = _MODULE.verify_model_identity
 
 
+def test_hosted_verifier_waits_for_the_candidate_descriptor(monkeypatch):
+    web_url = "https://site.example"
+    api_url = "https://api.example"
+    descriptor_url = web_url + "/data/current.json"
+    descriptors = iter([
+        {"schemaVersion": 1, "snapshotId": "previous"},
+        {"schemaVersion": 1, "snapshotId": "candidate"},
+    ])
+    calls = 0
+
+    def fake_request(url, *args, **kwargs):
+        assert url in {web_url + "/", web_url + "/app"}
+        return 200, {}, b"Umbral"
+
+    def fake_json_response(url, *args, **kwargs):
+        nonlocal calls
+        if url == web_url + "/public-config.json":
+            return 200, {}, {"schemaVersion": 1, "apiUrl": api_url}
+        if url == descriptor_url:
+            calls += 1
+            return 200, {}, next(descriptors)
+        if url == api_url + "/api/v1/health":
+            return 200, {"access-control-allow-origin": web_url}, {
+                "snapshotId": "candidate",
+                "authMode": "public",
+                "containsFixtures": False,
+                "classifier": "laya",
+                "integrity": {"manifestVerified": True, "predictionsHashVerified": True},
+                "counts": {},
+            }
+        if url == api_url + "/api/v1/public/agenda":
+            return 200, {}, {"snapshotId": "candidate", "items": [{"id": "topic"}]}
+        if url == api_url + "/api/v1/public/topics/topic":
+            return 200, {}, {"articles": [{}]}
+        if url == api_url + "/api/v1/public/queries":
+            return 200, {}, {"snapshotId": "candidate", "answer": "respuesta"}
+        if url == api_url + "/api/v1/public/drafts":
+            return 200, {}, {"draft": {"generationMode": "plantilla", "validation": {"ok": True}}}
+        if url == api_url + "/api/v1/rules":
+            return 403, {}, {}
+        raise AssertionError(f"Ruta inesperada: {url}")
+
+    monkeypatch.setattr(_MODULE, "request", fake_request)
+    monkeypatch.setattr(_MODULE, "json_response", fake_json_response)
+    monkeypatch.setattr(_MODULE.time, "sleep", lambda _: None)
+
+    result = _MODULE.verify(web_url, api_url, "candidate", wait_seconds=10)
+
+    assert calls == 2
+    assert result["snapshotId"] == "candidate"
+
+
+def test_request_disables_caching(monkeypatch):
+    headers = {}
+
+    class Response:
+        status = 200
+        headers = {}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def read(self, _limit):
+            return b"{}"
+
+    def fake_urlopen(request, timeout):
+        headers.update({key.lower(): value for key, value in request.header_items()})
+        assert timeout == 15
+        return Response()
+
+    monkeypatch.setattr(_MODULE, "urlopen", fake_urlopen)
+
+    _MODULE.request("https://site.example/data/current.json")
+
+    assert headers["cache-control"] == "no-cache"
+    assert headers["pragma"] == "no-cache"
+
+
 @pytest.fixture
 def calibrated_snapshot_info():
     return {
