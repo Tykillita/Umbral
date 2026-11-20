@@ -47,15 +47,15 @@ jobs:
         with:
           ref: ${{ vars.PRODUCTION_RELEASE_REF }}
           persist-credentials: false
-      - name: Traer la herramienta y el descriptor del modelo desde el commit de este workflow
-        # El código de producción sigue anclado a PRODUCTION_RELEASE_REF; el script que descarga el modelo calibrado y su
-        # descriptor vienen del commit del workflow, así no dependen de qué tan antiguo sea el ref anclado.
+      - name: Traer las herramientas actuales desde el commit de este workflow
+        # El pipeline de producción sigue anclado a PRODUCTION_RELEASE_REF; estas herramientas usan el código del workflow actual.
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           path: .workflow-tools
           sparse-checkout: |
             scripts/laya_artifact.py
+            scripts/verify_hosted.py
             eval/laya-calibrated-artifact.json
           sparse-checkout-cone-mode: false
           persist-credentials: false
@@ -194,7 +194,7 @@ jobs:
       - name: Publicar solo Hosting después de verificar el candidato
         run: npx --yes firebase-tools@15.32.1 deploy --only hosting --project site-umbral --non-interactive
       - name: Verificar el feed alojado y conservar el recibo
-        run: uv run --frozen --project pipeline python scripts/verify_hosted.py --web-url https://site-umbral.web.app --api-url "$PUBLIC_API_URL" --expected-snapshot-file .production/candidate-id --expected-model-version "${{ steps.candidate.outputs.model_version }}" --expected-calibration-profile-id "${{ steps.candidate.outputs.profile_id }}" --expected-calibration-profile-sha256 "${{ steps.candidate.outputs.profile_sha256 }}" --wait-seconds 960 --out .production/hosted-receipt.json
+        run: uv run --frozen --project pipeline python .workflow-tools/scripts/verify_hosted.py --web-url https://site-umbral.web.app --api-url "$PUBLIC_API_URL" --expected-snapshot-file .production/candidate-id --expected-model-version "${{ steps.candidate.outputs.model_version }}" --expected-calibration-profile-id "${{ steps.candidate.outputs.profile_id }}" --expected-calibration-profile-sha256 "${{ steps.candidate.outputs.profile_sha256 }}" --wait-seconds 960 --out .production/hosted-receipt.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
